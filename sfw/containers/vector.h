@@ -1,287 +1,198 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include "core/error_macros.h"
+/*************************************************************************/
+/*  vector.h                                                             */
+/*************************************************************************/
+/*                         This file is part of:                         */
+/*                          PANDEMONIUM ENGINE                           */
+/*             https://github.com/Relintai/pandemonium_engine            */
+/*************************************************************************/
+/* Copyright (c) 2022-present Péter Magyar.                              */
+/* Copyright (c) 2014-2022 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2022 Juan Linietsky, Ariel Manzur.                 */
+/*                                                                       */
+/* Permission is hereby granted, free of charge, to any person obtaining */
+/* a copy of this software and associated documentation files (the       */
+/* "Software"), to deal in the Software without restriction, including   */
+/* without limitation the rights to use, copy, modify, merge, publish,   */
+/* distribute, sublicense, and/or sell copies of the Software, and to    */
+/* permit persons to whom the Software is furnished to do so, subject to */
+/* the following conditions:                                             */
+/*                                                                       */
+/* The above copyright notice and this permission notice shall be        */
+/* included in all copies or substantial portions of the Software.       */
+/*                                                                       */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,       */
+/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */
+/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/
+/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */
+/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
+/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
+/*************************************************************************/
+
+/**
+ * @class Vector
+ * @author Juan Linietsky
+ * Vector container. Regular Vector Container. Use with care and for smaller arrays when possible. Use PoolVector for large arrays.
+ */
+
+#include "core/containers/cowdata.h"
+#include "core/containers/sort_array.h"
+#include "core/error/error_macros.h"
+#include "core/os/memory.h"
 
 template <class T>
-class Vector {
-
+class VectorWriteProxy {
 public:
-	void push_back(const T &element);
-	void pop_back();
-	void remove(const int index);
-	void remove_keep_order(const int index);
-	void erase(const T &element);
-	void clear();
-	bool empty() const;
-	T get(const int index);
-	const T &get(const int index) const;
-	void set(const int index, const T &value);
-	void swap(const int index1, const int index2);
+	_FORCE_INLINE_ T &operator[](int p_index) {
+		CRASH_BAD_INDEX(p_index, ((Vector<T> *)(this))->_cowdata.size());
 
-	void sort_inc();
-	void sort_dec();
-
-	int size() const;
-	int capacity() const;
-	void ensure_capacity(const int capacity);
-	void resize(const int s);
-	void append_array(const Vector<T> &other);
-	int find(const T &val) const;
-
-	T *dataw();
-	const T *data() const;
-
-	const T &operator[](const int index) const;
-	T &operator[](const int index);
-
-	Vector &operator=(const Vector &other);
-
-	Vector();
-	Vector(int prealloc);
-	Vector(int prealloc, int grow_by);
-	Vector(const Vector &other);
-	~Vector();
-
-private:
-	T *_data;
-	int _actual_size;
-	int _size;
-	int _grow_by;
+		return ((Vector<T> *)(this))->_cowdata.ptrw()[p_index];
+	}
 };
 
 template <class T>
-void Vector<T>::push_back(const T &element) {
-	ensure_capacity(_size + 1);
+class Vector {
+	friend class VectorWriteProxy<T>;
 
-	_data[_size++] = element;
+public:
+	VectorWriteProxy<T> write;
+
+private:
+	CowData<T> _cowdata;
+
+public:
+	bool push_back(T p_elem);
+
+	void remove(int p_index) { _cowdata.remove(p_index); }
+	_FORCE_INLINE_ bool erase(const T &p_val) {
+		int idx = find(p_val);
+		if (idx >= 0) {
+			remove(idx);
+			return true;
+		}
+		return false;
+	};
+	void invert();
+
+	_FORCE_INLINE_ T *ptrw() { return _cowdata.ptrw(); }
+	_FORCE_INLINE_ const T *ptr() const { return _cowdata.ptr(); }
+	_FORCE_INLINE_ void clear() { resize(0); }
+	_FORCE_INLINE_ bool empty() const { return _cowdata.empty(); }
+
+	_FORCE_INLINE_ T get(int p_index) { return _cowdata.get(p_index); }
+	_FORCE_INLINE_ const T &get(int p_index) const { return _cowdata.get(p_index); }
+	_FORCE_INLINE_ void set(int p_index, const T &p_elem) { _cowdata.set(p_index, p_elem); }
+	_FORCE_INLINE_ int size() const { return _cowdata.size(); }
+	Error resize(int p_size) { return _cowdata.resize(p_size); }
+	_FORCE_INLINE_ const T &operator[](int p_index) const { return _cowdata.get(p_index); }
+	Error insert(int p_pos, T p_val) { return _cowdata.insert(p_pos, p_val); }
+	int find(const T &p_val, int p_from = 0) const { return _cowdata.find(p_val, p_from); }
+	_FORCE_INLINE_ void fill(const T &p_val) { _cowdata.fill(p_val); }
+
+	void append_array(Vector<T> p_other);
+
+	template <class C>
+	void sort_custom() {
+		int len = _cowdata.size();
+		if (len == 0) {
+			return;
+		}
+
+		T *data = ptrw();
+		SortArray<T, C> sorter;
+		sorter.sort(data, len);
+	}
+
+	void sort() {
+		sort_custom<_DefaultComparator<T>>();
+	}
+
+	void ordered_insert(const T &p_val) {
+		int i;
+		for (i = 0; i < _cowdata.size(); i++) {
+			if (p_val < operator[](i)) {
+				break;
+			};
+		};
+		insert(i, p_val);
+	}
+
+	_FORCE_INLINE_ Vector() {}
+	_FORCE_INLINE_ Vector(const Vector &p_from) { _cowdata._ref(p_from._cowdata); }
+	inline Vector &operator=(const Vector &p_from) {
+		_cowdata._ref(p_from._cowdata);
+		return *this;
+	}
+
+	Vector<uint8_t> to_byte_array() const {
+		Vector<uint8_t> ret;
+		ret.resize(size() * sizeof(T));
+		memcpy(ret.ptrw(), ptr(), sizeof(T) * size());
+		return ret;
+	}
+
+	Vector<T> slice(int p_begin, int p_end = INT32_MAX) const {
+		Vector<T> result;
+
+		const int s = size();
+
+		int begin = CLAMP(p_begin, -s, s);
+		if (begin < 0) {
+			begin += s;
+		}
+		int end = CLAMP(p_end, -s, s);
+		if (end < 0) {
+			end += s;
+		}
+
+		ERR_FAIL_COND_V(begin > end, result);
+
+		int result_size = end - begin;
+		result.resize(result_size);
+
+		const T *const r = ptr();
+		T *const w = result.ptrw();
+		for (int i = 0; i < result_size; ++i) {
+			w[i] = r[begin + i];
+		}
+
+		return result;
+	}
+
+	_FORCE_INLINE_ ~Vector() {}
+};
+
+template <class T>
+void Vector<T>::invert() {
+	for (int i = 0; i < size() / 2; i++) {
+		T *p = ptrw();
+		SWAP(p[i], p[size() - i - 1]);
+	}
 }
 
 template <class T>
-void Vector<T>::pop_back() {
-	if (_size == 0) {
+void Vector<T>::append_array(Vector<T> p_other) {
+	const int ds = p_other.size();
+	if (ds == 0) {
 		return;
 	}
-
-	--_size;
-}
-
-template <class T>
-void Vector<T>::remove(const int index) {
-	_data[index] = _data[_size - 1];
-
-	--_size;
-}
-
-template <class T>
-void Vector<T>::remove_keep_order(const int index) {
-	--_size;
-
-	for (int i = index; i < _size; ++i) {
-		_data[i] = _data[i + 1];
+	const int bs = size();
+	resize(bs + ds);
+	for (int i = 0; i < ds; ++i) {
+		ptrw()[bs + i] = p_other[i];
 	}
 }
 
 template <class T>
-void Vector<T>::erase(const T &element) {
-	int index = find(element);
+bool Vector<T>::push_back(T p_elem) {
+	Error err = resize(size() + 1);
+	ERR_FAIL_COND_V(err, true);
+	set(size() - 1, p_elem);
 
-	if (index != -1) {
-		remove(index);
-	}
-}
-
-template <class T>
-void Vector<T>::clear() {
-	_size = 0;
-}
-
-template <class T>
-bool Vector<T>::empty() const {
-	return _size == 0;
-}
-
-template <class T>
-T Vector<T>::get(const int index) {
-	return _data[index];
-}
-
-template <class T>
-const T &Vector<T>::get(const int index) const {
-	return _data[index];
-}
-
-template <class T>
-void Vector<T>::set(const int index, const T &value) {
-	_data[index] = value;
-}
-
-template <class T>
-void Vector<T>::swap(const int index1, const int index2) {
-	T e = _data[index1];
-	_data[index1] = _data[index2];
-	_data[index2] = e;
-}
-
-template <class T>
-void Vector<T>::sort_inc() {
-	for (int i = 0; i < _size; ++i) {
-		for (int j = i + 1; j < _size; ++j) {
-			if (_data[j] < _data[i]) {
-				swap(i, j);
-			}
-		}
-	}
-}
-
-template <class T>
-void Vector<T>::sort_dec() {
-	for (int i = 0; i < _size; ++i) {
-		for (int j = i + 1; j < _size; ++j) {
-			if (_data[j] > _data[i]) {
-				swap(i, j);
-			}
-		}
-	}
-}
-
-template <class T>
-int Vector<T>::size() const {
-	return _size;
-}
-
-template <class T>
-int Vector<T>::capacity() const {
-	return _actual_size;
-}
-
-template <class T>
-void Vector<T>::ensure_capacity(const int capacity) {
-	if (capacity <= _actual_size) {
-		return;
-	}
-
-	int tsize = capacity + _grow_by;
-
-	T *nd = new T[tsize];
-
-	if (_data) {
-		for (int i = 0; i < _size; ++i) {
-			nd[i] = _data[i];
-		}
-
-		delete[] _data;
-	}
-
-	_data = nd;
-	_actual_size = tsize;
-}
-
-template <class T>
-void Vector<T>::resize(const int s) {
-	ensure_capacity(s);
-
-	_size = s;
-}
-
-template <class T>
-void Vector<T>::append_array(const Vector<T> &other) {
-	ensure_capacity(_size + other._size);
-
-	for (int i = 0; i < other._size; ++i) {
-		_data[_size++] = other._data[i];
-	}
-}
-
-template <class T>
-int Vector<T>::find(const T &val) const {
-	for (int i = 0; i < _size; ++i) {
-		if (_data[i] == val) {
-			return i;
-		}
-	}
-
-	return -1;
-}
-
-template <class T>
-T *Vector<T>::dataw() {
-	return _data;
-}
-
-template <class T>
-const T *Vector<T>::data() const {
-	return _data;
-}
-
-template <class T>
-const T &Vector<T>::operator[](const int index) const {
-	return _data[index];
-}
-
-template <class T>
-T &Vector<T>::operator[](const int index) {
-	return _data[index];
-}
-
-template <class T>
-Vector<T> &Vector<T>::operator=(const Vector<T> &other) {
-	resize(0);
-	ensure_capacity(other.size());
-	append_array(other);
-
-	return *this;
-}
-
-template <class T>
-Vector<T>::Vector() {
-	_data = nullptr;
-	_actual_size = 0;
-	_size = 0;
-	_grow_by = 100;
-}
-
-template <class T>
-Vector<T>::Vector(int prealloc) {
-	_data = nullptr;
-	_actual_size = 0;
-	_size = 0;
-	_grow_by = 100;
-
-	ensure_capacity(prealloc);
-}
-
-template <class T>
-Vector<T>::Vector(int prealloc, int grow_by) {
-	_data = nullptr;
-	_actual_size = 0;
-	_size = 0;
-	_grow_by = grow_by;
-
-	ensure_capacity(prealloc);
-}
-
-template <class T>
-Vector<T>::Vector(const Vector<T> &other) {
-	_actual_size = other._actual_size;
-	_size = other._size;
-	_grow_by = other._grow_by;
-
-	if (other._data) {
-		_data = new T[_actual_size];
-
-		for (int i = 0; i < _size; ++i) {
-			_data[i] = other._data[i];
-		}
-	}
-}
-
-template <class T>
-Vector<T>::~Vector() {
-	if (_data) {
-		delete[] _data;
-		_data = nullptr;
-	}
+	return false;
 }
 
 #endif
