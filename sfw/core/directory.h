@@ -3,7 +3,7 @@
 
 #include "core/string.h"
 #include "core/error_list.h"
-#include <tinydir/tinydir.h>
+#include "3rd_tinydir.h"
 
 #include "core/reference.h"
 
