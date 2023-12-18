@@ -32,7 +32,6 @@
 #include "vector4.h"
 
 #include "basis.h"
-#include "string/print_string.h"
 
 void Vector4::set_axis(const int p_axis, const real_t p_value) {
 	ERR_FAIL_INDEX(p_axis, 4);

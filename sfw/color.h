@@ -55,7 +55,6 @@ struct _NO_DISCARD_CLASS_ Color {
 	uint64_t to_rgba64() const;
 	uint64_t to_argb64() const;
 	uint64_t to_abgr64() const;
-	float gray() const;
 	float get_h() const;
 	float get_s() const;
 	float get_v() const;
@@ -190,7 +189,6 @@ struct _NO_DISCARD_CLASS_ Color {
 	static Color hex64(uint64_t p_hex);
 	static Color html(const String &p_color);
 	static bool html_is_valid(const String &p_color);
-	static Color named(const String &p_name);
 	String to_html(bool p_alpha = true) const;
 	Color from_hsv(float p_h, float p_s, float p_v, float p_a) const;
 	static Color from_rgbe9995(uint32_t p_rgbe);

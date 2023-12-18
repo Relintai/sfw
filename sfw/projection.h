@@ -37,7 +37,6 @@
 #include "vector3.h"
 #include "vector4.h"
 
-class Array;
 struct AABB;
 struct Plane;
 struct Rect2;
@@ -113,7 +112,6 @@ struct _NO_DISCARD_CLASS_ Projection {
 	bool is_orthogonal() const;
 
 	Vector<Plane> get_projection_planes(const Transform &p_transform) const;
-	Array get_projection_planes_array(const Transform &p_transform) const;
 
 	bool get_endpoints(const Transform &p_transform, Vector3 *p_8points) const;
 	Vector2 get_viewport_half_extents() const;

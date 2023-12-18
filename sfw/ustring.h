@@ -393,7 +393,6 @@ public:
 	String capitalize() const;
 	String camelcase_to_underscore(bool lowercase = true) const;
 
-	String get_with_code_lines() const;
 	int get_slice_count(String p_splitter) const;
 	String get_slice(String p_splitter, int p_slice) const;
 	String get_slicec(CharType p_splitter, int p_slice) const;
@@ -455,13 +454,6 @@ public:
 
 	uint32_t hash() const; /* hash the string */
 	uint64_t hash64() const; /* hash the string */
-
-	String md5_text() const;
-	String sha1_text() const;
-	String sha256_text() const;
-	Vector<uint8_t> md5_buffer() const;
-	Vector<uint8_t> sha1_buffer() const;
-	Vector<uint8_t> sha256_buffer() const;
 
 	_FORCE_INLINE_ bool empty() const { return length() == 0; }
 	_FORCE_INLINE_ bool contains(const char *p_str) const { return find(p_str) != -1; }

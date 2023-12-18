@@ -31,7 +31,7 @@
 
 #include "vector2i.h"
 
-#include "string/ustring.h"
+#include "ustring.h"
 
 Vector2i Vector2i::clamp(const Vector2i &p_min, const Vector2i &p_max) const {
 	return Vector2i(

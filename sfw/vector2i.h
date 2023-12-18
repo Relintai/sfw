@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "error/error_macros.h"
+#include "error_macros.h"
 #include "math_funcs.h"
 
 #include "vector2.h"

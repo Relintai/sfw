@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  vector3i.cpp                                                         */
+/*  pool_vector.cpp                                                      */
 /*************************************************************************/
 /*                         This file is part of:                         */
 /*                          PANDEMONIUM ENGINE                           */
@@ -29,44 +29,37 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "vector3i.h"
+#include "pool_vector.h"
 
-#include "vector3.h"
-#include "ustring.h"
+Mutex pool_vector_lock;
 
-void Vector3i::set_axis(const int p_axis, const int32_t p_value) {
-	ERR_FAIL_INDEX(p_axis, 3);
-	coord[p_axis] = p_value;
+PoolAllocator *MemoryPool::memory_pool = nullptr;
+uint8_t *MemoryPool::pool_memory = nullptr;
+size_t *MemoryPool::pool_size = nullptr;
+
+MemoryPool::Alloc *MemoryPool::allocs = nullptr;
+MemoryPool::Alloc *MemoryPool::free_list = nullptr;
+uint32_t MemoryPool::alloc_count = 0;
+uint32_t MemoryPool::allocs_used = 0;
+Mutex MemoryPool::alloc_mutex;
+
+size_t MemoryPool::total_memory = 0;
+size_t MemoryPool::max_memory = 0;
+
+void MemoryPool::setup(uint32_t p_max_allocs) {
+	allocs = memnew_arr(Alloc, p_max_allocs);
+	alloc_count = p_max_allocs;
+	allocs_used = 0;
+
+	for (uint32_t i = 0; i < alloc_count - 1; i++) {
+		allocs[i].free_list = &allocs[i + 1];
+	}
+
+	free_list = &allocs[0];
 }
 
-int32_t Vector3i::get_axis(const int p_axis) const {
-	ERR_FAIL_INDEX_V(p_axis, 3, 0);
-	return operator[](p_axis);
-}
+void MemoryPool::cleanup() {
+	memdelete_arr(allocs);
 
-Vector3i::Axis Vector3i::min_axis() const {
-	return x < y ? (x < z ? Vector3i::AXIS_X : Vector3i::AXIS_Z) : (y < z ? Vector3i::AXIS_Y : Vector3i::AXIS_Z);
-}
-
-Vector3i::Axis Vector3i::max_axis() const {
-	return x < y ? (y < z ? Vector3i::AXIS_Z : Vector3i::AXIS_Y) : (x < z ? Vector3i::AXIS_Z : Vector3i::AXIS_X);
-}
-
-Vector3i Vector3i::clamp(const Vector3i &p_min, const Vector3i &p_max) const {
-	return Vector3i(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y),
-			CLAMP(z, p_min.z, p_max.z));
-}
-
-Vector3 Vector3i::to_vector3() const {
-	return Vector3(x, y, z);
-}
-
-Vector3i::operator String() const {
-	return "(" + itos(x) + ", " + itos(y) + ", " + itos(z) + ")";
-}
-
-Vector3i::operator Vector3() const {
-	return Vector3(x, y, z);
+	ERR_FAIL_COND_MSG(allocs_used > 0, "There are still MemoryPool allocs in use at exit!");
 }

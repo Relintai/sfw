@@ -35,15 +35,10 @@
 
 #include "ustring.h"
 
-#include "crypto/crypto_core.h"
 #include "color.h"
 #include "math_funcs.h"
-#include "os/memory.h"
-#include "string/print_string.h"
-#include "string/translation.h"
-#include "string/ucaps.h"
-#include "variant/variant.h"
-#include "version_generated.gen.h"
+#include "memory.h"
+#include "ucaps.h"
 
 #include <wchar.h>
 #include <cstdint>
@@ -330,12 +325,14 @@ void String::copy_from(const CharType &p_char) {
 		print_unicode_error("NUL character", true);
 		return;
 	}
+	/*
 	if ((p_char & 0xfffff800) == 0xd800) {
 		print_unicode_error(vformat("Unpaired surrogate (%x)", (uint32_t)p_char));
 	}
 	if (p_char > 0x10ffff) {
 		print_unicode_error(vformat("Invalid unicode codepoint (%x)", (uint32_t)p_char));
 	}
+	*/
 
 	resize(2);
 
@@ -399,12 +396,14 @@ void String::copy_from_unchecked(const CharType *p_char, const int p_length) {
 			dst[i] = 0x20;
 			continue;
 		}
+		/*
 		if ((p_char[i] & 0xfffff800) == 0xd800) {
 			print_unicode_error(vformat("Unpaired surrogate (%x)", (uint32_t)p_char[i]));
 		}
 		if (p_char[i] > 0x10ffff) {
 			print_unicode_error(vformat("Invalid unicode codepoint (%x)", (uint32_t)p_char[i]));
 		}
+		*/
 		dst[i] = p_char[i];
 	}
 }
@@ -477,12 +476,14 @@ String &String::operator+=(CharType p_char) {
 		print_unicode_error("NUL character", true);
 		return *this;
 	}
+	/*
 	if ((p_char & 0xfffff800) == 0xd800) {
 		print_unicode_error(vformat("Unpaired surrogate (%x)", (uint32_t)p_char));
 	}
 	if (p_char > 0x10ffff) {
 		print_unicode_error(vformat("Invalid unicode codepoint (%x)", (uint32_t)p_char));
 	}
+	*/
 
 	const int lhs_len = length();
 	set_length(lhs_len + 1);
@@ -868,11 +869,13 @@ bool String::is_valid_string() const {
 }
 
 void String::print_unicode_error(const String &p_message, bool p_critical) const {
+	/*
 	if (p_critical) {
 		print_error(vformat("Unicode parsing error, some characters were replaced with spaces: %s", p_message));
 	} else {
 		print_error(vformat("Unicode parsing error: %s", p_message));
 	}
+	*/
 }
 
 /* complex helpers */
@@ -2496,18 +2499,6 @@ String String::camelcase_to_underscore(bool lowercase) const {
 	return lowercase ? new_string.to_lower() : new_string;
 }
 
-String String::get_with_code_lines() const {
-	const Vector<String> lines = split("\n");
-	String ret;
-	for (int i = 0; i < lines.size(); i++) {
-		if (i > 0) {
-			ret += "\n";
-		}
-		ret += vformat("%4d | %s", i + 1, lines[i]);
-	}
-	return ret;
-}
-
 int String::get_slice_count(String p_splitter) const {
 	if (empty()) {
 		return 0;
@@ -3120,7 +3111,7 @@ CharString String::ascii(bool p_allow_extended) const {
 		if ((c <= 0x7f) || (c <= 0xff && p_allow_extended)) {
 			cs[i] = c;
 		} else {
-			print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as ASCII/Latin-1", (uint32_t)c));
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as ASCII/Latin-1", (uint32_t)c));
 			cs[i] = 0x20;
 		}
 	}
@@ -3187,23 +3178,23 @@ Error String::parse_utf8(const char *p_utf8, int p_len, bool p_skip_cr) {
 					skip = 5;
 				} else {
 					skip = 0;
-					print_unicode_error(vformat("Invalid UTF-8 leading byte (%x)", c), true);
+					//print_unicode_error(vformat("Invalid UTF-8 leading byte (%x)", c), true);
 					decode_failed = true;
 				}
 				c_start = c;
 
 				if (skip == 1 && (c & 0x1e) == 0) {
-					print_unicode_error(vformat("Overlong encoding (%x ...)", c));
+					//print_unicode_error(vformat("Overlong encoding (%x ...)", c));
 					decode_error = true;
 				}
 				str_size++;
 			} else {
 				if ((c_start == 0xe0 && skip == 2 && c < 0xa0) || (c_start == 0xf0 && skip == 3 && c < 0x90) || (c_start == 0xf8 && skip == 4 && c < 0x88) || (c_start == 0xfc && skip == 5 && c < 0x84)) {
-					print_unicode_error(vformat("Overlong encoding (%x %x ...)", c_start, c));
+					//print_unicode_error(vformat("Overlong encoding (%x %x ...)", c_start, c));
 					decode_error = true;
 				}
 				if (c < 0x80 || c > 0xbf) {
-					print_unicode_error(vformat("Invalid UTF-8 continuation byte (%x ... %x ...)", c_start, c), true);
+					//print_unicode_error(vformat("Invalid UTF-8 continuation byte (%x ... %x ...)", c_start, c), true);
 					decode_failed = true;
 					skip = 0;
 				} else {
@@ -3216,7 +3207,7 @@ Error String::parse_utf8(const char *p_utf8, int p_len, bool p_skip_cr) {
 		}
 
 		if (skip) {
-			print_unicode_error(vformat("Missing %d UTF-8 continuation byte(s)", skip), true);
+			//rrprint_unicode_error(vformat("Missing %d UTF-8 continuation byte(s)", skip), true);
 			decode_failed = true;
 		}
 	}
@@ -3274,16 +3265,16 @@ Error String::parse_utf8(const char *p_utf8, int p_len, bool p_skip_cr) {
 				--skip;
 				if (skip == 0) {
 					if (unichar == 0) {
-						print_unicode_error("NUL character", true);
+						//print_unicode_error("NUL character", true);
 						decode_failed = true;
 						unichar = 0x20;
 					}
 					if ((unichar & 0xfffff800) == 0xd800) {
-						print_unicode_error(vformat("Unpaired surrogate (%x)", unichar));
+						//print_unicode_error(vformat("Unpaired surrogate (%x)", unichar));
 						decode_error = true;
 					}
 					if (unichar > 0x10ffff) {
-						print_unicode_error(vformat("Invalid unicode codepoint (%x)", unichar));
+						//print_unicode_error(vformat("Invalid unicode codepoint (%x)", unichar));
 						decode_error = true;
 					}
 					*(dst++) = unichar;
@@ -3327,13 +3318,13 @@ CharString String::utf8() const {
 			fl += 4;
 		} else if (c <= 0x03ffffff) { // 26 bits
 			fl += 5;
-			print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
 		} else if (c <= 0x7fffffff) { // 31 bits
 			fl += 6;
-			print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
 		} else {
 			fl += 1;
-			print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-8", c), true);
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-8", c), true);
 		}
 	}
 
@@ -3407,13 +3398,13 @@ int String::utf8_byte_length() const {
 			fl += 4;
 		} else if (c <= 0x03ffffff) { // 26 bits
 			fl += 5;
-			print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
 		} else if (c <= 0x7fffffff) { // 31 bits
 			fl += 6;
-			print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x)", c));
 		} else {
 			fl += 1;
-			print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-8", c), true);
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-8", c), true);
 		}
 	}
 
@@ -3460,14 +3451,14 @@ Error String::parse_utf16(const char16_t *p_utf16, int p_len) {
 	{
 		const char16_t *ptrtmp = p_utf16;
 		const char16_t *ptrtmp_limit = &p_utf16[p_len];
-		uint32_t c_prev = 0;
+		//uint32_t c_prev = 0;
 		bool skip = false;
 		while (ptrtmp != ptrtmp_limit && *ptrtmp) {
 			uint32_t c = (byteswap) ? BSWAP16(*ptrtmp) : *ptrtmp;
 
 			if ((c & 0xfffffc00) == 0xd800) { // lead surrogate
 				if (skip) {
-					print_unicode_error(vformat("Unpaired lead surrogate (%x [trail?] %x)", c_prev, c));
+					//print_unicode_error(vformat("Unpaired lead surrogate (%x [trail?] %x)", c_prev, c));
 					decode_error = true;
 				}
 				skip = true;
@@ -3475,7 +3466,7 @@ Error String::parse_utf16(const char16_t *p_utf16, int p_len) {
 				if (skip) {
 					str_size--;
 				} else {
-					print_unicode_error(vformat("Unpaired trail surrogate (%x [lead?] %x)", c_prev, c));
+					//print_unicode_error(vformat("Unpaired trail surrogate (%x [lead?] %x)", c_prev, c));
 					decode_error = true;
 				}
 				skip = false;
@@ -3483,14 +3474,14 @@ Error String::parse_utf16(const char16_t *p_utf16, int p_len) {
 				skip = false;
 			}
 
-			c_prev = c;
+			//c_prev = c;
 			str_size++;
 			cstr_size++;
 			ptrtmp++;
 		}
 
 		if (skip) {
-			print_unicode_error(vformat("Unpaired lead surrogate (%x [eol])", c_prev));
+			//print_unicode_error(vformat("Unpaired lead surrogate (%x [eol])", c_prev));
 			decode_error = true;
 		}
 	}
@@ -3555,12 +3546,12 @@ Char16String String::utf16() const {
 		if (c <= 0xffff) { // 16 bits.
 			fl += 1;
 			if ((c & 0xfffff800) == 0xd800) {
-				print_unicode_error(vformat("Unpaired surrogate (%x)", c));
+				//print_unicode_error(vformat("Unpaired surrogate (%x)", c));
 			}
 		} else if (c <= 0x10ffff) { // 32 bits.
 			fl += 2;
 		} else {
-			print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-16", c), true);
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-16", c), true);
 			fl += 1;
 		}
 	}
@@ -3606,12 +3597,12 @@ int String::utf16_byte_length() const {
 		if (c <= 0xffff) { // 16 bits.
 			fl += 1;
 			if ((c & 0xfffff800) == 0xd800) {
-				print_unicode_error(vformat("Unpaired surrogate (%x)", c));
+				//print_unicode_error(vformat("Unpaired surrogate (%x)", c));
 			}
 		} else if (c <= 0x10ffff) { // 32 bits.
 			fl += 2;
 		} else {
-			print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-16", c), true);
+			//print_unicode_error(vformat("Invalid unicode codepoint (%x), cannot represent as UTF-16", c), true);
 			fl += 1;
 		}
 	}
@@ -3705,67 +3696,6 @@ uint64_t String::hash64() const {
 	}
 
 	return hashv;
-}
-
-String String::md5_text() const {
-	CharString cs = utf8();
-	unsigned char hash[16];
-	CryptoCore::md5((unsigned char *)cs.ptr(), cs.length(), hash);
-	return String::hex_encode_buffer(hash, 16);
-}
-
-String String::sha1_text() const {
-	CharString cs = utf8();
-	unsigned char hash[20];
-	CryptoCore::sha1((unsigned char *)cs.ptr(), cs.length(), hash);
-	return String::hex_encode_buffer(hash, 20);
-}
-
-String String::sha256_text() const {
-	CharString cs = utf8();
-	unsigned char hash[32];
-	CryptoCore::sha256((unsigned char *)cs.ptr(), cs.length(), hash);
-	return String::hex_encode_buffer(hash, 32);
-}
-
-Vector<uint8_t> String::md5_buffer() const {
-	CharString cs = utf8();
-	unsigned char hash[16];
-	CryptoCore::md5((unsigned char *)cs.ptr(), cs.length(), hash);
-
-	Vector<uint8_t> ret;
-	ret.resize(16);
-	for (int i = 0; i < 16; i++) {
-		ret.write[i] = hash[i];
-	}
-	return ret;
-};
-
-Vector<uint8_t> String::sha1_buffer() const {
-	CharString cs = utf8();
-	unsigned char hash[20];
-	CryptoCore::sha1((unsigned char *)cs.ptr(), cs.length(), hash);
-
-	Vector<uint8_t> ret;
-	ret.resize(20);
-	for (int i = 0; i < 20; i++) {
-		ret.write[i] = hash[i];
-	}
-
-	return ret;
-}
-
-Vector<uint8_t> String::sha256_buffer() const {
-	CharString cs = utf8();
-	unsigned char hash[32];
-	CryptoCore::sha256((unsigned char *)cs.ptr(), cs.length(), hash);
-
-	Vector<uint8_t> ret;
-	ret.resize(32);
-	for (int i = 0; i < 32; i++) {
-		ret.write[i] = hash[i];
-	}
-	return ret;
 }
 
 bool String::is_abs_path() const {
@@ -5400,7 +5330,7 @@ static double built_in_strtod(
 
 	if (exp > maxExponent) {
 		exp = maxExponent;
-		WARN_PRINT("Exponent too high");
+		//WARN_PRINT("Exponent too high");
 	}
 	dblExp = 1.0;
 	for (d = powersOf10; exp != 0; exp >>= 1, ++d) {
@@ -5780,10 +5710,6 @@ String rtoss(double p_val) {
 
 #ifdef TOOLS_ENABLED
 String TTR(const String &p_text, const String &p_context) {
-	if (TranslationServer::get_singleton()) {
-		return TranslationServer::get_singleton()->tool_translate(p_text, p_context);
-	}
-
 	return p_text;
 }
 
@@ -5795,23 +5721,10 @@ String DTR(const String &p_text) {
 	// Comes straight from the XML, so remove indentation and any trailing whitespace.
 	const String text = p_text.dedent().strip_edges();
 
-	if (TranslationServer::get_singleton()) {
-		return String(TranslationServer::get_singleton()->doc_translate(text)).replace("$DOCS_URL", VERSION_DOCS_URL);
-	}
-
 	return text.replace("$DOCS_URL", VERSION_DOCS_URL);
 }
 #endif
 
 String RTR(const String &p_text) {
-	if (TranslationServer::get_singleton()) {
-		String rtr = TranslationServer::get_singleton()->tool_translate(p_text, StringName());
-		if (rtr == String() || rtr == p_text) {
-			return TranslationServer::get_singleton()->translate(p_text);
-		} else {
-			return rtr;
-		}
-	}
-
 	return p_text;
 }

@@ -34,7 +34,7 @@
 
 #include "math_defs.h"
 #include "math_funcs.h"
-#include "string/ustring.h"
+#include "ustring.h"
 
 struct _NO_DISCARD_CLASS_ Vector4 {
 	enum Axis {

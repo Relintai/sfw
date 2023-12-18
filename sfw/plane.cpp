@@ -32,7 +32,6 @@
 #include "plane.h"
 
 #include "math_funcs.h"
-#include "variant/variant.h"
 
 void Plane::set_normal(const Vector3 &p_normal) {
 	normal = p_normal;

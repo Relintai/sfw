@@ -32,7 +32,7 @@
 #ifndef VECTOR4I_H
 #define VECTOR4I_H
 
-#include "error/error_macros.h"
+#include "error_macros.h"
 #include "math_funcs.h"
 
 class String;

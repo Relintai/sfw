@@ -10,7 +10,7 @@
 
 
 void RLogger::print_trace(const String &str) {
-	print_trace(str.data());
+	print_trace(str.utf8().get_data());
 }
 void RLogger::print_trace(const char *str) {
 	printf("T %s\n", str);
@@ -19,11 +19,11 @@ void RLogger::print_trace(const char *p_function, const char *p_file, int p_line
 	printf("T | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::print_trace(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("T | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("T | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 
 void RLogger::print_message(const String &str) {
-	print_message(str.data());
+	print_message(str.utf8().get_data());
 }
 void RLogger::print_message(const char *str) {
 	printf("M %s\n", str);
@@ -32,11 +32,11 @@ void RLogger::print_message(const char *p_function, const char *p_file, int p_li
 	printf("M | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::print_message(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("M | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("M | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 
 void RLogger::print_warning(const String &str) {
-	print_warning(str.data());
+	print_warning(str.utf8().get_data());
 }
 void RLogger::print_warning(const char *str) {
 	printf("W %s\n", str);
@@ -45,11 +45,11 @@ void RLogger::print_warning(const char *p_function, const char *p_file, int p_li
 	printf("W | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::print_warning(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("W | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("W | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 
 void RLogger::print_error(const String &str) {
-	print_error(str.data());
+	print_error(str.utf8().get_data());
 }
 void RLogger::print_error(const char *str) {
 	printf("E %s\n", str);
@@ -59,7 +59,7 @@ void RLogger::print_error(const char *p_function, const char *p_file, int p_line
 	printf("E | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::print_error(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("E | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("E | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 void RLogger::print_msg_error(const char *p_function, const char *p_file, int p_line, const char *p_msg, const char *str) {
 	printf("E | %s::%s:%d | :: %s. %s\n", p_file, p_function, p_line, str, p_msg);
@@ -69,7 +69,7 @@ void RLogger::print_index_error(const char *p_function, const char *p_file, int 
 }
 
 void RLogger::log_trace(const String &str) {
-	log_trace(str.data());
+	log_trace(str.utf8().get_data());
 }
 void RLogger::log_trace(const char *str) {
 	printf("T %s\n", str);
@@ -78,11 +78,11 @@ void RLogger::log_trace(const char *p_function, const char *p_file, int p_line, 
 	printf("T | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::log_trace(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("T | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("T | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 
 void RLogger::log_message(const String &str) {
-	log_message(str.data());
+	log_message(str.utf8().get_data());
 }
 void RLogger::log_message(const char *str) {
 	printf("M %s\n", str);
@@ -91,11 +91,11 @@ void RLogger::log_message(const char *p_function, const char *p_file, int p_line
 	printf("M | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::log_message(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("M | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("M | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 
 void RLogger::log_warning(const String &str) {
-	log_warning(str.data());
+	log_warning(str.utf8().get_data());
 }
 void RLogger::log_warning(const char *str) {
 	printf("W %s\n", str);
@@ -104,11 +104,11 @@ void RLogger::log_warning(const char *p_function, const char *p_file, int p_line
 	printf("W | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::log_warning(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("W | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("W | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 
 void RLogger::log_error(const String &str) {
-	log_error(str.data());
+	log_error(str.utf8().get_data());
 }
 void RLogger::log_error(const char *str) {
 	printf("E %s\n", str);
@@ -118,7 +118,7 @@ void RLogger::log_error(const char *p_function, const char *p_file, int p_line, 
 	printf("E | %s::%s:%d | %s\n", p_file, p_function, p_line, str);
 }
 void RLogger::log_error(const char *p_function, const char *p_file, int p_line, const String &str) {
-	printf("E | %s::%s:%d | %s\n", p_file, p_function, p_line, str.c_str());
+	printf("E | %s::%s:%d | %s\n", p_file, p_function, p_line, str.utf8().get_data());
 }
 void RLogger::log_msg_error(const char *p_function, const char *p_file, int p_line, const char *p_msg, const char *str) {
 	printf("E | %s::%s:%d | :: %s. %s\n", p_file, p_function, p_line, str, p_msg);
@@ -128,31 +128,31 @@ void RLogger::log_index_error(const char *p_function, const char *p_file, int p_
 }
 
 String *RLogger::get_string_ptr(const int p_default_size) {
-	return new String(p_default_size);
+	return memnew(String());
 }
 String *RLogger::get_string_ptr(const char *p_function, const char *p_file, int p_line, const int p_default_size) {
-	String *s = new String(p_default_size);
+	String *s = memnew(String());
 
-	s->append_str(p_function);
-	s->append_str("::");
-	s->append_str(p_file);
-	s->append_str(":");
-	s->append_str(String::num(p_line));
-	s->append_str(" | ");
+	s->operator+=(p_function);
+	s->operator+=("::");
+	s->operator+=(p_file);
+	s->operator+=(":");
+	s->operator+=(String::num(p_line));
+	s->operator+=(" | ");
 
 	return s;
 }
 String *RLogger::get_string_ptr(const char *p_prefix, const char *p_function, const char *p_file, int p_line, const int p_default_size) {
-	String *s = new String(p_default_size);
+	String *s = memnew(String());
 
-	s->append_str(p_prefix);
-	s->append_str(" | ");
-	s->append_str(p_function);
-	s->append_str("::");
-	s->append_str(p_file);
-	s->append_str(":");
-	s->append_str(String::num(p_line));
-	s->append_str(" | ");
+	s->operator+=(p_prefix);
+	s->operator+=(" | ");
+	s->operator+=(p_function);
+	s->operator+=("::");
+	s->operator+=(p_file);
+	s->operator+=(":");
+	s->operator+=(String::num(p_line));
+	s->operator+=(" | ");
 
 	return s;
 }
@@ -162,22 +162,22 @@ void RLogger::return_string_ptr(String *str) {
 
 String *RLogger::get_trace_string_ptr(const int p_default_size) {
 	String *str = get_string_ptr(p_default_size);
-	str->append_str("T ");
+	str->operator+=("T ");
 	return str;
 }
 String *RLogger::get_message_string_ptr(const int p_default_size) {
 	String *str = get_string_ptr(p_default_size);
-	str->append_str("M ");
+	str->operator+=("M ");
 	return str;
 }
 String *RLogger::get_warning_string_ptr(const int p_default_size) {
 	String *str = get_string_ptr(p_default_size);
-	str->append_str("W ");
+	str->operator+=("W ");
 	return str;
 }
 String *RLogger::get_error_string_ptr(const int p_default_size) {
 	String *str = get_string_ptr(p_default_size);
-	str->append_str("E ");
+	str->operator+=("E ");
 	return str;
 }
 
@@ -195,7 +195,7 @@ String *RLogger::get_error_string_ptr(const char *p_function, const char *p_file
 }
 
 void RLogger::log_ptr(String *str) {
-	printf("%s\n", str->data());
+	printf("%s\n", str->utf8().get_data());
 }
 
 void RLogger::log_ret_ptr(String *str) {

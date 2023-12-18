@@ -1,5 +1,8 @@
+#ifndef RWLOCK_H
+#define RWLOCK_H
+
 /*************************************************************************/
-/*  vector3i.cpp                                                         */
+/*  rw_lock.h                                                            */
 /*************************************************************************/
 /*                         This file is part of:                         */
 /*                          PANDEMONIUM ENGINE                           */
@@ -29,44 +32,86 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "vector3i.h"
+#include "error_list.h"
 
-#include "vector3.h"
-#include "ustring.h"
+#if !defined(NO_THREADS)
 
-void Vector3i::set_axis(const int p_axis, const int32_t p_value) {
-	ERR_FAIL_INDEX(p_axis, 3);
-	coord[p_axis] = p_value;
-}
+#include <shared_mutex>
 
-int32_t Vector3i::get_axis(const int p_axis) const {
-	ERR_FAIL_INDEX_V(p_axis, 3, 0);
-	return operator[](p_axis);
-}
+class RWLock {
+	mutable std::shared_timed_mutex mutex;
 
-Vector3i::Axis Vector3i::min_axis() const {
-	return x < y ? (x < z ? Vector3i::AXIS_X : Vector3i::AXIS_Z) : (y < z ? Vector3i::AXIS_Y : Vector3i::AXIS_Z);
-}
+public:
+	// Lock the rwlock, block if locked by someone else
+	void read_lock() const {
+		mutex.lock_shared();
+	}
 
-Vector3i::Axis Vector3i::max_axis() const {
-	return x < y ? (y < z ? Vector3i::AXIS_Z : Vector3i::AXIS_Y) : (x < z ? Vector3i::AXIS_Z : Vector3i::AXIS_X);
-}
+	// Unlock the rwlock, let other threads continue
+	void read_unlock() const {
+		mutex.unlock_shared();
+	}
 
-Vector3i Vector3i::clamp(const Vector3i &p_min, const Vector3i &p_max) const {
-	return Vector3i(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y),
-			CLAMP(z, p_min.z, p_max.z));
-}
+	// Attempt to lock the rwlock, OK on success, ERR_BUSY means it can't lock.
+	Error read_try_lock() const {
+		return mutex.try_lock_shared() ? OK : ERR_BUSY;
+	}
 
-Vector3 Vector3i::to_vector3() const {
-	return Vector3(x, y, z);
-}
+	// Lock the rwlock, block if locked by someone else
+	void write_lock() {
+		mutex.lock();
+	}
 
-Vector3i::operator String() const {
-	return "(" + itos(x) + ", " + itos(y) + ", " + itos(z) + ")";
-}
+	// Unlock the rwlock, let other thwrites continue
+	void write_unlock() {
+		mutex.unlock();
+	}
 
-Vector3i::operator Vector3() const {
-	return Vector3(x, y, z);
-}
+	// Attempt to lock the rwlock, OK on success, ERR_BUSY means it can't lock.
+	Error write_try_lock() {
+		return mutex.try_lock() ? OK : ERR_BUSY;
+	}
+};
+
+#else
+
+class RWLock {
+public:
+	void read_lock() const {}
+	void read_unlock() const {}
+	Error read_try_lock() const { return OK; }
+
+	void write_lock() {}
+	void write_unlock() {}
+	Error write_try_lock() { return OK; }
+};
+
+#endif
+
+class RWLockRead {
+	const RWLock &lock;
+
+public:
+	RWLockRead(const RWLock &p_lock) :
+			lock(p_lock) {
+		lock.read_lock();
+	}
+	~RWLockRead() {
+		lock.read_unlock();
+	}
+};
+
+class RWLockWrite {
+	RWLock &lock;
+
+public:
+	RWLockWrite(RWLock &p_lock) :
+			lock(p_lock) {
+		lock.write_lock();
+	}
+	~RWLockWrite() {
+		lock.write_unlock();
+	}
+};
+
+#endif // RWLOCK_H

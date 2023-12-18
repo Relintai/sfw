@@ -31,8 +31,8 @@
 
 #include "memory.h"
 
-#include "core/error/error_macros.h"
-#include "core/os/safe_refcount.h"
+#include "error_macros.h"
+#include "safe_refcount.h"
 
 #include <stdio.h>
 #include <stdlib.h>

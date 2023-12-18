@@ -1,5 +1,8 @@
+#ifndef MUTEX_H
+#define MUTEX_H
+
 /*************************************************************************/
-/*  vector3i.cpp                                                         */
+/*  mutex.h                                                              */
 /*************************************************************************/
 /*                         This file is part of:                         */
 /*                          PANDEMONIUM ENGINE                           */
@@ -29,44 +32,90 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "vector3i.h"
+#include "error_list.h"
+#include "typedefs.h"
 
-#include "vector3.h"
-#include "ustring.h"
+#if !defined(NO_THREADS)
 
-void Vector3i::set_axis(const int p_axis, const int32_t p_value) {
-	ERR_FAIL_INDEX(p_axis, 3);
-	coord[p_axis] = p_value;
-}
+#include <mutex>
 
-int32_t Vector3i::get_axis(const int p_axis) const {
-	ERR_FAIL_INDEX_V(p_axis, 3, 0);
-	return operator[](p_axis);
-}
+template <class StdMutexT>
+class MutexImpl {
+	mutable StdMutexT mutex;
+	friend class MutexLock;
 
-Vector3i::Axis Vector3i::min_axis() const {
-	return x < y ? (x < z ? Vector3i::AXIS_X : Vector3i::AXIS_Z) : (y < z ? Vector3i::AXIS_Y : Vector3i::AXIS_Z);
-}
+public:
+	_ALWAYS_INLINE_ void lock() const {
+		mutex.lock();
+	}
 
-Vector3i::Axis Vector3i::max_axis() const {
-	return x < y ? (y < z ? Vector3i::AXIS_Z : Vector3i::AXIS_Y) : (x < z ? Vector3i::AXIS_Z : Vector3i::AXIS_X);
-}
+	_ALWAYS_INLINE_ void unlock() const {
+		mutex.unlock();
+	}
 
-Vector3i Vector3i::clamp(const Vector3i &p_min, const Vector3i &p_max) const {
-	return Vector3i(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y),
-			CLAMP(z, p_min.z, p_max.z));
-}
+	_ALWAYS_INLINE_ Error try_lock() const {
+		return mutex.try_lock() ? OK : ERR_BUSY;
+	}
+};
 
-Vector3 Vector3i::to_vector3() const {
-	return Vector3(x, y, z);
-}
+// This is written this way instead of being a template to overcome a limitation of C++ pre-17
+// that would require MutexLock to be used like this: MutexLock<Mutex> lock;
+class MutexLock {
+	union {
+		std::recursive_mutex *recursive_mutex;
+		std::mutex *mutex;
+	};
+	bool recursive;
 
-Vector3i::operator String() const {
-	return "(" + itos(x) + ", " + itos(y) + ", " + itos(z) + ")";
-}
+public:
+	_ALWAYS_INLINE_ explicit MutexLock(const MutexImpl<std::recursive_mutex> &p_mutex) :
+			recursive_mutex(&p_mutex.mutex),
+			recursive(true) {
+		recursive_mutex->lock();
+	}
+	_ALWAYS_INLINE_ explicit MutexLock(const MutexImpl<std::mutex> &p_mutex) :
+			mutex(&p_mutex.mutex),
+			recursive(false) {
+		mutex->lock();
+	}
 
-Vector3i::operator Vector3() const {
-	return Vector3(x, y, z);
-}
+	_ALWAYS_INLINE_ ~MutexLock() {
+		if (recursive) {
+			recursive_mutex->unlock();
+		} else {
+			mutex->unlock();
+		}
+	}
+};
+
+using Mutex = MutexImpl<std::recursive_mutex>; // Recursive, for general use
+using BinaryMutex = MutexImpl<std::mutex>; // Non-recursive, handle with care
+
+extern template class MutexImpl<std::recursive_mutex>;
+extern template class MutexImpl<std::mutex>;
+
+#else
+
+class FakeMutex {
+	FakeMutex() {}
+};
+
+template <class MutexT>
+class MutexImpl {
+public:
+	_ALWAYS_INLINE_ void lock() const {}
+	_ALWAYS_INLINE_ void unlock() const {}
+	_ALWAYS_INLINE_ Error try_lock() const { return OK; }
+};
+
+class MutexLock {
+public:
+	explicit MutexLock(const MutexImpl<FakeMutex> &p_mutex) {}
+};
+
+using Mutex = MutexImpl<FakeMutex>;
+using BinaryMutex = MutexImpl<FakeMutex>; // Non-recursive, handle with care
+
+#endif // !NO_THREADS
+
+#endif // MUTEX_H

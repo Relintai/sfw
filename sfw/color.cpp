@@ -31,9 +31,7 @@
 
 #include "color.h"
 
-#include "rb_map.h"
 #include "math_funcs.h"
-
 
 uint32_t Color::to_argb32() const {
 	uint32_t c = (uint8_t)Math::round(a * 255);
@@ -399,24 +397,6 @@ bool Color::html_is_valid(const String &p_color) {
 	return true;
 }
 
-Color Color::named(const String &p_name) {
-	if (_named_colors.empty()) {
-		_populate_named_colors(); // from color_names.inc
-	}
-	String name = p_name;
-	// Normalize name
-	name = name.replace(" ", "");
-	name = name.replace("-", "");
-	name = name.replace("_", "");
-	name = name.replace("'", "");
-	name = name.replace(".", "");
-	name = name.to_lower();
-
-	const RBMap<String, Color>::Element *color = _named_colors.find(name);
-	ERR_FAIL_NULL_V_MSG(color, Color(), "Invalid color name: " + p_name + ".");
-	return color->value();
-}
-
 String _to_hex(float p_val) {
 	int v = Math::round(p_val * 255);
 	v = CLAMP(v, 0, 255);
@@ -454,12 +434,6 @@ Color Color::from_hsv(float p_h, float p_s, float p_v, float p_a) const {
 	Color c;
 	c.set_hsv(p_h, p_s, p_v, p_a);
 	return c;
-}
-
-// FIXME: Remove once Pandemonium 3.1 has been released
-float Color::gray() const {
-	WARN_DEPRECATED_MSG("'Color.gray()' is deprecated and will be removed in a future version. Use 'Color.v' for a better grayscale approximation.");
-	return (r + g + b) / 3.0;
 }
 
 Color::operator String() const {

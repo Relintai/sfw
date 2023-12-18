@@ -36,6 +36,7 @@
 #include "basis.h"
 #include "plane.h"
 #include "vector3i.h"
+#include "pool_vector.h"
 
 struct _NO_DISCARD_CLASS_ Transform {
 	Basis basis;

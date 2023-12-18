@@ -31,7 +31,7 @@
 
 #include "vector2.h"
 
-#include "string/ustring.h"
+#include "ustring.h"
 
 real_t Vector2::angle() const {
 	return Math::atan2(y, x);

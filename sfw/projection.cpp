@@ -36,9 +36,6 @@
 #include "plane.h"
 #include "rect2.h"
 #include "transform.h"
-#include "string/print_string.h"
-#include "variant/array.h"
-#include "variant/variant.h"
 
 float Projection::determinant() const {
 	return matrix[0][3] * matrix[1][2] * matrix[2][1] * matrix[3][0] - matrix[0][2] * matrix[1][3] * matrix[2][1] * matrix[3][0] -
@@ -561,88 +558,6 @@ Vector<Plane> Projection::get_projection_planes(const Transform &p_transform) co
 	new_plane.normalize();
 
 	planes.write[5] = p_transform.xform(new_plane);
-
-	return planes;
-}
-
-Array Projection::get_projection_planes_array(const Transform &p_transform) const {
-	/** Fast Plane Extraction from combined modelview/projection matrices.
-	 * References:
-	 * https://web.archive.org/web/20011221205252/https://www.markmorley.com/opengl/frustumculling.html
-	 * https://web.archive.org/web/20061020020112/https://www2.ravensoft.com/users/ggribb/plane%20extraction.pdf
-	 */
-
-	Array planes;
-
-	const real_t *matrix = (const real_t *)this->matrix;
-
-	Plane new_plane;
-
-	///////--- Near Plane ---///////
-	new_plane = Plane(matrix[3] + matrix[2],
-			matrix[7] + matrix[6],
-			matrix[11] + matrix[10],
-			matrix[15] + matrix[14]);
-
-	new_plane.normal = -new_plane.normal;
-	new_plane.normalize();
-
-	planes.push_back(p_transform.xform(new_plane));
-
-	///////--- Far Plane ---///////
-	new_plane = Plane(matrix[3] - matrix[2],
-			matrix[7] - matrix[6],
-			matrix[11] - matrix[10],
-			matrix[15] - matrix[14]);
-
-	new_plane.normal = -new_plane.normal;
-	new_plane.normalize();
-
-	planes.push_back(p_transform.xform(new_plane));
-
-	///////--- Left Plane ---///////
-	new_plane = Plane(matrix[3] + matrix[0],
-			matrix[7] + matrix[4],
-			matrix[11] + matrix[8],
-			matrix[15] + matrix[12]);
-
-	new_plane.normal = -new_plane.normal;
-	new_plane.normalize();
-
-	planes.push_back(p_transform.xform(new_plane));
-
-	///////--- Top Plane ---///////
-	new_plane = Plane(matrix[3] - matrix[1],
-			matrix[7] - matrix[5],
-			matrix[11] - matrix[9],
-			matrix[15] - matrix[13]);
-
-	new_plane.normal = -new_plane.normal;
-	new_plane.normalize();
-
-	planes.push_back(p_transform.xform(new_plane));
-
-	///////--- Right Plane ---///////
-	new_plane = Plane(matrix[3] - matrix[0],
-			matrix[7] - matrix[4],
-			matrix[11] - matrix[8],
-			matrix[15] - matrix[12]);
-
-	new_plane.normal = -new_plane.normal;
-	new_plane.normalize();
-
-	planes.push_back(p_transform.xform(new_plane));
-
-	///////--- Bottom Plane ---///////
-	new_plane = Plane(matrix[3] + matrix[1],
-			matrix[7] + matrix[5],
-			matrix[11] + matrix[9],
-			matrix[15] + matrix[13]);
-
-	new_plane.normal = -new_plane.normal;
-	new_plane.normalize();
-
-	planes.push_back(p_transform.xform(new_plane));
 
 	return planes;
 }
