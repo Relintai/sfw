@@ -31,8 +31,7 @@
 
 #include "basis.h"
 
-#include "core/math/math_funcs.h"
-#include "core/string/print_string.h"
+#include "math_funcs.h"
 
 #define cofac(row1, col1, row2, col2) \
 	(rows[row1][col1] * rows[row2][col2] - rows[row1][col2] * rows[row2][col1])

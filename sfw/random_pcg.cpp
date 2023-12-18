@@ -31,7 +31,7 @@
 
 #include "random_pcg.h"
 
-#include "core/os/os.h"
+#include "os/os.h"
 
 RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
 		pcg(),

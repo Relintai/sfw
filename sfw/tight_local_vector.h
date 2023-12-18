@@ -32,11 +32,11 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/pool_vector.h"
-#include "core/containers/sort_array.h"
-#include "core/containers/vector.h"
-#include "core/error/error_macros.h"
-#include "core/os/memory.h"
+#include "pool_vector.h"
+#include "sort_array.h"
+#include "vector.h"
+#include "error_macros.h"
+#include "memory.h"
 
 // It grows strictly as much as needed. (The vanilla LocalVector is what you want in most cases).
 template <class T, class U = uint32_t, bool force_trivial = false>

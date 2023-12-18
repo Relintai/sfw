@@ -32,10 +32,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/hash_map.h"
-#include "core/containers/hashfuncs.h"
+#include "hash_map.h"
+#include "hashfuncs.h"
 #include "core/math/math_funcs.h"
-#include "core/os/memory.h"
+#include "memory.h"
 
 /**
  * Implementation of Set using a bidi indexed hash map.

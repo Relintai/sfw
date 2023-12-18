@@ -32,11 +32,11 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/hashfuncs.h"
-#include "core/containers/paged_allocator.h"
-#include "core/containers/pair.h"
+#include "hashfuncs.h"
+#include "paged_allocator.h"
+#include "pair.h"
 #include "core/math/math_funcs.h"
-#include "core/os/memory.h"
+#include "memory.h"
 
 /**
  * A HashMap implementation that uses open addressing with Robin Hood hashing.

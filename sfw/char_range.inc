@@ -31,7 +31,7 @@
 #ifndef CHAR_RANGE_INC
 #define CHAR_RANGE_INC
 
-#include "core/typedefs.h"
+#include "typedefs.h"
 
 struct CharRange {
 	char32_t start;

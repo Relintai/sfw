@@ -32,8 +32,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/vector2.h" // also includes math_funcs and ustring
-#include "core/math/vector2i.h"
+#include "vector2.h" // also includes math_funcs and ustring
+#include "vector2i.h"
 
 struct Transform2D;
 struct Rect2i;

@@ -31,10 +31,9 @@
 
 #include "color.h"
 
-#include "core/containers/rb_map.h"
-#include "core/math/color_names.inc"
-#include "core/math/math_funcs.h"
-#include "core/string/print_string.h"
+#include "rb_map.h"
+#include "math_funcs.h"
+
 
 uint32_t Color::to_argb32() const {
 	uint32_t c = (uint8_t)Math::round(a * 255);

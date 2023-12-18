@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/vector.h"
+#include "vector.h"
 
 template <typename T>
 class RingBuffer {

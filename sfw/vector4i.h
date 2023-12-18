@@ -32,8 +32,8 @@
 #ifndef VECTOR4I_H
 #define VECTOR4I_H
 
-#include "core/error/error_macros.h"
-#include "core/math/math_funcs.h"
+#include "error/error_macros.h"
+#include "math_funcs.h"
 
 class String;
 struct Vector4;

@@ -35,15 +35,15 @@
 
 #include "ustring.h"
 
-#include "core/crypto/crypto_core.h"
-#include "core/math/color.h"
-#include "core/math/math_funcs.h"
-#include "core/os/memory.h"
-#include "core/string/print_string.h"
-#include "core/string/translation.h"
-#include "core/string/ucaps.h"
-#include "core/variant/variant.h"
-#include "core/version_generated.gen.h"
+#include "crypto/crypto_core.h"
+#include "color.h"
+#include "math_funcs.h"
+#include "os/memory.h"
+#include "string/print_string.h"
+#include "string/translation.h"
+#include "string/ucaps.h"
+#include "variant/variant.h"
+#include "version_generated.gen.h"
 
 #include <wchar.h>
 #include <cstdint>

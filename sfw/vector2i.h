@@ -32,8 +32,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/error/error_macros.h"
-#include "core/math/math_funcs.h"
+#include "error/error_macros.h"
+#include "math_funcs.h"
 
 #include "vector2.h"
 

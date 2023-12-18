@@ -32,11 +32,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/cowdata.h"
-#include "core/containers/vector.h"
-#include "core/string/char_utils.h"
-#include "core/typedefs.h"
-#include "core/variant/array.h"
+#include "cowdata.h"
+#include "vector.h"
+#include "char_utils.h"
+#include "typedefs.h"
 
 /*************************************************************************/
 /*  CharProxy                                                            */

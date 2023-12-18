@@ -38,10 +38,10 @@
  * Vector container. Regular Vector Container. Use with care and for smaller arrays when possible. Use PoolVector for large arrays.
  */
 
-#include "core/containers/cowdata.h"
-#include "core/containers/sort_array.h"
-#include "core/error/error_macros.h"
-#include "core/os/memory.h"
+#include "cowdata.h"
+#include "sort_array.h"
+#include "error_macros.h"
+#include "memory.h"
 
 template <class T>
 class VectorWriteProxy {

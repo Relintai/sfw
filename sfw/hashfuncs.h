@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/rid.h"
+#include "rid.h"
 #include "core/math/aabb.h"
 #include "core/math/math_defs.h"
 #include "core/math/math_funcs.h"

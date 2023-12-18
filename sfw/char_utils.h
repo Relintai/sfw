@@ -32,7 +32,7 @@
 #ifndef CHAR_UTILS_H
 #define CHAR_UTILS_H
 
-#include "core/typedefs.h"
+#include "typedefs.h"
 
 #include "char_range.inc"
 

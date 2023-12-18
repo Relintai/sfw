@@ -29,9 +29,9 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
+#include "transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
 
-#include "core/math/rect2i.h"
+#include "rect2i.h"
 
 bool Rect2::is_equal_approx(const Rect2 &p_rect) const {
 	return position.is_equal_approx(p_rect.position) && size.is_equal_approx(p_rect.size);

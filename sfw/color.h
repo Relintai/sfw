@@ -32,8 +32,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/math_funcs.h"
-#include "core/string/ustring.h"
+#include "math_funcs.h"
+#include "ustring.h"
 
 struct _NO_DISCARD_CLASS_ Color {
 	union {

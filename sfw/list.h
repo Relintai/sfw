@@ -32,9 +32,9 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/sort_array.h"
-#include "core/error/error_macros.h"
-#include "core/os/memory.h"
+#include "sort_array.h"
+#include "error_macros.h"
+#include "memory.h"
 
 /**
  * Generic Templatized Linked List Implementation.

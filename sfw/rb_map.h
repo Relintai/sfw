@@ -1,8 +1,8 @@
-#ifndef RB_SET_H
-#define RB_SET_H
+#ifndef RB_MAP_H
+#define RB_MAP_H
 
 /*************************************************************************/
-/*  rb_set.h                                                             */
+/*  rb_map.h                                                             */
 /*************************************************************************/
 /*                         This file is part of:                         */
 /*                          PANDEMONIUM ENGINE                           */
@@ -32,14 +32,14 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/os/memory.h"
-#include "core/typedefs.h"
+#include "error_macros.h"
+#include "memory.h"
 
 // based on the very nice implementation of rb-trees by:
 // https://web.archive.org/web/20120507164830/http://web.mit.edu/~emin/www/source_code/red_black_tree/index.html
 
-template <class T, class C = Comparator<T>, class A = DefaultAllocator>
-class RBSet {
+template <class K, class V, class C = Comparator<K>, class A = DefaultAllocator>
+class RBMap {
 	enum Color {
 		RED,
 		BLACK
@@ -49,14 +49,15 @@ class RBSet {
 public:
 	class Element {
 	private:
-		friend class RBSet<T, C, A>;
+		friend class RBMap<K, V, C, A>;
 		int color;
 		Element *right;
 		Element *left;
 		Element *parent;
 		Element *_next;
 		Element *_prev;
-		T value;
+		K _key;
+		V _value;
 		//_Data *data;
 
 	public:
@@ -72,8 +73,20 @@ public:
 		Element *prev() {
 			return _prev;
 		}
-		const T &get() const {
-			return value;
+		const K &key() const {
+			return _key;
+		};
+		V &value() {
+			return _value;
+		};
+		const V &value() const {
+			return _value;
+		};
+		V &get() {
+			return _value;
+		};
+		const V &get() const {
+			return _value;
 		};
 		Element() {
 			color = RED;
@@ -202,20 +215,20 @@ private:
 			}
 
 			if (node == _data._root) {
-				return nullptr; // No predecessor, as p_node = first node.
+				return nullptr; // No predecessor, as p_node = first node
 			}
 			return node->parent;
 		}
 	}
 
-	Element *_find(const T &p_value) const {
+	Element *_find(const K &p_key) const {
 		Element *node = _data._root->left;
 		C less;
 
 		while (node != _data._nil) {
-			if (less(p_value, node->value)) {
+			if (less(p_key, node->_key)) {
 				node = node->left;
-			} else if (less(node->value, p_value)) {
+			} else if (less(node->_key, p_key)) {
 				node = node->right;
 			} else {
 				return node; // found
@@ -225,7 +238,7 @@ private:
 		return nullptr;
 	}
 
-	Element *_lower_bound(const T &p_value) const {
+	Element *_find_closest(const K &p_key) const {
 		Element *node = _data._root->left;
 		Element *prev = nullptr;
 		C less;
@@ -233,9 +246,9 @@ private:
 		while (node != _data._nil) {
 			prev = node;
 
-			if (less(p_value, node->value)) {
+			if (less(p_key, node->_key)) {
 				node = node->left;
-			} else if (less(node->value, p_value)) {
+			} else if (less(node->_key, p_key)) {
 				node = node->right;
 			} else {
 				return node; // found
@@ -246,8 +259,8 @@ private:
 			return nullptr; // tree empty
 		}
 
-		if (less(prev->value, p_value)) {
-			prev = prev->_next;
+		if (less(p_key, prev->_key)) {
+			prev = prev->_prev;
 		}
 
 		return prev;
@@ -301,7 +314,7 @@ private:
 		_set_color(_data._root->left, BLACK);
 	}
 
-	Element *_insert(const T &p_value) {
+	Element *_insert(const K &p_key, const V &p_value) {
 		Element *new_parent = _data._root;
 		Element *node = _data._root->left;
 		C less;
@@ -309,12 +322,13 @@ private:
 		while (node != _data._nil) {
 			new_parent = node;
 
-			if (less(p_value, node->value)) {
+			if (less(p_key, node->_key)) {
 				node = node->left;
-			} else if (less(node->value, p_value)) {
+			} else if (less(node->_key, p_key)) {
 				node = node->right;
 			} else {
-				return node; // Return existing node
+				node->_value = p_value;
+				return node; // Return existing node with new value
 			}
 		}
 
@@ -322,10 +336,11 @@ private:
 		new_node->parent = new_parent;
 		new_node->right = _data._nil;
 		new_node->left = _data._nil;
-		new_node->value = p_value;
+		new_node->_key = p_key;
+		new_node->_value = p_value;
 		//new_node->data=_data;
 
-		if (new_parent == _data._root || less(p_value, new_parent->value)) {
+		if (new_parent == _data._root || less(p_key, new_parent->_key)) {
 			new_parent->left = new_node;
 		} else {
 			new_parent->right = new_node;
@@ -482,49 +497,60 @@ private:
 		memdelete_allocator<Element, A>(p_element);
 	}
 
-	void _copy_from(const RBSet &p_set) {
+	void _copy_from(const RBMap &p_map) {
 		clear();
 		// not the fastest way, but safeset to write.
-		for (Element *I = p_set.front(); I; I = I->next()) {
-			insert(I->get());
+		for (Element *I = p_map.front(); I; I = I->next()) {
+			insert(I->key(), I->value());
 		}
 	}
 
 public:
-	const Element *find(const T &p_value) const {
+	const Element *find(const K &p_key) const {
 		if (!_data._root) {
 			return nullptr;
 		}
 
-		const Element *res = _find(p_value);
+		const Element *res = _find(p_key);
 		return res;
 	}
 
-	Element *find(const T &p_value) {
+	Element *find(const K &p_key) {
 		if (!_data._root) {
 			return nullptr;
 		}
 
-		Element *res = _find(p_value);
+		Element *res = _find(p_key);
 		return res;
 	}
 
-	Element *lower_bound(const T &p_value) const {
+	const Element *find_closest(const K &p_key) const {
+		if (!_data._root) {
+			return NULL;
+		}
+
+		const Element *res = _find_closest(p_key);
+		return res;
+	}
+
+	Element *find_closest(const K &p_key) {
 		if (!_data._root) {
 			return nullptr;
 		}
-		return _lower_bound(p_value);
+
+		Element *res = _find_closest(p_key);
+		return res;
 	}
 
-	bool has(const T &p_value) const {
-		return find(p_value) != nullptr;
+	bool has(const K &p_key) const {
+		return find(p_key) != nullptr;
 	}
 
-	Element *insert(const T &p_value) {
+	Element *insert(const K &p_key, const V &p_value) {
 		if (!_data._root) {
 			_data._create_root();
 		}
-		return _insert(p_value);
+		return _insert(p_key, p_value);
 	}
 
 	void erase(Element *p_element) {
@@ -538,12 +564,12 @@ public:
 		}
 	}
 
-	bool erase(const T &p_value) {
+	bool erase(const K &p_key) {
 		if (!_data._root) {
 			return false;
 		}
 
-		Element *e = find(p_value);
+		Element *e = find(p_key);
 		if (!e) {
 			return false;
 		}
@@ -553,6 +579,26 @@ public:
 			_data._free_root();
 		}
 		return true;
+	}
+
+	const V &operator[](const K &p_key) const {
+		CRASH_COND(!_data._root);
+		const Element *e = find(p_key);
+		CRASH_COND(!e);
+		return e->_value;
+	}
+
+	V &operator[](const K &p_key) {
+		if (!_data._root) {
+			_data._create_root();
+		}
+
+		Element *e = find(p_key);
+		if (!e) {
+			e = insert(p_key, V());
+		}
+
+		return e->_value;
 	}
 
 	Element *front() const {
@@ -614,18 +660,18 @@ public:
 		_data._free_root();
 	}
 
-	void operator=(const RBSet &p_set) {
-		_copy_from(p_set);
+	void operator=(const RBMap &p_map) {
+		_copy_from(p_map);
 	}
 
-	RBSet(const RBSet &p_set) {
-		_copy_from(p_set);
+	RBMap(const RBMap &p_map) {
+		_copy_from(p_map);
 	}
 
-	_FORCE_INLINE_ RBSet() {
+	_FORCE_INLINE_ RBMap() {
 	}
 
-	~RBSet() {
+	~RBMap() {
 		clear();
 	}
 };

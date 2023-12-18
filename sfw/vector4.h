@@ -32,9 +32,9 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
-#include "core/math/math_defs.h"
-#include "core/math/math_funcs.h"
-#include "core/string/ustring.h"
+#include "math_defs.h"
+#include "math_funcs.h"
+#include "string/ustring.h"
 
 struct _NO_DISCARD_CLASS_ Vector4 {
 	enum Axis {

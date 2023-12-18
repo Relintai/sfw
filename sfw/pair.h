@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/hashfuncs.h"
+#include "hashfuncs.h"
 #include "core/typedefs.h"
 
 template <class F, class S>

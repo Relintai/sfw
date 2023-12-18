@@ -32,11 +32,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/containers/pool_vector.h"
-#include "core/math/aabb.h"
-#include "core/math/basis.h"
-#include "core/math/plane.h"
-#include "core/math/vector3i.h"
+#include "aabb.h"
+#include "basis.h"
+#include "plane.h"
+#include "vector3i.h"
 
 struct _NO_DISCARD_CLASS_ Transform {
 	Basis basis;

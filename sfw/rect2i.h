@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/vector2i.h" // also includes math_funcs and ustring
+#include "vector2i.h" // also includes math_funcs and ustring
 
 struct _NO_DISCARD_CLASS_ Rect2i {
 	Point2i position;

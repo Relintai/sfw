@@ -32,10 +32,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/aabb.h"
-#include "core/math/plane.h"
-#include "core/math/transform.h"
-#include "core/math/vector3.h"
+#include "aabb.h"
+#include "plane.h"
+#include "transform.h"
+#include "vector3.h"
 
 struct _NO_DISCARD_CLASS_ Face3 {
 	enum Side {

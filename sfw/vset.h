@@ -1,5 +1,8 @@
+#ifndef VSET_H
+#define VSET_H
+
 /*************************************************************************/
-/*  vector2i.cpp                                                         */
+/*  vset.h                                                               */
 /*************************************************************************/
 /*                         This file is part of:                         */
 /*                          PANDEMONIUM ENGINE                           */
@@ -29,75 +32,111 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "vector2i.h"
+#include "vector.h"
+#include "core/typedefs.h"
 
-#include "string/ustring.h"
+template <class T>
+class VSet {
+	Vector<T> _data;
 
-Vector2i Vector2i::clamp(const Vector2i &p_min, const Vector2i &p_max) const {
-	return Vector2i(
-			CLAMP(x, p_min.x, p_max.x),
-			CLAMP(y, p_min.y, p_max.y));
-}
+	_FORCE_INLINE_ int _find(const T &p_val, bool &r_exact) const {
+		r_exact = false;
+		if (_data.empty()) {
+			return 0;
+		}
 
-int64_t Vector2i::length_squared() const {
-	return x * (int64_t)x + y * (int64_t)y;
-}
+		int low = 0;
+		int high = _data.size() - 1;
+		const T *a = &_data[0];
+		int middle = 0;
 
-double Vector2i::length() const {
-	return Math::sqrt((double)length_squared());
-}
+#ifdef DEBUG_ENABLED
+		if (low > high)
+			ERR_PRINT("low > high, this may be a bug");
+#endif
 
-Vector2i Vector2i::operator+(const Vector2i &p_v) const {
-	return Vector2i(x + p_v.x, y + p_v.y);
-}
-void Vector2i::operator+=(const Vector2i &p_v) {
-	x += p_v.x;
-	y += p_v.y;
-}
-Vector2i Vector2i::operator-(const Vector2i &p_v) const {
-	return Vector2i(x - p_v.x, y - p_v.y);
-}
-void Vector2i::operator-=(const Vector2i &p_v) {
-	x -= p_v.x;
-	y -= p_v.y;
-}
+		while (low <= high) {
+			middle = (low + high) / 2;
 
-Vector2i Vector2i::operator*(const Vector2i &p_v1) const {
-	return Vector2i(x * p_v1.x, y * p_v1.y);
+			if (p_val < a[middle]) {
+				high = middle - 1; //search low end of array
+			} else if (a[middle] < p_val) {
+				low = middle + 1; //search high end of array
+			} else {
+				r_exact = true;
+				return middle;
+			}
+		}
+
+		//return the position where this would be inserted
+		if (a[middle] < p_val) {
+			middle++;
+		}
+		return middle;
+	}
+
+	_FORCE_INLINE_ int _find_exact(const T &p_val) const {
+		if (_data.empty()) {
+			return -1;
+		}
+
+		int low = 0;
+		int high = _data.size() - 1;
+		int middle;
+		const T *a = &_data[0];
+
+		while (low <= high) {
+			middle = (low + high) / 2;
+
+			if (p_val < a[middle]) {
+				high = middle - 1; //search low end of array
+			} else if (a[middle] < p_val) {
+				low = middle + 1; //search high end of array
+			} else {
+				return middle;
+			}
+		}
+
+		return -1;
+	}
+
+public:
+	void insert(const T &p_val) {
+		bool exact;
+		int pos = _find(p_val, exact);
+		if (exact) {
+			return;
+		}
+		_data.insert(pos, p_val);
+	}
+
+	bool has(const T &p_val) const {
+		return _find_exact(p_val) != -1;
+	}
+
+	void erase(const T &p_val) {
+		int pos = _find_exact(p_val);
+		if (pos < 0) {
+			return;
+		}
+		_data.remove(pos);
+	}
+
+	int find(const T &p_val) const {
+		return _find_exact(p_val);
+	}
+
+	_FORCE_INLINE_ bool empty() const { return _data.empty(); }
+
+	_FORCE_INLINE_ int size() const { return _data.size(); }
+
+	inline T &operator[](int p_index) {
+		return _data.write[p_index];
+	}
+
+	inline const T &operator[](int p_index) const {
+		return _data[p_index];
+	}
 };
 
-Vector2i Vector2i::operator*(const int &rvalue) const {
-	return Vector2i(x * rvalue, y * rvalue);
-};
-void Vector2i::operator*=(const int &rvalue) {
-	x *= rvalue;
-	y *= rvalue;
-};
-
-Vector2i Vector2i::operator/(const Vector2i &p_v1) const {
-	return Vector2i(x / p_v1.x, y / p_v1.y);
-};
-
-Vector2i Vector2i::operator/(const int &rvalue) const {
-	return Vector2i(x / rvalue, y / rvalue);
-};
-
-void Vector2i::operator/=(const int &rvalue) {
-	x /= rvalue;
-	y /= rvalue;
-};
-
-Vector2i Vector2i::operator-() const {
-	return Vector2i(-x, -y);
-}
-
-bool Vector2i::operator==(const Vector2i &p_vec2) const {
-	return x == p_vec2.x && y == p_vec2.y;
-}
-bool Vector2i::operator!=(const Vector2i &p_vec2) const {
-	return x != p_vec2.x || y != p_vec2.y;
-}
-
-Vector2i::operator String() const {
-	return "(" + itos(x) + ", " + itos(y) + ")";
-}
+#endif // VSET_H

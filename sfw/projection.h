@@ -32,10 +32,10 @@
 #ifndef PROJECTION_H
 #define PROJECTION_H
 
-#include "core/containers/vector.h"
-#include "core/math/math_defs.h"
-#include "core/math/vector3.h"
-#include "core/math/vector4.h"
+#include "vector.h"
+#include "math_defs.h"
+#include "vector3.h"
+#include "vector4.h"
 
 class Array;
 struct AABB;

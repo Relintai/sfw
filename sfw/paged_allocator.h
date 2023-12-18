@@ -32,8 +32,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/os/memory.h"
-#include "core/os/spin_lock.h"
+#include "memory.h"
+#include "spin_lock.h"
 #include "core/typedefs.h"
 
 template <class T, bool thread_safe = false>
