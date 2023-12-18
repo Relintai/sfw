@@ -37,35 +37,6 @@
 		<Linker>
 			<Add option="`pkg-config --cflags --libs sdl2 glew`" />
 		</Linker>
-		<Unit filename="application.cpp" />
-		<Unit filename="application.h" />
-		<Unit filename="camera.cpp" />
-		<Unit filename="camera.h" />
-		<Unit filename="colored_material.h" />
-		<Unit filename="game_application.h" />
-		<Unit filename="game_scene.cpp" />
-		<Unit filename="game_scene.h" />
-		<Unit filename="main.cpp" />
-		<Unit filename="material.cpp" />
-		<Unit filename="material.h" />
-		<Unit filename="mesh.cpp" />
-		<Unit filename="mesh.h" />
-		<Unit filename="mesh_instance.cpp" />
-		<Unit filename="mesh_instance.cpp/" />
-		<Unit filename="mesh_instance.h" />
-		<Unit filename="object_2d.cpp" />
-		<Unit filename="object_2d.h" />
-		<Unit filename="opengl.h" />
-		<Unit filename="scene.cpp" />
-		<Unit filename="scene.h" />
-		<Unit filename="shader.cpp" />
-		<Unit filename="shader.h" />
-		<Unit filename="sprite.cpp" />
-		<Unit filename="sprite.h" />
-		<Unit filename="texture.cpp" />
-		<Unit filename="texture.h" />
-		<Unit filename="texture_material.h" />
-		<Unit filename="transparent_texture_material.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
