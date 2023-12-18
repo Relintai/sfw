@@ -1,0 +1,15 @@
+
+bin/
+obj/
+
+*.layout
+*.depend
+
+
+# These are tmeporary:
+libs/
+*.bmp
+
+
+
+
