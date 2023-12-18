@@ -3,17 +3,16 @@
 
 #include <stdio.h>
 
-#include <SDL.h>
-
-#include "opengl.h"
 #include "scene.h"
+
+class Window;
 
 class Application {
 public:
     bool running;
     int target_fps;
 
-    virtual void event(const SDL_Event &ev);
+    virtual void event();
     virtual void update(float delta);
     virtual void render();
 
@@ -24,8 +23,7 @@ public:
 
     Scene *scene;
 
-    SDL_Window *window;
-    SDL_GLContext context;
+    Window *window;
 
     static Application *get_singleton();
 

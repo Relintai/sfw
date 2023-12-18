@@ -12,7 +12,7 @@
 #endif
 
 #if defined(_WIN64) || defined(_WIN32)
-#include <glad/glad.h>
+#include "3rd_glad.h"
 #endif // defined
 
 #endif // OPENGL_H

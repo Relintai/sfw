@@ -1,13 +1,12 @@
 #include "application.h"
 
+#include "opengl.h"
 #include <chrono>
 
-void Application::event(const SDL_Event &ev) {
-    if (ev.type == SDL_QUIT) {
-        running = false;
-    }
+#include "window.h"
 
-    scene->event(ev);
+void Application::event() {
+    scene->event();
 }
 
 void Application::update(float delta) {
@@ -17,18 +16,20 @@ void Application::update(float delta) {
 void Application::render() {
     scene->render();
 
-    SDL_GL_SwapWindow(window);
+    //SDL_GL_SwapWindow(window);
 }
 
 void Application::main_loop() {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
     //handle input
+    /*
     SDL_Event current_event;
 
     while (SDL_PollEvent(&current_event)) {
         event(current_event);
     }
+    */
 
     //update_world
     update(frame_delta);
@@ -46,11 +47,11 @@ void Application::main_loop() {
     double remaining = tfps - t;
 
     if (remaining > 0) {
-        Uint32 fms = static_cast<Uint32>(remaining * 1000.0);
+        //uint32_t fms = static_cast<uint32_t>(remaining * 1000.0);
 
         frame_delta = tfps;
 
-        SDL_Delay(fms);
+        //SDL_Delay(fms);
     } else {
         frame_delta = t;
     }
@@ -66,6 +67,7 @@ Application::Application() {
 
     frame_delta = 0;
 
+    /*
     SDL_SetMainReady();
 
     int error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
@@ -104,13 +106,14 @@ Application::Application() {
     #endif // defined
 
     printf("%s\n", glGetString(GL_VERSION));
+    */
 }
 Application::~Application() {
-    SDL_DestroyWindow(window);
+    //SDL_DestroyWindow(window);
 
-    window = NULL;
+   // window = NULL;
 
-    SDL_Quit();
+    //SDL_Quit();
 }
 
 Application *Application::get_singleton() {
