@@ -32,9 +32,9 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/quaternion.h"
-#include "core/math/vector3.h"
-#include "core/math/vector3i.h"
+#include "quaternion.h"
+#include "vector3.h"
+#include "vector3i.h"
 
 struct _NO_DISCARD_CLASS_ Basis {
 	Vector3 rows[3] = {

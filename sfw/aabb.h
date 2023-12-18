@@ -32,9 +32,9 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/math_defs.h"
-#include "core/math/plane.h"
-#include "core/math/vector3.h"
+#include "math_defs.h"
+#include "plane.h"
+#include "vector3.h"
 
 /**
  * AABB / AABB (Axis Aligned Bounding Box)

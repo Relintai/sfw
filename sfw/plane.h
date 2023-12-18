@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/math/vector3.h"
+#include "vector3.h"
 
 class Variant;
 

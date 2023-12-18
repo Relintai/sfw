@@ -1,7 +1,7 @@
 #ifndef ERROR_MACROS_H
 #define ERROR_MACROS_H
 
-#include "core/log/logger.h"
+#include "logger.h"
 #include "typedefs.h"
 
 // Based on Godot Engine's error_macros.h
