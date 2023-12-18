@@ -6,11 +6,6 @@
 
 #include "game_application.h"
 
-//érdekesség
-//https://gist.github.com/reduz/9635c731f0592d7e526367c6063b8f8f
-//https://gist.github.com/reduz/9b9d1278848237fd9a9a8b6cc77c8270
-//https://github.com/reduz/larvita3
-
 Application *application = NULL;
 
 void handle_frame() {
