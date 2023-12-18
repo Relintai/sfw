@@ -3,13 +3,12 @@
 
 #include "scene.h"
 
-#include "colored_material.h"
 #include "camera.h"
-#include "mesh.h"
 #include "mesh_instance.h"
-#include "sprite.h"
-#include "texture_material.h"
 #include "texture.h"
+#include "texture_material.h"
+#include "tile_map.h"
+#include "sprite.h"
 
 class GameScene : public Scene {
 public:
@@ -25,11 +24,11 @@ public:
     bool up;
     bool down;
 
-    OrthographicCamera *camera;
-    Sprite *sprite;
+    Camera *camera;
     Texture *texture;
     TextureMaterial *material;
+    TileMap *tile_map;
+    Sprite *sprite;
 };
 
-
-#endif // GAME_SCENE_H
+#endif
