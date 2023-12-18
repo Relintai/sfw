@@ -41,8 +41,6 @@
  * This is implemented by a point (position) and the box size
  */
 
-class Variant;
-
 struct _NO_DISCARD_CLASS_ AABB {
 	Vector3 position;
 	Vector3 size;
@@ -106,8 +104,8 @@ struct _NO_DISCARD_CLASS_ AABB {
 		return AABB(Vector3(position.x + MIN(size.x, 0), position.y + MIN(size.y, 0), position.z + MIN(size.z, 0)), size.abs());
 	}
 
-	Variant intersects_segmentv(const Vector3 &p_from, const Vector3 &p_to) const;
-	Variant intersects_rayv(const Vector3 &p_from, const Vector3 &p_dir) const;
+	//Variant intersects_segmentv(const Vector3 &p_from, const Vector3 &p_to) const;
+	//Variant intersects_rayv(const Vector3 &p_from, const Vector3 &p_dir) const;
 
 	_FORCE_INLINE_ void quantize(real_t p_unit);
 	_FORCE_INLINE_ AABB quantized(real_t p_unit) const;

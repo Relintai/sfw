@@ -34,6 +34,7 @@
 
 #include <string.h>
 
+#include "error_list.h"
 #include "error_macros.h"
 #include "memory.h"
 #include "safe_refcount.h"

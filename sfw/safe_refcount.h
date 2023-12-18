@@ -32,7 +32,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "core/typedefs.h"
+#include "typedefs.h"
 
 #if !defined(NO_THREADS)
 

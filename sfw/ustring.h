@@ -321,7 +321,7 @@ public:
 
 	Vector<String> bigrams() const;
 	float similarity(const String &p_string) const;
-	String format(const Variant &values, String placeholder = "{_}") const;
+	//String format(const Variant &values, String placeholder = "{_}") const;
 
 	String replace_first(const String &p_key, const String &p_with) const;
 	String replace(const String &p_key, const String &p_with) const;
@@ -342,7 +342,7 @@ public:
 	String lpad(int min_length, const String &character = " ") const;
 	String rpad(int min_length, const String &character = " ") const;
 
-	String sprintf(const Array &values, bool *error) const;
+	//String sprintf(const Array &values, bool *error) const;
 
 	String quote(String quotechar = "\"") const;
 	String unquote() const;

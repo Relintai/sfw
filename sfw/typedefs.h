@@ -1,12 +1,16 @@
+#ifndef TYPEDEFS_H
+#define TYPEDEFS_H
+
 /*************************************************************************/
 /*  typedefs.h                                                           */
 /*************************************************************************/
-/*                       This file is part of:                           */
-/*                           GODOT ENGINE                                */
-/*                      https://godotengine.org                          */
+/*                         This file is part of:                         */
+/*                          PANDEMONIUM ENGINE                           */
+/*             https://github.com/Relintai/pandemonium_engine            */
 /*************************************************************************/
-/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2022-present Péter Magyar.                              */
+/* Copyright (c) 2014-2022 Godot Engine contributors (cf. AUTHORS.md).   */
+/* Copyright (c) 2007-2022 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -27,9 +31,6 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-
-#ifndef TYPEDEFS_H
-#define TYPEDEFS_H
 
 #include <stddef.h>
 
@@ -59,15 +60,55 @@
 
 #endif
 
-//should always inline, except in some cases because it makes debugging harder
+// Should always inline, except in dev builds because it makes debugging harder.
 #ifndef _FORCE_INLINE_
-
-#ifdef DISABLE_FORCED_INLINE
+#ifdef DEV_ENABLED
 #define _FORCE_INLINE_ inline
 #else
 #define _FORCE_INLINE_ _ALWAYS_INLINE_
 #endif
 
+#endif
+
+// No discard allows the compiler to flag warnings if we don't use the return value of functions / classes
+#ifndef _NO_DISCARD_
+// c++ 17 onwards
+#if __cplusplus >= 201703L
+#define _NO_DISCARD_ [[nodiscard]]
+#else
+// __warn_unused_result__ supported on clang and GCC
+#if (defined(__clang__) || defined(__GNUC__)) && defined(__has_attribute)
+#if __has_attribute(__warn_unused_result__)
+#define _NO_DISCARD_ __attribute__((__warn_unused_result__))
+#endif
+#endif
+
+// Visual Studio 2012 onwards
+#if _MSC_VER >= 1700
+#define _NO_DISCARD_ _Check_return_
+#endif
+
+// If nothing supported, just noop the macro
+#ifndef _NO_DISCARD_
+#define _NO_DISCARD_
+#endif
+#endif // not c++ 17
+#endif // not defined _NO_DISCARD_
+
+// In some cases _NO_DISCARD_ will get false positives,
+// we can prevent the warning in specific cases by preceding the call with a cast.
+#ifndef _ALLOW_DISCARD_
+#define _ALLOW_DISCARD_ (void)
+#endif
+
+// GCC (prior to c++ 17) Does not seem to support no discard with classes, only functions.
+// So we will use a specific macro for classes.
+#ifndef _NO_DISCARD_CLASS_
+#if (defined(__clang__) || defined(_MSC_VER))
+#define _NO_DISCARD_CLASS_ _NO_DISCARD_
+#else
+#define _NO_DISCARD_CLASS_
+#endif
 #endif
 
 //custom, gcc-safe offsetof, because gcc complains a lot.
@@ -107,7 +148,7 @@ T *_nullptr() {
 
 #include "int_types.h"
 
-//#include "error_list.h"
+#include "error_list.h"
 
 /** Generic ABS function, for math uses please use Math::abs */
 
@@ -118,7 +159,7 @@ T *_nullptr() {
 #define ABSDIFF(x, y) (((x) < (y)) ? ((y) - (x)) : ((x) - (y)))
 
 #ifndef SGN
-#define SGN(m_v) (((m_v) < 0) ? (-1.0) : (+1.0))
+#define SGN(m_v) (((m_v) < 0) ? (-1.0f) : (+1.0f))
 #endif
 
 #ifndef MIN
@@ -349,6 +390,39 @@ struct _GlobalLock {
 
 #ifndef FALLTHROUGH
 #define FALLTHROUGH
+#endif
+
+// Limit the depth of recursive algorithms when dealing with Array/Dictionary
+#define MAX_RECURSION 100
+
+//HAS_TRIVIAL_CONSTRUCTOR
+
+#if defined(__llvm__) && _llvm_has_builtin(__is_trivially_constructible)
+#define HAS_TRIVIAL_CONSTRUCTOR(T) __is_trivially_constructible(T)
+#endif
+
+#ifndef HAS_TRIVIAL_CONSTRUCTOR
+#define HAS_TRIVIAL_CONSTRUCTOR(T) __has_trivial_constructor(T)
+#endif
+
+//HAS_TRIVIAL_DESTRUCTOR
+
+#if defined(__llvm__) && _llvm_has_builtin(__is_trivially_destructible)
+#define HAS_TRIVIAL_DESTRUCTOR(T) __is_trivially_destructible(T)
+#endif
+
+#ifndef HAS_TRIVIAL_DESTRUCTOR
+#define HAS_TRIVIAL_DESTRUCTOR(T) __has_trivial_destructor(T)
+#endif
+
+//HAS_TRIVIAL_COPY
+
+#if defined(__llvm__) && _llvm_has_builtin(__is_trivially_copyable)
+#define HAS_TRIVIAL_COPY(T) __is_trivially_copyable(T)
+#endif
+
+#ifndef HAS_TRIVIAL_COPY
+#define HAS_TRIVIAL_COPY(T) __has_trivial_copy(T)
 #endif
 
 #endif // TYPEDEFS_H

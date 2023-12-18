@@ -407,6 +407,7 @@ void AABB::get_edge(int p_edge, Vector3 &r_from, Vector3 &r_to) const {
 	}
 }
 
+/*
 Variant AABB::intersects_segmentv(const Vector3 &p_from, const Vector3 &p_to) const {
 	Vector3 inters;
 	if (intersects_segment(p_from, p_to, &inters)) {
@@ -422,6 +423,7 @@ Variant AABB::intersects_rayv(const Vector3 &p_from, const Vector3 &p_dir) const
 	}
 	return Variant();
 }
+*/
 
 AABB::operator String() const {
 	return "[P: " + position.operator String() + ", S: " + size + "]";

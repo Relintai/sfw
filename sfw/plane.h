@@ -34,8 +34,6 @@
 
 #include "vector3.h"
 
-class Variant;
-
 struct _NO_DISCARD_CLASS_ Plane {
 	Vector3 normal;
 	real_t d;

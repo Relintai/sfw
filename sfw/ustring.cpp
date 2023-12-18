@@ -1405,6 +1405,7 @@ float String::similarity(const String &p_string) const {
 	return (2.0f * inter) / sum;
 }
 
+/*
 String String::format(const Variant &values, String placeholder) const {
 	String new_string = String(this->ptr());
 
@@ -1456,6 +1457,7 @@ String String::format(const Variant &values, String placeholder) const {
 
 	return new_string;
 }
+*/
 
 String String::replace_first(const String &p_key, const String &p_with) const {
 	int pos = find(p_key);
@@ -1678,6 +1680,7 @@ String String::rpad(int min_length, const String &character) const {
 //   "fish %s pie" % "frog"
 //   "fish %s %d pie" % ["frog", 12]
 // In case of an error, the string returned is the error description and "error" is true.
+/*
 String String::sprintf(const Array &values, bool *error) const {
 	String formatted;
 	CharType *self = (CharType *)get_data();
@@ -1964,6 +1967,7 @@ String String::sprintf(const Array &values, bool *error) const {
 	}
 	return formatted;
 }
+*/
 
 String String::quote(String quotechar) const {
 	return quotechar + *this + quotechar;
