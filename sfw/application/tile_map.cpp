@@ -1,8 +1,8 @@
 #include "tile_map.h"
 
-#include "./glm/gtc/matrix_transform.hpp"
-#include "./glm/matrix.hpp"
-#include "./glm/vec3.hpp"
+#include "../../libs/glm/gtc/matrix_transform.hpp"
+#include "../../libs/glm/matrix.hpp"
+#include "../../libs/glm/vec3.hpp"
 
 #include "camera.h"
 
@@ -73,7 +73,7 @@ void TileMap::allocate_data() {
 }
 
 void TileMap::add_rect(const int x, const int y, const float uv_x, const float uv_y, const float uv_size_x, const float uv_size_y) {
-	int vc = static_cast<int>(mesh->vertices.size() / mesh->vertex_dimensions);
+	int vc = static_cast<int>(mesh->vertices.size() / mesh->vertex_dimesions);
 
 	mesh->add_uv(uv_x, uv_y);
 	mesh->add_vertex2(x, y + 1);

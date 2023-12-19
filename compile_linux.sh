@@ -48,6 +48,10 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/shad
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/material.cpp -o sfw/application/material.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh.cpp -o sfw/application/mesh.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/camera.cpp -o sfw/application/camera.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh_instance.cpp -o sfw/application/mesh_instance.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/object_2d.cpp -o sfw/application/object_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/sprite.cpp -o sfw/application/sprite.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/tile_map.cpp -o sfw/application/tile_map.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c game_scene.cpp -o game_scene.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c main.cpp -o main.o
@@ -60,7 +64,8 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/aabb.o sfw/basis.
                         sfw/pool_vector.o sfw/pool_allocator.o sfw/mutex.o sfw/stime.o \
                         sfw/application/application.o sfw/application/scene.o sfw/application/window.o \
                         sfw/application/shader.o sfw/application/material.o sfw/application/mesh.o \
-                        sfw/application/camera.o \
+                        sfw/application/camera.o sfw/application/mesh_instance.o sfw/application/object_2d.o \
+                        sfw/application/sprite.o sfw/application/tile_map.o \
                         game_scene.o main.o \
                          -o game 
 

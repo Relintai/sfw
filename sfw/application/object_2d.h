@@ -1,7 +1,7 @@
 #ifndef OBJECT_2D_H
 #define OBJECT_2D_H
 
-#include "./libs/glm/vec2.hpp"
+#include "../../libs/glm/vec2.hpp"
 
 class Object2D {
 public:
