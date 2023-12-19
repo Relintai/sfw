@@ -3,6 +3,7 @@
 #include "application.h"
 
 #include "3rd_glad.h"
+#include "memory.h"
 
 //#include "camera.h"
 //#include "sprite.h"
@@ -97,7 +98,7 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::render() {
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//camera->bind();
@@ -105,14 +106,17 @@ void GameScene::render() {
 	//tile_map->render();
 
 	//sprite->render();
+
+    material->bind();
+    mesh->render();
 }
 
 GameScene::GameScene() {
 	/*
 	left = false;
-    right = false;
-    up = false;
-    down = false;
+	right = false;
+	up = false;
+	down = false;
 
 	camera = new OrthographicCamera();
 	camera->width = 16;
@@ -165,6 +169,44 @@ GameScene::GameScene() {
 
 	tile_map->build_mesh();
 	*/
+
+	mesh = memnew(Mesh(2));
+	material = memnew(ColoredMaterial());
+
+	mesh->clear();
+
+	//float width = 1;
+	//float height = 1;
+
+	//float region_x = 0;
+	//float region_y = 0;
+	//float region_width = 1;
+	//float region_height = 1;
+
+	//float w2 = width / 2.0;
+	//float h2 = height / 2.0;
+
+	//mesh->add_uv(region_x, region_y);
+	//mesh->add_vertex2(-w2, h2);
+
+	//mesh->add_uv(region_x + region_width, region_y + region_height);
+	//mesh->add_vertex2(w2, -h2);
+
+	//mesh->add_uv(region_x, region_y + region_height);
+	//mesh->add_vertex2(-w2, -h2);
+
+	//mesh->add_uv(region_x + region_width, region_y);
+	//mesh->add_vertex2(w2, h2);
+
+
+	mesh->add_vertex2(0, 0.5);
+	mesh->add_vertex2(-0.5, -0.5);
+	mesh->add_vertex2(0.5, -0.5);
+
+	mesh->add_triangle(0, 1, 2);
+	//mesh->add_triangle(0, 1, 3);
+
+	mesh->upload();
 }
 
 GameScene::~GameScene() {
@@ -175,4 +217,7 @@ GameScene::~GameScene() {
 	delete tile_map;
 	delete sprite;
 	*/
+
+	memdelete(mesh);
+	memdelete(material);
 }

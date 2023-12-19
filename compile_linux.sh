@@ -44,6 +44,10 @@ g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/scene.cpp -
 g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/window.cpp -o sfw/application/window.o
 
 
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/shader.cpp -o sfw/application/shader.o
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/material.cpp -o sfw/application/material.o
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh.cpp -o sfw/application/mesh.o
+
 g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c game_scene.cpp -o game_scene.o
 g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c main.cpp -o main.o
 
@@ -54,6 +58,7 @@ g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/aabb.o sfw/basis.o sfw/c
                         sfw/ustring.o sfw/vector2.o sfw/vector2i.o sfw/vector3.o sfw/vector3i.o sfw/vector4.o sfw/vector4i.o \
                         sfw/pool_vector.o sfw/pool_allocator.o sfw/mutex.o sfw/stime.o \
                         sfw/application/application.o sfw/application/scene.o sfw/application/window.o \
+                        sfw/application/shader.o sfw/application/material.o sfw/application/mesh.o \
                         game_scene.o main.o \
                          -o game 
 

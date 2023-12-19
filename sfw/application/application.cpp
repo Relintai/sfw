@@ -1,6 +1,5 @@
 #include "application.h"
 
-#include "opengl.h"
 #include <chrono>
 
 #include "window.h"

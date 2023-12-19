@@ -3,11 +3,10 @@
 
 #include <vector>
 
-#include "opengl.h"
 #include "material.h"
 #include "mesh.h"
 
-#include "./libs/glm/vec3.hpp"
+#include "../../libs/glm/vec3.hpp"
 
 class MeshInstance {
 public:

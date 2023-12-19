@@ -1,7 +1,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "opengl.h"
+#include "3rd_glad.h"
 #include <unordered_map>
 
 class Shader {

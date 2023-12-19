@@ -6,6 +6,7 @@
 #include "window.h"
 
 #include "game_application.h"
+#include "window.h"
 
 Application *application = NULL;
 
@@ -14,6 +15,9 @@ void handle_frame() {
 }
 
 int main(int argc, char **argv) {
+	AppWindow *w = memnew(AppWindow());
+	w->create(100, 0);
+
 	application = new GameApplication();
 
 #ifdef __EMSCRIPTEN__
@@ -23,8 +27,6 @@ int main(int argc, char **argv) {
 	//while (application->running) {
 	//    application->main_loop();
 	//}
-
-	AppWindow *w = AppWindow::get_singleton();
 
 	while (application->running) {
 		if (w->frame_begin()) {

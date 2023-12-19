@@ -4,7 +4,7 @@
 #include <vector>
 #include <inttypes.h>
 
-#include "opengl.h"
+#include "3rd_glad.h"
 
 class Mesh {
 public:

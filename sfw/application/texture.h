@@ -1,7 +1,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "opengl.h"
 #include <SDL.h>
 
 class Texture {
