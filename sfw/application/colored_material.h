@@ -3,8 +3,7 @@
 
 #include "material.h"
 
-#include "../../libs/glm/vec4.hpp"
-#include "../../libs/glm/gtc/type_ptr.hpp"
+#include "color.h"
 
 #include "camera.h"
 
@@ -15,8 +14,8 @@ public:
     }
 
     void bind_uniforms() {
-        glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->projection_matrix));
-        glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->model_view_matrix));
+        //glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->projection_matrix));
+        //glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->model_view_matrix));
 
         glUniform4f(tri_color_uniform_location, color.r, color.g, color.b, color.a);
     }
@@ -59,14 +58,13 @@ public:
     }
 
     ColoredMaterial() : Material() {
-        color = glm::vec4(1, 1, 1, 1);
     }
 
     GLint projection_matrix_location;
     GLint model_view_matrix_location;
 
     GLint tri_color_uniform_location;
-    glm::vec4 color;
+    Color color;
 };
 
 

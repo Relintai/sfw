@@ -3,49 +3,50 @@
 
 #include "3rd_glad.h"
 
-#include "../../libs/glm/vec3.hpp"
-#include "../../libs/glm/matrix.hpp"
+#include "projection.h"
+#include "transform.h"
+#include "vector3.h"
 
 class Camera {
 public:
-    virtual void bind();
+	virtual void bind();
 
-    void make_current();
+	void make_current();
 
-    Camera();
-    virtual ~Camera();
+	Camera();
+	virtual ~Camera();
 
-    float width;
-    float height;
-    float fov;
+	float size;
+    float screen_aspect_ratio; //p_viewport_size.width / (float)p_viewport_size.height,
+	float znear;
+	float zfar;
+    bool vaspect;
 
-    glm::vec3 position;
-    glm::vec3 rotation;
-    glm::vec3 scale;
+	static Camera *current_camera;
 
-    static Camera* current_camera;
-
-    glm::mat4x4 projection_matrix;
-    glm::mat4x4 model_view_matrix;
+	Transform camera_transform;
+	Transform model_view_matrix;
+	Projection projection_matrix;
 };
 
 class OrthographicCamera : public Camera {
 public:
-    void bind();
+	void bind();
 
-    OrthographicCamera();
-    ~OrthographicCamera();
+	OrthographicCamera();
+	~OrthographicCamera();
 };
 
 class PerspectiveCamera : public Camera {
 public:
-    float near;
-    float far;
+	float fov;
 
-    void bind();
+	void bind();
 
-    PerspectiveCamera();
-    ~PerspectiveCamera();
+	PerspectiveCamera();
+	~PerspectiveCamera();
 };
+
+//frustum
 
 #endif // CAMERA_H

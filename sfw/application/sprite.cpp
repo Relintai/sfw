@@ -1,6 +1,7 @@
 #include "sprite.h"
 
 void Sprite::render() {
+    /*
     mesh_instance->position.x = position.x;
     mesh_instance->position.y = position.y;
 
@@ -8,6 +9,7 @@ void Sprite::render() {
 
     mesh_instance->scale.x = scale.x;
     mesh_instance->scale.y = scale.y;
+    */
 
     mesh_instance->render();
 }

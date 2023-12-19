@@ -6,7 +6,7 @@
 #include "material.h"
 #include "mesh.h"
 
-#include "../../libs/glm/vec3.hpp"
+#include "transform.h"
 
 class MeshInstance {
 public:
@@ -18,9 +18,7 @@ public:
     Material *material;
     Mesh *mesh;
 
-    glm::vec3 position;
-    glm::vec3 rotation;
-    glm::vec3 scale;
+    Transform transform;
 
     std::vector<MeshInstance *> children;
 };

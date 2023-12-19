@@ -2,11 +2,8 @@
 #define COLOR_MATERIAL_H
 
 #include "material.h"
-#include "glm/vec4.hpp"
 
 #include "camera.h"
-
-#include "./glm/gtc/type_ptr.hpp"
 
 class ColorMaterial : public Material {
 
@@ -16,8 +13,8 @@ public:
     }
 
     void bind_uniforms() {
-        glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->projection_matrix));
-        glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->model_view_matrix));
+        //glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->projection_matrix));
+        //glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->model_view_matrix));
     }
 
     void setup_uniforms() {

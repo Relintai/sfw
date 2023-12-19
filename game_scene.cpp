@@ -135,8 +135,8 @@ GameScene::GameScene() {
 
 	sprite = new Sprite();
 	sprite->mesh_instance->material = material;
-	sprite->position.x = 0;
-	sprite->position.y = 0;
+	//sprite->position.x = 0;
+	//sprite->position.y = 0;
 	//sprite->region_x = 7.0 * (1.0 / 16.0);
 	//sprite->region_y = 7.0 * (1.0 / 16.0);
 	//sprite->region_width = 1.0 / 16.0;
@@ -164,15 +164,15 @@ GameScene::GameScene() {
 	*/
 
 	camera = new OrthographicCamera();
-	camera->width = 2;
-	camera->height = 2;
-	camera->position.x = 0;
-	camera->position.y = 0;
+	//camera->width = 2;
+	//camera->height = 2;
+	//camera->position.x = 0;
+	//camera->position.y = 0;
 	//camera->position.z = -2;
 
 	mesh = memnew(Mesh(2));
 	cmaterial = memnew(ColoredMaterial());
-	cmaterial->color = glm::vec4(1, 1, 0, 1);
+	//cmaterial->color = glm::vec4(1, 1, 0, 1);
 
 	mesh->clear();
 

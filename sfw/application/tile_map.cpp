@@ -1,9 +1,5 @@
 #include "tile_map.h"
 
-#include "../../libs/glm/gtc/matrix_transform.hpp"
-#include "../../libs/glm/matrix.hpp"
-#include "../../libs/glm/vec3.hpp"
-
 #include "camera.h"
 
 void TileMap::build_mesh() {
@@ -105,13 +101,13 @@ void TileMap::render() {
     if (!mesh)
 		return;
 
-	glm::mat4 mat_orig = Camera::current_camera->model_view_matrix;
+	Transform mat_orig = Camera::current_camera->model_view_matrix;
 	
-	Camera::current_camera->model_view_matrix = glm::translate(Camera::current_camera->model_view_matrix, glm::vec3(position.x, position.y, 0));
+	//Camera::current_camera->model_view_matrix = glm::translate(Camera::current_camera->model_view_matrix, glm::vec3(position.x, position.y, 0));
 
-	Camera::current_camera->model_view_matrix = glm::rotate(Camera::current_camera->model_view_matrix, rotation, glm::vec3(0, 0, 1));
+	//Camera::current_camera->model_view_matrix = glm::rotate(Camera::current_camera->model_view_matrix, rotation, glm::vec3(0, 0, 1));
 
-	Camera::current_camera->model_view_matrix = glm::scale(Camera::current_camera->model_view_matrix, glm::vec3(scale.x, scale.y, 0));
+	//Camera::current_camera->model_view_matrix = glm::scale(Camera::current_camera->model_view_matrix, glm::vec3(scale.x, scale.y, 0));
 
 	if (material)
 		material->bind();

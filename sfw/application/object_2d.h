@@ -1,16 +1,14 @@
 #ifndef OBJECT_2D_H
 #define OBJECT_2D_H
 
-#include "../../libs/glm/vec2.hpp"
+#include "transform_2d.h"
 
 class Object2D {
 public:
     Object2D();
     virtual ~Object2D();
 
-    glm::vec2 position;
-    float rotation;
-    glm::vec2 scale;
+    Transform2D transform;
 };
 
 
