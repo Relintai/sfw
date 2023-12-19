@@ -168,21 +168,38 @@ void AppWindow::window_hints(unsigned flags) {
 
 #ifdef __APPLE__
 	/* We need to explicitly ask for a 3.2 context on OS X */
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // osx
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2); // osx, 2:#version150,3:330
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // osx
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2); // osx, 2:#version150,3:330
 #else
 	// Compute shaders need 4.5 otherwise. But...
 	// According to the GLFW docs, the context version hint acts as a minimum version.
 	// i.e, the context you actually get may be a higher or highest version (which is usually the case)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 #endif
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //osx
 #endif
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
 	glfwWindowHint(GLFW_STENCIL_BITS, 8); //osx
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+
+
+/*
+#if defined(_WIN64) || defined(_WIN32)
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+#else
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
+*/
+
 
 	//glfwWindowHint( GLFW_RED_BITS, 8 );
 	//glfwWindowHint( GLFW_GREEN_BITS, 8 );
@@ -369,13 +386,15 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	//glEnable(GL_TEXTURE_2D);
 
 	// 0:disable vsync, 1:enable vsync, <0:adaptive (allow vsync when framerate is higher than syncrate and disable vsync when framerate drops below syncrate)
-	flags |= _vsync ? WINDOW_VSYNC : WINDOW_VSYNC_DISABLED;
-	flags |= _vsync_adaptive ? WINDOW_VSYNC_ADAPTIVE : 0;
+	//flags |= _vsync ? WINDOW_VSYNC : WINDOW_VSYNC_DISABLED;
+	//flags |= _vsync_adaptive ? WINDOW_VSYNC_ADAPTIVE : 0;
 
-	int has_adaptive_vsync = glfwExtensionSupported("WGL_EXT_swap_control_tear") || glfwExtensionSupported("GLX_EXT_swap_control_tear") || glfwExtensionSupported("EXT_swap_control_tear");
-	int wants_adaptive_vsync = (flags & WINDOW_VSYNC_ADAPTIVE);
-	int interval = has_adaptive_vsync && wants_adaptive_vsync ? -1 : (flags & WINDOW_VSYNC_DISABLED ? 0 : 1);
-	glfwSwapInterval(interval);
+	flags |= WINDOW_VSYNC_DISABLED;
+
+	//int has_adaptive_vsync = glfwExtensionSupported("WGL_EXT_swap_control_tear") || glfwExtensionSupported("GLX_EXT_swap_control_tear") || //glfwExtensionSupported("EXT_swap_control_tear");
+	//int wants_adaptive_vsync = (flags & WINDOW_VSYNC_ADAPTIVE);
+	//int interval = has_adaptive_vsync && wants_adaptive_vsync ? -1 : (flags & WINDOW_VSYNC_DISABLED ? 0 : 1);
+	//glfwSwapInterval(interval);
 
 	const GLFWvidmode *mode = glfwGetVideoMode(monitor ? monitor : glfwGetPrimaryMonitor());
 
@@ -385,7 +404,7 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	//PRINTF("GPU driver: %s\n", glGetString(GL_VERSION));
 
 #ifndef __EMSCRIPTEN__
-	//PRINTF("GPU OpenGL: %d.%d\n", GLAD_VERSION_MAJOR(gl_version), GLAD_VERSION_MINOR(gl_version));
+	LOG_MSG("GPU OpenGL: " + String::num(GLAD_VERSION_MAJOR(gl_version)) + " " + String::num(GLAD_VERSION_MINOR(gl_version)));
 
 	if (FLAGS_TRANSPARENT) { // @transparent
 		glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE); // @todo: is decorated an attrib or a hint?

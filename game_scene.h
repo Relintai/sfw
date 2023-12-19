@@ -4,7 +4,7 @@
 #include "scene.h"
 
 /*
-#include "camera.h"
+
 #include "mesh_instance.h"
 #include "sprite.h"
 #include "texture.h"
@@ -14,6 +14,7 @@
 
 #include "colored_material.h"
 #include "mesh.h"
+#include "camera.h"
 
 class GameScene : public Scene {
 public:
@@ -29,13 +30,13 @@ public:
 	bool up;
 	bool down;
 
-	Camera *camera;
 	Texture *texture;
 	TextureMaterial *material;
 	TileMap *tile_map;
 	Sprite *sprite;
 	*/
 
+	Camera *camera;
 	Mesh *mesh;
 	ColoredMaterial *material;
 };

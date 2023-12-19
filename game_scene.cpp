@@ -5,6 +5,8 @@
 #include "3rd_glad.h"
 #include "memory.h"
 
+
+
 //#include "camera.h"
 //#include "sprite.h"
 
@@ -101,7 +103,7 @@ void GameScene::render() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//camera->bind();
+	camera->bind();
 
 	//tile_map->render();
 
@@ -117,13 +119,6 @@ GameScene::GameScene() {
 	right = false;
 	up = false;
 	down = false;
-
-	camera = new OrthographicCamera();
-	camera->width = 16;
-	camera->height = 16;
-	camera->position.x = 8;
-	camera->position.y = 8;
-	//camera->position.z = -2;
 
 	int w;
 	int h;
@@ -170,8 +165,16 @@ GameScene::GameScene() {
 	tile_map->build_mesh();
 	*/
 
+	camera = new OrthographicCamera();
+	camera->width = 2;
+	camera->height = 2;
+	camera->position.x = 0;
+	camera->position.y = 0;
+	//camera->position.z = -2;
+
 	mesh = memnew(Mesh(2));
 	material = memnew(ColoredMaterial());
+	material->color = glm::vec4(1, 1, 0, 1);
 
 	mesh->clear();
 
@@ -218,6 +221,7 @@ GameScene::~GameScene() {
 	delete sprite;
 	*/
 
+	memdelete(camera);
 	memdelete(mesh);
 	memdelete(material);
 }
