@@ -2,7 +2,8 @@
 
 #include "application.h"
 
-void GameScene::event(const SDL_Event &ev) {
+void GameScene::event() {
+	/*
 	switch (ev.type) {
 		case SDL_WINDOWEVENT: {
 			switch (ev.window.event) {
@@ -51,9 +52,11 @@ void GameScene::event(const SDL_Event &ev) {
 			break;
 		}
 	}
+	*/
 }
 
 void GameScene::update(float delta) {
+	/*
 	if (up) {
 		sprite->position.y += delta * 3.0;
 	}
@@ -85,9 +88,11 @@ void GameScene::update(float delta) {
 	if (sprite->position.y > 14.5) {
 		sprite->position.y = 14.5;
 	}
+	*/
 }
 
 void GameScene::render() {
+	/*
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -96,9 +101,11 @@ void GameScene::render() {
 	tile_map->render();
 
 	sprite->render();
+	*/
 }
 
 GameScene::GameScene() {
+	/*
 	left = false;
     right = false;
     up = false;
@@ -154,12 +161,15 @@ GameScene::GameScene() {
 	}
 
 	tile_map->build_mesh();
+	*/
 }
 
 GameScene::~GameScene() {
+	/*
 	delete camera;
 	delete texture;
 	delete material;
 	delete tile_map;
 	delete sprite;
+	*/
 }

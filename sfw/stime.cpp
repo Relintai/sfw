@@ -9,42 +9,42 @@
 #include <ctime>
 
 #if 0
-uint64_t Time::time_gpu() {
+uint64_t STime::time_gpu() {
     GLint64 t = 123456789;
     glGetInteger64v(GL_TIMESTAMP, &t);
     return (uint64_t)t;
 }
 #endif
-uint64_t Time::date() {
+uint64_t STime::date() {
 	//time_t epoch = time(0);
 	//struct tm *ti = localtime(&epoch);
 	//return atoi64(va("%04d%02d%02d%02d%02d%02d", ti->tm_year + 1900, ti->tm_mon + 1, ti->tm_mday, ti->tm_hour, ti->tm_min, ti->tm_sec));
 	return 0;
 }
-char *Time::date_string() {
+char *STime::date_string() {
 	//time_t epoch = time(0);
 	//struct tm *ti = localtime(&epoch);
 	//return va("%04d-%02d-%02d %02d:%02d:%02d", ti->tm_year + 1900, ti->tm_mon + 1, ti->tm_mday, ti->tm_hour, ti->tm_min, ti->tm_sec);
 	return 0;
 }
-uint64_t Time::date_epoch() {
+uint64_t STime::date_epoch() {
 	time_t epoch = time(0);
 	return epoch;
 }
 #if 0
-double Time::time_ss() {
+double STime::time_ss() {
     return glfwGetTime();
 }
-double Time::time_ms() {
+double STime::time_ms() {
     return glfwGetTime() * 1000.0;
 }
-uint64_t Time::time_us() {
+uint64_t STime::time_us() {
     return (uint64_t)(glfwGetTime() * 1000000.0); // @fixme: use a high resolution timer instead, or time_gpu below
 }
-uint64_t Time::sleep_us(uint64_t us) { // @fixme: use a high resolution sleeper instead
+uint64_t STime::sleep_us(uint64_t us) { // @fixme: use a high resolution sleeper instead
     return sleep_ms( us / 1000.0 );
 }
-double Time::sleep_ms(double ms) {
+double STime::sleep_ms(double ms) {
     double now = time_ms();
     if( ms <= 0 ) {
 #if defined(_WIN64) || defined(_WIN32)
@@ -111,7 +111,7 @@ static uint64_t nanotimer(uint64_t *out_freq) {
 #endif
 }
 
-uint64_t Time::time_ns() {
+uint64_t STime::time_ns() {
 	static __thread uint64_t epoch = 0;
 	static __thread uint64_t freq = 0;
 	if (!freq) {
@@ -128,23 +128,23 @@ uint64_t Time::time_ns() {
 	uint64_t r = a % c;
 	return q * b + r * b / c;
 }
-uint64_t Time::time_us() {
+uint64_t STime::time_us() {
 	return time_ns() / TIMER_E3;
 }
-uint64_t Time::time_ms() {
+uint64_t STime::time_ms() {
 	return time_ns() / TIMER_E6;
 }
-double Time::time_ss() {
+double STime::time_ss() {
 	return time_ns() / 1e9; // TIMER_E9;
 }
-double Time::time_mm() {
+double STime::time_mm() {
 	return time_ss() / 60;
 }
-double Time::time_hh() {
+double STime::time_hh() {
 	return time_mm() / 60;
 }
 
-void Time::sleep_ns(double ns) {
+void STime::sleep_ns(double ns) {
 #if defined(_WIN64) || defined(_WIN32)
 	if (ns >= 100) {
 		LARGE_INTEGER li; // Windows sleep in 100ns units
@@ -168,12 +168,12 @@ void Time::sleep_ns(double ns) {
 #endif
 	}
 }
-void Time::sleep_us(double us) {
+void STime::sleep_us(double us) {
 	sleep_ns(us * 1e3);
 }
-void Time::sleep_ms(double ms) {
+void STime::sleep_ms(double ms) {
 	sleep_ns(ms * 1e6);
 }
-void Time::sleep_ss(double ss) {
+void STime::sleep_ss(double ss) {
 	sleep_ns(ss * 1e9);
 }

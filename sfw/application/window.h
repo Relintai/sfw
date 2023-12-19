@@ -17,7 +17,7 @@ struct GLFWwindow;
 struct GLFWcursor;
 struct GLFWmonitor;
 
-class Window {
+class AppWindow {
 public:
 	enum WINDOW_FLAGS {
 		WINDOW_MSAA2 = 0x02,
@@ -37,8 +37,8 @@ public:
 		WINDOW_VSYNC_DISABLED = 0x2000,
 	};
 
-	bool create(float scale, unsigned flags);
-	bool create_from_handle(void *handle, float scale, unsigned flags);
+	bool create(float scale, unsigned int flags);
+	bool create_from_handle(void *handle, float scale, unsigned int flags);
 
 	int frame_begin();
 	void frame_end();
@@ -107,10 +107,10 @@ public:
 	const char *get_clipboard();
 	void set_clipboard(const char *text);
 
-	static Window *get_singleton();
+	static AppWindow *get_singleton();
 
-	Window();
-	~Window();
+	AppWindow();
+	~AppWindow();
 
 protected:
 	static void glfw_quit();
@@ -123,11 +123,12 @@ protected:
 	void resize();
 	static void loop_wrapper(void *loopArg);
 	void glNewFrame();
-	Vector2 canvas();
 	double get_scale();
 	void create_default_cursors();
 
-	static Window *_singleton;
+	static AppWindow *_singleton;
+
+	double boot_time;
 
 	GLFWwindow *_window;
 	int w;

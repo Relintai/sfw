@@ -7,7 +7,7 @@
 
 #include "int_types.h"
 
-class Time {
+class STime {
 public:
 	static uint64_t date(); // YYYYMMDDhhmmss
 	static uint64_t date_epoch(); // linux epoch

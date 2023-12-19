@@ -37,8 +37,25 @@
 # g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pool_vector.cpp -o sfw/pool_vector.o
 # g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pool_allocator.cpp -o sfw/pool_allocator.o
 # g++ -Wall -D_REENTRANT -g -Isfw -c sfw/mutex.cpp -o sfw/mutex.o
-#g++ -Wall -D_REENTRANT -g -Isfw -c sfw/stime.cpp -o sfw/stime.o
+# g++ -Wall -D_REENTRANT -g -Isfw -c sfw/stime.cpp -o sfw/stime.o
 
-#g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/application.cpp -o sfw/application/application.o
-#g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/scene.cpp -o sfw/application/scene.o
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/application.cpp -o sfw/application/application.o
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/scene.cpp -o sfw/application/scene.o
 g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/window.cpp -o sfw/application/window.o
+
+
+#g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c game_scene.cpp -o game_scene.o
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c main.cpp -o main.o
+
+
+g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/aabb.o sfw/basis.o sfw/color.o sfw/face3.o sfw/logger.o sfw/math_funcs.o \
+                        sfw/memory.o sfw/pcg.o sfw/plane.o sfw/projection.o sfw/quaternion.o sfw/random_pcg.o \
+                        sfw/rect2.o sfw/rect2i.o sfw/safe_refcount.o sfw/transform_2d.o sfw/transform.o \
+                        sfw/ustring.o sfw/vector2.o sfw/vector2i.o sfw/vector3.o sfw/vector3i.o sfw/vector4.o sfw/vector4i.o \
+                        sfw/pool_vector.o sfw/pool_allocator.o sfw/mutex.o sfw/stime.o \
+                        sfw/application/application.o sfw/application/scene.o sfw/application/window.o \
+                        game_scene.o main.o \
+                         -o game 
+
+
+#export args="-lm -ldl -lpthread -lX11 -w -Iengine/ $args"

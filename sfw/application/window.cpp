@@ -3,13 +3,30 @@
 
 #include "window.h"
 
+#define GLAD_GL_IMPLEMENTATION // glad
+#include "3rd_glad.h"
+
+#define _GLFW_IMPLEMENTATION // glfw337
+#define GLFW_INCLUDE_NONE // glfw337
+
+#ifdef __APPLE__
+#define _GLFW_COCOA // glfw osx
+#elif defined(_WIN32) || defined(_WIN64)
+#define _GLFW_WIN32 // glfw win32
+#else
+#define _GLFW_X11 // glfw linux, also _GLFW_OSMESA or _GLFW_WAYLAND
+#endif
+
+#undef _GNU_SOURCE
+
+#include "3rd_glfw3.h"
+#undef timeGetTime
+#undef Time
+
 #include "error_macros.h"
+#include "stime.h"
 #include "ustring.h"
 #include "vector4.h"
-
-#include "3rd_glad.h"
-#include "3rd_glfw3.h"
-#include "stime.h"
 
 /*
 static volatile float framerate = 0;
@@ -19,11 +36,11 @@ static int fps__timing_thread(void *arg) {
 	while (fps_active) {
 		if (framerate <= 0) {
 			loop_counter = timer_counter = 0;
-			Time::sleep_ms(250);
+			STime::sleep_ms(250);
 		} else {
 			timer_counter++;
 			int64_t tt = (int64_t)(1e9 / (float)framerate) - ns_excess;
-			uint64_t took = -Time::time_ns();
+			uint64_t took = -STime::time_ns();
 #if is(win32)
 			timeBeginPeriod(1);
 			Sleep(tt > 0 ? tt / 1e6 : 0);
@@ -63,7 +80,7 @@ static int fps_wait() {
 	// if we throttled too much, cpu idle wait
 	while (fps_active && (loop_counter > timer_counter)) {
 		//thread_yield();
-		Time::sleep_ns(100);
+		STime::sleep_ns(100);
 	}
 
 	// max auto frameskip is 10: ie, even if speed is low paint at least one frame every 10
@@ -76,7 +93,7 @@ static int fps_wait() {
 	// only draw if we are fast enough, otherwise skip the frame
 	return loop_counter >= timer_counter;
 }
-static void Window::vsync(float hz) {
+static void AppWindow::vsync(float hz) {
 	if (hz <= 0)
 		return;
 	do_once fps_locker(1);
@@ -91,7 +108,7 @@ static void Window::vsync(float hz) {
 static void (*hooks[64])() = {0};
 static void *userdatas[64] = {0};
 
-bool Window::hook(void (*func)(), void* user) {
+bool AppWindow::hook(void (*func)(), void* user) {
     unhook( func );
     for( int i = 0; i < 64; ++i ) {
         if( !hooks[i] ) {
@@ -102,7 +119,7 @@ bool Window::hook(void (*func)(), void* user) {
     }
     return false;
 }
-void Window::unhook(void (*func)()) {
+void AppWindow::unhook(void (*func)()) {
     for( int i = 0; i < 64; ++i ) {
         if(hooks[i] == func) {
             hooks[i] = 0;
@@ -115,7 +132,7 @@ void Window::unhook(void (*func)()) {
 // -----------------------------------------------------------------------------
 // glfw
 
-void Window::glfw_error_callback(int error, const char *description) {
+void AppWindow::glfw_error_callback(int error, const char *description) {
 #ifdef __APPLE__
 	if (error == 65544)
 		return; // whitelisted
@@ -124,11 +141,11 @@ void Window::glfw_error_callback(int error, const char *description) {
 	CRASH_MSG(String(description) + " (error " + String::num(error) + ")");
 }
 
-void Window::glfw_quit(void) {
+void AppWindow::glfw_quit(void) {
 	glfwTerminate();
 }
 
-void Window::glfw_init() {
+void AppWindow::glfw_init() {
 	glfwSetErrorCallback(glfw_error_callback);
 	int ok = glfwInit();
 
@@ -137,10 +154,10 @@ void Window::glfw_init() {
 	atexit(glfw_quit); //glfwTerminate);
 }
 
-void Window::drop_callback(GLFWwindow *window, int count, const char **paths) {
+void AppWindow::drop_callback(GLFWwindow *window, int count, const char **paths) {
 }
 
-void Window::window_hints(unsigned flags) {
+void AppWindow::window_hints(unsigned flags) {
 #ifdef __APPLE__
 	//glfwInitHint( GLFW_COCOA_CHDIR_RESOURCES, GLFW_FALSE );
 	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE); // @todo: remove silicon mac M1 hack
@@ -190,10 +207,10 @@ void Window::window_hints(unsigned flags) {
 	//if(flags & WINDOW_MSAA4) glfwWindowHint(GLFW_SAMPLES, 4); // x4 AA
 	//if(flags & WINDOW_MSAA8) glfwWindowHint(GLFW_SAMPLES, 8); // x8 AA
 
-	Window::get_singleton()->_window_flags = flags;
+	AppWindow::get_singleton()->_window_flags = flags;
 }
 
-void Window::glNewFrame() {
+void AppWindow::glNewFrame() {
 	// @transparent debug
 	// if( input_down(KEY_F1) ) transparent(window_has_transparent()^1);
 	// if( input_down(KEY_F2) ) maximize(window_has_maximize()^1);
@@ -211,8 +228,8 @@ void Window::glNewFrame() {
 	//printf("%dx%d\n", w, h);
 #endif
 
-	Window::get_singleton()->width = w;
-	Window::get_singleton()->height = h;
+	AppWindow::get_singleton()->width = w;
+	AppWindow::get_singleton()->height = h;
 
 	// blending defaults
 	glEnable(GL_BLEND);
@@ -241,7 +258,7 @@ void Window::glNewFrame() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
+bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags) {
 	// abort run if any test suite failed in unit-test mode
 
 	glfw_init();
@@ -391,16 +408,14 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 	return true;
 }
 
-bool Window::create(float scale, unsigned flags) {
+bool AppWindow::create(float scale, unsigned int flags) {
 	return create_from_handle(NULL, scale, flags);
 }
 
-static double boot_time = 0;
-
-char *Window::get_stats() {
+char *AppWindow::get_stats() {
 	static double num_frames = 0, begin = FLT_MAX, prev_frame = 0;
 
-	double now = Time::time_ss();
+	double now = STime::time_ss();
 	if (boot_time < 0)
 		boot_time = now;
 
@@ -432,7 +447,7 @@ char *Window::get_stats() {
 	return buf + strspn(buf, " ");
 }
 
-int Window::frame_begin() {
+int AppWindow::frame_begin() {
 	glfwPollEvents();
 
 	if (glfwWindowShouldClose(_window)) {
@@ -452,7 +467,7 @@ int Window::frame_begin() {
 	return 1;
 }
 
-void Window::frame_end() {
+void AppWindow::frame_end() {
 	// flush batching systems that need to be rendered before frame swapping. order matters.
 	{
 		/*
@@ -472,7 +487,7 @@ void Window::frame_end() {
 	}
 }
 
-void Window::frame_swap() {
+void AppWindow::frame_swap() {
 	// glFinish();
 	/*
 #ifndef __EMSCRIPTEN__
@@ -483,11 +498,11 @@ void Window::frame_swap() {
 	// emscripten_webgl_commit_frame();
 }
 
-void Window::shutdown() {
+void AppWindow::shutdown() {
 	loop_exit(); // finish emscripten loop automatically
 }
 
-int Window::swap() {
+int AppWindow::swap() {
 	// end frame
 	if (frame_count > 0) {
 		frame_end();
@@ -505,7 +520,7 @@ int Window::swap() {
 	return 1;
 }
 
-void Window::resize() {
+void AppWindow::resize() {
 #ifdef __EMSCRIPTEN__
 	EM_ASM(canvas.canResize = 0);
 	if (g->flags & WINDOW_FIXED)
@@ -523,8 +538,8 @@ void Window::resize() {
 #endif /* __EMSCRIPTEN__ */
 }
 
-void Window::loop_wrapper(void *loopArg) {
-	Window *w = Window::get_singleton();
+void AppWindow::loop_wrapper(void *loopArg) {
+	AppWindow *w = AppWindow::get_singleton();
 	if (w->frame_begin()) {
 		w->resize();
 		w->render_callback(loopArg);
@@ -535,7 +550,7 @@ void Window::loop_wrapper(void *loopArg) {
 	}
 }
 
-void Window::loop(void (*user_function)(void *loopArg), void *loopArg) {
+void AppWindow::loop(void (*user_function)(void *loopArg), void *loopArg) {
 #ifdef __EMSCRIPTEN__
 	render_callback = user_function;
 	emscripten_set_main_loop_arg(window_loop_wrapper, loopArg, 0, 1);
@@ -546,7 +561,7 @@ void Window::loop(void (*user_function)(void *loopArg), void *loopArg) {
 #endif /* __EMSCRIPTEN__ */
 }
 
-void Window::loop_exit() {
+void AppWindow::loop_exit() {
 #ifdef __EMSCRIPTEN__
 	emscripten_cancel_main_loop();
 #else
@@ -554,7 +569,7 @@ void Window::loop_exit() {
 #endif /* __EMSCRIPTEN__ */
 }
 
-Vector2 Window::canvas() {
+Vector2 AppWindow::get_canvas() {
 #ifdef __EMSCRIPTEN__
 	int width = EM_ASM_INT_V(return canvas.width);
 	int height = EM_ASM_INT_V(return canvas.height);
@@ -567,41 +582,41 @@ Vector2 Window::canvas() {
 #endif /* __EMSCRIPTEN__ */
 }
 
-int Window::get_width() {
+int AppWindow::get_width() {
 	return w;
 }
-int Window::get_height() {
+int AppWindow::get_height() {
 	return h;
 }
-double Window::get_time() {
+double AppWindow::get_time() {
 	return t;
 }
-double Window::get_delta() {
+double AppWindow::get_delta() {
 	return dt;
 }
 
-double Window::get_fps() {
+double AppWindow::get_fps() {
 	return fps;
 }
-void Window::fps_lock(float fps) {
+void AppWindow::fps_lock(float fps) {
 	hz = fps;
 }
-void Window::fps_unlock() {
+void AppWindow::fps_unlock() {
 	hz = 0;
 }
-double Window::get_fps_target() {
+double AppWindow::get_fps_target() {
 	return hz;
 }
 
-uint64_t Window::frame() {
+uint64_t AppWindow::frame() {
 	return frame_count;
 }
-void Window::set_title(const char *title_) {
+void AppWindow::set_title(const char *title_) {
 	snprintf(title, 128, "%s", title_);
 	if (!title[0])
 		glfwSetWindowTitle(_window, title);
 }
-void Window::set_color(unsigned color) {
+void AppWindow::set_color(unsigned color) {
 	unsigned r = (color >> 0) & 255;
 	unsigned g = (color >> 8) & 255;
 	unsigned b = (color >> 16) & 255;
@@ -609,10 +624,10 @@ void Window::set_color(unsigned color) {
 	winbgcolor = Color(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 }
 
-int Window::has_icon() {
+int AppWindow::has_icon() {
 	return _has_icon;
 }
-void Window::set_icon(const char *file_icon) {
+void AppWindow::set_icon(const char *file_icon) {
 	/*
 	int len = 0;
 	void *data = vfs_load(file_icon, &len);
@@ -645,11 +660,11 @@ void Window::set_icon(const char *file_icon) {
 #endif
 	*/
 }
-void *Window::get_handle() {
+void *AppWindow::get_handle() {
 	return _window;
 }
 
-Vector2 Window::dpi() {
+Vector2 AppWindow::dpi() {
 	Vector2 dpi = Vector2(1, 1);
 
 #if !defined(__EMSCRIPTEN__) && !defined(__APPLE__) // @todo: remove silicon mac M1 hack`
@@ -661,7 +676,7 @@ Vector2 Window::dpi() {
 // -----------------------------------------------------------------------------
 // fullscreen
 
-GLFWmonitor *Window::find_monitor(int wx, int wy) {
+GLFWmonitor *AppWindow::find_monitor(int wx, int wy) {
 	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 
 	// find best monitor given current window coordinates. @todo: select by ocuppied window area inside each monitor instead.
@@ -681,7 +696,7 @@ GLFWmonitor *Window::find_monitor(int wx, int wy) {
 
 #if 0 // to deprecate
 
-void Window::fullscreen(int enabled) {
+void AppWindow::fullscreen(int enabled) {
     fullscreen = !!enabled;
 #ifndef __EMSCRIPTEN__
     if( fullscreen ) {
@@ -699,13 +714,13 @@ void Window::fullscreen(int enabled) {
     }
 #endif
 }
-int Window::has_fullscreen() {
+int AppWindow::has_fullscreen() {
     return fullscreen;
 }
 
 #else
 
-int Window::has_fullscreen() {
+int AppWindow::has_fullscreen() {
 #ifdef __EMSCRIPTEN__
 	EmscriptenFullscreenChangeEvent fsce;
 	emscripten_get_fullscreen_status(&fsce);
@@ -715,7 +730,7 @@ int Window::has_fullscreen() {
 #endif /* __EMSCRIPTEN__ */
 }
 
-void Window::set_fullscreen(int enabled) {
+void AppWindow::set_fullscreen(int enabled) {
 	if (has_fullscreen() == !!enabled)
 		return;
 
@@ -778,20 +793,20 @@ void Window::set_fullscreen(int enabled) {
 
 #endif
 
-void Window::set_pause(int enabled) {
+void AppWindow::set_pause(int enabled) {
 	paused = enabled;
 }
-int Window::has_pause() {
+int AppWindow::has_pause() {
 	return paused;
 }
-void Window::set_focus() {
+void AppWindow::set_focus() {
 	glfwFocusWindow(_window);
 }
-int Window::has_focus() {
+int AppWindow::has_focus() {
 	return !!glfwGetWindowAttrib(_window, GLFW_FOCUSED);
 }
 
-void Window::create_default_cursors() {
+void AppWindow::create_default_cursors() {
 	if (_cursors_initialized) {
 		return;
 	}
@@ -813,7 +828,7 @@ void Window::create_default_cursors() {
 	}
 }
 
-void Window::set_cursor_shape(unsigned mode) {
+void AppWindow::set_cursor_shape(unsigned mode) {
 	_cursorshape = (mode &= 7);
 
 	create_default_cursors();
@@ -824,14 +839,14 @@ void Window::set_cursor_shape(unsigned mode) {
 		glfwSetCursor(_window, mode < 7 ? cursors[mode] : NULL);
 	}
 }
-void Window::set_cursor(int visible) {
+void AppWindow::set_cursor(int visible) {
 	glfwSetInputMode(_window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
-int Window::has_cursor() {
+int AppWindow::has_cursor() {
 	return glfwGetInputMode(_window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
 }
 
-void Window::set_visible(int visible) {
+void AppWindow::set_visible(int visible) {
 	if (!_window)
 		return;
 
@@ -843,14 +858,14 @@ void Window::set_visible(int visible) {
 	glfwPollEvents();
 #endif
 }
-int Window::has_visible() {
+int AppWindow::has_visible() {
 	return glfwGetWindowAttrib(_window, GLFW_VISIBLE);
 }
 
-double Window::get_aspect() {
+double AppWindow::get_aspect() {
 	return (double)w / (h + !h);
 }
-void Window::aspect_lock(unsigned numer, unsigned denom) {
+void AppWindow::aspect_lock(unsigned numer, unsigned denom) {
 	if (!_window)
 		return;
 	if (numer * denom != 0) {
@@ -859,13 +874,13 @@ void Window::aspect_lock(unsigned numer, unsigned denom) {
 		glfwSetWindowAspectRatio(_window, GLFW_DONT_CARE, GLFW_DONT_CARE);
 	}
 }
-void Window::aspect_unlock() {
+void AppWindow::aspect_unlock() {
 	if (!_window)
 		return;
-	Window::aspect_lock(0, 0);
+	AppWindow::aspect_lock(0, 0);
 }
 
-void Window::set_transparent(int enabled) {
+void AppWindow::set_transparent(int enabled) {
 #ifndef __EMSCRIPTEN__
 	if (!has_fullscreen()) {
 		if (enabled) {
@@ -880,7 +895,7 @@ void Window::set_transparent(int enabled) {
 	}
 #endif
 }
-int Window::has_transparent() {
+int AppWindow::has_transparent() {
 #ifndef __EMSCRIPTEN__
 	return glfwGetWindowAttrib(_window, GLFW_DECORATED) != GLFW_TRUE;
 #else
@@ -888,7 +903,7 @@ int Window::has_transparent() {
 #endif
 }
 
-void Window::set_maximize(int enabled) {
+void AppWindow::set_maximize(int enabled) {
 #ifndef __EMSCRIPTEN__
 	if (!has_fullscreen()) {
 		if (enabled) {
@@ -899,7 +914,7 @@ void Window::set_maximize(int enabled) {
 	}
 #endif
 }
-int Window::has_maximize() {
+int AppWindow::has_maximize() {
 #ifndef __EMSCRIPTEN__
 	return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE;
 #else
@@ -907,28 +922,31 @@ int Window::has_maximize() {
 #endif
 }
 
-const char *Window::get_clipboard() {
+const char *AppWindow::get_clipboard() {
 	return glfwGetClipboardString(_window);
 }
-void Window::set_clipboard(const char *text) {
+void AppWindow::set_clipboard(const char *text) {
 	glfwSetClipboardString(_window, text);
 }
 
-double Window::get_scale() { // ok? @testme
+double AppWindow::get_scale() { // ok? @testme
 	float xscale, yscale;
 	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 	glfwGetMonitorContentScale(monitor, &xscale, &yscale);
 	return MAX(xscale, yscale);
 }
 
-Window *Window::get_singleton() {
+AppWindow *AppWindow::get_singleton() {
 	return _singleton;
 }
 
-Window::Window() {
+AppWindow::AppWindow() {
 	_singleton = this;
 
 	_window = NULL;
+
+	boot_time = 0;
+
 	w = 0;
 	h = 0;
 	xpos = 0;
@@ -977,8 +995,8 @@ Window::Window() {
 	cursor_enums[5] = GLFW_HAND_CURSOR;
 	cursor_enums[6] = GLFW_CROSSHAIR_CURSOR;
 }
-Window::~Window() {
+AppWindow::~AppWindow() {
 	_singleton = NULL;
 }
 
-Window *Window::_singleton = NULL;
+AppWindow *AppWindow::_singleton = NULL;

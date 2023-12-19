@@ -10964,6 +10964,7 @@ typedef struct _GLFWwindowNull
     }
 
 // Swaps the provided pointers
+/*
 #define _GLFW_SWAP_POINTERS(x, y) \
     {                             \
         void* t;                  \
@@ -10971,6 +10972,15 @@ typedef struct _GLFWwindowNull
         x = y;                    \
         y = t;                    \
     }
+    */
+
+#define _GLFW_SWAP_POINTERS(m_x, m_y) __glfw_ptr_swap_tmpl((m_x), (m_y))
+template <class T>
+inline void __glfw_ptr_swap_tmpl(T &x, T &y) {
+	T aux = x;
+	x = y;
+	y = aux;
+}
 
 // Per-thread error structure
 //
@@ -11427,7 +11437,7 @@ void _glfwPlatformWaitEvents(void);
 void _glfwPlatformWaitEventsTimeout(double timeout);
 void _glfwPlatformPostEmptyEvent(void);
 
-void _glfwPlatformGetRequiredInstanceExtensions(char** extensions);
+void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions);
 int _glfwPlatformGetPhysicalDevicePresentationSupport(VkInstance instance,
                                                       VkPhysicalDevice device,
                                                       uint32_t queuefamily);
@@ -12031,10 +12041,10 @@ static GLFWbool chooseEGLConfig(const _GLFWctxconfig* ctxconfig,
         return GLFW_FALSE;
     }
 
-    nativeConfigs = calloc(nativeCount, sizeof(EGLConfig));
+    nativeConfigs = (EGLConfig*)calloc(nativeCount, sizeof(EGLConfig));
     eglGetConfigs(_glfw.egl.display, nativeConfigs, nativeCount, &nativeCount);
 
-    usableConfigs = calloc(nativeCount, sizeof(_GLFWfbconfig));
+    usableConfigs = (_GLFWfbconfig*)calloc(nativeCount, sizeof(_GLFWfbconfig));
     usableCount = 0;
 
     for (i = 0;  i < nativeCount;  i++)
@@ -12151,7 +12161,7 @@ static void makeContextCurrentEGL(_GLFWwindow* window)
 
 static void swapBuffersEGL(_GLFWwindow* window)
 {
-    if (window != _glfwPlatformGetTls(&_glfw.contextSlot))
+    if (window != (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot))
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "EGL: The context must be current on the calling thread when swapping buffers");
@@ -12186,7 +12196,7 @@ static int extensionSupportedEGL(const char* extension)
 
 static GLFWglproc getProcAddressEGL(const char* procname)
 {
-    _GLFWwindow* window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    _GLFWwindow* window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
 
     if (window->context.egl.client)
     {
@@ -13097,7 +13107,7 @@ GLFWbool _glfwRefreshContextAttribs(_GLFWwindow* window,
     window->context.source = ctxconfig->source;
     window->context.client = GLFW_OPENGL_API;
 
-    previous = _glfwPlatformGetTls(&_glfw.contextSlot);
+    previous = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
     glfwMakeContextCurrent((GLFWwindow*) window);
 
     window->context.GetIntegerv = (PFNGLGETINTEGERVPROC)
@@ -13352,7 +13362,7 @@ GLFWbool _glfwStringInExtensionString(const char* string, const char* extensions
 GLFWAPI void glfwMakeContextCurrent(GLFWwindow* handle)
 {
     _GLFWwindow* window = (_GLFWwindow*) handle;
-    _GLFWwindow* previous = _glfwPlatformGetTls(&_glfw.contextSlot);
+    _GLFWwindow* previous = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
 
     _GLFW_REQUIRE_INIT();
 
@@ -13376,7 +13386,7 @@ GLFWAPI void glfwMakeContextCurrent(GLFWwindow* handle)
 GLFWAPI GLFWwindow* glfwGetCurrentContext(void)
 {
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
-    return _glfwPlatformGetTls(&_glfw.contextSlot);
+    return (GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
 }
 
 GLFWAPI void glfwSwapBuffers(GLFWwindow* handle)
@@ -13402,7 +13412,7 @@ GLFWAPI void glfwSwapInterval(int interval)
 
     _GLFW_REQUIRE_INIT();
 
-    window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
     if (!window)
     {
         _glfwInputError(GLFW_NO_CURRENT_CONTEXT,
@@ -13420,7 +13430,7 @@ GLFWAPI int glfwExtensionSupported(const char* extension)
 
     _GLFW_REQUIRE_INIT_OR_RETURN(GLFW_FALSE);
 
-    window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
     if (!window)
     {
         _glfwInputError(GLFW_NO_CURRENT_CONTEXT,
@@ -13486,7 +13496,7 @@ GLFWAPI GLFWglproc glfwGetProcAddress(const char* procname)
 
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
 
-    window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
     if (!window)
     {
         _glfwInputError(GLFW_NO_CURRENT_CONTEXT,
@@ -13650,7 +13660,7 @@ size_t _glfwEncodeUTF8(char* s, uint32_t codepoint)
 char* _glfw_strdup(const char* source)
 {
     const size_t length = strlen(source);
-    char* result = calloc(length + 1, 1);
+    char* result = (char*)calloc(length + 1, 1);
     strcpy(result, source);
     return result;
 }
@@ -13729,10 +13739,10 @@ void _glfwInputError(int code, const char* format, ...)
 
     if (_glfw.initialized)
     {
-        error = _glfwPlatformGetTls(&_glfw.errorSlot);
+        error = (_GLFWerror*)_glfwPlatformGetTls(&_glfw.errorSlot);
         if (!error)
         {
-            error = calloc(1, sizeof(_GLFWerror));
+            error = (_GLFWerror*)calloc(1, sizeof(_GLFWerror));
             _glfwPlatformSetTls(&_glfw.errorSlot, error);
             _glfwPlatformLockMutex(&_glfw.errorLock);
             error->next = _glfw.errorListHead;
@@ -13839,7 +13849,7 @@ GLFWAPI int glfwGetError(const char** description)
         *description = NULL;
 
     if (_glfw.initialized)
-        error = _glfwPlatformGetTls(&_glfw.errorSlot);
+        error = (_GLFWerror*)_glfwPlatformGetTls(&_glfw.errorSlot);
     else
         error = &_glfwMainThreadError;
 
@@ -15280,7 +15290,7 @@ void _glfwInitGamepadMappings(void)
     int jid;
     size_t i;
     const size_t count = sizeof(_glfwDefaultMappings) / sizeof(char*);
-    _glfw.mappings = calloc(count, sizeof(_GLFWmapping));
+    _glfw.mappings = (_GLFWmapping*)calloc(count, sizeof(_GLFWmapping));
 
     for (i = 0;  i < count;  i++)
     {
@@ -15318,9 +15328,9 @@ _GLFWjoystick* _glfwAllocJoystick(const char* name,
 
     js = _glfw.joysticks + jid;
     js->present     = GLFW_TRUE;
-    js->axes        = calloc(axisCount, sizeof(float));
-    js->buttons     = calloc(buttonCount + (size_t) hatCount * 4, 1);
-    js->hats        = calloc(hatCount, 1);
+    js->axes        = (float*)calloc(axisCount, sizeof(float));
+    js->buttons     = (unsigned char *)calloc(buttonCount + (size_t) hatCount * 4, 1);
+    js->hats        = (unsigned char *)calloc(hatCount, 1);
     js->axisCount   = axisCount;
     js->buttonCount = buttonCount;
     js->hatCount    = hatCount;
@@ -15631,7 +15641,7 @@ GLFWAPI GLFWcursor* glfwCreateCursor(const GLFWimage* image, int xhot, int yhot)
 
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
 
-    cursor = calloc(1, sizeof(_GLFWcursor));
+    cursor = (_GLFWcursor*)calloc(1, sizeof(_GLFWcursor));
     cursor->next = _glfw.cursorListHead;
     _glfw.cursorListHead = cursor;
 
@@ -15661,7 +15671,7 @@ GLFWAPI GLFWcursor* glfwCreateStandardCursor(int shape)
         return NULL;
     }
 
-    cursor = calloc(1, sizeof(_GLFWcursor));
+    cursor = (_GLFWcursor*)calloc(1, sizeof(_GLFWcursor));
     cursor->next = _glfw.cursorListHead;
     _glfw.cursorListHead = cursor;
 
@@ -16042,7 +16052,7 @@ GLFWAPI int glfwUpdateGamepadMappings(const char* string)
                     {
                         _glfw.mappingCount++;
                         _glfw.mappings =
-                            realloc(_glfw.mappings,
+                            (_GLFWmapping*)realloc(_glfw.mappings,
                                     sizeof(_GLFWmapping) * _glfw.mappingCount);
                         _glfw.mappings[_glfw.mappingCount - 1] = mapping;
                     }
@@ -16299,8 +16309,8 @@ GLFWAPI uint64_t glfwGetTimerFrequency(void)
 //
 static int compareVideoModes(const void* fp, const void* sp)
 {
-    const GLFWvidmode* fm = fp;
-    const GLFWvidmode* sm = sp;
+    const GLFWvidmode* fm = (GLFWvidmode*)fp;
+    const GLFWvidmode* sm = (GLFWvidmode*)sp;
     const int fbpp = fm->redBits + fm->greenBits + fm->blueBits;
     const int sbpp = sm->redBits + sm->greenBits + sm->blueBits;
     const int farea = fm->width * fm->height;
@@ -16357,7 +16367,7 @@ void _glfwInputMonitor(_GLFWmonitor* monitor, int action, int placement)
     if (action == GLFW_CONNECTED)
     {
         _glfw.monitorCount++;
-        _glfw.monitors =
+        _glfw.monitors = (_GLFWmonitor**)
             realloc(_glfw.monitors, sizeof(_GLFWmonitor*) * _glfw.monitorCount);
 
         if (placement == _GLFW_INSERT_FIRST)
@@ -16424,7 +16434,7 @@ void _glfwInputMonitorWindow(_GLFWmonitor* monitor, _GLFWwindow* window)
 //
 _GLFWmonitor* _glfwAllocMonitor(const char* name, int widthMM, int heightMM)
 {
-    _GLFWmonitor* monitor = calloc(1, sizeof(_GLFWmonitor));
+    _GLFWmonitor* monitor = (_GLFWmonitor*)calloc(1, sizeof(_GLFWmonitor));
     monitor->widthMM = widthMM;
     monitor->heightMM = heightMM;
 
@@ -16453,9 +16463,9 @@ void _glfwFreeMonitor(_GLFWmonitor* monitor)
 //
 void _glfwAllocGammaArrays(GLFWgammaramp* ramp, unsigned int size)
 {
-    ramp->red = calloc(size, sizeof(unsigned short));
-    ramp->green = calloc(size, sizeof(unsigned short));
-    ramp->blue = calloc(size, sizeof(unsigned short));
+    ramp->red = (unsigned short*)calloc(size, sizeof(unsigned short));
+    ramp->green = (unsigned short*)calloc(size, sizeof(unsigned short));
+    ramp->blue = (unsigned short*)calloc(size, sizeof(unsigned short));
     ramp->size = size;
 }
 
@@ -16730,7 +16740,7 @@ GLFWAPI void glfwSetGamma(GLFWmonitor* handle, float gamma)
     if (!original)
         return;
 
-    values = calloc(original->size, sizeof(unsigned short));
+    values = (unsigned short*)calloc(original->size, sizeof(unsigned short));
 
     for (i = 0;  i < original->size;  i++)
     {
@@ -16916,7 +16926,7 @@ GLFWbool _glfwInitVulkan(int mode)
         return GLFW_FALSE;
     }
 
-    ep = calloc(count, sizeof(VkExtensionProperties));
+    ep = (VkExtensionProperties*)calloc(count, sizeof(VkExtensionProperties));
 
     err = vkEnumerateInstanceExtensionProperties(NULL, &count, ep);
     if (err)
@@ -16957,7 +16967,7 @@ GLFWbool _glfwInitVulkan(int mode)
 
     _glfw.vk.available = GLFW_TRUE;
 
-    _glfwPlatformGetRequiredInstanceExtensions(_glfw.vk.extensions);
+    _glfwPlatformGetRequiredInstanceExtensions((const char **)_glfw.vk.extensions);
 
     return GLFW_TRUE;
 }
@@ -17332,7 +17342,7 @@ GLFWAPI GLFWwindow* glfwCreateWindow(int width, int height,
     if (!_glfwIsValidContextConfig(&ctxconfig))
         return NULL;
 
-    window = calloc(1, sizeof(_GLFWwindow));
+    window = (_GLFWwindow*)calloc(1, sizeof(_GLFWwindow));
     window->next = _glfw.windowListHead;
     _glfw.windowListHead = window;
 
@@ -17601,7 +17611,7 @@ GLFWAPI void glfwDestroyWindow(GLFWwindow* handle)
 
     // The window's context must not be current on another thread when the
     // window is destroyed
-    if (window == _glfwPlatformGetTls(&_glfw.contextSlot))
+    if (window == (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot))
         glfwMakeContextCurrent(NULL);
 
     _glfwPlatformDestroyWindow(window);
@@ -22693,7 +22703,7 @@ const char* _glfwPlatformGetClipboardString(void)
     return _glfw.win32.clipboardString;
 }
 
-void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
+void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions)
 {
     if (!_glfw.vk.KHR_surface || !_glfw.vk.KHR_win32_surface)
         return;
@@ -22904,7 +22914,7 @@ static int choosePixelFormat(_GLFWwindow* window,
                                           NULL);
     }
 
-    usableConfigs = calloc(nativeCount, sizeof(_GLFWfbconfig));
+    usableConfigs = (_GLFWfbconfig*)calloc(nativeCount, sizeof(_GLFWfbconfig));
 
     for (i = 0;  i < nativeCount;  i++)
     {
@@ -23118,7 +23128,7 @@ static void swapBuffersWGL(_GLFWwindow* window)
 
 static void swapIntervalWGL(int interval)
 {
-    _GLFWwindow* window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    _GLFWwindow* window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
 
     window->context.wgl.interval = interval;
 
@@ -24033,7 +24043,7 @@ int _glfwPlatformGetKeyScancode(int key)
     return -1;
 }
 
-void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
+void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions)
 {
 }
 
@@ -24347,7 +24357,7 @@ static void createKeyTables(void)
         const struct
         {
             int key;
-            char* name;
+            const char* name;
         } keymap[] =
         {
             { GLFW_KEY_GRAVE_ACCENT, "TLDE" },
@@ -24482,7 +24492,7 @@ static void createKeyTables(void)
             // keyboard layout. Because function keys aren't mapped correctly
             // when using traditional KeySym translations, they are mapped
             // here instead.
-            for (int i = 0;  i < sizeof(keymap) / sizeof(keymap[0]);  i++)
+            for (unsigned int i = 0;  i < sizeof(keymap) / sizeof(keymap[0]);  i++)
             {
                 if (strncmp(desc->names->keys[scancode].name,
                             keymap[i].name,
@@ -24506,7 +24516,7 @@ static void createKeyTables(void)
                     continue;
                 }
 
-                for (int j = 0;  j < sizeof(keymap) / sizeof(keymap[0]);  j++)
+                for (unsigned int j = 0;  j < sizeof(keymap) / sizeof(keymap[0]);  j++)
                 {
                     if (strncmp(desc->names->key_aliases[i].alias,
                                 keymap[j].name,
@@ -25507,7 +25517,7 @@ void _glfwPollMonitorsX11(void)
         disconnectedCount = _glfw.monitorCount;
         if (disconnectedCount)
         {
-            disconnected = calloc(_glfw.monitorCount, sizeof(_GLFWmonitor*));
+            disconnected = (_GLFWmonitor**)calloc(_glfw.monitorCount, sizeof(_GLFWmonitor*));
             memcpy(disconnected,
                    _glfw.monitors,
                    _glfw.monitorCount * sizeof(_GLFWmonitor*));
@@ -25568,10 +25578,10 @@ void _glfwPollMonitorsX11(void)
 
             for (j = 0;  j < screenCount;  j++)
             {
-                if (screens[j].x_org == ci->x &&
-                    screens[j].y_org == ci->y &&
-                    screens[j].width == ci->width &&
-                    screens[j].height == ci->height)
+                if ((int)screens[j].x_org == ci->x &&
+                    (int)screens[j].y_org == ci->y &&
+                    (unsigned int)screens[j].width == ci->width &&
+                    (unsigned int)screens[j].height == ci->height)
                 {
                     monitor->x11.index = j;
                     break;
@@ -25841,7 +25851,7 @@ GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* count)
         XRRCrtcInfo* ci = XRRGetCrtcInfo(_glfw.x11.display, sr, monitor->x11.crtc);
         XRROutputInfo* oi = XRRGetOutputInfo(_glfw.x11.display, sr, monitor->x11.output);
 
-        result = calloc(oi->nmode, sizeof(GLFWvidmode));
+        result = (GLFWvidmode*)calloc(oi->nmode, sizeof(GLFWvidmode));
 
         for (int i = 0;  i < oi->nmode;  i++)
         {
@@ -25873,7 +25883,7 @@ GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* count)
     else
     {
         *count = 1;
-        result = calloc(1, sizeof(GLFWvidmode));
+        result = (GLFWvidmode*)calloc(1, sizeof(GLFWvidmode));
         _glfwPlatformGetVideoMode(monitor, result);
     }
 
@@ -25952,7 +25962,7 @@ void _glfwPlatformSetGammaRamp(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
 {
     if (_glfw.x11.randr.available && !_glfw.x11.randr.gammaBroken)
     {
-        if (XRRGetCrtcGammaSize(_glfw.x11.display, monitor->x11.crtc) != ramp->size)
+        if ((unsigned int)XRRGetCrtcGammaSize(_glfw.x11.display, monitor->x11.crtc) != ramp->size)
         {
             _glfwInputError(GLFW_PLATFORM_ERROR,
                             "X11: Gamma ramp size must match current ramp size");
@@ -26158,7 +26168,7 @@ static GLFWbool waitForAnyEvent(double* timeout)
         if (!waitForData(fds, count, timeout))
             return GLFW_FALSE;
 
-        for (int i = 1; i < count; i++)
+        for (unsigned int i = 1; i < count; i++)
         {
             if (fds[i].revents & POLLIN)
                 return GLFW_TRUE;
@@ -26497,8 +26507,8 @@ static char** parseUriList(char* text, int* count)
 
         (*count)++;
 
-        char* path = calloc(strlen(line) + 1, 1);
-        paths = realloc(paths, *count * sizeof(char*));
+        char* path = (char*)calloc(strlen(line) + 1, 1);
+        paths = (char**)realloc(paths, *count * sizeof(char*));
         paths[*count - 1] = path;
 
         while (*line)
@@ -26555,7 +26565,7 @@ static char* convertLatin1toUTF8(const char* source)
     for (sp = source;  *sp;  sp++)
         size += (*sp & 0x80) ? 2 : 1;
 
-    char* target = calloc(size, 1);
+    char* target = (char*)calloc(size, 1);
     char* tp = target;
 
     for (sp = source;  *sp;  sp++)
@@ -27118,7 +27128,7 @@ static const char* getSelectionString(Atom selection)
                 if (itemCount)
                 {
                     size += itemCount;
-                    string = realloc(string, size);
+                    string = (char*)realloc(string, size);
                     string[size - itemCount - 1] = '\0';
                     strcat(string, data);
                 }
@@ -27272,7 +27282,7 @@ static void processEvent(XEvent *event)
                 XGetEventData(_glfw.x11.display, &event->xcookie) &&
                 event->xcookie.evtype == XI_RawMotion)
             {
-                XIRawEvent* re = event->xcookie.data;
+                XIRawEvent* re = (XIRawEvent*)event->xcookie.data;
                 if (re->valuators.mask_len)
                 {
                     const double* values = re->raw_values;
@@ -27366,7 +27376,7 @@ static void processEvent(XEvent *event)
 
                     if (status == XBufferOverflow)
                     {
-                        chars = calloc(count + 1, 1);
+                        chars = (char*)calloc(count + 1, 1);
                         count = Xutf8LookupString(window->x11.ic,
                                                   &event->xkey,
                                                   chars, count,
@@ -27445,7 +27455,7 @@ static void processEvent(XEvent *event)
 
                     if (next.type == KeyPress &&
                         next.xkey.window == event->xkey.window &&
-                        next.xkey.keycode == keycode)
+                        next.xkey.keycode == (unsigned int)keycode)
                     {
                         // HACK: The time of repeat events sometimes doesn't
                         //       match that of the press event, so add an
@@ -28183,7 +28193,7 @@ void _glfwPlatformSetWindowIcon(_GLFWwindow* window,
         for (i = 0;  i < count;  i++)
             longCount += 2 + images[i].width * images[i].height;
 
-        unsigned long* icon = calloc(longCount, sizeof(unsigned long));
+        unsigned long* icon = (unsigned long*)calloc(longCount, sizeof(unsigned long));
         unsigned long* target = icon;
 
         for (i = 0;  i < count;  i++)
@@ -29046,7 +29056,7 @@ const char* _glfwPlatformGetClipboardString(void)
     return getSelectionString(_glfw.x11.CLIPBOARD);
 }
 
-void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
+void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions)
 {
     if (!_glfw.vk.KHR_surface)
         return;
@@ -29320,7 +29330,7 @@ static GLFWbool chooseGLXFBConfig(const _GLFWfbconfig* desired,
         return GLFW_FALSE;
     }
 
-    usableConfigs = calloc(nativeCount, sizeof(_GLFWfbconfig));
+    usableConfigs = (_GLFWfbconfig*)calloc(nativeCount, sizeof(_GLFWfbconfig));
     usableCount = 0;
 
     for (i = 0;  i < nativeCount;  i++)
@@ -29436,7 +29446,7 @@ static void swapBuffersGLX(_GLFWwindow* window)
 
 static void swapIntervalGLX(int interval)
 {
-    _GLFWwindow* window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    _GLFWwindow* window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
 
     if (_glfw.glx.EXT_swap_control)
     {
@@ -29473,7 +29483,7 @@ static GLFWglproc getProcAddressGLX(const char* procname)
     else if (_glfw.glx.GetProcAddressARB)
         return _glfw.glx.GetProcAddressARB((const GLubyte*) procname);
     else
-        return _glfw_dlsym(_glfw.glx.handle, procname);
+        return (GLFWglproc)_glfw_dlsym(_glfw.glx.handle, procname);
 }
 
 static void destroyContextGLX(_GLFWwindow* window)
@@ -29533,31 +29543,31 @@ GLFWbool _glfwInitGLX(void)
     }
 
     _glfw.glx.GetFBConfigs =
-        _glfw_dlsym(_glfw.glx.handle, "glXGetFBConfigs");
+        (PFNGLXGETFBCONFIGSPROC)_glfw_dlsym(_glfw.glx.handle, "glXGetFBConfigs");
     _glfw.glx.GetFBConfigAttrib =
-        _glfw_dlsym(_glfw.glx.handle, "glXGetFBConfigAttrib");
+        (PFNGLXGETFBCONFIGATTRIBPROC)_glfw_dlsym(_glfw.glx.handle, "glXGetFBConfigAttrib");
     _glfw.glx.GetClientString =
-        _glfw_dlsym(_glfw.glx.handle, "glXGetClientString");
+        (PFNGLXGETCLIENTSTRINGPROC)_glfw_dlsym(_glfw.glx.handle, "glXGetClientString");
     _glfw.glx.QueryExtension =
-        _glfw_dlsym(_glfw.glx.handle, "glXQueryExtension");
+        (PFNGLXQUERYEXTENSIONPROC)_glfw_dlsym(_glfw.glx.handle, "glXQueryExtension");
     _glfw.glx.QueryVersion =
-        _glfw_dlsym(_glfw.glx.handle, "glXQueryVersion");
+        (PFNGLXQUERYVERSIONPROC)_glfw_dlsym(_glfw.glx.handle, "glXQueryVersion");
     _glfw.glx.DestroyContext =
-        _glfw_dlsym(_glfw.glx.handle, "glXDestroyContext");
+        (PFNGLXDESTROYCONTEXTPROC)_glfw_dlsym(_glfw.glx.handle, "glXDestroyContext");
     _glfw.glx.MakeCurrent =
-        _glfw_dlsym(_glfw.glx.handle, "glXMakeCurrent");
+        (PFNGLXMAKECURRENTPROC)_glfw_dlsym(_glfw.glx.handle, "glXMakeCurrent");
     _glfw.glx.SwapBuffers =
-        _glfw_dlsym(_glfw.glx.handle, "glXSwapBuffers");
+        (PFNGLXSWAPBUFFERSPROC)_glfw_dlsym(_glfw.glx.handle, "glXSwapBuffers");
     _glfw.glx.QueryExtensionsString =
-        _glfw_dlsym(_glfw.glx.handle, "glXQueryExtensionsString");
+        (PFNGLXQUERYEXTENSIONSSTRINGPROC)_glfw_dlsym(_glfw.glx.handle, "glXQueryExtensionsString");
     _glfw.glx.CreateNewContext =
-        _glfw_dlsym(_glfw.glx.handle, "glXCreateNewContext");
+        (PFNGLXCREATENEWCONTEXTPROC)_glfw_dlsym(_glfw.glx.handle, "glXCreateNewContext");
     _glfw.glx.CreateWindow =
-        _glfw_dlsym(_glfw.glx.handle, "glXCreateWindow");
+        (PFNGLXCREATEWINDOWPROC)_glfw_dlsym(_glfw.glx.handle, "glXCreateWindow");
     _glfw.glx.DestroyWindow =
-        _glfw_dlsym(_glfw.glx.handle, "glXDestroyWindow");
+        (PFNGLXDESTROYWINDOWPROC)_glfw_dlsym(_glfw.glx.handle, "glXDestroyWindow");
     _glfw.glx.GetVisualFromFBConfig =
-        _glfw_dlsym(_glfw.glx.handle, "glXGetVisualFromFBConfig");
+        (PFNGLXGETVISUALFROMFBCONFIGPROC)_glfw_dlsym(_glfw.glx.handle, "glXGetVisualFromFBConfig");
 
     if (!_glfw.glx.GetFBConfigs ||
         !_glfw.glx.GetFBConfigAttrib ||
@@ -33434,7 +33444,7 @@ const char* _glfwPlatformGetClipboardString(void)
     return _glfw.wl.clipboardString;
 }
 
-void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
+void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions)
 {
     if (!_glfw.vk.KHR_surface || !_glfw.vk.KHR_wayland_surface)
         return;
@@ -34236,7 +34246,7 @@ static void swapIntervalNSGL(int interval)
 {
     @autoreleasepool {
 
-    _GLFWwindow* window = _glfwPlatformGetTls(&_glfw.contextSlot);
+    _GLFWwindow* window = (_GLFWwindow*)_glfwPlatformGetTls(&_glfw.contextSlot);
     if (window)
     {
         [window->context.nsgl.object setValues:&interval
@@ -37388,7 +37398,7 @@ const char* _glfwPlatformGetClipboardString(void)
     } // autoreleasepool
 }
 
-void _glfwPlatformGetRequiredInstanceExtensions(char** extensions)
+void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions)
 {
     if (_glfw.vk.KHR_surface && _glfw.vk.EXT_metal_surface)
     {
@@ -38058,8 +38068,8 @@ static void closeJoystick(_GLFWjoystick* js)
 //
 static int compareJoysticks(const void* fp, const void* sp)
 {
-    const _GLFWjoystick* fj = fp;
-    const _GLFWjoystick* sj = sp;
+    const _GLFWjoystick* fj = (const _GLFWjoystick*)fp;
+    const _GLFWjoystick* sj = (const _GLFWjoystick*)sp;
     return strcmp(fj->linjs.path, sj->linjs.path);
 }
 
