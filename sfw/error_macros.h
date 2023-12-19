@@ -22,47 +22,47 @@
 // template methods for the variadic log macros. Add more as needed.
 template <class STR, class A>
 _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0) {
-	str->append(p0);
+	str->operator+=(p0);
 }
 
 template <class STR, class A, class B>
 _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1) {
-	str->append(p0);
-	str->push_back(' ');
-	str->append(p1);
+	str->operator+=(p0);
+	str->operator+=(' ');
+	str->operator+=(p1);
 }
 
 template <class STR, class A, class B, class C>
 _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2) {
-	str->append(p0);
-	str->push_back(' ');
-	str->append(p1);
-	str->push_back(' ');
-	str->append(p2);
+	str->operator+=(p0);
+	str->operator+=(' ');
+	str->operator+=(p1);
+	str->operator+=(' ');
+	str->operator+=(p2);
 }
 
 template <class STR, class A, class B, class C, class D>
 _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3) {
-	str->append(p0);
-	str->push_back(' ');
-	str->append(p1);
-	str->push_back(' ');
-	str->append(p2);
-	str->push_back(' ');
-	str->append(p3);
+	str->operator+=(p0);
+	str->operator+=(' ');
+	str->operator+=(p1);
+	str->operator+=(' ');
+	str->operator+=(p2);
+	str->operator+=(' ');
+	str->operator+=(p3);
 }
 
 template <class STR, class A, class B, class C, class D, class E>
 _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3, E p4) {
-	str->append(p0);
-	str->push_back(' ');
-	str->append(p1);
-	str->push_back(' ');
-	str->append(p2);
-	str->push_back(' ');
-	str->append(p3);
-	str->push_back(' ');
-	str->append(p4);
+	str->operator+=(p0);
+	str->operator+=(' ');
+	str->operator+=(p1);
+	str->operator+=(' ');
+	str->operator+=(p2);
+	str->operator+=(' ');
+	str->operator+=(p3);
+	str->operator+=(' ');
+	str->operator+=(p4);
 }
 
 #define PRINT_TRACE(str) \
