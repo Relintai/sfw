@@ -5,7 +5,7 @@
 
 #include "scene.h"
 
-class Window;
+class AppWindow;
 
 class Application {
 public:
@@ -23,7 +23,7 @@ public:
 
     Scene *scene;
 
-    Window *window;
+    AppWindow *window;
 
     static Application *get_singleton();
 

@@ -2,6 +2,11 @@
 
 #include "application.h"
 
+#include "3rd_glad.h"
+
+//#include "camera.h"
+//#include "sprite.h"
+
 void GameScene::event() {
 	/*
 	switch (ev.type) {
@@ -92,16 +97,14 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::render() {
-	/*
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	camera->bind();
+	//camera->bind();
 
-	tile_map->render();
+	//tile_map->render();
 
-	sprite->render();
-	*/
+	//sprite->render();
 }
 
 GameScene::GameScene() {

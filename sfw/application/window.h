@@ -89,6 +89,8 @@ public:
 	void fps_lock(float fps);
 	void fps_unlock();
 
+	void shutdown();
+
 	Vector2 dpi();
 
 	enum CURSOR_SHAPES {
@@ -119,7 +121,6 @@ protected:
 	static void drop_callback(GLFWwindow *window, int count, const char **paths);
 	static void window_hints(unsigned flags);
 	GLFWmonitor *find_monitor(int wx, int wy);
-	void shutdown();
 	void resize();
 	static void loop_wrapper(void *loopArg);
 	void glNewFrame();

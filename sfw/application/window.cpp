@@ -27,6 +27,7 @@
 #include "stime.h"
 #include "ustring.h"
 #include "vector4.h"
+#include "application.h"
 
 /*
 static volatile float framerate = 0;
@@ -463,6 +464,8 @@ int AppWindow::frame_begin() {
 	glfwSetWindowTitle(_window, title);
 
 	//input_update();
+
+	Application::get_singleton()->render();
 
 	return 1;
 }
