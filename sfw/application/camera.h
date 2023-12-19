@@ -3,8 +3,8 @@
 
 #include "3rd_glad.h"
 
-#include "./libs/glm/vec3.hpp"
-#include "./libs/glm/matrix.hpp"
+#include "../../libs/glm/vec3.hpp"
+#include "../../libs/glm/matrix.hpp"
 
 class Camera {
 public:

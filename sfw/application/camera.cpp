@@ -1,6 +1,6 @@
 #include "camera.h"
 
-#include "./libs/glm/gtc/matrix_transform.hpp"
+#include "../../libs/glm/gtc/matrix_transform.hpp"
 
 
 void Camera::bind() {
