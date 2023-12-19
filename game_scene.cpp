@@ -5,11 +5,6 @@
 #include "3rd_glad.h"
 #include "memory.h"
 
-
-
-//#include "camera.h"
-//#include "sprite.h"
-
 void GameScene::event() {
 	/*
 	switch (ev.type) {
@@ -109,8 +104,10 @@ void GameScene::render() {
 
 	//sprite->render();
 
-    material->bind();
-    mesh->render();
+	//material->bind();
+	//mesh->render();
+
+	sprite->render();
 }
 
 GameScene::GameScene() {
@@ -119,16 +116,17 @@ GameScene::GameScene() {
 	right = false;
 	up = false;
 	down = false;
+	*/
 
-	int w;
-	int h;
-	SDL_GetWindowSize(Application::get_singleton()->window, &w, &h);
+	//int w;
+	//int h;
+	//SDL_GetWindowSize(Application::get_singleton()->window, &w, &h);
 
-	float ar = static_cast<float>(w) / static_cast<float>(h);
-	camera->width = camera->height * ar;
+	//float ar = static_cast<float>(w) / static_cast<float>(h);
+	//camera->width = camera->height * ar;
 
 	texture = new Texture();
-	texture->load_image("download.bmp");
+	texture->load_image("icon.png");
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
 
@@ -137,14 +135,14 @@ GameScene::GameScene() {
 
 	sprite = new Sprite();
 	sprite->mesh_instance->material = material;
-	sprite->position.x = 8;
-	sprite->position.y = 8;
-	sprite->region_x = 7.0 * (1.0 / 16.0);
-	sprite->region_y = 7.0 * (1.0 / 16.0);
-	sprite->region_width = 1.0 / 16.0;
-	sprite->region_height = 1.0 / 16.0;
+	sprite->position.x = 0;
+	sprite->position.y = 0;
+	//sprite->region_x = 7.0 * (1.0 / 16.0);
+	//sprite->region_y = 7.0 * (1.0 / 16.0);
+	//sprite->region_width = 1.0 / 16.0;
+	//sprite->region_height = 1.0 / 16.0;
 	sprite->update_mesh();
-
+	/*
 	tile_map = new TileMap();
 	tile_map->material = material;
 	tile_map->atlas_size_x = 16;
@@ -173,8 +171,8 @@ GameScene::GameScene() {
 	//camera->position.z = -2;
 
 	mesh = memnew(Mesh(2));
-	material = memnew(ColoredMaterial());
-	material->color = glm::vec4(1, 1, 0, 1);
+	cmaterial = memnew(ColoredMaterial());
+	cmaterial->color = glm::vec4(1, 1, 0, 1);
 
 	mesh->clear();
 
@@ -201,7 +199,6 @@ GameScene::GameScene() {
 	//mesh->add_uv(region_x + region_width, region_y);
 	//mesh->add_vertex2(w2, h2);
 
-
 	mesh->add_vertex2(0, 0.5);
 	mesh->add_vertex2(-0.5, -0.5);
 	mesh->add_vertex2(0.5, -0.5);
@@ -214,12 +211,13 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
 	/*
-	delete camera;
-	delete texture;
-	delete material;
 	delete tile_map;
-	delete sprite;
 	*/
+	memdelete(camera);
+	memdelete(texture);
+	memdelete(material);
+
+	memdelete(sprite);
 
 	memdelete(camera);
 	memdelete(mesh);

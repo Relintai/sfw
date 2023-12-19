@@ -4,8 +4,8 @@
 #include "material.h"
 #include "texture.h"
 
-#include "./libs/glm/vec4.hpp"
-#include "./libs/glm/gtc/type_ptr.hpp"
+#include "../../libs/glm/vec4.hpp"
+#include "../../libs/glm/gtc/type_ptr.hpp"
 
 #include "camera.h"
 
