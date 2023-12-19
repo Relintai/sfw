@@ -3,8 +3,11 @@
 
 #include "window.h"
 
+#include "error_macros.h"
+#include "ustring.h"
 #include "vector4.h"
 
+#include "3rd_glad.h"
 #include "3rd_glfw3.h"
 #include "stime.h"
 
@@ -109,69 +112,35 @@ void Window::unhook(void (*func)()) {
 }
 #endif
 
-Vector4 Window::getcolor_() {
-	return winbgcolor;
-} // internal
-
 // -----------------------------------------------------------------------------
 // glfw
 
-struct app {
-	GLFWwindow *window;
-	int width, height, keep_running;
-	unsigned flags;
-
-	struct nk_context *ctx;
-	struct nk_glfw *nk_glfw;
-} appHandle = { 0 }, *g;
-
-static void glfw_error_callback(int error, const char *description) {
-	if (is(osx) && error == 65544)
+void Window::glfw_error_callback(int error, const char *description) {
+#ifdef __APPLE__
+	if (error == 65544)
 		return; // whitelisted
-	PANIC("%s (error %x)", description, error);
+#endif
+
+	CRASH_MSG(String(description) + " (error " + String::num(error) + ")");
 }
 
-void glfw_quit(void) {
-	do_once {
-		glfwTerminate();
-	}
+void Window::glfw_quit(void) {
+	glfwTerminate();
 }
 
-void glfw_init() {
-	do_once {
-		g = &appHandle;
+void Window::glfw_init() {
+	glfwSetErrorCallback(glfw_error_callback);
+	int ok = glfwInit();
 
-		glfwSetErrorCallback(glfw_error_callback);
-		int ok = !!glfwInit();
-		assert(ok); // if(!ok) PANIC("cannot initialize glfw");
+	CRASH_COND(!ok);
 
-		atexit(glfw_quit); //glfwTerminate);
-	}
+	atexit(glfw_quit); //glfwTerminate);
 }
 
 void Window::drop_callback(GLFWwindow *window, int count, const char **paths) {
-	// @fixme: win: convert from utf8 to window16 before processing
-
-	char pathdir[DIR_MAX];
-	snprintf(pathdir, DIR_MAX, "%s/import/%llu_%s/", ART, (unsigned long long)date(), ifdef(linux, getlogin(), getenv("USERNAME")));
-	mkdir(pathdir, 0777);
-
-	int errors = 0;
-	for (int i = 0; i < count; ++i) {
-		const char *src = paths[i];
-		const char *dst = va("%s%s", pathdir, file_name(src));
-		errors += file_copy(src, dst) ? 0 : 1;
-	}
-
-	if (errors)
-		PANIC("%d errors found during file dropping", errors);
-	else
-		reload();
-
-	(void)window;
 }
 
-void window_hints(unsigned flags) {
+void Window::window_hints(unsigned flags) {
 #ifdef __APPLE__
 	//glfwInitHint( GLFW_COCOA_CHDIR_RESOURCES, GLFW_FALSE );
 	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE); // @todo: remove silicon mac M1 hack
@@ -221,20 +190,16 @@ void window_hints(unsigned flags) {
 	//if(flags & WINDOW_MSAA4) glfwWindowHint(GLFW_SAMPLES, 4); // x4 AA
 	//if(flags & WINDOW_MSAA8) glfwWindowHint(GLFW_SAMPLES, 8); // x8 AA
 
-	g->flags = flags;
+	Window::get_singleton()->_window_flags = flags;
 }
 
-struct nk_glfw *window_handle_nkglfw() {
-	return g->nk_glfw;
-}
-
-void glNewFrame() {
+void Window::glNewFrame() {
 	// @transparent debug
 	// if( input_down(KEY_F1) ) transparent(window_has_transparent()^1);
 	// if( input_down(KEY_F2) ) maximize(window_has_maximize()^1);
 	// @transparent debug
 
-#if 0 // is(ems)
+#if 0 // #ifdef __EMSCRIPTEN__
     int canvasWidth, canvasHeight;
     emscripten_get_canvas_element_size("#canvas", &canvasWidth, &canvasHeight);
     w = canvasWidth;
@@ -242,12 +207,12 @@ void glNewFrame() {
     //printf("%dx%d\n", w, h);
 #else
 	//glfwGetWindowSize(window, &w, &h);
-	glfwGetFramebufferSize(window, &w, &h);
+	glfwGetFramebufferSize(_window, &w, &h);
 	//printf("%dx%d\n", w, h);
 #endif
 
-	g->width = w;
-	g->height = h;
+	Window::get_singleton()->width = w;
+	Window::get_singleton()->height = h;
 
 	// blending defaults
 	glEnable(GL_BLEND);
@@ -267,10 +232,10 @@ void glNewFrame() {
 	// seamless cubemaps
 	//  glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-	glViewport(0, 0, Window::get_singleton()->width(), Window::get_singleton()->height());
+	glViewport(0, 0, width, height);
 
 	// GLfloat bgColor[4]; glGetFloatv(GL_COLOR_CLEAR_VALUE, bgColor);
-	glClearColor(winbgcolor.r, winbgcolor.g, winbgcolor.b, Window::get_singleton()->has_transparent() ? 0 : winbgcolor.a); // @transparent
+	glClearColor(winbgcolor.r, winbgcolor.g, winbgcolor.b, has_transparent() ? 0 : winbgcolor.a); // @transparent
 	//glClearColor(0.15,0.15,0.15,1);
 	//glClearColor( clearColor.r, clearColor.g, clearColor.b, clearColor.a );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -285,26 +250,27 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 	if (!t)
 		t = glfwGetTime();
 
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	scale = 100.f;
 #endif
 
-	if (flag("--fullscreen"))
+	if (_fullscreen) {
 		scale = 100;
+	}
 
 	scale = (scale < 1 ? scale * 100 : scale);
 
 	bool FLAGS_FULLSCREEN = scale > 100;
 	bool FLAGS_FULLSCREEN_DESKTOP = scale == 100;
 	bool FLAGS_WINDOWED = scale < 100;
-	bool FLAGS_TRANSPARENT = flag("--transparent") || (flags & WINDOW_TRANSPARENT);
+	bool FLAGS_TRANSPARENT = _transparent || (flags & WINDOW_TRANSPARENT);
 	if (FLAGS_TRANSPARENT)
 		FLAGS_FULLSCREEN = 0, FLAGS_FULLSCREEN_DESKTOP = 0, FLAGS_WINDOWED = 1;
 	scale = (scale > 100 ? 100 : scale) / 100.f;
-	int winWidth = canvas().w * scale;
-	int winHeight = canvas().h * scale;
+	int winWidth = get_canvas().x * scale;
+	int winHeight = get_canvas().y * scale;
 
-	hints(flags);
+	window_hints(flags);
 
 	GLFWmonitor *monitor = NULL;
 #ifndef __EMSCRIPTEN__
@@ -321,7 +287,7 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 		winHeight = mode->height;
 	}
 	if (FLAGS_WINDOWED) {
-#if !is(ems)
+#ifndef __EMSCRIPTEN__
 		if (FLAGS_TRANSPARENT) { // @transparent
 			//glfwWindowHint(GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE); // see through. requires undecorated
 			//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); // always on top
@@ -342,14 +308,14 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 	}
 #endif
 
-	window = handle ? handle : glfwCreateWindow(winWidth, winHeight, "", monitor, NULL);
-	if (!window)
-		return PANIC("GLFW Window creation failed"), false;
+	_window = handle ? (GLFWwindow *)handle : glfwCreateWindow(winWidth, winHeight, "", monitor, NULL);
 
-	glfwGetFramebufferSize(window, &w, &h); //glfwGetWindowSize(window, &w, &h);
+	ERR_FAIL_COND_V_MSG(!_window, false, "GLFW Window creation failed");
+
+	glfwGetFramebufferSize(_window, &w, &h); //glfwGetWindowSize(window, &w, &h);
 
 	if (flags & WINDOW_FIXED) { // disable resizing
-		glfwSetWindowSizeLimits(window, w, h, w, h);
+		glfwSetWindowSizeLimits(_window, w, h, w, h);
 	}
 	if (flags & (WINDOW_SQUARE | WINDOW_PORTRAIT | WINDOW_LANDSCAPE | WINDOW_ASPECT)) { // keep aspect ratio
 		aspect_lock(w, h);
@@ -363,7 +329,7 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 
 		int area_width = mode->width, area_height = mode->height;
 		glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &area_width, &area_height);
-		glfwSetWindowPos(window, xpos = xpos + (area_width - winWidth) / 2, ypos = ypos + (area_height - winHeight) / 2);
+		glfwSetWindowPos(_window, xpos = xpos + (area_width - winWidth) / 2, ypos = ypos + (area_height - winHeight) / 2);
 		//printf("%dx%d @(%d,%d) [res:%dx%d]\n", winWidth, winHeight, xpos,ypos, area_width, area_height );
 
 		wprev = w, hprev = h;
@@ -371,22 +337,22 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 	}
 #endif
 
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(_window);
 
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	if (FLAGS_FULLSCREEN)
 		fullscreen(1);
 #else
 	int gl_version = gladLoadGL(glfwGetProcAddress);
 #endif
 
-	glDebugEnable();
+	//glDebugEnable();
 
 	//glEnable(GL_TEXTURE_2D);
 
 	// 0:disable vsync, 1:enable vsync, <0:adaptive (allow vsync when framerate is higher than syncrate and disable vsync when framerate drops below syncrate)
-	flags |= optioni("--vsync", 1) || flag("--vsync") ? WINDOW_VSYNC : WINDOW_VSYNC_DISABLED;
-	flags |= optioni("--vsync-adaptive", 0) || flag("--vsync-adaptive") ? WINDOW_VSYNC_ADAPTIVE : 0;
+	flags |= _vsync ? WINDOW_VSYNC : WINDOW_VSYNC_DISABLED;
+	flags |= _vsync_adaptive ? WINDOW_VSYNC_ADAPTIVE : 0;
 
 	int has_adaptive_vsync = glfwExtensionSupported("WGL_EXT_swap_control_tear") || glfwExtensionSupported("GLX_EXT_swap_control_tear") || glfwExtensionSupported("EXT_swap_control_tear");
 	int wants_adaptive_vsync = (flags & WINDOW_VSYNC_ADAPTIVE);
@@ -394,95 +360,34 @@ bool Window::create_from_handle(void *handle, float scale, unsigned flags) {
 	glfwSwapInterval(interval);
 
 	const GLFWvidmode *mode = glfwGetVideoMode(monitor ? monitor : glfwGetPrimaryMonitor());
-	PRINTF("Build version: %s\n", BUILD_VERSION);
-	PRINTF("Monitor: %s (%dHz, vsync=%d)\n", glfwGetMonitorName(monitor ? monitor : glfwGetPrimaryMonitor()), mode->refreshRate, interval);
-	PRINTF("GPU device: %s\n", glGetString(GL_RENDERER));
-	PRINTF("GPU driver: %s\n", glGetString(GL_VERSION));
 
-#if !is(ems)
-	PRINTF("GPU OpenGL: %d.%d\n", GLAD_VERSION_MAJOR(gl_version), GLAD_VERSION_MINOR(gl_version));
+	//PRINTF("Build version: %s\n", BUILD_VERSION);
+	//PRINTF("Monitor: %s (%dHz, vsync=%d)\n", glfwGetMonitorName(monitor ? monitor : glfwGetPrimaryMonitor()), mode->refreshRate, interval);
+	//PRINTF("GPU device: %s\n", glGetString(GL_RENDERER));
+	//PRINTF("GPU driver: %s\n", glGetString(GL_VERSION));
+
+#ifndef __EMSCRIPTEN__
+	//PRINTF("GPU OpenGL: %d.%d\n", GLAD_VERSION_MAJOR(gl_version), GLAD_VERSION_MINOR(gl_version));
 
 	if (FLAGS_TRANSPARENT) { // @transparent
-		glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE); // @todo: is decorated an attrib or a hint?
+		glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE); // @todo: is decorated an attrib or a hint?
 		if (scale >= 1)
-			glfwMaximizeWindow(window);
+			glfwMaximizeWindow(_window);
 	}
 #endif
 
-	g->ctx = ui_ctx;
-	g->nk_glfw = &nk_glfw;
-	g->window = window;
-	g->width = width();
-	g->height = height();
+	width = get_width();
+	height = get_height();
 
 	// cursor(flags & WINDOW_NO_MOUSE ? false : true);
-	glfwSetDropCallback(window, drop_callback);
+	glfwSetDropCallback(_window, drop_callback);
 
 	// camera inits for fwk_pre_init() -> ddraw_flush() -> get_active_camera()
 	// static camera_t cam = {0}; id44(cam.view); id44(cam.proj); extern camera_t *last_camera; last_camera = &cam;
-	fwk_pre_init();
+	//fwk_pre_init();
 
-	// display a progress bar meanwhile cook is working in the background
-	// Sleep(500);
-	if (!COOK_ON_DEMAND)
-		if (have_tools() && cook_jobs())
-			while (cook_progress() < 100) {
-				for (int frames = 0; frames < 2 /*10*/ && swap(); frames += cook_progress() >= 100) {
-					title(va("%s %.2d%%", cook_cancelling ? "Aborting" : "Cooking assets", cook_progress()));
-					if (input(KEY_ESC))
-						cook_cancel();
+	//fwk_post_init(mode->refreshRate);
 
-					glNewFrame();
-
-					static float previous[JOBS_MAX] = { 0 };
-
-#define ddraw_progress_bar(JOB_ID, JOB_MAX, PERCENT)                                           \
-	do {                                                                                       \
-		/* NDC coordinates (2d): bottom-left(-1,-1), center(0,0), top-right(+1,+1) */          \
-		float progress = (PERCENT + 1) / 100.f;                                                \
-		if (progress > 1)                                                                      \
-			progress = 1;                                                                      \
-		float speed = progress < 1 ? 0.05f : 0.75f;                                            \
-		float smooth = previous[JOB_ID] = progress * speed + previous[JOB_ID] * (1 - speed);   \
-                                                                                               \
-		float pixel = 2.f / height(), dist = smooth * 2 - 1, y = pixel * 3 * JOB_ID;           \
-		if (JOB_ID == 0)                                                                       \
-			ddraw_line(vec3(-1, y - pixel * 2, 0), vec3(1, y - pixel * 2, 0)); /* full line */ \
-		ddraw_line(vec3(-1, y - pixel, 0), vec3(dist, y - pixel, 0)); /* progress line */      \
-		ddraw_line(vec3(-1, y + 0, 0), vec3(dist, y + 0, 0)); /* progress line */              \
-		ddraw_line(vec3(-1, y + pixel, 0), vec3(dist, y + pixel, 0)); /* progress line */      \
-		if (JOB_ID == JOB_MAX - 1)                                                             \
-			ddraw_line(vec3(-1, y + pixel * 2, 0), vec3(1, y + pixel * 2, 0)); /* full line */ \
-	} while (0)
-
-					if (FLAGS_TRANSPARENT) {
-					} else // @transparent
-						for (int i = 0; i < cook_jobs(); ++i)
-							ddraw_progress_bar(i, cook_jobs(), jobs[i].progress);
-					// ddraw_progress_bar(0, 1, cook_progress());
-
-					ddraw_flush();
-
-					do_once visible(1);
-
-					// render progress bar at 30Hz + give the cook threads more time to actually cook the assets.
-					// no big deal since progress bar is usually quiet when cooking assets most of the time.
-					// also, make the delay even larger when window is minimized or hidden.
-					// shaved cook times: 88s -> 57s (tcc), 50s -> 43s (vc)
-					sleep_ms(has_visible() && has_focus() ? 8 : 16);
-				}
-				// set black screen
-				glNewFrame();
-				swap();
-#if !ENABLE_RETAIL
-				title("");
-#endif
-			}
-
-	if (cook_cancelling)
-		cook_stop(), exit(-1);
-
-	fwk_post_init(mode->refreshRate);
 	return true;
 }
 
@@ -492,7 +397,7 @@ bool Window::create(float scale, unsigned flags) {
 
 static double boot_time = 0;
 
-char *Window::stats() {
+char *Window::get_stats() {
 	static double num_frames = 0, begin = FLT_MAX, prev_frame = 0;
 
 	double now = Time::time_ss();
@@ -511,15 +416,15 @@ char *Window::stats() {
 		num_frames = 0;
 	}
 
-	const char *cmdline = app_cmdline();
+	//const char *cmdline = app_cmdline();
 
 	// @todo: print %used/%avail kib mem, %used/%avail objs as well
 	static char buf[256];
-	snprintf(buf, 256, "%s%s%s%s | boot %.2fs | %5.2ffps (%.2fms)%s%s",
-			title, BUILD_VERSION[0] ? " (" : "", BUILD_VERSION[0] ? BUILD_VERSION : "", BUILD_VERSION[0] ? ")" : "",
+	snprintf(buf, 256, "%s | boot %.2fs | %5.2ffps (%.2fms)",
+			title,
 			!boot_time ? now : boot_time,
-			fps, (now - prev_frame) * 1000.f,
-			cmdline[0] ? " | " : "", cmdline[0] ? cmdline : "");
+			fps, (now - prev_frame) * 1000.f);
+	//cmdline[0] ? " | " : "", cmdline[0] ? cmdline : "");
 
 	prev_frame = now;
 	++num_frames;
@@ -530,79 +435,19 @@ char *Window::stats() {
 int Window::frame_begin() {
 	glfwPollEvents();
 
-	// we cannot simply terminate threads on some OSes. also, aborted cook jobs could leave temporary files on disc.
-	// so let's try to be polite: we will be disabling any window closing briefly until all cook is either done or canceled.
-	static bool has_cook;
-	do_once has_cook = !COOK_ON_DEMAND && have_tools() && cook_jobs();
-	if (has_cook) {
-		has_cook = cook_progress() < 100;
-		if (glfwWindowShouldClose(g->window))
-			cook_cancel();
-		glfwSetWindowShouldClose(g->window, GLFW_FALSE);
-	}
-
-	if (glfwWindowShouldClose(g->window)) {
+	if (glfwWindowShouldClose(_window)) {
 		return 0;
 	}
 
 	glNewFrame();
 
-	ui_create();
-
-#if !ENABLE_RETAIL
-	bool has_menu = ui_has_menubar();
-	bool may_render_debug_panel = 1;
-
-	if (have_tools()) {
-		static int cook_has_progressbar;
-		do_once cook_has_progressbar = !COOK_ON_DEMAND;
-		if (cook_has_progressbar) {
-			// render profiler, unless we are in the cook progress screen
-			static unsigned frames = 0;
-			if (frames <= 0)
-				frames += cook_progress() >= 100;
-			may_render_debug_panel = (frames > 0);
-		}
-	}
-
-	// generate Debug panel contents
-	if (may_render_debug_panel) {
-		if (has_menu ? ui_window("Debug " ICON_MD_SETTINGS, 0) : ui_panel("Debug " ICON_MD_SETTINGS, 0)) {
-			ui_engine();
-
-			(has_menu ? ui_window_end : ui_panel_end)();
-		}
-
-		API int engine_tick();
-		engine_tick();
-	}
-#endif // ENABLE_RETAIL
-
-#if 0 // deprecated
-    // run user-defined hooks
-    for(int i = 0; i < 64; ++i) {
-        if( hooks[i] ) hooks[i]( userdatas[i] );
-    }
-#endif
-
 	double now = paused ? t : glfwGetTime();
 	dt = now - t;
 	t = now;
 
-#if !ENABLE_RETAIL
-	char *st = stats();
-	static double timer = 0;
-	timer += delta();
-	if (timer >= 0.25) {
-		glfwSetWindowTitle(window, st);
-		timer = 0;
-	}
-#else
-	glfwSetWindowTitle(window, title);
-#endif
+	glfwSetWindowTitle(_window, title);
 
-	void input_update();
-	input_update();
+	//input_update();
 
 	return 1;
 }
@@ -610,6 +455,7 @@ int Window::frame_begin() {
 void Window::frame_end() {
 	// flush batching systems that need to be rendered before frame swapping. order matters.
 	{
+		/*
 		font_goto(0, 0);
 		touch_flush();
 		sprite_flush();
@@ -622,58 +468,23 @@ void Window::frame_end() {
 		ddraw_flush();
 
 		ui_render();
+		*/
 	}
-
-#if !is(ems)
-	// save screenshot if queued
-	if (screenshot_file[0]) {
-		int n = 3;
-		void *rgb = screenshot(n);
-		stbi_flip_vertically_on_write(true);
-		if (!stbi_write_png(screenshot_file, w, h, n, rgb, n * w)) {
-			PANIC("!could not write screenshot file `%s`\n", screenshot_file);
-		}
-		screenshot_file[0] = 0;
-	}
-	if (record_active()) {
-		void record_frame();
-		record_frame();
-	}
-#endif
 }
 
 void Window::frame_swap() {
 	// glFinish();
-#if !is(ems)
+	/*
+#ifndef __EMSCRIPTEN__
 	vsync(hz);
 #endif
-	glfwSwapBuffers(window);
+	*/
+	glfwSwapBuffers(_window);
 	// emscripten_webgl_commit_frame();
-
-	static int delay = 0;
-	do_once delay = optioni("--delay", 0);
-	if (delay && !COOK_ON_DEMAND && cook_progress() >= 100)
-		sleep_ms(delay);
 }
 
-static void Window::shutdown() {
-	do_once {
-#if ENABLE_SELFIES
-
-		snprintf(screenshot_file, DIR_MAX, "%s.png", app_name());
-
-		int n = 3;
-		void *rgb = screenshot(n);
-		stbi_flip_vertically_on_write(true);
-		if (!stbi_write_png(screenshot_file, w, h, n, rgb, n * w)) {
-			PANIC("!could not write screenshot file `%s`\n", screenshot_file);
-		}
-		screenshot_file[0] = 0;
-
-#endif
-
-		loop_exit(); // finish emscripten loop automatically
-	}
+void Window::shutdown() {
+	loop_exit(); // finish emscripten loop automatically
 }
 
 int Window::swap() {
@@ -694,12 +505,8 @@ int Window::swap() {
 	return 1;
 }
 
-static void (*window_render_callback)(void *loopArg);
-
-static Vector2 last_canvas_size = { 0 };
-
-static void Window::resize() {
-#if is(ems)
+void Window::resize() {
+#ifdef __EMSCRIPTEN__
 	EM_ASM(canvas.canResize = 0);
 	if (g->flags & WINDOW_FIXED)
 		return;
@@ -708,71 +515,72 @@ static void Window::resize() {
 	if (size.x != last_canvas_size.x || size.y != last_canvas_size.y) {
 		w = size.x;
 		h = size.y;
-		g->width = w;
-		g->height = h;
+		width = w;
+		height = h;
 		last_canvas_size = Vector2(w, h);
 		emscripten_set_canvas_size(w, h);
 	}
 #endif /* __EMSCRIPTEN__ */
 }
 
-static void Window::loop_wrapper(void *loopArg) {
-	if (frame_begin()) {
-		resize();
-		render_callback(loopArg);
-		frame_end();
-		frame_swap();
+void Window::loop_wrapper(void *loopArg) {
+	Window *w = Window::get_singleton();
+	if (w->frame_begin()) {
+		w->resize();
+		w->render_callback(loopArg);
+		w->frame_end();
+		w->frame_swap();
 	} else {
-		do_once shutdown();
+		w->shutdown();
 	}
 }
 
 void Window::loop(void (*user_function)(void *loopArg), void *loopArg) {
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	render_callback = user_function;
 	emscripten_set_main_loop_arg(window_loop_wrapper, loopArg, 0, 1);
 #else
-	g->keep_running = true;
-	while (g->keep_running)
+	keep_running = true;
+	while (keep_running)
 		user_function(loopArg);
 #endif /* __EMSCRIPTEN__ */
 }
 
 void Window::loop_exit() {
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	emscripten_cancel_main_loop();
 #else
-	g->keep_running = false;
+	keep_running = false;
 #endif /* __EMSCRIPTEN__ */
 }
 
 Vector2 Window::canvas() {
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	int width = EM_ASM_INT_V(return canvas.width);
 	int height = EM_ASM_INT_V(return canvas.height);
 	return Vector2(width, height);
 #else
 	glfw_init();
 	const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	assert(mode);
+	CRASH_COND(!mode);
 	return Vector2(mode->width, mode->height);
 #endif /* __EMSCRIPTEN__ */
 }
 
-int Window::width() {
+int Window::get_width() {
 	return w;
 }
-int Window::height() {
+int Window::get_height() {
 	return h;
 }
-double Window::time() {
+double Window::get_time() {
 	return t;
 }
-double Window::delta() {
+double Window::get_delta() {
 	return dt;
 }
 
-double Window::fps() {
+double Window::get_fps() {
 	return fps;
 }
 void Window::fps_lock(float fps) {
@@ -781,30 +589,31 @@ void Window::fps_lock(float fps) {
 void Window::fps_unlock() {
 	hz = 0;
 }
-double Window::fps_target() {
+double Window::get_fps_target() {
 	return hz;
 }
 
 uint64_t Window::frame() {
 	return frame_count;
 }
-void Window::title(const char *title_) {
+void Window::set_title(const char *title_) {
 	snprintf(title, 128, "%s", title_);
 	if (!title[0])
-		glfwSetWindowTitle(window, title);
+		glfwSetWindowTitle(_window, title);
 }
-void Window::color(unsigned color) {
+void Window::set_color(unsigned color) {
 	unsigned r = (color >> 0) & 255;
 	unsigned g = (color >> 8) & 255;
 	unsigned b = (color >> 16) & 255;
 	unsigned a = (color >> 24) & 255;
-	winbgcolor = Vector4(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
+	winbgcolor = Color(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 }
-static int has_icon;
+
 int Window::has_icon() {
-	return has_icon;
+	return _has_icon;
 }
-void Window::icon(const char *file_icon) {
+void Window::set_icon(const char *file_icon) {
+	/*
 	int len = 0;
 	void *data = vfs_load(file_icon, &len);
 	if (!data)
@@ -823,43 +632,27 @@ void Window::icon(const char *file_icon) {
 		}
 	}
 #if 0 // is(win32)
-    HANDLE hIcon = LoadImageA(0, file_icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
-    if( hIcon ) {
-        HWND hWnd = glfwGetWin32Window(window);
-        SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-        SendMessage(hWnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
-        SendMessage(GetWindow(hWnd, GW_OWNER), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-        SendMessage(GetWindow(hWnd, GW_OWNER), WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
-        has_icon = 1;
-        return;
-    }
+	HANDLE hIcon = LoadImageA(0, file_icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
+	if( hIcon ) {
+		HWND hWnd = glfwGetWin32Window(window);
+		SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		SendMessage(hWnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
+		SendMessage(GetWindow(hWnd, GW_OWNER), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		SendMessage(GetWindow(hWnd, GW_OWNER), WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
+		has_icon = 1;
+		return;
+	}
 #endif
+	*/
 }
-void *Window::handle() {
-	return window;
-}
-
-void Window::reload() {
-	// @todo: save_on_exit();
-	fflush(0);
-	// chdir(app_path());
-	execv(__argv[0], __argv);
-	exit(0);
-}
-
-int Window::record(const char *outfile_mp4) {
-	record_start(outfile_mp4);
-	// @todo: if( flags & RECORD_MOUSE )
-	if (record_active())
-		cursor_shape(CURSOR_SW_AUTO);
-	else
-		cursor_shape(CURSOR_HW_ARROW);
-	return record_active();
+void *Window::get_handle() {
+	return _window;
 }
 
 Vector2 Window::dpi() {
 	Vector2 dpi = Vector2(1, 1);
-#if !is(ems) && !is(osx) // @todo: remove silicon mac M1 hack
+
+#if !defined(__EMSCRIPTEN__) && !defined(__APPLE__) // @todo: remove silicon mac M1 hack`
 	glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &dpi.x, &dpi.y);
 #endif
 	return dpi;
@@ -868,13 +661,13 @@ Vector2 Window::dpi() {
 // -----------------------------------------------------------------------------
 // fullscreen
 
-static GLFWmonitor *window_find_monitor(int wx, int wy) {
+GLFWmonitor *Window::find_monitor(int wx, int wy) {
 	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 
 	// find best monitor given current window coordinates. @todo: select by ocuppied window area inside each monitor instead.
 	int num_monitors = 0;
 	GLFWmonitor **monitors = glfwGetMonitors(&num_monitors);
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	return *monitors;
 #else
 	for (int i = 0; i < num_monitors; ++i) {
@@ -913,20 +706,20 @@ int Window::has_fullscreen() {
 #else
 
 int Window::has_fullscreen() {
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 	EmscriptenFullscreenChangeEvent fsce;
 	emscripten_get_fullscreen_status(&fsce);
 	return !!fsce.isFullscreen;
 #else
-	return !!glfwGetWindowMonitor(g->window);
+	return !!glfwGetWindowMonitor(_window);
 #endif /* __EMSCRIPTEN__ */
 }
 
-void Window::fullscreen(int enabled) {
+void Window::set_fullscreen(int enabled) {
 	if (has_fullscreen() == !!enabled)
 		return;
 
-#if is(ems)
+#ifdef __EMSCRIPTEN__
 
 #if 0 // deprecated: crash
     if( enabled ) {
@@ -966,17 +759,17 @@ void Window::fullscreen(int enabled) {
 #else
 	if (enabled) {
 		int wx = 0, wy = 0;
-		glfwGetWindowPos(window, &wx, &wy);
+		glfwGetWindowPos(_window, &wx, &wy);
 		GLFWmonitor *monitor = find_monitor(wx, wy);
 
 		wprev = w, hprev = h, xprev = wx, yprev = wy; // save window context for further restoring
 
 		int width, height;
 		glfwGetMonitorWorkarea(monitor, NULL, NULL, &width, &height);
-		glfwSetWindowMonitor(window, monitor, 0, 0, width, height, GLFW_DONT_CARE);
+		glfwSetWindowMonitor(_window, monitor, 0, 0, width, height, GLFW_DONT_CARE);
 	} else {
-		glfwSetWindowMonitor(window, NULL, xpos, ypos, wprev, hprev, GLFW_DONT_CARE);
-		glfwSetWindowPos(window, xprev, yprev);
+		glfwSetWindowMonitor(_window, NULL, xpos, ypos, wprev, hprev, GLFW_DONT_CARE);
+		glfwSetWindowPos(_window, xprev, yprev);
 	}
 #endif
 
@@ -985,136 +778,143 @@ void Window::fullscreen(int enabled) {
 
 #endif
 
-void Window::pause(int enabled) {
+void Window::set_pause(int enabled) {
 	paused = enabled;
 }
 int Window::has_pause() {
 	return paused;
 }
-void Window::focus() {
-	glfwFocusWindow(window);
+void Window::set_focus() {
+	glfwFocusWindow(_window);
 }
 int Window::has_focus() {
-	return !!glfwGetWindowAttrib(window, GLFW_FOCUSED);
+	return !!glfwGetWindowAttrib(_window, GLFW_FOCUSED);
 }
-static int cursorshape = 1;
-void Window::cursor_shape(unsigned mode) {
-	cursorshape = (mode &= 7);
 
-	static GLFWcursor *cursors[7] = { 0 };
-	static unsigned enums[7] = {
-		0,
-		GLFW_ARROW_CURSOR,
-		GLFW_IBEAM_CURSOR,
-		GLFW_HRESIZE_CURSOR,
-		GLFW_VRESIZE_CURSOR,
-		GLFW_HAND_CURSOR,
-		GLFW_CROSSHAIR_CURSOR,
-	};
-	do_once {
-		static unsigned pixels[16 * 16] = { 0x01000000 }; // ABGR(le) glfw3 note: A(0x00) means 0xFF for some reason
-		static GLFWimage image = { 16, 16, (void *)pixels };
-		static GLFWcursor *empty;
-		for (int x = 0; x < 16 * 16; ++x)
-			pixels[x] = pixels[0];
-		empty = glfwCreateCursor(&image, 0, 0);
-
-		for (int i = 0; i < countof(enums); ++i)
-			cursors[i] = i ? glfwCreateStandardCursor(enums[i]) : empty;
+void Window::create_default_cursors() {
+	if (_cursors_initialized) {
+		return;
 	}
+
+	_cursors_initialized = true;
+
+	unsigned int pixels[16 * 16] = { 0x01000000 }; // ABGR(le) glfw3 note: A(0x00) means 0xFF for some reason
+	GLFWimage image = { 16, 16, (unsigned char *)pixels };
+	GLFWcursor *empty;
+
+	for (int x = 0; x < 16 * 16; ++x) {
+		pixels[x] = pixels[0];
+	}
+
+	empty = glfwCreateCursor(&image, 0, 0);
+
+	for (int i = 0; i < 7; ++i) {
+		cursors[i] = i ? glfwCreateStandardCursor(cursor_enums[i]) : empty;
+	}
+}
+
+void Window::set_cursor_shape(unsigned mode) {
+	_cursorshape = (mode &= 7);
+
+	create_default_cursors();
+
 	if (mode == CURSOR_SW_AUTO) { // UI (nuklear) driven cursor
-		nk_style_show_cursor(ui_handle());
-		glfwSetCursor(window, cursors[0]);
+		glfwSetCursor(_window, cursors[0]);
 	} else {
-		nk_style_hide_cursor(ui_handle());
-		glfwSetCursor(window, mode < countof(enums) ? cursors[mode] : NULL);
+		glfwSetCursor(_window, mode < 7 ? cursors[mode] : NULL);
 	}
 }
-void Window::cursor(int visible) {
-	(cursorshape == CURSOR_SW_AUTO && visible ? nk_style_show_cursor : nk_style_hide_cursor)(ui_handle());
-	glfwSetInputMode(window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+void Window::set_cursor(int visible) {
+	glfwSetInputMode(_window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 int Window::has_cursor() {
-	return glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
+	return glfwGetInputMode(_window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
 }
 
-void Window::visible(int visible) {
-	if (!window)
+void Window::set_visible(int visible) {
+	if (!_window)
 		return;
+
 	//if(window) (visible ? glfwRestoreWindow : glfwIconifyWindow)(window);
-	(visible ? glfwShowWindow : glfwHideWindow)(window);
+	(visible ? glfwShowWindow : glfwHideWindow)(_window);
+
 // call glfwpollevents in linux to flush visiblity changes that would happen in next frame otherwise
-#if is(linux) || is(osx)
+#if defined(__linux__) || defined(__APPLE__)
 	glfwPollEvents();
 #endif
 }
 int Window::has_visible() {
-	return glfwGetWindowAttrib(window, GLFW_VISIBLE);
+	return glfwGetWindowAttrib(_window, GLFW_VISIBLE);
 }
 
-void Window::screenshot(const char *outfile_png) {
-	snprintf(screenshot_file, DIR_MAX, "%s", outfile_png ? outfile_png : "");
-}
-
-double Window::aspect() {
+double Window::get_aspect() {
 	return (double)w / (h + !h);
 }
 void Window::aspect_lock(unsigned numer, unsigned denom) {
-	if (!window)
+	if (!_window)
 		return;
-	if (numer * denom) {
-		glfwSetWindowAspectRatio(window, numer, denom);
+	if (numer * denom != 0) {
+		glfwSetWindowAspectRatio(_window, numer, denom);
 	} else {
-		glfwSetWindowAspectRatio(window, GLFW_DONT_CARE, GLFW_DONT_CARE);
+		glfwSetWindowAspectRatio(_window, GLFW_DONT_CARE, GLFW_DONT_CARE);
 	}
 }
 void Window::aspect_unlock() {
-	if (!window)
+	if (!_window)
 		return;
 	Window::aspect_lock(0, 0);
 }
 
-void Window::transparent(int enabled) {
-#if !is(ems)
-	if (!window_has_fullscreen()) {
+void Window::set_transparent(int enabled) {
+#ifndef __EMSCRIPTEN__
+	if (!has_fullscreen()) {
 		if (enabled) {
-			glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+			glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE);
 			//glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH , GLFW_TRUE);
 			//glfwMaximizeWindow(window);
 		} else {
 			//glfwRestoreWindow(window);
 			//glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH , GLFW_FALSE);
-			glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
+			glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_TRUE);
 		}
 	}
 #endif
 }
 int Window::has_transparent() {
-	return ifdef(ems, 0, glfwGetWindowAttrib(window, GLFW_DECORATED) != GLFW_TRUE);
+#ifndef __EMSCRIPTEN__
+	return glfwGetWindowAttrib(_window, GLFW_DECORATED) != GLFW_TRUE;
+#else
+	return 0;
+#endif
 }
 
-void Window::maximize(int enabled) {
-	ifdef(ems, return);
-	if (!window_has_fullscreen()) {
+void Window::set_maximize(int enabled) {
+#ifndef __EMSCRIPTEN__
+	if (!has_fullscreen()) {
 		if (enabled) {
-			glfwMaximizeWindow(window);
+			glfwMaximizeWindow(_window);
 		} else {
-			glfwRestoreWindow(window);
+			glfwRestoreWindow(_window);
 		}
 	}
+#endif
 }
 int Window::has_maximize() {
-	return ifdef(ems, 0, glfwGetWindowAttrib(window, GLFW_MAXIMIZED) == GLFW_TRUE);
+#ifndef __EMSCRIPTEN__
+	return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE;
+#else
+	return 0;
+#endif
 }
 
-const char *window_clipboard() {
-	return glfwGetClipboardString(window);
+const char *Window::get_clipboard() {
+	return glfwGetClipboardString(_window);
 }
-void Window::setclipboard(const char *text) {
-	glfwSetClipboardString(window, text);
+void Window::set_clipboard(const char *text) {
+	glfwSetClipboardString(_window, text);
 }
 
-static double Window::scale() { // ok? @testme
+double Window::get_scale() { // ok? @testme
 	float xscale, yscale;
 	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 	glfwGetMonitorContentScale(monitor, &xscale, &yscale);
@@ -1128,7 +928,7 @@ Window *Window::get_singleton() {
 Window::Window() {
 	_singleton = this;
 
-	window = NULL;
+	_window = NULL;
 	w = 0;
 	h = 0;
 	xpos = 0;
@@ -1145,6 +945,37 @@ Window::Window() {
 	fps = 0;
 	hz = 0.00;
 	locked_aspect_ratio = 0;
+	title[0] = '\0';
+
+	_has_icon = 0;
+
+	_cursorshape = 1;
+
+	render_callback = NULL;
+
+	width = 0;
+	height = 0;
+	keep_running = true;
+	_window_flags = 0;
+
+	_fullscreen = false;
+	_transparent = false;
+	_vsync = false;
+	_vsync_adaptive = false;
+
+	_cursors_initialized = false;
+
+	for (int i = 0; i < 7; ++i) {
+		cursors[i] = NULL;
+	}
+
+	cursor_enums[0] = 0;
+	cursor_enums[1] = GLFW_ARROW_CURSOR;
+	cursor_enums[2] = GLFW_IBEAM_CURSOR;
+	cursor_enums[3] = GLFW_HRESIZE_CURSOR;
+	cursor_enums[4] = GLFW_VRESIZE_CURSOR;
+	cursor_enums[5] = GLFW_HAND_CURSOR;
+	cursor_enums[6] = GLFW_CROSSHAIR_CURSOR;
 }
 Window::~Window() {
 	_singleton = NULL;

@@ -1,3 +1,6 @@
+#ifndef WINDOW_H
+#define WINDOW_H
+
 // -----------------------------------------------------------------------------
 // window framework
 // - rlyeh, public domain
@@ -6,8 +9,13 @@
 // @todo: if WINDOW_PORTRAIT && exist portrait monitor, use that instead of primary one
 // @todo: WINDOW_TRAY
 
+#include "color.h"
 #include "int_types.h"
 #include "vector2.h"
+
+struct GLFWwindow;
+struct GLFWcursor;
+struct GLFWmonitor;
 
 class Window {
 public:
@@ -31,7 +39,6 @@ public:
 
 	bool create(float scale, unsigned flags);
 	bool create_from_handle(void *handle, float scale, unsigned flags);
-	void reload();
 
 	int frame_begin();
 	void frame_end();
@@ -41,49 +48,46 @@ public:
 	void loop(void (*function)(void *loopArg), void *loopArg); // run main loop function continuously (emscripten only)
 	void loop_exit(); // exit from main loop function (emscripten only)
 
-	void title(const char *title);
-	void color(unsigned color);
-	Vector2 canvas();
-	void *handle();
-	char *stats();
+	void set_title(const char *title);
+	void set_color(unsigned color);
+	Vector2 get_canvas();
+	void *get_handle();
+	char *get_stats();
 
 	uint64_t frame();
-	int width();
-	int height();
-	double time();
-	double delta();
+	int get_width();
+	int get_height();
+	double get_time();
+	double get_delta();
 
 	// bool  hook(void (*func)(), void* userdata); // deprecated
 	// void  unhook(void (*func)()); // deprecated
 
-	void focus(); // window attribute using haz catz language for now
+	void set_focus(); // window attribute using haz catz language for now
 	int has_focus();
-	void fullscreen(int enabled);
+	void set_fullscreen(int enabled);
 	int has_fullscreen();
-	void cursor(int visible);
+	void set_cursor(int visible);
 	int has_cursor();
-	void pause(int paused);
+	void set_pause(int paused);
 	int has_pause();
-	void visible(int visible);
+	void set_visible(int visible);
 	int has_visible();
-	void maximize(int enabled);
+	void set_maximize(int enabled);
 	int has_maximize();
-	void transparent(int enabled);
+	void set_transparent(int enabled);
 	int has_transparent();
-	void icon(const char *file_icon);
+	void set_icon(const char *file_icon);
 	int has_icon();
 
-	double aspect();
+	double get_aspect();
 	void aspect_lock(unsigned numer, unsigned denom);
 	void aspect_unlock();
 
-	double fps();
-	double fps_target();
+	double get_fps();
+	double get_fps_target();
 	void fps_lock(float fps);
 	void fps_unlock();
-
-	void screenshot(const char *outfile_png); // , bool record_cursor
-	int record(const char *outfile_mp4); // , bool record_cursor
 
 	Vector2 dpi();
 
@@ -98,10 +102,10 @@ public:
 		CURSOR_SW_AUTO, // software cursor, ui driven. note: this is the only icon that may be recorded or snapshotted
 	};
 
-	void cursor_shape(unsigned shape);
+	void set_cursor_shape(unsigned shape);
 
-	const char *clipboard();
-	void setclipboard(const char *text);
+	const char *get_clipboard();
+	void set_clipboard(const char *text);
 
 	static Window *get_singleton();
 
@@ -109,11 +113,23 @@ public:
 	~Window();
 
 protected:
+	static void glfw_quit();
+	static void glfw_init();
+	static void glfw_error_callback(int error, const char *description);
+	static void drop_callback(GLFWwindow *window, int count, const char **paths);
+	static void window_hints(unsigned flags);
+	GLFWmonitor *find_monitor(int wx, int wy);
+	void shutdown();
+	void resize();
+	static void loop_wrapper(void *loopArg);
+	void glNewFrame();
+	Vector2 canvas();
+	double get_scale();
+	void create_default_cursors();
+
 	static Window *_singleton;
 
-	struct GLFWwindow;
-
-	GLFWwindow *window;
+	GLFWwindow *_window;
 	int w;
 	int h;
 	int xpos;
@@ -131,5 +147,27 @@ protected:
 	double hz;
 	char title[128];
 	int locked_aspect_ratio;
-	Vector4 winbgcolor;
+	Color winbgcolor;
+	int _has_icon;
+
+	int _cursorshape = 1;
+
+	void (*render_callback)(void *loopArg);
+	Vector2 last_canvas_size;
+
+	int width;
+	int height;
+	bool keep_running;
+	unsigned int _window_flags;
+
+	bool _fullscreen;
+	bool _transparent;
+	bool _vsync;
+	bool _vsync_adaptive;
+
+	bool _cursors_initialized;
+	GLFWcursor *cursors[7];
+	unsigned int cursor_enums[7];
 };
+
+#endif

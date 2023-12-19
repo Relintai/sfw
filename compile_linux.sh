@@ -37,7 +37,8 @@
 # g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pool_vector.cpp -o sfw/pool_vector.o
 # g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pool_allocator.cpp -o sfw/pool_allocator.o
 # g++ -Wall -D_REENTRANT -g -Isfw -c sfw/mutex.cpp -o sfw/mutex.o
-g++ -Wall -D_REENTRANT -g -Isfw -c sfw/stime.cpp -o sfw/stime.o
+#g++ -Wall -D_REENTRANT -g -Isfw -c sfw/stime.cpp -o sfw/stime.o
 
 #g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/application.cpp -o sfw/application/application.o
 #g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/scene.cpp -o sfw/application/scene.o
+g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/window.cpp -o sfw/application/window.o

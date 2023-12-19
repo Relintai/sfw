@@ -112,7 +112,7 @@ _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3, E
 	RLogger::log_error(__FUNCTION__, __FILE__, __LINE__, msg); \
 	return;
 
-#define ERR_FAIL_V(val)                                        \
+#define ERR_FAIL_V(val)                                       \
 	RLogger::log_error(__FUNCTION__, __FILE__, __LINE__, ""); \
 	return val;
 
@@ -213,7 +213,7 @@ _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3, E
 	} else                                                                                 \
 		((void)0)
 
-#define CRASH_BAD_INDEX(index, size)                                                   \
+#define CRASH_BAD_INDEX(index, size)                                                       \
 	if ((index < 0) || (index >= size)) {                                                  \
 		RLogger::log_index_error(__FUNCTION__, __FILE__, __LINE__, index, size, "CRASH!"); \
 		GENERATE_TRAP                                                                      \
@@ -233,6 +233,10 @@ _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3, E
 		GENERATE_TRAP                                                                               \
 	} else                                                                                          \
 		((void)0)
+
+#define CRASH_MSG(msg)                                                      \
+	RLogger::log_error(__FUNCTION__, __FILE__, __LINE__, msg); \
+	GENERATE_TRAP
 
 /**
  * This should be a 'free' assert for program flow and should not be needed in any releases,
