@@ -53,7 +53,7 @@ public:
 			"\n"
 			"void main() {\n"
 			"  v_uv = a_uv;\n"
-			"  gl_Position = u_proj_matrix * camera_matrix_location * u_model_view_matrix * a_position;\n"
+			"  gl_Position = u_proj_matrix * u_camera_matrix * u_model_view_matrix * a_position;\n"
 			"}"
 		};
 
