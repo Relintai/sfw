@@ -63,11 +63,13 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c game_scen
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c main.cpp -o main.o
 
 
-ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/aabb.o sfw/basis.o sfw/color.o sfw/face3.o sfw/logger.o sfw/math_funcs.o \
-                        sfw/memory.o sfw/pcg.o sfw/plane.o sfw/projection.o sfw/quaternion.o sfw/random_pcg.o \
-                        sfw/rect2.o sfw/rect2i.o sfw/safe_refcount.o sfw/transform_2d.o sfw/transform.o \
-                        sfw/ustring.o sfw/vector2.o sfw/vector2i.o sfw/vector3.o sfw/vector3i.o sfw/vector4.o sfw/vector4i.o \
-                        sfw/pool_vector.o sfw/pool_allocator.o sfw/mutex.o sfw/stime.o \
+ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \
+                        sfw/core/face3.o sfw/core/logger.o sfw/core/math_funcs.o \
+                        sfw/core/memory.o sfw/core/pcg.o sfw/core/plane.o sfw/core/projection.o sfw/core/quaternion.o sfw/core/random_pcg.o \
+                        sfw/core/rect2.o sfw/core/rect2i.o sfw/core/safe_refcount.o sfw/core/transform_2d.o sfw/core/transform.o \
+                        sfw/core/ustring.o sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
+                        sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
+                        sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/stime.o \
                         sfw/application/application.o sfw/application/scene.o sfw/application/window.o \
                         sfw/application/shader.o sfw/application/material.o sfw/application/mesh.o \
                         sfw/application/camera_3d.o sfw/application/object_3d.o sfw/application/mesh_instance_3d.o \

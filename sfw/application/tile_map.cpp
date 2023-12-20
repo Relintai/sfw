@@ -71,17 +71,17 @@ void TileMap::allocate_data() {
 void TileMap::add_rect(const int x, const int y, const float uv_x, const float uv_y, const float uv_size_x, const float uv_size_y) {
 	int vc = static_cast<int>(mesh->vertices.size() / mesh->vertex_dimesions);
 
-	mesh->add_uv(uv_x, uv_y);
 	mesh->add_vertex2(x, y + 1);
-
-	mesh->add_uv(uv_x + uv_size_x, uv_y + uv_size_y);
-	mesh->add_vertex2(x + 1, y);
-
 	mesh->add_uv(uv_x, uv_y + uv_size_y);
-	mesh->add_vertex2(x, y);
 
+	mesh->add_vertex2(x + 1, y);
 	mesh->add_uv(uv_x + uv_size_x, uv_y);
+
+	mesh->add_vertex2(x, y);
+	mesh->add_uv(uv_x, uv_y);
+
 	mesh->add_vertex2(x + 1, y + 1);
+	mesh->add_uv(uv_x + uv_size_x, uv_y + uv_size_y);
 
 	mesh->add_triangle(vc + 1, vc + 0, vc + 2);
 	mesh->add_triangle(vc + 0, vc + 1, vc + 3);
@@ -116,7 +116,6 @@ void TileMap::render() {
 
 TileMap::TileMap() :
 		Object2D() {
-			
 	data = nullptr;
 	size_x = 16;
 	size_y = 16;
