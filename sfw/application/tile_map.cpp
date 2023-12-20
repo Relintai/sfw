@@ -1,6 +1,6 @@
 #include "tile_map.h"
 
-#include "camera.h"
+#include "camera_2d.h"
 
 void TileMap::build_mesh() {
 	if (!mesh) {
@@ -98,26 +98,25 @@ void TileMap::set_data(const int x, const int y, const uint8_t value) {
 }
 
 void TileMap::render() {
-    if (!mesh)
+	if (!mesh)
 		return;
 
-	Transform mat_orig = Camera::current_camera->model_view_matrix;
-	
-	//Camera::current_camera->model_view_matrix = glm::translate(Camera::current_camera->model_view_matrix, glm::vec3(position.x, position.y, 0));
+	Transform2D mat_orig = Camera2D::current_camera->model_view_matrix;
 
-	//Camera::current_camera->model_view_matrix = glm::rotate(Camera::current_camera->model_view_matrix, rotation, glm::vec3(0, 0, 1));
+	Camera2D::current_camera->model_view_matrix *= transform;
 
-	//Camera::current_camera->model_view_matrix = glm::scale(Camera::current_camera->model_view_matrix, glm::vec3(scale.x, scale.y, 0));
-
-	if (material)
+	if (material) {
 		material->bind();
+	}
 
 	mesh->render();
 
-	Camera::current_camera->model_view_matrix = mat_orig;
+	Camera2D::current_camera->model_view_matrix = mat_orig;
 }
 
-TileMap::TileMap() : Object2D() {
+TileMap::TileMap() :
+		Object2D() {
+			
 	data = nullptr;
 	size_x = 16;
 	size_y = 16;
@@ -129,6 +128,7 @@ TileMap::TileMap() : Object2D() {
 	material = nullptr;
 }
 TileMap::~TileMap() {
-    if (data)
-        delete[] data;
+	if (data) {
+		delete[] data;
+	}
 }

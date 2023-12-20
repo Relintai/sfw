@@ -105,7 +105,7 @@ void GameScene::render() {
 
 	camera->bind();
 
-	//tile_map->render();
+	
 	//sprite->render();
 	//material->bind();
 	//color_material->bind();
@@ -118,6 +118,7 @@ void GameScene::render() {
 
 	camera_2d->bind();
 	sprite->render();
+	tile_map->render();
 }
 
 GameScene::GameScene() {
@@ -153,11 +154,11 @@ GameScene::GameScene() {
 	//sprite->region_width = 1.0 / 16.0;
 	//sprite->region_height = 1.0 / 16.0;
 	sprite->update_mesh();
-	/*
+
 	tile_map = new TileMap();
 	tile_map->material = material;
-	tile_map->atlas_size_x = 16;
-	tile_map->atlas_size_y = 16;
+	tile_map->atlas_size_x = 2;
+	tile_map->atlas_size_y = 2;
 
 	tile_map->allocate_data();
 
@@ -172,7 +173,10 @@ GameScene::GameScene() {
 	}
 
 	tile_map->build_mesh();
-	*/
+
+	tile_map->transform.scale(Vector2(32, 32));
+	tile_map->transform.set_origin(Vector2(500, 500));
+	
 
 	camera = new PerspectiveCamera();
 	//camera->width = 2;
@@ -243,17 +247,15 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-	/*
-	delete tile_map;
-	*/
-	memdelete(camera);
-	//memdelete(texture);
-	//memdelete(material);
+	memdelete(tile_map);
 
-	//memdelete(sprite);
+	memdelete(camera);
+	memdelete(texture);
+
+	memdelete(sprite);
 
 	memdelete(camera);
 	memdelete(mesh);
-	//memdelete(material);
+	memdelete(material);
 	memdelete(color_material);
 }
