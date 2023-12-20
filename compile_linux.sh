@@ -7,60 +7,60 @@
 #g++ main.cpp shader.cpp material.cpp mesh.cpp mesh_instance.cpp mesh_utils.cpp texture.cpp camera.cpp application.cpp scene.cpp game_scene.cpp object_2d.cpp tile_map.cpp sprite.cpp \
 #    -g -Wall -o3 -o ./bin/game $(pkg-config --cflags --libs sdl2 glew)
 
-#g++ -Wall -fexceptions -I/usr/include/SDL2 -D_REENTRANT -g -Isfw -c sfw/aabb.cpp -o sfw/aabb.o
+#g++ -Wall -fexceptions -I/usr/include/SDL2 -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/aabb.cpp -o sfw/core/aabb.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/aabb.cpp -o sfw/aabb.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/basis.cpp -o sfw/basis.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/color.cpp -o sfw/color.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/face3.cpp -o sfw/face3.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/logger.cpp -o sfw/logger.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/math_funcs.cpp -o sfw/math_funcs.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/memory.cpp -o sfw/memory.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pcg.cpp -o sfw/pcg.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/plane.cpp -o sfw/plane.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/projection.cpp -o sfw/projection.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/quaternion.cpp -o sfw/quaternion.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/random_pcg.cpp -o sfw/random_pcg.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/rect2.cpp -o sfw/rect2.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/rect2i.cpp -o sfw/rect2i.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/safe_refcount.cpp -o sfw/safe_refcount.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/transform_2d.cpp -o sfw/transform_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/transform.cpp -o sfw/transform.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/ustring.cpp -o sfw/ustring.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/vector2.cpp -o sfw/vector2.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/vector2i.cpp -o sfw/vector2i.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/vector3.cpp -o sfw/vector3.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/vector3i.cpp -o sfw/vector3i.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/vector4.cpp -o sfw/vector4.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/vector4i.cpp -o sfw/vector4i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/aabb.cpp -o sfw/core/aabb.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/basis.cpp -o sfw/core/basis.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/color.cpp -o sfw/core/color.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/face3.cpp -o sfw/core/face3.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/logger.cpp -o sfw/core/logger.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/math_funcs.cpp -o sfw/core/math_funcs.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/memory.cpp -o sfw/core/memory.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/pcg.cpp -o sfw/core/pcg.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/plane.cpp -o sfw/core/plane.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/projection.cpp -o sfw/core/projection.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/quaternion.cpp -o sfw/core/quaternion.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/random_pcg.cpp -o sfw/core/random_pcg.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/rect2.cpp -o sfw/core/rect2.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/rect2i.cpp -o sfw/core/rect2i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/safe_refcount.cpp -o sfw/core/safe_refcount.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/transform_2d.cpp -o sfw/core/transform_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/transform.cpp -o sfw/core/transform.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/ustring.cpp -o sfw/core/ustring.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector2.cpp -o sfw/core/vector2.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector2i.cpp -o sfw/core/vector2i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector3.cpp -o sfw/core/vector3.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector3i.cpp -o sfw/core/vector3i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector4.cpp -o sfw/core/vector4.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector4i.cpp -o sfw/core/vector4i.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pool_vector.cpp -o sfw/pool_vector.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/pool_allocator.cpp -o sfw/pool_allocator.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/mutex.cpp -o sfw/mutex.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/stime.cpp -o sfw/stime.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/pool_vector.cpp -o sfw/core/pool_vector.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/pool_allocator.cpp -o sfw/core/pool_allocator.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/mutex.cpp -o sfw/core/mutex.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/stime.cpp -o sfw/core/stime.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/application.cpp -o sfw/application/application.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/scene.cpp -o sfw/application/scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/window.cpp -o sfw/application/window.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw -Isfw/application -c sfw/application/application.cpp -o sfw/application/application.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/scene.cpp -o sfw/application/scene.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/window.cpp -o sfw/application/window.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/shader.cpp -o sfw/application/shader.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/material.cpp -o sfw/application/material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh.cpp -o sfw/application/mesh.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh_utils.cpp -o sfw/application/mesh_utils.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/texture.cpp -o sfw/application/texture.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/shader.cpp -o sfw/application/shader.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/material.cpp -o sfw/application/material.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/mesh.cpp -o sfw/application/mesh.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/mesh_utils.cpp -o sfw/application/mesh_utils.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/texture.cpp -o sfw/application/texture.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/camera_3d.cpp -o sfw/application/camera_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/object_3d.cpp -o sfw/application/object_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh_instance_3d.cpp -o sfw/application/mesh_instance_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/camera_3d.cpp -o sfw/application/camera_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/object_3d.cpp -o sfw/application/object_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/mesh_instance_3d.cpp -o sfw/application/mesh_instance_3d.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/camera_2d.cpp -o sfw/application/camera_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh_instance_2d.cpp -o sfw/application/mesh_instance_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/object_2d.cpp -o sfw/application/object_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/sprite.cpp -o sfw/application/sprite.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/tile_map.cpp -o sfw/application/tile_map.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/camera_2d.cpp -o sfw/application/camera_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/mesh_instance_2d.cpp -o sfw/application/mesh_instance_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/object_2d.cpp -o sfw/application/object_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/sprite.cpp -o sfw/application/sprite.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c sfw/application/tile_map.cpp -o sfw/application/tile_map.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c game_scene.cpp -o game_scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c main.cpp -o main.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c game_scene.cpp -o game_scene.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/application -c main.cpp -o main.o
 
 
 ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/aabb.o sfw/basis.o sfw/color.o sfw/face3.o sfw/logger.o sfw/math_funcs.o \
