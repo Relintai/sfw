@@ -396,7 +396,7 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	//int interval = has_adaptive_vsync && wants_adaptive_vsync ? -1 : (flags & WINDOW_VSYNC_DISABLED ? 0 : 1);
 	//glfwSwapInterval(interval);
 
-	const GLFWvidmode *mode = glfwGetVideoMode(monitor ? monitor : glfwGetPrimaryMonitor());
+	//const GLFWvidmode *mode = glfwGetVideoMode(monitor ? monitor : glfwGetPrimaryMonitor());
 
 	//PRINTF("Build version: %s\n", BUILD_VERSION);
 	//PRINTF("Monitor: %s (%dHz, vsync=%d)\n", glfwGetMonitorName(monitor ? monitor : glfwGetPrimaryMonitor()), mode->refreshRate, interval);

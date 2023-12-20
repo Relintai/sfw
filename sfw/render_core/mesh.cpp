@@ -117,17 +117,17 @@ void Mesh::render() {
     glEnableVertexAttribArray(Shader::ATTRIBUTE_POSITION);
 
     if (normals_vbo_size > 0) {
-        glVertexAttribPointer(Shader::ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, (void*)(vertices_vbo_size));
+        glVertexAttribPointer(Shader::ATTRIBUTE_NORMAL, 3, GL_FLOAT, GL_FALSE, 0, (void*)(uintptr_t)(vertices_vbo_size));
         glEnableVertexAttribArray(Shader::ATTRIBUTE_NORMAL);
     }
 
     if (colors_vbo_size > 0) {
-        glVertexAttribPointer(Shader::ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, (void*)(vertices_vbo_size + normals_vbo_size));
+        glVertexAttribPointer(Shader::ATTRIBUTE_COLOR, 4, GL_FLOAT, GL_FALSE, 0, (void*)(uintptr_t)(vertices_vbo_size + normals_vbo_size));
         glEnableVertexAttribArray(Shader::ATTRIBUTE_COLOR);
     }
 
     if (uvs_vbo_size > 0) {
-        glVertexAttribPointer(Shader::ATTRIBUTE_UV, 2, GL_FLOAT, GL_FALSE, 0, (void*)(vertices_vbo_size + normals_vbo_size + colors_vbo_size));
+        glVertexAttribPointer(Shader::ATTRIBUTE_UV, 2, GL_FLOAT, GL_FALSE, 0, (void*)(uintptr_t)(vertices_vbo_size + normals_vbo_size + colors_vbo_size));
         glEnableVertexAttribArray(Shader::ATTRIBUTE_UV);
     }
 
