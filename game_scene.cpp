@@ -116,7 +116,8 @@ void GameScene::render() {
 	rotmi += 0.01;
 	mi->render();
 
-	//sprite->render();
+	camera_2d->bind();
+	sprite->render();
 }
 
 GameScene::GameScene() {
@@ -134,23 +135,24 @@ GameScene::GameScene() {
 	//float ar = static_cast<float>(w) / static_cast<float>(h);
 	//camera->width = camera->height * ar;
 
-	//texture = new Texture();
-	//texture->load_image("icon.png");
+	texture = new Texture();
+	texture->load_image("icon.png");
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
 
-	//material = new TextureMaterial();
-	//material->texture = texture;
+	material = new TextureMaterial2D();
+	material->texture = texture;
 
-	//sprite = new Sprite();
-	//sprite->mesh_instance->material = material;
-	//sprite->position.x = 0;
-	//sprite->position.y = 0;
+	sprite = new Sprite();
+	sprite->mesh_instance->material = material;
+	sprite->width = 500;
+	sprite->height = 500;
+	sprite->transform.set_origin(Vector2(250, 250));
 	//sprite->region_x = 7.0 * (1.0 / 16.0);
 	//sprite->region_y = 7.0 * (1.0 / 16.0);
 	//sprite->region_width = 1.0 / 16.0;
 	//sprite->region_height = 1.0 / 16.0;
-	//sprite->update_mesh();
+	sprite->update_mesh();
 	/*
 	tile_map = new TileMap();
 	tile_map->material = material;
@@ -179,7 +181,10 @@ GameScene::GameScene() {
 	//camera->position.y = 0;
 	//camera->position.z = -2;
 	camera->camera_transform.origin.z -= 2;
-	camera->screen_aspect_ratio = 1980.0 / 1080.0;
+	camera->screen_aspect_ratio = 1920.0 / 1080.0;
+
+	camera_2d = memnew(Camera2D);
+	camera_2d->size = Vector2(1920, 1080);
 
 	mesh = memnew(Mesh());
 	//cmaterial = memnew(ColoredMaterial());

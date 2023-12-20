@@ -3,7 +3,8 @@
 
 #include "object_2d.h"
 
-#include "mesh_instance.h"
+#include "transform_2d.h"
+#include "mesh_instance_2d.h"
 
 class Sprite : public Object2D {
 public:
@@ -13,7 +14,9 @@ public:
     Sprite();
     ~Sprite();
 
-    MeshInstance *mesh_instance;
+    Transform2D transform;
+
+    MeshInstance2D *mesh_instance;
 
     float width;
     float height;
