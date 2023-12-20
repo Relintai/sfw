@@ -44,6 +44,8 @@ public:
 
 	Camera *camera;
 	Mesh *mesh;
+	MeshInstance *mi;
+	MeshInstance *mi2;
 	ColorMaterial *color_material;
 
 	//ColoredMaterial *cmaterial;

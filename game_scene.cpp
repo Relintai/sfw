@@ -100,20 +100,21 @@ void GameScene::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	static float rot = 0;
-
 	camera->camera_transform.basis = Basis(Vector3(0, 1, 0), rot);
-
 	rot += 0.01;
 
 	camera->bind();
 
 	//tile_map->render();
-
 	//sprite->render();
-
 	//material->bind();
-	color_material->bind();
-	mesh->render();
+	//color_material->bind();
+	//mesh->render();
+
+	static float rotmi = 0;
+	mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+	rotmi += 0.01;
+	mi->render();
 
 	//sprite->render();
 }
@@ -189,6 +190,17 @@ GameScene::GameScene() {
 
 	MeshUtils::create_cone(mesh);
 	mesh->upload();
+
+	mi = memnew(MeshInstance());
+	mi->material = color_material;
+	mi->mesh = mesh;
+
+	mi2 = memnew(MeshInstance());
+	mi2->material = color_material;
+	mi2->mesh = mesh;
+	mi2->transform.origin.x = 1;
+
+	mi->children.push_back(mi2);
 
 	//float width = 1;
 	//float height = 1;
