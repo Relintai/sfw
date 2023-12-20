@@ -39,7 +39,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/pool_allocator.cpp
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/mutex.cpp -o sfw/core/mutex.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/stime.cpp -o sfw/core/stime.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw -Isfw/render_core -c sfw/render_core/application.cpp -o sfw/render_core/application.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/application.cpp -o sfw/render_core/application.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/window.cpp -o sfw/render_core/window.o
 
