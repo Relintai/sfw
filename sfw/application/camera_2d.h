@@ -3,15 +3,20 @@
 
 #include "3rd_glad.h"
 
+#include "object_2d.h"
+
 #include "transform.h"
 #include "transform_2d.h"
 #include "vector2.h"
 
-class Camera2D {
+class Camera2D : Object2D {
 public:
 	virtual void bind();
 
 	void make_current();
+
+	//void push_transform(const Transform2D &transform);
+	//void pop_transform();
 
 	Camera2D();
 	virtual ~Camera2D();

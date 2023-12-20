@@ -1,18 +1,18 @@
-#include "camera.h"
+#include "camera_3d.h"
 
 #include "math_funcs.h"
 
-void Camera::bind() {
+void Camera3D::bind() {
 	make_current();
 
 	model_view_matrix = Transform();
 }
 
-void Camera::make_current() {
+void Camera3D::make_current() {
 	current_camera = this;
 }
 
-Camera::Camera() {
+Camera3D::Camera3D() {
 	screen_aspect_ratio = 1; //p_viewport_size.width / (float)p_viewport_size.height,
 
 	znear = 0.05;
@@ -21,13 +21,13 @@ Camera::Camera() {
 
 	vaspect = false;
 }
-Camera::~Camera() {
+Camera3D::~Camera3D() {
 }
 
-Camera *Camera::current_camera = NULL;
+Camera3D *Camera3D::current_camera = NULL;
 
 void OrthographicCamera::bind() {
-	Camera::bind();
+	Camera3D::bind();
 	projection_matrix.set_orthogonal(
 			size,
 			screen_aspect_ratio,
@@ -37,13 +37,13 @@ void OrthographicCamera::bind() {
 }
 
 OrthographicCamera::OrthographicCamera() :
-		Camera() {
+		Camera3D() {
 }
 OrthographicCamera::~OrthographicCamera() {
 }
 
 void PerspectiveCamera::bind() {
-	Camera::bind();
+	Camera3D::bind();
 
 	projection_matrix.set_perspective(
 			fov,
@@ -54,9 +54,20 @@ void PerspectiveCamera::bind() {
 }
 
 PerspectiveCamera::PerspectiveCamera() :
-		Camera() {
+		Camera3D() {
 	fov = 70;
 }
 
 PerspectiveCamera::~PerspectiveCamera() {
+}
+
+void FrustumCamera::bind() {
+	Camera3D::bind();
+}
+
+FrustumCamera::FrustumCamera() :
+		Camera3D() {
+}
+
+FrustumCamera::~FrustumCamera() {
 }

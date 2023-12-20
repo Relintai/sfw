@@ -5,7 +5,7 @@
 
 #include "color.h"
 
-#include "camera.h"
+#include "camera_3d.h"
 
 class ColoredMaterial : public Material {
 public:
@@ -14,8 +14,8 @@ public:
     }
 
     void bind_uniforms() {
-        //glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->projection_matrix));
-        //glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->model_view_matrix));
+        //glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera3D::current_camera->projection_matrix));
+        //glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera3D::current_camera->model_view_matrix));
 
         glUniform4f(tri_color_uniform_location, color.r, color.g, color.b, color.a);
     }

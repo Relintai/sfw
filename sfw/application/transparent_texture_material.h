@@ -7,7 +7,7 @@
 #include "./libs/glm/vec4.hpp"
 #include "./libs/glm/gtc/type_ptr.hpp"
 
-#include "camera.h"
+#include "camera_3d.h"
 
 class TransparentTextureMaterial : public Material {
 public:
@@ -16,8 +16,8 @@ public:
     }
 
     void bind_uniforms() {
-        glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->projection_matrix));
-        glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera::current_camera->model_view_matrix));
+        glUniformMatrix4fv(projection_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera3D::current_camera->projection_matrix));
+        glUniformMatrix4fv(model_view_matrix_location, 1, GL_FALSE, glm::value_ptr(Camera3D::current_camera->model_view_matrix));
 
         if (texture) {
             glActiveTexture(GL_TEXTURE0);

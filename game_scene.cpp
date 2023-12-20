@@ -200,11 +200,11 @@ GameScene::GameScene() {
 	MeshUtils::create_cone(mesh);
 	mesh->upload();
 
-	mi = memnew(MeshInstance());
+	mi = memnew(MeshInstance3D());
 	mi->material = color_material;
 	mi->mesh = mesh;
 
-	mi2 = memnew(MeshInstance());
+	mi2 = memnew(MeshInstance3D());
 	mi2->material = color_material;
 	mi2->mesh = mesh;
 	mi2->transform.origin.x = 1;

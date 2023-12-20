@@ -4,8 +4,8 @@
 #include "scene.h"
 
 #include "tile_map.h"
-#include "mesh_instance.h"
-#include "camera.h"
+#include "mesh_instance_3d.h"
+#include "camera_3d.h"
 #include "camera_2d.h"
 #include "color_material.h"
 #include "colored_material.h"
@@ -37,10 +37,10 @@ public:
 	TileMap *tile_map;
 	Sprite *sprite;
 
-	Camera *camera;
+	Camera3D *camera;
 	Mesh *mesh;
-	MeshInstance *mi;
-	MeshInstance *mi2;
+	MeshInstance3D *mi;
+	MeshInstance3D *mi2;
 	ColorMaterial *color_material;
 
 	//ColoredMaterial *cmaterial;

@@ -4,7 +4,7 @@
 #include "material.h"
 #include "texture.h"
 
-#include "camera.h"
+#include "camera_3d.h"
 
 class TextureMaterial : public Material {
 public:
@@ -13,9 +13,9 @@ public:
 	}
 
 	void bind_uniforms() {
-        set_uniform(projection_matrix_location, Camera::current_camera->projection_matrix);
-        set_uniform(camera_matrix_location, Camera::current_camera->camera_transform);
-        set_uniform(model_view_matrix_location, Camera::current_camera->model_view_matrix);
+        set_uniform(projection_matrix_location, Camera3D::current_camera->projection_matrix);
+        set_uniform(camera_matrix_location, Camera3D::current_camera->camera_transform);
+        set_uniform(model_view_matrix_location, Camera3D::current_camera->model_view_matrix);
 
 		if (texture) {
 			glActiveTexture(GL_TEXTURE0);
