@@ -4,6 +4,7 @@
 
 #include "3rd_glad.h"
 #include "memory.h"
+#include "mesh_utils.h"
 
 void GameScene::event() {
 	/*
@@ -98,6 +99,12 @@ void GameScene::render() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	static float rot = 0;
+
+	camera->camera_transform.basis = Basis(Vector3(0, 1, 0), rot);
+
+	rot += 0.01;
+
 	camera->bind();
 
 	//tile_map->render();
@@ -105,9 +112,10 @@ void GameScene::render() {
 	//sprite->render();
 
 	//material->bind();
-	//mesh->render();
+	color_material->bind();
+	mesh->render();
 
-	sprite->render();
+	//sprite->render();
 }
 
 GameScene::GameScene() {
@@ -125,23 +133,23 @@ GameScene::GameScene() {
 	//float ar = static_cast<float>(w) / static_cast<float>(h);
 	//camera->width = camera->height * ar;
 
-	texture = new Texture();
-	texture->load_image("icon.png");
+	//texture = new Texture();
+	//texture->load_image("icon.png");
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
 
-	material = new TextureMaterial();
-	material->texture = texture;
+	//material = new TextureMaterial();
+	//material->texture = texture;
 
-	sprite = new Sprite();
-	sprite->mesh_instance->material = material;
+	//sprite = new Sprite();
+	//sprite->mesh_instance->material = material;
 	//sprite->position.x = 0;
 	//sprite->position.y = 0;
 	//sprite->region_x = 7.0 * (1.0 / 16.0);
 	//sprite->region_y = 7.0 * (1.0 / 16.0);
 	//sprite->region_width = 1.0 / 16.0;
 	//sprite->region_height = 1.0 / 16.0;
-	sprite->update_mesh();
+	//sprite->update_mesh();
 	/*
 	tile_map = new TileMap();
 	tile_map->material = material;
@@ -163,18 +171,24 @@ GameScene::GameScene() {
 	tile_map->build_mesh();
 	*/
 
-	camera = new OrthographicCamera();
+	camera = new PerspectiveCamera();
 	//camera->width = 2;
 	//camera->height = 2;
 	//camera->position.x = 0;
 	//camera->position.y = 0;
 	//camera->position.z = -2;
+	camera->camera_transform.origin.z -= 2;
+	camera->screen_aspect_ratio = 1980.0 / 1080.0;
 
-	mesh = memnew(Mesh(2));
-	cmaterial = memnew(ColoredMaterial());
+	mesh = memnew(Mesh());
+	//cmaterial = memnew(ColoredMaterial());
 	//cmaterial->color = glm::vec4(1, 1, 0, 1);
+	color_material = memnew(ColorMaterial());
 
-	mesh->clear();
+	//mesh->clear();
+
+	MeshUtils::create_cone(mesh);
+	mesh->upload();
 
 	//float width = 1;
 	//float height = 1;
@@ -199,6 +213,7 @@ GameScene::GameScene() {
 	//mesh->add_uv(region_x + region_width, region_y);
 	//mesh->add_vertex2(w2, h2);
 
+	/*
 	mesh->add_vertex2(0, 0.5);
 	mesh->add_vertex2(-0.5, -0.5);
 	mesh->add_vertex2(0.5, -0.5);
@@ -207,6 +222,7 @@ GameScene::GameScene() {
 	//mesh->add_triangle(0, 1, 3);
 
 	mesh->upload();
+	*/
 }
 
 GameScene::~GameScene() {
@@ -214,12 +230,13 @@ GameScene::~GameScene() {
 	delete tile_map;
 	*/
 	memdelete(camera);
-	memdelete(texture);
-	memdelete(material);
+	//memdelete(texture);
+	//memdelete(material);
 
-	memdelete(sprite);
+	//memdelete(sprite);
 
 	memdelete(camera);
 	memdelete(mesh);
-	memdelete(material);
+	//memdelete(material);
+	memdelete(color_material);
 }

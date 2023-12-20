@@ -53,6 +53,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/obje
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/sprite.cpp -o sfw/application/sprite.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/tile_map.cpp -o sfw/application/tile_map.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/texture.cpp -o sfw/application/texture.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c sfw/application/mesh_utils.cpp -o sfw/application/mesh_utils.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c game_scene.cpp -o game_scene.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/application -c main.cpp -o main.o
@@ -67,6 +68,7 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/aabb.o sfw/basis.
                         sfw/application/shader.o sfw/application/material.o sfw/application/mesh.o \
                         sfw/application/camera.o sfw/application/mesh_instance.o sfw/application/object_2d.o \
                         sfw/application/sprite.o sfw/application/tile_map.o sfw/application/texture.o \
+                        sfw/application/mesh_utils.o \
                         game_scene.o main.o \
                          -o game 
 

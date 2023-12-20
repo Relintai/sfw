@@ -12,14 +12,13 @@
 #include "tile_map.h"
 */
 
+#include "camera.h"
+#include "color_material.h"
 #include "colored_material.h"
 #include "mesh.h"
-#include "camera.h"
+#include "sprite.h"
 #include "texture.h"
 #include "texture_material.h"
-#include "camera.h"
-#include "sprite.h"
-
 
 class GameScene : public Scene {
 public:
@@ -36,14 +35,18 @@ public:
 	bool down;
 	*/
 
+	/*
 	Texture *texture;
 	TextureMaterial *material;
 	//TileMap *tile_map;
 	Sprite *sprite;
+	*/
 
 	Camera *camera;
 	Mesh *mesh;
-	ColoredMaterial *cmaterial;
+	ColorMaterial *color_material;
+
+	//ColoredMaterial *cmaterial;
 };
 
 #endif

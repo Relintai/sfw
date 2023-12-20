@@ -28,7 +28,6 @@ Camera *Camera::current_camera = NULL;
 
 void OrthographicCamera::bind() {
 	Camera::bind();
-
 	projection_matrix.set_orthogonal(
 			size,
 			screen_aspect_ratio,
