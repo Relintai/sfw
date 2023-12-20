@@ -49,18 +49,18 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/rende
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/mesh_utils.cpp -o sfw/render_core/mesh_utils.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/texture.cpp -o sfw/render_core/texture.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/camera_3d.cpp -o sfw/render_core/camera_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/object_3d.cpp -o sfw/render_core/object_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/mesh_instance_3d.cpp -o sfw/render_core/mesh_instance_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/mesh_instance_3d.cpp -o sfw/render_objects/mesh_instance_3d.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/camera_2d.cpp -o sfw/render_core/camera_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/mesh_instance_2d.cpp -o sfw/render_core/mesh_instance_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/object_2d.cpp -o sfw/render_core/object_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/sprite.cpp -o sfw/render_core/sprite.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/tile_map.cpp -o sfw/render_core/tile_map.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_2d.cpp -o sfw/render_objects/camera_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/mesh_instance_2d.cpp -o sfw/render_objects/mesh_instance_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_2d.cpp -o sfw/render_objects/object_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/sprite.cpp -o sfw/render_objects/sprite.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c game_scene.cpp -o game_scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c main.cpp -o main.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c game_scene.cpp -o game_scene.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c main.cpp -o main.o
 
 
 ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \
@@ -72,11 +72,11 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/stime.o \
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
-                        sfw/render_core/camera_3d.o sfw/render_core/object_3d.o sfw/render_core/mesh_instance_3d.o \
-                        sfw/render_core/object_2d.o \
-                        sfw/render_core/sprite.o sfw/render_core/tile_map.o sfw/render_core/texture.o \
-                        sfw/render_core/camera_2d.o sfw/render_core/mesh_instance_2d.o \
-                        sfw/render_core/mesh_utils.o \
+                        sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
+                        sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
+                        sfw/render_objects/object_2d.o \
+                        sfw/render_objects/sprite.o sfw/render_objects/tile_map.o \
+                        sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
                         game_scene.o main.o \
                          -o game 
 
