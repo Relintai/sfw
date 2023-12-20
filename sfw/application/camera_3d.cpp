@@ -67,6 +67,15 @@ void FrustumCamera::bind() {
 
 FrustumCamera::FrustumCamera() :
 		Camera3D() {
+	offset = 0;
+
+	projection_matrix.set_frustum(
+			size,
+			screen_aspect_ratio,
+			offset,
+			znear,
+			zfar,
+			vaspect);
 }
 
 FrustumCamera::~FrustumCamera() {

@@ -49,7 +49,8 @@ public:
 
 class FrustumCamera : public Camera3D {
 public:
-	//todo
+	float offset;
+	
 	void bind();
 
 	FrustumCamera();
