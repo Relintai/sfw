@@ -905,12 +905,16 @@ String String::substr(int p_from, int p_chars) const {
 String String::substr_index(const int start_index, const int end_index) const {
 	int s = length();
 
-	if (start_index < 0 || start_index >= s || end_index < 0 || start_index >= s) {
+	if (start_index < 0 || start_index >= s || end_index < 0) {
 		return "";
 	}
 
 	if (start_index > end_index) {
 		return "";
+	}
+
+	if (end_index >= s) {
+		return substr(start_index, (s - 1) - start_index);
 	}
 
 	return substr(start_index, end_index - start_index);
@@ -4059,8 +4063,17 @@ String String::path_clean_end_slash() const {
 
 	String ret = *this;
 
-	while (ret.length() > 1 && (ret.ends_with("/") || ret.ends_with("\\"))) {
-		ret.resize(ret.length());
+	int strip_to = ret.length() - 1;
+
+	CharType c = ret[strip_to];
+
+	while (strip_to > 1 && (c == '/' || c == '\\')) {
+		--strip_to;
+		c = ret[strip_to];
+	}
+
+	if (ret.length() != strip_to + 1) {
+		ret.set_length(strip_to + 1);
 	}
 
 	return ret;
