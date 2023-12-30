@@ -1,6 +1,6 @@
 #include "string.h"
 
-#include "core/math/math.h"
+#include "math.h"
 #include "error_macros.h"
 #include "variant.h"
 #include <stdlib.h>

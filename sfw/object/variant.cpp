@@ -1,6 +1,6 @@
 #include "variant.h"
 
-#include "core/math/math.h"
+#include "math.h"
 #include "core/reference.h"
 
 Variant::Type Variant::get_type() const {

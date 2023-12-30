@@ -8,7 +8,7 @@
 #include "core/reference.h"
 
 class Directory : public Reference {
-	RCPP_OBJECT(Directory, Reference);
+	SFW_OBJECT(Directory, Reference);
 public:
 	Error open_dir(const String &path, bool skip_specials = true);
 	Error open_dir(const char *path, bool skip_specials = true);
