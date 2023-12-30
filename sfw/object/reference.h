@@ -5,14 +5,12 @@
 /* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
 /* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
 
-
-#include "safe_refcount.h"
-#include "object.h"
-#include "object_id.h"
 #include "memory.h"
+#include "object.h"
+#include "safe_refcount.h"
 
 class Reference : public Object {
-	RCPP_OBJECT(Reference, Object);
+	SFW_OBJECT(Reference, Object);
 
 public:
 	/*_FORCE_INLINE_*/ bool is_referenced() const { return refcount_init.get() != 1; }
@@ -151,7 +149,7 @@ public:
 			ref_pointer(p_reference);
 		}
 	}
-	
+
 	inline bool is_valid() const { return reference != nullptr; }
 	inline bool is_null() const { return reference == nullptr; }
 
@@ -183,7 +181,7 @@ typedef Ref<Reference> REF;
 
 /*
 class WeakRef : public Reference {
-	RCPP_OBJECT(WeakRef, Reference);
+	SFW_OBJECT(WeakRef, Reference);
 
 	ObjectID ref;
 
