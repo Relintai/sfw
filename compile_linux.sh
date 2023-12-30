@@ -27,6 +27,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/safe_refcount.cpp 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/transform_2d.cpp -o sfw/core/transform_2d.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/transform.cpp -o sfw/core/transform.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/ustring.cpp -o sfw/core/ustring.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/string_name.cpp -o sfw/core/string_name.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector2.cpp -o sfw/core/vector2.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector2i.cpp -o sfw/core/vector2i.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/vector3.cpp -o sfw/core/vector3.o
@@ -67,7 +68,8 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/core/face3.o sfw/core/logger.o sfw/core/math_funcs.o \
                         sfw/core/memory.o sfw/core/pcg.o sfw/core/plane.o sfw/core/projection.o sfw/core/quaternion.o sfw/core/random_pcg.o \
                         sfw/core/rect2.o sfw/core/rect2i.o sfw/core/safe_refcount.o sfw/core/transform_2d.o sfw/core/transform.o \
-                        sfw/core/ustring.o sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
+                        sfw/core/ustring.o sfw/core/string_name.o \
+                        sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
                         sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/stime.o \
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \

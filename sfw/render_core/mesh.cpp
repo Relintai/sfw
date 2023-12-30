@@ -64,18 +64,18 @@ void Mesh::upload() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices_vbo_size + normals_vbo_size + colors_vbo_size + uvs_vbo_size, NULL, GL_STATIC_DRAW);
 
-    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_vbo_size, &vertices[0]);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, vertices_vbo_size, vertices.ptr());
 
     if (normals_vbo_size > 0) {
-        glBufferSubData(GL_ARRAY_BUFFER, vertices_vbo_size, normals_vbo_size, &normals[0]);
+        glBufferSubData(GL_ARRAY_BUFFER, vertices_vbo_size, normals_vbo_size, normals.ptr());
     }
 
     if (colors_vbo_size > 0) {
-        glBufferSubData(GL_ARRAY_BUFFER, vertices_vbo_size + normals_vbo_size, colors_vbo_size, &colors[0]);
+        glBufferSubData(GL_ARRAY_BUFFER, vertices_vbo_size + normals_vbo_size, colors_vbo_size, colors.ptr());
     }
 
     if (uvs_vbo_size > 0) {
-        glBufferSubData(GL_ARRAY_BUFFER, vertices_vbo_size + normals_vbo_size + colors_vbo_size, uvs_vbo_size, &uvs[0]);
+        glBufferSubData(GL_ARRAY_BUFFER, vertices_vbo_size + normals_vbo_size + colors_vbo_size, uvs_vbo_size, uvs.ptr());
     }
 
     if (indices_vbo_size > 0) {
@@ -84,7 +84,7 @@ void Mesh::upload() {
         }
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_vbo_size, &indices[0], GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_vbo_size, indices.ptr(), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }

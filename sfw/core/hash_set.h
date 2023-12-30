@@ -34,7 +34,7 @@
 
 #include "hash_map.h"
 #include "hashfuncs.h"
-#include "core/math/math_funcs.h"
+#include "math_funcs.h"
 #include "memory.h"
 
 /**

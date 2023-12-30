@@ -2,7 +2,7 @@
 #define SHADER_H
 
 #include "3rd_glad.h"
-#include <unordered_map>
+#include "hash_map.h"
 
 class Shader {
 public:
@@ -53,7 +53,7 @@ public:
 	~ShaderCache();
 
 protected:
-	std::unordered_map<int, Shader *> shaders;
+	HashMap<int, Shader *> shaders;
 };
 
 #endif // SHADER_H

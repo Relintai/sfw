@@ -32,22 +32,19 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#include "rid.h"
-#include "core/math/aabb.h"
-#include "core/math/math_defs.h"
-#include "core/math/math_funcs.h"
-#include "core/math/rect2.h"
-#include "core/math/rect2i.h"
-#include "core/math/vector2.h"
-#include "core/math/vector2i.h"
-#include "core/math/vector3.h"
-#include "core/math/vector3i.h"
-#include "core/math/vector4.h"
-#include "core/math/vector4i.h"
-#include "core/object/object_id.h"
-#include "core/string/node_path.h"
-#include "core/string/string_name.h"
-#include "core/string/ustring.h"
+#include "aabb.h"
+#include "math_defs.h"
+#include "math_funcs.h"
+#include "rect2.h"
+#include "rect2i.h"
+#include "vector2.h"
+#include "vector2i.h"
+#include "vector3.h"
+#include "vector3i.h"
+#include "vector4.h"
+#include "vector4i.h"
+#include "string_name.h"
+#include "ustring.h"
 #include "core/typedefs.h"
 
 /**
@@ -321,10 +318,7 @@ struct HashMapHasherDefault {
 	static _FORCE_INLINE_ uint32_t hash(const wchar_t p_wchar) { return hash_fmix32(p_wchar); }
 	static _FORCE_INLINE_ uint32_t hash(const char16_t p_uchar) { return hash_fmix32(p_uchar); }
 	static _FORCE_INLINE_ uint32_t hash(const char32_t p_uchar) { return hash_fmix32(p_uchar); }
-	static _FORCE_INLINE_ uint32_t hash(const RID &p_rid) { return hash_one_uint64(p_rid.get_id()); }
 	static _FORCE_INLINE_ uint32_t hash(const StringName &p_string_name) { return p_string_name.hash(); }
-	static _FORCE_INLINE_ uint32_t hash(const NodePath &p_path) { return p_path.hash(); }
-	//static _FORCE_INLINE_ uint32_t hash(const ObjectID &p_id) { return hash_one_uint64(p_id); }
 
 	static _FORCE_INLINE_ uint32_t hash(const uint64_t p_int) { return hash_one_uint64(p_int); }
 	static _FORCE_INLINE_ uint32_t hash(const int64_t p_int) { return hash_one_uint64(p_int); }

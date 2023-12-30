@@ -35,8 +35,9 @@
 #include "hashfuncs.h"
 #include "paged_allocator.h"
 #include "pair.h"
-#include "core/math/math_funcs.h"
+#include "math_funcs.h"
 #include "memory.h"
+#include "list.h"
 
 /**
  * A HashMap implementation that uses open addressing with Robin Hood hashing.

@@ -17,7 +17,7 @@ void MeshInstance2D::render() {
 
     mesh->render();
 
-    for (uint32_t i = 0; i < children.size(); ++i) {
+    for (int i = 0; i < children.size(); ++i) {
         MeshInstance2D * c = children[i];
 
         if (c) {

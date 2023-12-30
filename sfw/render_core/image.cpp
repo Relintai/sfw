@@ -36,7 +36,7 @@
 #include "memory.h"
 #include <memory.h>
 #include <stdio.h>
-#include <map>
+#include "hash_map.h"
 
 const char *Image::format_names[Image::FORMAT_MAX] = {
 	"Lum8", // luminance
@@ -1748,7 +1748,7 @@ void Image::create(const char **p_xpm) {
 	Status status = READING_HEADER;
 	int line = 0;
 
-	std::map<String, Color> colormap;
+	HashMap<String, Color> colormap;
 	int colormap_size = 0;
 	uint32_t pixel_size = 0;
 	uint8_t *w_ptr;

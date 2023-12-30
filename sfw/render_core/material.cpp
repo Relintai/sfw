@@ -9,7 +9,7 @@ void Material::bind() {
         shader = ShaderCache::get_singleton()->get_shader(get_material_id());
 
         if (!shader) {
-            shader = new Shader();
+            shader = memnew(Shader());
 
             shader->set_vertex_shader_source(get_vertex_shader_source());
             shader->set_fragment_shader_source(get_fragment_shader_source());

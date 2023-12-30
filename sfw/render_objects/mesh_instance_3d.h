@@ -1,7 +1,7 @@
 #ifndef MESH_INSTACE_3D_H
 #define MESH_INSTACE_3D_H
 
-#include <vector>
+#include "vector.h"
 
 #include "object_3d.h"
 
@@ -20,7 +20,7 @@ public:
 	Material *material;
 	Mesh *mesh;
 
-	std::vector<MeshInstance3D *> children;
+	Vector<MeshInstance3D *> children;
 };
 
 #endif // MESH_INSTACE_H

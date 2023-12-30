@@ -234,8 +234,19 @@ _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3, E
 	} else                                                                                          \
 		((void)0)
 
-#define CRASH_MSG(msg)                                                      \
+#define CRASH_COND_MSG(cond, msg)                                  \
+	if (cond) {                                                    \
+		RLogger::log_error(__FUNCTION__, __FILE__, __LINE__, msg); \
+		GENERATE_TRAP                                              \
+	} else                                                         \
+		((void)0)
+
+#define CRASH_MSG(msg)                                         \
 	RLogger::log_error(__FUNCTION__, __FILE__, __LINE__, msg); \
+	GENERATE_TRAP
+
+#define CRASH_NOW(msg)                                              \
+	RLogger::log_error(__FUNCTION__, __FILE__, __LINE__, "CRASH!"); \
 	GENERATE_TRAP
 
 /**

@@ -1,7 +1,7 @@
 #ifndef MESH_INSTACE_2D_H
 #define MESH_INSTACE_2D_H
 
-#include <vector>
+#include "vector.h"
 
 #include "material.h"
 #include "mesh.h"
@@ -20,7 +20,7 @@ public:
 
     Transform2D transform;
 
-    std::vector<MeshInstance2D *> children;
+   Vector<MeshInstance2D *> children;
 };
 
 #endif // MESH_INSTACE_H

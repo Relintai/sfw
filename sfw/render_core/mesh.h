@@ -1,7 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <vector>
+#include "vector.h"
 #include <inttypes.h>
 
 #include "3rd_glad.h"
@@ -34,11 +34,11 @@ public:
 
     int vertex_dimesions;
 
-    std::vector<float> vertices;
-    std::vector<float> normals;
-    std::vector<float> colors;
-    std::vector<float> uvs;
-    std::vector<uint32_t> indices;
+    Vector<float> vertices;
+    Vector<float> normals;
+    Vector<float> colors;
+    Vector<float> uvs;
+    Vector<uint32_t> indices;
 
 protected:
     uint32_t vertices_vbo_size;
