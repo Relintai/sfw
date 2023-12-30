@@ -40,15 +40,19 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/pool_allocator.cpp
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/mutex.cpp -o sfw/core/mutex.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/core/stime.cpp -o sfw/core/stime.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/application.cpp -o sfw/render_core/application.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/window.cpp -o sfw/render_core/window.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/object/object.cpp -o sfw/object/object.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -c sfw/object/reference.cpp -o sfw/object/reference.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/shader.cpp -o sfw/render_core/shader.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/material.cpp -o sfw/render_core/material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/mesh.cpp -o sfw/render_core/mesh.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/mesh_utils.cpp -o sfw/render_core/mesh_utils.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -c sfw/render_core/texture.cpp -o sfw/render_core/texture.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/application.cpp -o sfw/render_core/application.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/window.cpp -o sfw/render_core/window.o
+
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/shader.cpp -o sfw/render_core/shader.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/material.cpp -o sfw/render_core/material.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/mesh.cpp -o sfw/render_core/mesh.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/mesh_utils.cpp -o sfw/render_core/mesh_utils.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/texture.cpp -o sfw/render_core/texture.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/image.cpp -o sfw/render_core/image.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
@@ -72,6 +76,8 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
                         sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/stime.o \
+                        sfw/object/object.o sfw/object/reference.o \
+                        sfw/render_core/image.o \
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
                         sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
