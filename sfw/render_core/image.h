@@ -1,3 +1,6 @@
+#ifndef IMAGE_H
+#define IMAGE_H
+
 /*************************************************************************/
 /*  image.h                                                              */
 /*************************************************************************/
@@ -28,18 +31,15 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef IMAGE_H
-#define IMAGE_H
+#include "color.h"
+#include "rect2.h"
+#include "rect2i.h"
+#include "reference.h"
+#include "vector.h"
+#include "vector2i.h"
 
-#include "core/math/color.h"
-#include "core/math/rect2.h"
-#include "core/containers/vector.h"
-#include "core/resource.h"
-#include "core/math/rect2i.h"
-#include "core/math/vector2i.h"
-
-class Image : public Resource {
-	RCPP_OBJECT(Image, Resource);
+class Image : public Reference {
+	SFW_OBJECT(Image, Reference);
 
 public:
 	enum {
@@ -210,8 +210,8 @@ public:
 	bool empty() const;
 
 	Vector<uint8_t> get_data() const;
-	const uint8_t* datar() const;
-	uint8_t* dataw();
+	const uint8_t *datar() const;
+	uint8_t *dataw();
 	int get_data_size() const;
 
 	Image();
@@ -271,7 +271,7 @@ public:
 
 	Image(const char **p_xpm);
 
-	virtual Ref<Resource> duplicate(bool p_subresources = false) const;
+	Ref<Image> duplicate() const;
 
 	void lock();
 	void unlock();
