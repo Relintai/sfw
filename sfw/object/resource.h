@@ -13,6 +13,9 @@ public:
 
 	void emit_changed();
 
+	virtual Error load(const String &path);
+	virtual Error save(const String &path);
+
 	Resource();
 	virtual ~Resource();
 };
