@@ -21,7 +21,7 @@ public:
 
         if (texture) {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, texture->texture);
+            glBindTexture(GL_TEXTURE_2D, texture->get_gl_texture());
             glUniform1i(texture_location, 0);
         }
     }

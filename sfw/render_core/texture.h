@@ -6,16 +6,18 @@
 
 class Texture {
 public:
-	enum TextureFilter {
-		TEXTURE_FILTER_NEAREST = 0,
-		TEXTURE_FILTER_LINEAR,
+	enum TextureFlags {
+		TEXTURE_FLAG_FILTER = 1 << 0,
+		TEXTURE_FLAG_REPEAT = 1 << 1,
+		TEXTURE_FLAG_MIRRORED_REPEAT = 1 << 2,
+		TEXTURE_FLAG_MIP_MAPS = 1 << 3,
 	};
 
-	TextureFilter filter;
-	GLuint texture;
+	_FORCE_INLINE_ GLuint get_gl_texture() {
+		return _texture;
+	}
 
-	void apply_filter();
-	void texture_update(int flags);
+	void texture_update();
 
 	void set_image(const Ref<Image> &img);
 
@@ -23,12 +25,15 @@ public:
 	virtual ~Texture();
 
 protected:
-	int _image_width;
-	int _image_height;
+	int _texture_width;
+	int _texture_height;
 	Ref<Image> _image;
-	Vector<uint8_t> _image_data;
-	Image::Format _image_format;
-	bool _image_mip_maps;
+
+	int _flags;
+	int _texture_index;
+	int _data_size;
+	int _mipmaps;
+	GLuint _texture;
 };
 
 #endif // TEXTURE_H
