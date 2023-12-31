@@ -6,17 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/object/resource.h"
+#include "resource.h"
 
 class InputEvent;
 
 class ShortCut : public Resource {
 	GDCLASS(ShortCut, Resource);
-
-	Ref<InputEvent> shortcut;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_shortcut(const Ref<InputEvent> &p_shortcut);
@@ -28,6 +23,9 @@ public:
 
 	ShortCut();
 	~ShortCut();
+
+private:
+	Ref<InputEvent> shortcut;
 };
 
 #endif // SHORTCUT_H
