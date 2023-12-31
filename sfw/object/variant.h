@@ -6,28 +6,23 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/containers/pool_vector.h"
-#include "core/containers/rid.h"
-#include "core/io/ip_address.h"
-#include "core/math/aabb.h"
-#include "core/math/basis.h"
-#include "core/math/color.h"
-#include "core/math/face3.h"
-#include "core/math/plane.h"
-#include "core/math/projection.h"
-#include "core/math/quaternion.h"
-#include "core/math/transform.h"
-#include "core/math/transform_2d.h"
-#include "core/math/vector3.h"
-#include "core/math/vector3i.h"
-#include "core/math/vector4.h"
-#include "core/math/vector4i.h"
-#include "core/object/object_id.h"
-#include "core/object/ref_ptr.h"
-#include "core/string/node_path.h"
-#include "core/string/ustring.h"
-#include "core/variant/array.h"
-#include "core/variant/dictionary.h"
+#include "pool_vector.h"
+#include "aabb.h"
+#include "basis.h"
+#include "color.h"
+#include "face3.h"
+#include "plane.h"
+#include "projection.h"
+#include "quaternion.h"
+#include "transform.h"
+#include "transform_2d.h"
+#include "vector3.h"
+#include "vector3i.h"
+#include "vector4.h"
+#include "vector4i.h"
+#include "ustring.h"
+#include "array.h"
+#include "dictionary.h"
 
 class Object;
 class ObjectRC;
@@ -216,7 +211,6 @@ public:
 	operator Color() const;
 	operator NodePath() const;
 	operator RefPtr() const;
-	operator ::RID() const;
 
 	operator Object *() const;
 	operator Node *() const;
@@ -250,7 +244,6 @@ public:
 	operator Vector<Vector4>() const;
 	operator Vector<Vector4i>() const;
 	operator Vector<Color>() const;
-	operator Vector<::RID>() const;
 	operator Vector<Vector2>() const;
 	operator Vector<Vector2i>() const;
 
@@ -260,8 +253,6 @@ public:
 	operator Margin() const;
 	operator Side() const;
 	operator Orientation() const;
-
-	operator IP_Address() const;
 
 	Variant(bool p_bool);
 	Variant(signed int p_int); // real one
@@ -301,7 +292,6 @@ public:
 	Variant(const Color &p_color);
 	Variant(const NodePath &p_node_path);
 	Variant(const RefPtr &p_resource);
-	Variant(const ::RID &p_rid);
 	Variant(const Object *p_object);
 	Variant(const Dictionary &p_dictionary);
 
@@ -335,8 +325,6 @@ public:
 	Variant(const Vector<Vector2i> &p_array);
 	Variant(const Vector<Vector4> &p_array);
 	Variant(const Vector<Vector4i> &p_array);
-
-	Variant(const IP_Address &p_address);
 
 	// If this changes the table in variant_op must be updated
 	enum Operator {
