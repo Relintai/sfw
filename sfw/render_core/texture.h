@@ -25,6 +25,8 @@ public:
 	virtual ~Texture();
 
 protected:
+	void _get_gl_and_format(Image::Format p_format, GLenum &r_gl_format, GLenum &r_gl_internal_format, GLenum &r_gl_type, bool &r_supported) const;
+
 	int _texture_width;
 	int _texture_height;
 	Ref<Image> _image;
