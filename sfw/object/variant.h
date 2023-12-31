@@ -6,31 +6,26 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/pool_vector.h"
 #include "core/aabb.h"
 #include "core/basis.h"
 #include "core/color.h"
-#include "face3.h"
+#include "core/face3.h"
 #include "core/plane.h"
+#include "core/pool_vector.h"
 #include "core/projection.h"
 #include "core/quaternion.h"
 #include "core/transform.h"
 #include "core/transform_2d.h"
+#include "core/ustring.h"
 #include "core/vector3.h"
 #include "core/vector3i.h"
 #include "core/vector4.h"
 #include "core/vector4i.h"
-#include "core/ustring.h"
-#include "array.h"
-#include "dictionary.h"
+#include "object/array.h"
+#include "object/dictionary.h"
 
 class Object;
 class ObjectRC;
-class Node; // helper
-class Control; // helper
-
-struct PropertyInfo;
-struct MethodInfo;
 
 typedef PoolVector<uint8_t> PoolByteArray;
 typedef PoolVector<int> PoolIntArray;
@@ -72,42 +67,40 @@ public:
 		STRING,
 
 		// math types
-		RECT2, // 5
+		RECT2,
 		RECT2I,
 		VECTOR2,
 		VECTOR2I,
 		VECTOR3,
-		VECTOR3I, // 10
+		VECTOR3I,
 		VECTOR4,
 		VECTOR4I,
 
 		PLANE,
 		QUATERNION,
-		AABB, // 15
+		AABB,
 		BASIS,
 		TRANSFORM,
 		TRANSFORM2D,
 		PROJECTION,
 
 		// misc types
-		COLOR, // 20
-		NODE_PATH,
-		RID,
+		COLOR,
 		OBJECT,
 		STRING_NAME,
-		DICTIONARY, // 25
+		DICTIONARY,
 		ARRAY,
 
 		// arrays
 		POOL_BYTE_ARRAY,
 		POOL_INT_ARRAY,
 		POOL_REAL_ARRAY,
-		POOL_STRING_ARRAY, //30
+		POOL_STRING_ARRAY,
 		POOL_VECTOR2_ARRAY,
 		POOL_VECTOR2I_ARRAY,
 		POOL_VECTOR3_ARRAY,
 		POOL_VECTOR3I_ARRAY,
-		POOL_VECTOR4_ARRAY, //35
+		POOL_VECTOR4_ARRAY,
 		POOL_VECTOR4I_ARRAY,
 		POOL_COLOR_ARRAY,
 
@@ -121,7 +114,6 @@ public:
 	};
 
 private:
-	friend struct _VariantCall;
 	// Variant takes 20 bytes when real_t is float, and 36 if double
 	// it only allocates extra memory for aabb/matrix.
 
@@ -209,12 +201,9 @@ public:
 	operator Projection() const;
 
 	operator Color() const;
-	operator NodePath() const;
 	operator RefPtr() const;
 
 	operator Object *() const;
-	operator Node *() const;
-	operator Control *() const;
 
 	operator Dictionary() const;
 	operator Array() const;
@@ -328,7 +317,6 @@ public:
 
 	// If this changes the table in variant_op must be updated
 	enum Operator {
-
 		//comparison
 		OP_EQUAL,
 		OP_NOT_EQUAL,
@@ -360,8 +348,13 @@ public:
 		//containment
 		OP_IN,
 		OP_MAX
-
 	};
+
+	//Maybe add helper methods that use these
+	//Like max()
+	//add()
+	//maybe operators like with add
+	//?
 
 	static String get_operator_name(Operator p_op);
 	static void evaluate(const Operator &p_op, const Variant &p_a, const Variant &p_b, Variant &r_ret, bool &r_valid);
@@ -378,39 +371,12 @@ public:
 	static void interpolate(const Variant &a, const Variant &b, float c, Variant &r_dst);
 	static void sub(const Variant &a, const Variant &b, Variant &r_dst);
 
-	struct CallError {
-		enum Error {
-			CALL_OK,
-			CALL_ERROR_INVALID_METHOD,
-			CALL_ERROR_INVALID_ARGUMENT,
-			CALL_ERROR_TOO_MANY_ARGUMENTS,
-			CALL_ERROR_TOO_FEW_ARGUMENTS,
-			CALL_ERROR_INSTANCE_IS_NULL,
-		};
-		Error error;
-		int argument;
-		Type expected;
-	};
-
-	void call_ptr(const StringName &p_method, const Variant **p_args, int p_argcount, Variant *r_ret, CallError &r_error);
-	Variant call(const StringName &p_method, const Variant **p_args, int p_argcount, CallError &r_error);
-	Variant call(const StringName &p_method, const Variant &p_arg1 = Variant(), const Variant &p_arg2 = Variant(), const Variant &p_arg3 = Variant(), const Variant &p_arg4 = Variant(), const Variant &p_arg5 = Variant(), const Variant &p_arg6 = Variant(), const Variant &p_arg7 = Variant(), const Variant &p_arg8 = Variant());
-
-	static String get_call_error_text(Object *p_base, const StringName &p_method, const Variant **p_argptrs, int p_argcount, const Variant::CallError &ce);
-
-	static Variant construct(const Variant::Type, const Variant **p_args, int p_argcount, CallError &r_error, bool p_strict = true);
-
-	void get_method_list(List<MethodInfo> *p_list) const;
-	bool has_method(const StringName &p_method) const;
-	static Vector<Variant::Type> get_method_argument_types(Variant::Type p_type, const StringName &p_method);
-	static Vector<Variant> get_method_default_arguments(Variant::Type p_type, const StringName &p_method);
-	static Variant::Type get_method_return_type(Variant::Type p_type, const StringName &p_method, bool *r_has_return = nullptr);
-	static Vector<StringName> get_method_argument_names(Variant::Type p_type, const StringName &p_method);
-	static bool is_method_const(Variant::Type p_type, const StringName &p_method);
-
+	//Maybe add helper methods that call this? like get_x(), set_x() etc Or just x(), x(value)?
+	//Check if operator[] can take strings and ints that might work too
 	void set_named(const StringName &p_index, const Variant &p_value, bool *r_valid = nullptr);
 	Variant get_named(const StringName &p_index, bool *r_valid = nullptr) const;
 
+	//Implement operator[]s that use these?
 	void set(const Variant &p_index, const Variant &p_value, bool *r_valid = nullptr);
 	Variant get(const Variant &p_index, bool *r_valid = nullptr) const;
 	bool in(const Variant &p_index, bool *r_valid = nullptr) const;
@@ -418,10 +384,6 @@ public:
 	bool iter_init(Variant &r_iter, bool &r_valid) const;
 	bool iter_next(Variant &r_iter, bool &r_valid) const;
 	Variant iter_get(const Variant &r_iter, bool &r_valid) const;
-
-	void get_property_list(List<PropertyInfo> *p_list) const;
-
-	//argsVariant call()
 
 	bool deep_equal(const Variant &p_variant, int p_recursion_count = 0) const;
 	bool operator==(const Variant &p_variant) const;
@@ -433,18 +395,6 @@ public:
 	bool hash_compare(const Variant &p_variant) const;
 	bool booleanize() const;
 	String stringify(List<const void *> &stack) const;
-
-	void static_assign(const Variant &p_variant);
-	static void get_constructor_list(Variant::Type p_type, List<MethodInfo> *p_list);
-	static void get_constants_for_type(Variant::Type p_type, List<StringName> *p_constants);
-	static bool has_constant(Variant::Type p_type, const StringName &p_value);
-	static Variant get_constant_value(Variant::Type p_type, const StringName &p_value, bool *r_valid = nullptr);
-
-	typedef String (*ObjectDeConstruct)(const Variant &p_object, void *ud);
-	typedef void (*ObjectConstruct)(const String &p_text, void *ud, Variant &r_value);
-
-	String get_construct_string() const;
-	static void construct_from_string(const String &p_string, Variant &r_value, ObjectConstruct p_obj_construct = nullptr, void *p_construct_ud = nullptr);
 
 	void operator=(const Variant &p_variant); // only this is enough for all the other types
 	Variant(const Variant &p_variant);

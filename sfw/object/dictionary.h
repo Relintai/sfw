@@ -6,9 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/containers/list.h"
-#include "core/string/ustring.h"
-#include "core/variant/array.h"
+#include "core/list.h"
+#include "core/ustring.h"
+#include "object/array.h"
 
 class Variant;
 

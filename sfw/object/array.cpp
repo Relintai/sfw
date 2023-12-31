@@ -5,10 +5,10 @@
 
 #include "array.h"
 
-#include "core/containers/hashfuncs.h"
-#include "core/containers/vector.h"
-#include "core/object/object.h"
-#include "core/variant/variant.h"
+#include "core/hashfuncs.h"
+#include "core/vector.h"
+#include "object/object.h"
+#include "object/variant.h"
 
 class ArrayPrivate {
 public:

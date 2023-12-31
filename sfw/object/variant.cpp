@@ -5,15 +5,14 @@
 
 #include "variant.h"
 
-#include "core/core_string_names.h"
-#include "core/io/marshalls.h"
-#include "core/math/math_funcs.h"
-#include "core/object/object_rc.h"
-#include "core/object/resource.h"
-#include "core/string/print_string.h"
-#include "core/variant/variant_parser.h"
-#include "scene/main/control.h"
-#include "scene/main/node.h"
+//#include "core/core_string_names.h"
+//#include "core/io/marshalls.h"
+
+#include "core/math_funcs.h"
+
+#include "object/object_rc.h"
+#include "object/resource.h"
+
 
 String Variant::get_type_name(Variant::Type p_type) {
 	switch (p_type) {
