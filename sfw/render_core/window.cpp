@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
 // fps locking
 
-#include "window.h"
+#include "render_core/window.h"
 
 #define GLAD_GL_IMPLEMENTATION // glad
-#include "3rd_glad.h"
+#include "render_core/3rd_glad.h"
 
 #define _GLFW_IMPLEMENTATION // glfw337
 #define GLFW_INCLUDE_NONE // glfw337
@@ -23,11 +23,11 @@
 #undef timeGetTime
 #undef Time
 
-#include "error_macros.h"
-#include "stime.h"
-#include "ustring.h"
-#include "vector4.h"
-#include "application.h"
+#include "core/error_macros.h"
+#include "core/stime.h"
+#include "core/ustring.h"
+#include "core/vector4.h"
+#include "render_core/application.h"
 
 /*
 static volatile float framerate = 0;

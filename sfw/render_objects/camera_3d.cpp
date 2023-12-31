@@ -1,6 +1,6 @@
-#include "camera_3d.h"
+#include "render_objects/camera_3d.h"
 
-#include "math_funcs.h"
+#include "core/math_funcs.h"
 
 void Camera3D::bind() {
 	make_current();

@@ -5,7 +5,7 @@
 
 #if defined(DEBUG_ENABLED) && !defined(NO_THREADS)
 
-#include "safe_refcount.h"
+#include "core/safe_refcount.h"
 
 #include "core/error/error_macros.h"
 

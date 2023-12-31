@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "scene.h"
+#include "render_core/scene.h"
 
 class AppWindow;
 

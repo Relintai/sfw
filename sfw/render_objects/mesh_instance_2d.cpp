@@ -1,6 +1,6 @@
-#include "mesh_instance_2d.h"
+#include "render_objects/mesh_instance_2d.h"
 
-#include "camera_2d.h"
+#include "render_objects/camera_2d.h"
 
 void MeshInstance2D::render() {
     if (!mesh) {

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // time
 
-#include "stime.h"
+#include "core/stime.h"
 
 #include <sys/time.h>
 #include <time.h>

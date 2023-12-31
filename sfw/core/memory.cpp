@@ -3,10 +3,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "memory.h"
+#include "core/memory.h"
 
-#include "error_macros.h"
-#include "safe_refcount.h"
+#include "core/error_macros.h"
+#include "core/safe_refcount.h"
 
 #include <stdio.h>
 #include <stdlib.h>

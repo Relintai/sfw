@@ -1,11 +1,11 @@
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
 
-#include "object_2d.h"
+#include "render_objects/object_2d.h"
 
-#include "mesh.h"
+#include "render_core/mesh.h"
 
-#include "material.h"
+#include "render_core/material.h"
 
 class TileMap : public Object2D {
     public:

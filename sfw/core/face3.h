@@ -6,10 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "aabb.h"
-#include "plane.h"
-#include "transform.h"
-#include "vector3.h"
+#include "core/aabb.h"
+#include "core/plane.h"
+#include "core/transform.h"
+#include "core/vector3.h"
 
 struct _NO_DISCARD_CLASS_ Face3 {
 	enum Side {

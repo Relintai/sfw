@@ -6,8 +6,8 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "math_funcs.h"
-#include "ustring.h"
+#include "core/math_funcs.h"
+#include "core/ustring.h"
 
 struct Basis;
 

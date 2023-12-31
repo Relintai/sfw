@@ -3,9 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "plane.h"
+#include "core/plane.h"
 
-#include "math_funcs.h"
+#include "core/math_funcs.h"
 
 void Plane::set_normal(const Vector3 &p_normal) {
 	normal = p_normal;

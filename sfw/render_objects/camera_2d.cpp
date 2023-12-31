@@ -1,6 +1,6 @@
-#include "camera_2d.h"
+#include "render_objects/camera_2d.h"
 
-#include "math_funcs.h"
+#include "core/math_funcs.h"
 
 void Camera2D::bind() {
 	make_current();

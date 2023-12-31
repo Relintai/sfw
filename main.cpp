@@ -2,11 +2,11 @@
 #include <emscripten.h>
 #endif // __EMSCRIPTEN__
 
-#include "application.h"
-#include "window.h"
+#include "render_core/application.h"
+#include "render_core/window.h"
 
 #include "game_application.h"
-#include "window.h"
+#include "render_core/window.h"
 
 Application *application = NULL;
 

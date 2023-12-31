@@ -1,13 +1,10 @@
 
-#include "logger.h"
+#include "core/logger.h"
 
-#include "ustring.h"
+#include "core/ustring.h"
 #include <cstdio>
 
-#include "logger.h"
 #include <stdio.h>
-#include <thread>
-
 
 void RLogger::print_trace(const String &str) {
 	print_trace(str.utf8().get_data());

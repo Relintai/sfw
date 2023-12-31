@@ -7,11 +7,11 @@
 #define _CRT_SECURE_NO_WARNINGS // to disable build-time warning which suggested to use strcpy_s instead strcpy
 #endif
 
-#include "ustring.h"
+#include "core/ustring.h"
 
-#include "color.h"
-#include "math_funcs.h"
-#include "memory.h"
+#include "core/color.h"
+#include "core/math_funcs.h"
+#include "core/memory.h"
 #include "ucaps.h"
 
 #include <wchar.h>

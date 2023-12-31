@@ -3,9 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "vector3.h"
+#include "core/vector3.h"
 
-#include "basis.h"
+#include "core/basis.h"
 
 void Vector3::rotate(const Vector3 &p_axis, real_t p_phi) {
 	*this = Basis(p_axis, p_phi).xform(*this);

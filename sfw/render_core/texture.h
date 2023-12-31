@@ -1,8 +1,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "3rd_glad.h"
-#include "image.h"
+#include "render_core/3rd_glad.h"
+#include "render_core/image.h"
 
 class Texture {
 public:

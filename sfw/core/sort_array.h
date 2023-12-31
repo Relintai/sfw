@@ -6,8 +6,8 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "error_macros.h"
-#include "typedefs.h"
+#include "core/error_macros.h"
+#include "core/typedefs.h"
 
 #define ERR_BAD_COMPARE(cond)                                         \
 	if (unlikely(cond)) {                                             \

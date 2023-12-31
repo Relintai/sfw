@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "vector3.h"
+#include "core/vector3.h"
 
 struct _NO_DISCARD_CLASS_ Plane {
 	Vector3 normal;

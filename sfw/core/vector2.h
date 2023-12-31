@@ -6,9 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "math_funcs.h"
+#include "core/math_funcs.h"
 
-#include "error_macros.h"
+#include "core/error_macros.h"
 
 class String;
 

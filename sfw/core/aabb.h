@@ -6,9 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "math_defs.h"
-#include "plane.h"
-#include "vector3.h"
+#include "core/math_defs.h"
+#include "core/plane.h"
+#include "core/vector3.h"
 
 /**
  * AABB / AABB (Axis Aligned Bounding Box)

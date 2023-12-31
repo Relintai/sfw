@@ -1,8 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "3rd_glad.h"
-#include "hash_map.h"
+#include "render_core/3rd_glad.h"
+#include "core/hash_map.h"
 
 class Shader {
 public:

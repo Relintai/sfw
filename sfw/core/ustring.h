@@ -7,9 +7,9 @@
 /*************************************************************************/
 
 #include "cowdata.h"
-#include "vector.h"
+#include "core/vector.h"
 #include "char_utils.h"
-#include "typedefs.h"
+#include "core/typedefs.h"
 
 /*************************************************************************/
 /*  CharProxy                                                            */

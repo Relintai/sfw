@@ -3,8 +3,8 @@
 
 #include "core/color.h"
 #include "core/rect2.h"
-#include "sprite.h"
-#include "texture.h"
+#include "render_objects/sprite.h"
+#include "render_core/texture.h"
 
 #include <SDL.h>
 

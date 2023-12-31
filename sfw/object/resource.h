@@ -1,7 +1,7 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
-#include "reference.h"
+#include "object/reference.h"
 
 #include "psignal.h"
 

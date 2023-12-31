@@ -3,13 +3,13 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "image.h"
+#include "render_core/image.h"
 
-#include "error_macros.h"
-#include "hash_map.h"
+#include "core/error_macros.h"
+#include "core/hash_map.h"
 #include "math.h"
-#include "memory.h"
-#include "vector3.h"
+#include "core/memory.h"
+#include "core/vector3.h"
 #include <memory.h>
 #include <stdio.h>
 

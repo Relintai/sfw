@@ -1,9 +1,9 @@
-#include "texture.h"
+#include "render_core/texture.h"
 
-#include "memory.h"
+#include "core/memory.h"
 #include <stdio.h>
 
-#include "window.h"
+#include "render_core/window.h"
 
 void Texture::create_from_image(const Ref<Image> &img) {
 	if (_image == img) {

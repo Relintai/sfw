@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "hashfuncs.h"
+#include "core/hashfuncs.h"
 #include "core/typedefs.h"
 
 template <class F, class S>

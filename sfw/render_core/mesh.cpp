@@ -1,6 +1,6 @@
-#include "mesh.h"
+#include "render_core/mesh.h"
 
-#include "shader.h"
+#include "render_core/shader.h"
 
 void Mesh::add_vertex2(float x, float y) {
     vertices.push_back(x);

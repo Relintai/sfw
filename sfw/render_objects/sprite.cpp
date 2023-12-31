@@ -1,4 +1,4 @@
-#include "sprite.h"
+#include "render_objects/sprite.h"
 
 void Sprite::render() {
 	/*

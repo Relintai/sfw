@@ -3,10 +3,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "vector3i.h"
+#include "core/vector3i.h"
 
-#include "vector3.h"
-#include "ustring.h"
+#include "core/vector3.h"
+#include "core/ustring.h"
 
 void Vector3i::set_axis(const int p_axis, const int32_t p_value) {
 	ERR_FAIL_INDEX(p_axis, 3);

@@ -1,6 +1,6 @@
-#include "tile_map.h"
+#include "render_objects/tile_map.h"
 
-#include "camera_2d.h"
+#include "render_objects/camera_2d.h"
 
 void TileMap::build_mesh() {
 	if (!mesh) {

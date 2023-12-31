@@ -1,20 +1,20 @@
 #ifndef GAME_SCENE_H
 #define GAME_SCENE_H
 
-#include "scene.h"
+#include "render_core/scene.h"
 
-#include "tile_map.h"
-#include "mesh_instance_3d.h"
-#include "camera_3d.h"
-#include "camera_2d.h"
-#include "color_material.h"
-#include "colored_material.h"
-#include "mesh.h"
-#include "sprite.h"
-#include "texture.h"
-#include "texture_material.h"
-#include "texture_material_2d.h"
-#include "image.h"
+#include "render_objects/tile_map.h"
+#include "render_objects/mesh_instance_3d.h"
+#include "render_objects/camera_3d.h"
+#include "render_objects/camera_2d.h"
+#include "render_core/color_material.h"
+#include "render_core/colored_material.h"
+#include "render_core/mesh.h"
+#include "render_objects/sprite.h"
+#include "render_core/texture.h"
+#include "render_core/texture_material.h"
+#include "render_core/texture_material_2d.h"
+#include "render_core/image.h"
 
 class GameScene : public Scene {
 public:

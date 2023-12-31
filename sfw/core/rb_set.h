@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "memory.h"
+#include "core/memory.h"
 #include "core/typedefs.h"
 
 // based on the very nice implementation of rb-trees by:

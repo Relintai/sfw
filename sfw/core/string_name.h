@@ -6,9 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "mutex.h"
-#include "safe_refcount.h"
-#include "ustring.h"
+#include "core/mutex.h"
+#include "core/safe_refcount.h"
+#include "core/ustring.h"
 
 struct StaticCString {
 	const char *ptr;

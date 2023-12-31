@@ -6,8 +6,8 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "error_macros.h"
-#include "memory.h"
+#include "core/error_macros.h"
+#include "core/memory.h"
 
 // based on the very nice implementation of rb-trees by:
 // https://web.archive.org/web/20120507164830/http://web.mit.edu/~emin/www/source_code/red_black_tree/index.html

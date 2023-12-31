@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "error_list.h"
+#include "core/error_list.h"
 
 #if !defined(NO_THREADS)
 

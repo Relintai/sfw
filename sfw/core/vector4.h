@@ -6,9 +6,9 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
-#include "math_defs.h"
-#include "math_funcs.h"
-#include "ustring.h"
+#include "core/math_defs.h"
+#include "core/math_funcs.h"
+#include "core/ustring.h"
 
 struct _NO_DISCARD_CLASS_ Vector4 {
 	enum Axis {

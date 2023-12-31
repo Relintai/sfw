@@ -1,10 +1,10 @@
 #include "game_scene.h"
 
-#include "application.h"
+#include "render_core/application.h"
 
-#include "3rd_glad.h"
-#include "memory.h"
-#include "mesh_utils.h"
+#include "render_core/3rd_glad.h"
+#include "core/memory.h"
+#include "render_core/mesh_utils.h"
 
 void GameScene::event() {
 	/*

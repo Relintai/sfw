@@ -6,10 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "math_defs.h"
-#include "math_funcs.h"
-#include "vector3.h"
-#include "ustring.h"
+#include "core/math_defs.h"
+#include "core/math_funcs.h"
+#include "core/vector3.h"
+#include "core/ustring.h"
 
 struct _NO_DISCARD_CLASS_ Quaternion {
 	union {

@@ -3,7 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "string_name.h"
+#include "core/string_name.h"
 
 StaticCString StaticCString::create(const char *p_ptr) {
 	StaticCString scs;

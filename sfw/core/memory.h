@@ -6,8 +6,8 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "error_macros.h"
-#include "safe_refcount.h"
+#include "core/error_macros.h"
+#include "core/safe_refcount.h"
 
 #include <stddef.h>
 

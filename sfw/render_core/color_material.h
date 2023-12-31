@@ -1,9 +1,9 @@
 #ifndef COLOR_MATERIAL_H
 #define COLOR_MATERIAL_H
 
-#include "material.h"
+#include "render_core/material.h"
 
-#include "camera_3d.h"
+#include "render_objects/camera_3d.h"
 
 class ColorMaterial : public Material {
 public:

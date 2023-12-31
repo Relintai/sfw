@@ -5,7 +5,7 @@
 #include "core/string.h"
 #include "core/variant.h"
 
-#include "reference.h"
+#include "object/reference.h"
 
 class Signal {
 public:

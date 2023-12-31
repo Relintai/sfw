@@ -6,9 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "quaternion.h"
-#include "vector3.h"
-#include "vector3i.h"
+#include "core/quaternion.h"
+#include "core/vector3.h"
+#include "core/vector3i.h"
 
 struct _NO_DISCARD_CLASS_ Basis {
 	Vector3 rows[3] = {

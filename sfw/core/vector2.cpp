@@ -3,9 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "vector2.h"
+#include "core/vector2.h"
 
-#include "ustring.h"
+#include "core/ustring.h"
 
 real_t Vector2::angle() const {
 	return Math::atan2(y, x);

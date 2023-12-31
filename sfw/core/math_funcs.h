@@ -6,12 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "error_macros.h"
-#include "math_defs.h"
-#include "random_pcg.h"
-#include "typedefs.h"
+#include "core/error_macros.h"
+#include "core/math_defs.h"
+#include "core/random_pcg.h"
+#include "core/typedefs.h"
 
-#include "pcg.h"
+#include "core/pcg.h"
 
 #include <float.h>
 #include <math.h>

@@ -1,11 +1,11 @@
 #ifndef CAMERA_3D_H
 #define CAMERA_3D_H
 
-#include "3rd_glad.h"
+#include "render_core/3rd_glad.h"
 
-#include "projection.h"
-#include "transform.h"
-#include "vector3.h"
+#include "core/projection.h"
+#include "core/transform.h"
+#include "core/vector3.h"
 
 class Camera3D {
 public:

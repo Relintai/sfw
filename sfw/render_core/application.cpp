@@ -1,8 +1,8 @@
-#include "application.h"
+#include "render_core/application.h"
 
 #include <chrono>
 
-#include "window.h"
+#include "render_core/window.h"
 
 void Application::event() {
     scene->event();

@@ -6,12 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "memory.h"
-#include "mutex.h"
+#include "core/memory.h"
+#include "core/mutex.h"
 #include "pool_allocator.h"
 #include "rw_lock.h"
-#include "safe_refcount.h"
-#include "ustring.h"
+#include "core/safe_refcount.h"
+#include "core/ustring.h"
 
 struct MemoryPool {
 	//avoid accessing these directly, must be public for template access

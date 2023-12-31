@@ -1,12 +1,12 @@
 #ifndef MESH_INSTACE_2D_H
 #define MESH_INSTACE_2D_H
 
-#include "vector.h"
+#include "core/vector.h"
 
-#include "material.h"
-#include "mesh.h"
+#include "render_core/material.h"
+#include "render_core/mesh.h"
 
-#include "transform.h"
+#include "core/transform.h"
 
 class MeshInstance2D {
 public:

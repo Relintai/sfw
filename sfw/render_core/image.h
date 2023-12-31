@@ -6,12 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "color.h"
-#include "rect2.h"
-#include "rect2i.h"
-#include "reference.h"
-#include "vector.h"
-#include "vector2i.h"
+#include "core/color.h"
+#include "core/rect2.h"
+#include "core/rect2i.h"
+#include "object/reference.h"
+#include "core/vector.h"
+#include "core/vector2i.h"
 
 class Image : public Reference {
 	SFW_OBJECT(Image, Reference);

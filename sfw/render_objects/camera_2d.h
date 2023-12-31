@@ -1,13 +1,13 @@
 #ifndef CAMERA_2D_H
 #define CAMERA_2D_H
 
-#include "3rd_glad.h"
+#include "render_core/3rd_glad.h"
 
-#include "object_2d.h"
+#include "render_objects/object_2d.h"
 
-#include "transform.h"
-#include "transform_2d.h"
-#include "vector2.h"
+#include "core/transform.h"
+#include "core/transform_2d.h"
+#include "core/vector2.h"
 
 class Camera2D : Object2D {
 public:

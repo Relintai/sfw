@@ -1,10 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include "vector.h"
+#include "core/vector.h"
 #include <inttypes.h>
 
-#include "3rd_glad.h"
+#include "render_core/3rd_glad.h"
 
 class Mesh {
 public:

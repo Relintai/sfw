@@ -8,10 +8,10 @@
 
 #include <string.h>
 
-#include "error_list.h"
-#include "error_macros.h"
-#include "memory.h"
-#include "safe_refcount.h"
+#include "core/error_list.h"
+#include "core/error_macros.h"
+#include "core/memory.h"
+#include "core/safe_refcount.h"
 
 template <class T>
 class Vector;

@@ -1,7 +1,7 @@
 #ifndef MESH_UTILS_H
 #define MESH_UTILS_H
 
-#include "mesh.h"
+#include "render_core/mesh.h"
 
 class MeshUtils {
 public:

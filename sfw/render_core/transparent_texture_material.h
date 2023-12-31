@@ -1,13 +1,13 @@
 #ifndef TRANSPARENT_TEXTURE_MATERIAL_H
 #define TRANSPARENT_TEXTURE_MATERIAL_H
 
-#include "material.h"
-#include "texture.h"
+#include "render_core/material.h"
+#include "render_core/texture.h"
 
 #include "./libs/glm/vec4.hpp"
 #include "./libs/glm/gtc/type_ptr.hpp"
 
-#include "camera_3d.h"
+#include "render_objects/camera_3d.h"
 
 class TransparentTextureMaterial : public Material {
 public:

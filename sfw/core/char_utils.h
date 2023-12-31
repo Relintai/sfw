@@ -6,9 +6,9 @@
 #ifndef CHAR_UTILS_H
 #define CHAR_UTILS_H
 
-#include "typedefs.h"
+#include "core/typedefs.h"
 
-#include "char_range.inc"
+#include "core/char_range.inc"
 
 static _FORCE_INLINE_ bool is_unicode_identifier_start(char32_t c) {
 	for (int i = 0; xid_start[i].start != 0; i++) {

@@ -1,8 +1,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "ustring.h"
-#include "vector.h"
+#include "core/ustring.h"
+#include "core/vector.h"
 
 /*************************************************************************/
 /*  object.h                                                             */

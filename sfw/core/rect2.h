@@ -6,8 +6,8 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "vector2.h" // also includes math_funcs and ustring
-#include "vector2i.h"
+#include "core/vector2.h" // also includes math_funcs and ustring
+#include "core/vector2i.h"
 
 struct Transform2D;
 struct Rect2i;

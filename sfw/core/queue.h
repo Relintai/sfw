@@ -3,7 +3,7 @@
 
 #include "core/error_macros.h"
 
-#include "vector.h"
+#include "core/vector.h"
 
 template<class T>
 class Queue

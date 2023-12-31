@@ -6,11 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "hashfuncs.h"
+#include "core/hashfuncs.h"
 #include "paged_allocator.h"
 #include "pair.h"
-#include "math_funcs.h"
-#include "memory.h"
+#include "core/math_funcs.h"
+#include "core/memory.h"
 #include "list.h"
 
 /**

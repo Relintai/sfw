@@ -8,9 +8,9 @@
 
 #include <math.h>
 
-#include "math_defs.h"
+#include "core/math_defs.h"
 
-#include "pcg.h"
+#include "core/pcg.h"
 
 #if defined(__GNUC__) || (_llvm_has_builtin(__builtin_clz))
 #define CLZ32(x) __builtin_clz(x)

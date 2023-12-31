@@ -6,10 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "hash_map.h"
-#include "hashfuncs.h"
-#include "math_funcs.h"
-#include "memory.h"
+#include "core/hash_map.h"
+#include "core/hashfuncs.h"
+#include "core/math_funcs.h"
+#include "core/memory.h"
 
 /**
  * Implementation of Set using a bidi indexed hash map.

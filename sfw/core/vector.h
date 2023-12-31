@@ -13,9 +13,9 @@
  */
 
 #include "cowdata.h"
-#include "sort_array.h"
-#include "error_macros.h"
-#include "memory.h"
+#include "core/sort_array.h"
+#include "core/error_macros.h"
+#include "core/memory.h"
 
 template <class T>
 class VectorWriteProxy {

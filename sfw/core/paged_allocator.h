@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "memory.h"
+#include "core/memory.h"
 #include "spin_lock.h"
 #include "core/typedefs.h"
 

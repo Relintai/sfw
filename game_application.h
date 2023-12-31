@@ -1,7 +1,7 @@
 #ifndef GAME_APPLICATION_H
 #define GAME_APPLICATION_H
 
-#include "application.h"
+#include "render_core/application.h"
 
 #include "game_scene.h"
 

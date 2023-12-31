@@ -6,19 +6,19 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "aabb.h"
-#include "math_defs.h"
-#include "math_funcs.h"
-#include "rect2.h"
-#include "rect2i.h"
-#include "vector2.h"
-#include "vector2i.h"
-#include "vector3.h"
-#include "vector3i.h"
-#include "vector4.h"
-#include "vector4i.h"
-#include "string_name.h"
-#include "ustring.h"
+#include "core/aabb.h"
+#include "core/math_defs.h"
+#include "core/math_funcs.h"
+#include "core/rect2.h"
+#include "core/rect2i.h"
+#include "core/vector2.h"
+#include "core/vector2i.h"
+#include "core/vector3.h"
+#include "core/vector3i.h"
+#include "core/vector4.h"
+#include "core/vector4i.h"
+#include "core/string_name.h"
+#include "core/ustring.h"
 #include "core/typedefs.h"
 
 /**

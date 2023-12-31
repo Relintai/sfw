@@ -1,10 +1,10 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "projection.h"
-#include "shader.h"
-#include "transform.h"
-#include "transform_2d.h"
+#include "core/projection.h"
+#include "render_core/shader.h"
+#include "core/transform.h"
+#include "core/transform_2d.h"
 
 class Material {
 public:

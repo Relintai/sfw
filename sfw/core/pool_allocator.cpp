@@ -5,8 +5,8 @@
 
 #include "pool_allocator.h"
 
-#include "error_macros.h"
-#include "memory.h"
+#include "core/error_macros.h"
+#include "core/memory.h"
 
 #define COMPACT_CHUNK(m_entry, m_to_pos)                      \
 	do {                                                      \

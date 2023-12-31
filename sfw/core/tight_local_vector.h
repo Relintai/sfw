@@ -6,11 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "pool_vector.h"
-#include "sort_array.h"
-#include "vector.h"
-#include "error_macros.h"
-#include "memory.h"
+#include "core/pool_vector.h"
+#include "core/sort_array.h"
+#include "core/vector.h"
+#include "core/error_macros.h"
+#include "core/memory.h"
 
 // It grows strictly as much as needed. (The vanilla LocalVector is what you want in most cases).
 template <class T, class U = uint32_t, bool force_trivial = false>

@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "typedefs.h"
+#include "core/typedefs.h"
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>

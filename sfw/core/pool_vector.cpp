@@ -3,7 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "pool_vector.h"
+#include "core/pool_vector.h"
 
 Mutex pool_vector_lock;
 

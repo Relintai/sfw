@@ -1,7 +1,7 @@
 #ifndef OBJECT_3D_H
 #define OBJECT_3D_H
 
-#include "transform.h"
+#include "core/transform.h"
 
 class Object3D {
 public:

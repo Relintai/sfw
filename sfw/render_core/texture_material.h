@@ -1,10 +1,10 @@
 #ifndef TEXTURE_MATERIAL_H
 #define TEXTURE_MATERIAL_H
 
-#include "material.h"
-#include "texture.h"
+#include "render_core/material.h"
+#include "render_core/texture.h"
 
-#include "camera_3d.h"
+#include "render_objects/camera_3d.h"
 
 class TextureMaterial : public Material {
 public:
