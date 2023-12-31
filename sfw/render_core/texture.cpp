@@ -5,16 +5,6 @@
 
 #include "window.h"
 
-void Texture::set_as_render_target() {
-	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-	glViewport(0, 0, _fbo_width, _fbo_height);
-}
-
-void Texture::unset_render_target() {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
-}
-
 void Texture::create_from_image(const Ref<Image> &img) {
 	if (_image == img) {
 		return;
@@ -269,14 +259,32 @@ Texture::Texture() {
 	_flags = 0;
 
 	_texture_format = Image::FORMAT_RGBA8;
-
-	_fbo_width = 0;
-	_fbo_height = 0;
-	_fbo = 0;
 }
 
 Texture::~Texture() {
 	if (_texture) {
 		glDeleteTextures(1, &_texture);
 	}
+}
+
+//RenderTexture
+
+void RenderTexture::set_as_render_target() {
+	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+	glViewport(0, 0, _fbo_width, _fbo_height);
+}
+
+void RenderTexture::unset_render_target() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
+}
+
+RenderTexture::RenderTexture() :
+		Texture() {
+	_fbo_width = 0;
+	_fbo_height = 0;
+	_fbo = 0;
+}
+
+RenderTexture::~RenderTexture() {
 }

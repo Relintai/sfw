@@ -17,9 +17,6 @@ public:
 		return _texture;
 	}
 
-	void set_as_render_target();
-	void unset_render_target();
-
 	void create_from_image(const Ref<Image> &img);
 
 	Ref<Image> get_data();
@@ -44,7 +41,18 @@ protected:
 	int _mipmaps;
 
 	GLuint _texture;
+};
 
+//TODO
+class RenderTexture : public Texture {
+public:
+	void set_as_render_target();
+	void unset_render_target();
+
+	RenderTexture();
+	virtual ~RenderTexture();
+
+protected:
 	int _fbo_width;
 	int _fbo_height;
 	GLuint _fbo;
