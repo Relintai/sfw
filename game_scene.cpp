@@ -103,9 +103,12 @@ void GameScene::render() {
 	camera->camera_transform.basis = Basis(Vector3(0, 1, 0), rot);
 	rot += 0.01;
 
+	Ref<Image> d = texture->get_data();
+
+	texture->create_from_image(d);
+
 	camera->bind();
 
-	
 	//sprite->render();
 	//material->bind();
 	//color_material->bind();
@@ -142,7 +145,7 @@ GameScene::GameScene() {
 
 	texture = new Texture();
 	//texture->load_image("icon.png");
-	texture->set_image(image);
+	texture->create_from_image(image);
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
 
@@ -181,7 +184,6 @@ GameScene::GameScene() {
 
 	tile_map->transform.scale(Vector2(32, 32));
 	tile_map->transform.set_origin(Vector2(500, 500));
-	
 
 	camera = new PerspectiveCamera();
 	//camera->width = 2;

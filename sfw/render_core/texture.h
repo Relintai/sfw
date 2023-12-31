@@ -17,24 +17,33 @@ public:
 		return _texture;
 	}
 
-	void texture_update();
+	//TODO
+	//set_as_render_target()
+	//unset_render_target()
 
-	void set_image(const Ref<Image> &img);
+	void create_from_image(const Ref<Image> &img);
+
+	Ref<Image> get_data();
+
+	void upload();
 
 	Texture();
 	virtual ~Texture();
 
 protected:
-	void _get_gl_and_format(Image::Format p_format, GLenum &r_gl_format, GLenum &r_gl_internal_format, GLenum &r_gl_type, bool &r_supported) const;
+	void _get_gl_format(Image::Format p_format, GLenum &r_gl_format, GLenum &r_gl_internal_format, GLenum &r_gl_type, bool &r_supported) const;
+
+	Ref<Image> _image;
 
 	int _texture_width;
 	int _texture_height;
-	Ref<Image> _image;
+	Image::Format _texture_format;
 
 	int _flags;
 	int _texture_index;
 	int _data_size;
 	int _mipmaps;
+	bool _render_target;
 	GLuint _texture;
 };
 
