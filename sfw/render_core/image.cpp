@@ -1461,9 +1461,9 @@ void Image::load_from_file(const String &file_name, Format p_format) {
 
 	int size = x * y * get_format_pixel_size(FORMAT_RGBA8);
 
+	data.resize(size);
 	{
 		write_lock = true;
-		data.resize(size);
 		memcpy(data.ptrw(), pixels, size);
 		write_lock = false;
 	}
@@ -1812,6 +1812,7 @@ Image::Image(int p_width, int p_height, bool p_use_mipmaps, Format p_format) {
 	height = 0;
 	mipmaps = p_use_mipmaps;
 	format = FORMAT_L8;
+	write_lock = false;
 
 	create(p_width, p_height, p_use_mipmaps, p_format);
 }
@@ -1821,6 +1822,7 @@ Image::Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const V
 	height = 0;
 	mipmaps = p_mipmaps;
 	format = FORMAT_L8;
+	write_lock = false;
 
 	create(p_width, p_height, p_mipmaps, p_format, p_data);
 }

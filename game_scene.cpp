@@ -138,6 +138,7 @@ GameScene::GameScene() {
 
 	image.instance();
 	image->load_from_file("icon.png");
+	//image->bumpmap_to_normalmap();
 
 	texture = new Texture();
 	//texture->load_image("icon.png");
