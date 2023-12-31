@@ -1,5 +1,10 @@
 #include "reference.h"
 
+/*************************************************************************/
+/*  reference.cpp                                                        */
+/*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
+/*************************************************************************/
+
 bool Reference::init_ref() {
 	if (reference()) {
 		if (!is_referenced() && refcount_init.unref()) {

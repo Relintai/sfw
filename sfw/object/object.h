@@ -4,9 +4,11 @@
 #include "ustring.h"
 #include "vector.h"
 
-class Database;
+/*************************************************************************/
+/*  object.h                                                             */
+/*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
+/*************************************************************************/
 
-//taken from GodotEngine's object.h
 #define SFW_OBJECT(m_class, m_inherits)                                                   \
 private:                                                                                   \
 	void operator=(const m_class &p_rval) {}                                               \

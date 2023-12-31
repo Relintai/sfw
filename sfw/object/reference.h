@@ -1,9 +1,10 @@
 #ifndef REFERENCE_H
 #define REFERENCE_H
 
-// Most of the code is from the godot engine's reference.h
-/* Copyright (c) 2007-2021 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2021 Godot Engine contributors (cf. AUTHORS.md).   */
+/*************************************************************************/
+/*  reference.h                                                          */
+/*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
+/*************************************************************************/
 
 #include "memory.h"
 #include "object.h"
@@ -13,7 +14,7 @@ class Reference : public Object {
 	SFW_OBJECT(Reference, Object);
 
 public:
-	/*_FORCE_INLINE_*/ bool is_referenced() const { return refcount_init.get() != 1; }
+	_FORCE_INLINE_ bool is_referenced() const { return refcount_init.get() != 1; }
 	bool init_ref();
 	bool reference(); // returns false if refcount is at zero and didn't get increased
 	bool unreference();
