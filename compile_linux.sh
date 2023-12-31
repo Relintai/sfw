@@ -54,18 +54,18 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_cor
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/texture.cpp -o sfw/render_core/texture.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -c sfw/render_core/image.cpp -o sfw/render_core/image.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/mesh_instance_3d.cpp -o sfw/render_objects/mesh_instance_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/mesh_instance_3d.cpp -o sfw/render_objects/mesh_instance_3d.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_2d.cpp -o sfw/render_objects/camera_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/mesh_instance_2d.cpp -o sfw/render_objects/mesh_instance_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_2d.cpp -o sfw/render_objects/object_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/sprite.cpp -o sfw/render_objects/sprite.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/camera_2d.cpp -o sfw/render_objects/camera_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/mesh_instance_2d.cpp -o sfw/render_objects/mesh_instance_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/object_2d.cpp -o sfw/render_objects/object_2d.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/sprite.cpp -o sfw/render_objects/sprite.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c game_scene.cpp -o game_scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/render_core -Isfw/render_objects -c main.cpp -o main.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c game_scene.cpp -o game_scene.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -Isfw/core -Isfw/object -Isfw/render_core -Isfw/render_objects -c main.cpp -o main.o
 
 
 ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \

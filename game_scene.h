@@ -14,6 +14,7 @@
 #include "texture.h"
 #include "texture_material.h"
 #include "texture_material_2d.h"
+#include "image.h"
 
 class GameScene : public Scene {
 public:
@@ -30,6 +31,7 @@ public:
 	bool down;
 	*/
 
+	Ref<Image> image;
 	Texture *texture;
 	TextureMaterial2D *material;
 

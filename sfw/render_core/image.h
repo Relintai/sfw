@@ -200,10 +200,13 @@ public:
 	/**
 	 * Create a new image of a given size and format. Current image will be lost
 	 */
+	void load_from_file(const String &file_name, Format p_format = FORMAT_RGBA8);
+
 	void create(int p_width, int p_height, bool p_use_mipmaps, Format p_format);
 	void create(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
 
 	void create(const char **p_xpm);
+
 	/**
 	 * returns true when the image is empty (0,0) in size
 	 */

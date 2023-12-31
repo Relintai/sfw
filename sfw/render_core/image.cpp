@@ -31,12 +31,27 @@
 #include "image.h"
 
 #include "error_macros.h"
+#include "hash_map.h"
 #include "math.h"
-#include "vector3.h"
 #include "memory.h"
+#include "vector3.h"
 #include <memory.h>
 #include <stdio.h>
-#include "hash_map.h"
+
+#define STB_IMAGE_IMPLEMENTATION // stbi
+#define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
+#define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
+#define STB_SPRINTF_NOUNALIGNED // stb_sprintf
+
+#include "3rd_stb_image.h"
+
+//{{FILE:3rd_stb_image_write.h}}
+//---
+#undef freelist
+#define STBTT_malloc(x, u) ((void)(u), MALLOC(x))
+#define STBTT_free(x, u) ((void)(u), FREE(x))
+#define NK_ASSERT ASSERT
+#define NK_DTOA(s, n) strcpy(s, va("%f", n)) // override cos built-in nk_dtoa() will freeze while parsing UINT_MAX otherwise
 
 const char *Image::format_names[Image::FORMAT_MAX] = {
 	"Lum8", // luminance
@@ -1687,6 +1702,55 @@ uint8_t *Image::dataw() {
 }
 int Image::get_data_size() const {
 	return data.size();
+}
+
+void Image::load_from_file(const String &file_name, Format p_format) {
+	//stbi_set_flip_vertically_on_load(flags & IMAGE_FLIP ? 1 : 0);
+
+	int img_n = 4;
+
+	FILE *fp = fopen(file_name.utf8().get_data(), "r");
+
+	//case FORMAT_RF:
+	//case FORMAT_RGF:
+	//case FORMAT_RGBF:
+	//case FORMAT_RGBAF:
+	//img.pixels = stbi_loadf_from_file((const stbi_uc *)data, size, (int *)&img.x, (int *)&img.y, (int *)&img.n, n);
+
+	int x;
+	int y;
+	int n;
+
+	stbi_uc *pixels = stbi_load_from_file(fp, &x, &y, &n, img_n);
+	fclose(fp);
+
+	ERR_FAIL_COND_MSG(!pixels, "Couldn't load image! " + file_name);
+
+	if (n != img_n) {
+		memdelete(pixels);
+		ERR_PRINT("Couldn't load image! n != img_n");
+		return;
+	}
+
+	int size = x * y * get_format_pixel_size(FORMAT_RGBA8);
+
+	{
+		write_lock = true;
+		data.resize(size);
+		memcpy(data.ptrw(), pixels, size);
+		write_lock = false;
+	}
+
+	width = x;
+	height = y;
+	mipmaps = false;
+	format = FORMAT_RGBA8;
+
+	memdelete(pixels);
+
+	if (p_format != FORMAT_RGBA8) {
+		convert(p_format);
+	}
 }
 
 void Image::create(int p_width, int p_height, bool p_use_mipmaps, Format p_format) {

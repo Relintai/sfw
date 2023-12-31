@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include "3rd_glad.h"
+#include "image.h"
 
 class Texture {
 public:
@@ -10,36 +11,24 @@ public:
 		TEXTURE_FILTER_LINEAR,
 	};
 
-	void load_image(const char *file_name, const int format = GL_RGBA, const int internal_components = GL_RGBA);
-	void apply_filter();
-
 	TextureFilter filter;
 	GLuint texture;
 
-	// from fwk, temporary
-	union {
-		int x, w;
-	};
-	union {
-		int y, h;
-	};
-	union {
-		int n, comps;
-	};
-	union {
-		void *pixels;
-		uint8_t *pixels8;
-		uint16_t *pixels16;
-		uint32_t *pixels32;
-		float *pixelsf;
-	};
-
-	// From FWK
-	void image_data_load(const char *file_name, int flags);
+	void apply_filter();
 	void texture_update(int flags);
+
+	void set_image(const Ref<Image> &img);
 
 	Texture();
 	virtual ~Texture();
+
+protected:
+	int _image_width;
+	int _image_height;
+	Ref<Image> _image;
+	Vector<uint8_t> _image_data;
+	Image::Format _image_format;
+	bool _image_mip_maps;
 };
 
 #endif // TEXTURE_H

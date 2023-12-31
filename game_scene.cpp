@@ -136,8 +136,12 @@ GameScene::GameScene() {
 	//float ar = static_cast<float>(w) / static_cast<float>(h);
 	//camera->width = camera->height * ar;
 
+	image.instance();
+	image->load_from_file("icon.png");
+
 	texture = new Texture();
-	texture->load_image("icon.png");
+	//texture->load_image("icon.png");
+	texture->set_image(image);
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
 
