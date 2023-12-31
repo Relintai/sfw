@@ -98,12 +98,13 @@ void TileMap::set_data(const int x, const int y, const uint8_t value) {
 }
 
 void TileMap::render() {
-	if (!mesh)
+	if (!mesh) {
 		return;
+	}
 
-	Transform2D mat_orig = Camera2D::current_camera->model_view_matrix;
+	Transform2D mat_orig = Camera2D::current_camera->get_model_view_matrix();
 
-	Camera2D::current_camera->model_view_matrix *= transform;
+	Camera2D::current_camera->set_model_view_matrix(mat_orig * transform);
 
 	if (material) {
 		material->bind();
@@ -111,7 +112,7 @@ void TileMap::render() {
 
 	mesh->render();
 
-	Camera2D::current_camera->model_view_matrix = mat_orig;
+	Camera2D::current_camera->set_model_view_matrix(mat_orig);
 }
 
 TileMap::TileMap() :

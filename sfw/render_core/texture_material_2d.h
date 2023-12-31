@@ -4,7 +4,7 @@
 #include "render_core/material.h"
 #include "render_core/texture.h"
 
-#include "render_objects/camera_2d.h"
+#include "render_core/render_state.h"
 
 class TextureMaterial2D : public Material {
 public:
@@ -13,8 +13,8 @@ public:
 	}
 
 	void bind_uniforms() {
-        set_uniform(projection_matrix_location, Camera2D::current_camera->projection_matrix);
-        set_uniform(model_view_matrix_location, Camera2D::current_camera->model_view_matrix);
+        set_uniform(projection_matrix_location, RenderState::projection_matrix_2d);
+        set_uniform(model_view_matrix_location, RenderState::model_view_matrix_2d);
 
 		if (texture) {
 			glActiveTexture(GL_TEXTURE0);

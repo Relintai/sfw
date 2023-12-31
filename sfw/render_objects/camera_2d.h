@@ -11,6 +11,12 @@
 
 class Camera2D : Object2D {
 public:
+	Transform2D get_model_view_matrix();
+	void set_model_view_matrix(const Transform2D &p_value);
+
+	Transform get_projection_matrix();
+	void set_projection_matrix(const Transform &p_value);
+
 	virtual void bind();
 
 	void make_current();
@@ -29,8 +35,9 @@ public:
 
 	static Camera2D *current_camera;
 
-	Transform2D model_view_matrix;
-	Transform projection_matrix;
+protected:
+	Transform2D _model_view_matrix;
+	Transform _projection_matrix;
 };
 
 #endif // CAMERA_H

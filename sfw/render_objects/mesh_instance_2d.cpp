@@ -3,35 +3,35 @@
 #include "render_objects/camera_2d.h"
 
 void MeshInstance2D::render() {
-    if (!mesh) {
-        return;
-    }
+	if (!mesh) {
+		return;
+	}
 
-    Transform2D mat_orig = Camera2D::current_camera->model_view_matrix;
+	Transform2D mat_orig = Camera2D::current_camera->get_model_view_matrix();
 
-    Camera2D::current_camera->model_view_matrix *= transform;
+	Camera2D::current_camera->set_model_view_matrix(mat_orig * transform);
 
-    if (material) {
-        material->bind();
-    }
+	if (material) {
+		material->bind();
+	}
 
-    mesh->render();
+	mesh->render();
 
-    for (int i = 0; i < children.size(); ++i) {
-        MeshInstance2D * c = children[i];
+	for (int i = 0; i < children.size(); ++i) {
+		MeshInstance2D *c = children[i];
 
-        if (c) {
-            c->render();
-        }
-    }
+		if (c) {
+			c->render();
+		}
+	}
 
-    Camera2D::current_camera->model_view_matrix = mat_orig;
+	Camera2D::current_camera->set_model_view_matrix(mat_orig);
 }
 
 MeshInstance2D::MeshInstance2D() {
-    material = NULL;
-    mesh = NULL;
+	material = NULL;
+	mesh = NULL;
 }
 MeshInstance2D::~MeshInstance2D() {
-    children.clear();
+	children.clear();
 }

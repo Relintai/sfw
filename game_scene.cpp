@@ -100,7 +100,9 @@ void GameScene::render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	static float rot = 0;
-	camera->camera_transform.basis = Basis(Vector3(0, 1, 0), rot);
+	Transform t = camera->get_camera_transform();
+	t.basis = Basis(Vector3(0, 1, 0), rot);
+	camera->set_camera_transform(t);
 	rot += 0.01;
 
 	Ref<Image> d = texture->get_data();
@@ -185,12 +187,15 @@ GameScene::GameScene() {
 	tile_map->transform.set_origin(Vector2(500, 500));
 
 	camera = new PerspectiveCamera();
+	Transform t = camera->get_camera_transform();
 	//camera->width = 2;
 	//camera->height = 2;
 	//camera->position.x = 0;
 	//camera->position.y = 0;
 	//camera->position.z = -2;
-	camera->camera_transform.origin.z -= 2;
+	t.origin.z -= 2;
+	camera->set_camera_transform(t);
+	
 	camera->screen_aspect_ratio = 1920.0 / 1080.0;
 
 	camera_2d = memnew(Camera2D);

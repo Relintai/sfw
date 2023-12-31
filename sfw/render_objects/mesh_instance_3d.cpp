@@ -3,35 +3,35 @@
 #include "render_objects/camera_3d.h"
 
 void MeshInstance3D::render() {
-    if (!mesh) {
-        return;
-    }
+	if (!mesh) {
+		return;
+	}
 
-    Transform mat_orig = Camera3D::current_camera->model_view_matrix;
+	Transform mat_orig = Camera3D::current_camera->get_model_view_matrix();
 
-    Camera3D::current_camera->model_view_matrix *= transform;
+	Camera3D::current_camera->set_model_view_matrix(mat_orig * transform);
 
-    if (material) {
-        material->bind();
-    }
+	if (material) {
+		material->bind();
+	}
 
-    mesh->render();
+	mesh->render();
 
-    for (int i = 0; i < children.size(); ++i) {
-        MeshInstance3D * c = children[i];
+	for (int i = 0; i < children.size(); ++i) {
+		MeshInstance3D *c = children[i];
 
-        if (c) {
-            c->render();
-        }
-    }
+		if (c) {
+			c->render();
+		}
+	}
 
-    Camera3D::current_camera->model_view_matrix = mat_orig;
+	Camera3D::current_camera->set_model_view_matrix(mat_orig);
 }
 
 MeshInstance3D::MeshInstance3D() {
-    material = NULL;
-    mesh = NULL;
+	material = NULL;
+	mesh = NULL;
 }
 MeshInstance3D::~MeshInstance3D() {
-    children.clear();
+	children.clear();
 }
