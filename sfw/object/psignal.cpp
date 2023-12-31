@@ -1,4 +1,4 @@
-#include "signal.h"
+#include "psignal.h"
 
 void Signal::connect_static(void (*func)(Signal *)) {
 	StaticSignalEntry *se = new StaticSignalEntry();
@@ -14,7 +14,7 @@ void Signal::disconnect_static(void (*func)(Signal *)) {
 			StaticSignalEntry *se = static_cast<StaticSignalEntry *>(e);
 
 			if (se->func == func) {
-				entries.remove_keep_order(i);
+				entries.remove(i);
 				return;
 			}
 		}

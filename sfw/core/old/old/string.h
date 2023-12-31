@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include "core/containers/vector.h"
+#include "core/vector.h"
 
 #ifndef DEFAULT_DIRECTORY_SEPARATOR
 #define DEFAULT_DIRECTORY_SEPARATOR '/'

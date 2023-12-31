@@ -1872,7 +1872,7 @@ String String::sprintf(const Array &values, bool *error) const {
 					} else {
 						if (c == '0' && min_chars == 0) {
 							if (left_justified) {
-								WARN_PRINT("'0' flag ignored with '-' flag in string format");
+								LOG_WARN("'0' flag ignored with '-' flag in string format");
 							} else {
 								pad_with_zeros = true;
 							}

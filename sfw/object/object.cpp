@@ -2,7 +2,64 @@
 
 #include "core/error_macros.h"
 #include "core/logger.h"
+#include "object/core_string_names.h"
 #include "object/object_rc.h"
+
+void Object::set(const StringName &p_name, const Variant &p_value, bool *r_valid) {
+	if (p_name == CoreStringNames::get_singleton()->_meta) {
+		//set_meta(p_name,p_value);
+		metadata = p_value.duplicate();
+		if (r_valid) {
+			*r_valid = true;
+		}
+		return;
+	}
+
+	//something inside the object... :|
+	bool success = _setv(p_name, p_value);
+	if (success) {
+		if (r_valid) {
+			*r_valid = true;
+		}
+		return;
+	}
+
+	if (r_valid) {
+		*r_valid = false;
+	}
+}
+
+Variant Object::get(const StringName &p_name, bool *r_valid) const {
+	Variant ret;
+
+	if (p_name == CoreStringNames::get_singleton()->_meta) {
+		ret = metadata;
+		if (r_valid) {
+			*r_valid = true;
+		}
+		return ret;
+
+	} else {
+		//something inside the object... :|
+		bool success = _getv(p_name, ret);
+		if (success) {
+			if (r_valid) {
+				*r_valid = true;
+			}
+			return ret;
+		}
+
+		if (r_valid) {
+			*r_valid = false;
+		}
+
+		return Variant();
+	}
+}
+
+bool Object::lt(const Variant &p_value_l, const Variant &p_value_r) {
+	return p_value_l < p_value_r;
+}
 
 void Object::notification(int p_notification, bool p_reversed) {
 	_notificationv(p_notification, p_reversed);
@@ -26,7 +83,6 @@ void Object::_postinitialize() {
 	notification(NOTIFICATION_POSTINITIALIZE);
 }
 
-/*
 bool Object::has_meta(const String &p_name) const {
 	return metadata.has(p_name);
 }
@@ -50,7 +106,6 @@ Variant Object::get_meta(const String &p_name, const Variant &p_default) const {
 void Object::remove_meta(const String &p_name) {
 	metadata.erase(p_name);
 }
-*/
 
 void Object::cancel_free() {
 	_predelete_ok = 0;

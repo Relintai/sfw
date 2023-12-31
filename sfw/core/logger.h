@@ -54,6 +54,7 @@ public:
 	static void log_error(const char *p_function, const char *p_file, int p_line, const String &str);
 	static void log_msg_error(const char *p_function, const char *p_file, int p_line, const char *p_msg, const char *str);
 	static void log_index_error(const char *p_function, const char *p_file, int p_line, const int index, const int size, const char *str);
+	static void log_index_error(const char *p_function, const char *p_file, int p_line, const int index, const int size, const String &str);
 
 	static String *get_string_ptr(const int p_default_size = 100);
 	static String *get_string_ptr(const char *p_function, const char *p_file, int p_line, const int p_default_size = 300);

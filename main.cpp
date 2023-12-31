@@ -10,6 +10,7 @@
 
 #include "core/pool_vector.h"
 #include "core/string_name.h"
+#include "object/core_string_names.h"
 
 Application *application = NULL;
 
@@ -21,6 +22,7 @@ int main(int argc, char **argv) {
 	//TODO centralize these
 	StringName::setup();
 	MemoryPool::setup();
+	CoreStringNames::create();
 
 	AppWindow *w = memnew(AppWindow());
 	w->create(100, 0);
@@ -52,6 +54,7 @@ int main(int argc, char **argv) {
 
 	StringName::cleanup();
 	MemoryPool::cleanup();
+	CoreStringNames::free();
 
 	return 0;
 }

@@ -10,9 +10,10 @@
 
 #include "core/math_funcs.h"
 
+#include "object/core_string_names.h"
+#include "object/object.h"
 #include "object/object_rc.h"
 #include "object/resource.h"
-
 
 String Variant::get_type_name(Variant::Type p_type) {
 	switch (p_type) {
@@ -87,12 +88,6 @@ String Variant::get_type_name(Variant::Type p_type) {
 		// misc types
 		case COLOR: {
 			return "Color";
-		} break;
-		case NODE_PATH: {
-			return "NodePath";
-		} break;
-		case RID: {
-			return "RID";
 		} break;
 		case OBJECT: {
 			return "Object";
@@ -328,22 +323,6 @@ bool Variant::can_convert(Variant::Type p_type_from, Variant::Type p_type_to) {
 
 			valid_types = valid;
 		} break;
-		case NODE_PATH: {
-			static const Type valid[] = {
-				STRING,
-				NIL
-			};
-
-			valid_types = valid;
-		} break;
-		case RID: {
-			static const Type valid[] = {
-				OBJECT,
-				NIL
-			};
-
-			valid_types = valid;
-		} break;
 		case OBJECT: {
 			static const Type valid[] = {
 				NIL
@@ -539,7 +518,6 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 		} break;
 		case STRING: {
 			static const Type valid[] = {
-				NODE_PATH,
 				STRING_NAME,
 				NIL
 			};
@@ -664,22 +642,6 @@ bool Variant::can_convert_strict(Variant::Type p_type_from, Variant::Type p_type
 				STRING,
 				INT,
 				NIL,
-			};
-
-			valid_types = valid;
-		} break;
-		case NODE_PATH: {
-			static const Type valid[] = {
-				STRING,
-				NIL
-			};
-
-			valid_types = valid;
-		} break;
-		case RID: {
-			static const Type valid[] = {
-				OBJECT,
-				NIL
 			};
 
 			valid_types = valid;
@@ -958,12 +920,6 @@ bool Variant::is_zero() const {
 		case COLOR: {
 			return *reinterpret_cast<const Color *>(_data._mem) == Color();
 		} break;
-		case NODE_PATH: {
-			return reinterpret_cast<const NodePath *>(_data._mem)->is_empty();
-		} break;
-		case RID: {
-			return *reinterpret_cast<const ::RID *>(_data._mem) == ::RID();
-		} break;
 		case OBJECT: {
 			return _UNSAFE_OBJ_PROXY_PTR(*this) == nullptr;
 		} break;
@@ -1173,12 +1129,6 @@ void Variant::reference(const Variant &p_variant) {
 		case COLOR: {
 			memnew_placement(_data._mem, Color(*reinterpret_cast<const Color *>(p_variant._data._mem)));
 		} break;
-		case NODE_PATH: {
-			memnew_placement(_data._mem, NodePath(*reinterpret_cast<const NodePath *>(p_variant._data._mem)));
-		} break;
-		case RID: {
-			memnew_placement(_data._mem, ::RID(*reinterpret_cast<const ::RID *>(p_variant._data._mem)));
-		} break;
 		case OBJECT: {
 			memnew_placement(_data._mem, ObjData(p_variant._get_obj()));
 			if (likely(_get_obj().rc)) {
@@ -1334,13 +1284,6 @@ void Variant::clear() {
 		//COLOR
 
 		// misc types
-		case NODE_PATH: {
-			reinterpret_cast<NodePath *>(_data._mem)->~NodePath();
-		} break;
-		case RID: {
-			// not much need probably
-			reinterpret_cast<::RID *>(_data._mem)->~RID();
-		} break;
 		case OBJECT: {
 			if (likely(_get_obj().rc)) {
 				if (unlikely(_get_obj().rc->decrement())) {
@@ -1645,8 +1588,6 @@ Variant::operator double() const {
 Variant::operator StringName() const {
 	if (type == STRING_NAME) {
 		return *reinterpret_cast<const StringName *>(_data._mem);
-	} else if (type == NODE_PATH) {
-		return reinterpret_cast<const NodePath *>(_data._mem)->get_sname();
 	}
 
 	return StringName(operator String());
@@ -1726,9 +1667,6 @@ String Variant::stringify(List<const void *> &stack) const {
 			return operator Projection();
 		case COLOR:
 			return operator Color();
-		case NODE_PATH:
-			return operator NodePath();
-		//RID
 		case OBJECT: {
 			Object *obj = _OBJ_PTR(*this);
 			if (likely(obj)) {
@@ -2077,16 +2015,6 @@ Variant::operator Color() const {
 	}
 }
 
-Variant::operator NodePath() const {
-	if (type == NODE_PATH) {
-		return *reinterpret_cast<const NodePath *>(_data._mem);
-	} else if (type == STRING) {
-		return NodePath(operator String());
-	} else {
-		return NodePath();
-	}
-}
-
 Variant::operator RefPtr() const {
 	if (type == OBJECT) {
 		return _get_obj().ref;
@@ -2095,60 +2023,11 @@ Variant::operator RefPtr() const {
 	}
 }
 
-Variant::operator ::RID() const {
-	if (type == RID) {
-		return *reinterpret_cast<const ::RID *>(_data._mem);
-	} else if (type == OBJECT) {
-		if (!_get_obj().ref.is_null()) {
-			return _get_obj().ref.get_rid();
-		} else {
-			Object *obj = likely(_get_obj().rc) ? _get_obj().rc->get_ptr() : nullptr;
-			if (unlikely(!obj)) {
-				if (_get_obj().rc) {
-					ERR_PRINT("Attempted get RID on a deleted object.");
-				}
-				return ::RID();
-			}
-			Variant::CallError ce;
-			Variant ret = obj->call(CoreStringNames::get_singleton()->get_rid, nullptr, 0, ce);
-			if (ce.error == Variant::CallError::CALL_OK && ret.get_type() == Variant::RID) {
-				return ret;
-			} else {
-				return ::RID();
-			}
-		}
-	} else {
-		return ::RID();
-	}
-}
-
 Variant::operator Object *() const {
 	if (type == OBJECT) {
 		return _OBJ_PTR(*this);
 	} else {
 		return nullptr;
-	}
-}
-Variant::operator Node *() const {
-	if (type == OBJECT) {
-		Object *obj = _get_obj().rc ? _get_obj().rc->get_ptr() : nullptr;
-		return Object::cast_to<Node>(obj);
-	}
-	return nullptr;
-}
-Variant::operator Control *() const {
-	if (type == OBJECT) {
-		Object *obj = _get_obj().rc ? _get_obj().rc->get_ptr() : nullptr;
-		return Object::cast_to<Control>(obj);
-	}
-	return nullptr;
-}
-
-Variant::operator Dictionary() const {
-	if (type == DICTIONARY) {
-		return *reinterpret_cast<const Dictionary *>(_data._mem);
-	} else {
-		return Dictionary();
 	}
 }
 
@@ -2208,6 +2087,15 @@ inline DA _convert_array_from_variant(const Variant &p_variant) {
 		}
 	}
 }
+
+Variant::operator Dictionary() const {
+	if (type == DICTIONARY) {
+		return *reinterpret_cast<const Dictionary *>(_data._mem);
+	} else {
+		return Dictionary();
+	}
+}
+
 
 Variant::operator Array() const {
 	if (type == ARRAY) {
@@ -2297,16 +2185,6 @@ Variant::operator PoolVector<Color>() const {
 }
 
 /* helpers */
-
-Variant::operator Vector<::RID>() const {
-	Array va = operator Array();
-	Vector<::RID> rids;
-	rids.resize(va.size());
-	for (int i = 0; i < rids.size(); i++) {
-		rids.write[i] = va[i];
-	}
-	return rids;
-}
 
 Variant::operator PoolVector<Plane>() const {
 	Array va = operator Array();
@@ -2544,17 +2422,6 @@ Variant::operator Orientation() const {
 	return (Orientation) operator int();
 }
 
-Variant::operator IP_Address() const {
-	if (type == POOL_REAL_ARRAY || type == POOL_INT_ARRAY || type == POOL_BYTE_ARRAY) {
-		PoolVector<int> addr = operator PoolVector<int>();
-		if (addr.size() == 4) {
-			return IP_Address(addr.get(0), addr.get(1), addr.get(2), addr.get(3));
-		}
-	}
-
-	return IP_Address(operator String());
-}
-
 Variant::Variant(bool p_bool) {
 	type = BOOL;
 	_data._bool = p_bool;
@@ -2717,21 +2584,11 @@ Variant::Variant(const Color &p_color) {
 	memnew_placement(_data._mem, Color(p_color));
 }
 
-Variant::Variant(const NodePath &p_node_path) {
-	type = NODE_PATH;
-	memnew_placement(_data._mem, NodePath(p_node_path));
-}
-
 Variant::Variant(const RefPtr &p_resource) {
 	type = OBJECT;
 	memnew_placement(_data._mem, ObjData);
 	_get_obj().rc = nullptr;
 	_get_obj().ref = p_resource;
-}
-
-Variant::Variant(const ::RID &p_rid) {
-	type = RID;
-	memnew_placement(_data._mem, ::RID(p_rid));
 }
 
 Variant::Variant(const Object *p_object) {
@@ -2779,18 +2636,6 @@ Variant::Variant(const Vector<Plane> &p_array) {
 
 	for (int i = 0; i < p_array.size(); i++) {
 		plane_array->operator[](i) = Variant(p_array[i]);
-	}
-}
-
-Variant::Variant(const Vector<::RID> &p_array) {
-	type = ARRAY;
-
-	Array *rid_array = memnew_placement(_data._mem, Array);
-
-	rid_array->resize(p_array.size());
-
-	for (int i = 0; i < p_array.size(); i++) {
-		rid_array->set(i, Variant(p_array[i]));
 	}
 }
 
@@ -3115,12 +2960,6 @@ void Variant::operator=(const Variant &p_variant) {
 		case COLOR: {
 			*reinterpret_cast<Color *>(_data._mem) = *reinterpret_cast<const Color *>(p_variant._data._mem);
 		} break;
-		case NODE_PATH: {
-			*reinterpret_cast<NodePath *>(_data._mem) = *reinterpret_cast<const NodePath *>(p_variant._data._mem);
-		} break;
-		case RID: {
-			*reinterpret_cast<::RID *>(_data._mem) = *reinterpret_cast<const ::RID *>(p_variant._data._mem);
-		} break;
 		case OBJECT: {
 			if (likely(_get_obj().rc)) {
 				if (unlikely(_get_obj().rc->decrement())) {
@@ -3179,11 +3018,6 @@ void Variant::operator=(const Variant &p_variant) {
 		default: {
 		}
 	}
-}
-
-Variant::Variant(const IP_Address &p_address) {
-	type = STRING;
-	memnew_placement(_data._mem, String(p_address));
 }
 
 Variant::Variant(const Variant &p_variant) {
@@ -3340,12 +3174,6 @@ uint32_t Variant::recursive_hash(int p_recursion_count) const {
 			h = hash_murmur3_one_float(c.b, h);
 			h = hash_murmur3_one_float(c.a, h);
 			return hash_fmix32(h);
-		} break;
-		case NODE_PATH: {
-			return reinterpret_cast<const NodePath *>(_data._mem)->hash();
-		} break;
-		case RID: {
-			return hash_one_uint64(reinterpret_cast<const ::RID *>(_data._mem)->get_id());
 		} break;
 		case OBJECT: {
 			return hash_one_uint64(hash_make_uint64_t(_UNSAFE_OBJ_PROXY_PTR(*this)));
@@ -3862,9 +3690,6 @@ Vector<Variant> varray(const Variant &p_arg1, const Variant &p_arg2, const Varia
 	return v;
 }
 
-void Variant::static_assign(const Variant &p_variant) {
-}
-
 bool Variant::is_shared() const {
 	switch (type) {
 		case OBJECT:
@@ -3878,82 +3703,6 @@ bool Variant::is_shared() const {
 	}
 
 	return false;
-}
-
-Variant Variant::call(const StringName &p_method, VARIANT_ARG_DECLARE) {
-	VARIANT_ARGPTRS;
-	int argc = 0;
-	for (int i = 0; i < VARIANT_ARG_MAX; i++) {
-		if (argptr[i]->get_type() == Variant::NIL) {
-			break;
-		}
-		argc++;
-	}
-
-	CallError error;
-
-	Variant ret = call(p_method, argptr, argc, error);
-
-	switch (error.error) {
-		case CallError::CALL_ERROR_INVALID_ARGUMENT: {
-			String err = "Invalid type for argument #" + itos(error.argument) + ", expected '" + Variant::get_type_name(error.expected) + "'.";
-			ERR_PRINT(err.utf8().get_data());
-
-		} break;
-		case CallError::CALL_ERROR_INVALID_METHOD: {
-			String err = "Invalid method '" + p_method + "' for type '" + Variant::get_type_name(type) + "'.";
-			ERR_PRINT(err.utf8().get_data());
-		} break;
-		case CallError::CALL_ERROR_TOO_MANY_ARGUMENTS: {
-			String err = "Too many arguments for method '" + p_method + "'";
-			ERR_PRINT(err.utf8().get_data());
-		} break;
-		default: {
-		}
-	}
-
-	return ret;
-}
-
-void Variant::construct_from_string(const String &p_string, Variant &r_value, ObjectConstruct p_obj_construct, void *p_construct_ud) {
-	r_value = Variant();
-}
-
-String Variant::get_construct_string() const {
-	String vars;
-	VariantWriter::write_to_string(*this, vars);
-
-	return vars;
-}
-
-String Variant::get_call_error_text(Object *p_base, const StringName &p_method, const Variant **p_argptrs, int p_argcount, const Variant::CallError &ce) {
-	String err_text;
-
-	if (ce.error == Variant::CallError::CALL_ERROR_INVALID_ARGUMENT) {
-		int errorarg = ce.argument;
-		if (p_argptrs) {
-			err_text = "Cannot convert argument " + itos(errorarg + 1) + " from " + Variant::get_type_name(p_argptrs[errorarg]->get_type()) + " to " + Variant::get_type_name(ce.expected) + ".";
-		} else {
-			err_text = "Cannot convert argument " + itos(errorarg + 1) + " from [missing argptr, type unknown] to " + Variant::get_type_name(ce.expected) + ".";
-		}
-	} else if (ce.error == Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS) {
-		err_text = "Method expected " + itos(ce.argument) + " arguments, but called with " + itos(p_argcount) + ".";
-	} else if (ce.error == Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS) {
-		err_text = "Method expected " + itos(ce.argument) + " arguments, but called with " + itos(p_argcount) + ".";
-	} else if (ce.error == Variant::CallError::CALL_ERROR_INVALID_METHOD) {
-		err_text = "Method not found.";
-	} else if (ce.error == Variant::CallError::CALL_ERROR_INSTANCE_IS_NULL) {
-		err_text = "Instance is null";
-	} else if (ce.error == Variant::CallError::CALL_OK) {
-		return "Call OK";
-	}
-
-	String class_name = p_base->get_class();
-	Ref<Script> script = p_base->get_script();
-	if (script.is_valid() && script->get_path().is_resource_file()) {
-		class_name += "(" + script->get_path().get_file() + ")";
-	}
-	return "'" + class_name + "::" + String(p_method) + "': " + err_text;
 }
 
 String vformat(const String &p_text, const Variant &p1, const Variant &p2, const Variant &p3, const Variant &p4, const Variant &p5) {
@@ -3979,7 +3728,10 @@ String vformat(const String &p_text, const Variant &p1, const Variant &p2, const
 	}
 
 	bool error = false;
-	String fmt = p_text.sprintf(args, &error);
+	//TODO
+	//String fmt = p_text.sprintf(args, &error);
+
+	String fmt;
 
 	ERR_FAIL_COND_V_MSG(error, String(), fmt);
 

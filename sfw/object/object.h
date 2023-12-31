@@ -7,8 +7,9 @@
 #include "core/ustring.h"
 #include "core/vector.h"
 #include "object/object_id.h"
+#include "object/variant.h"
 
-//#include "object/dictionary.h"
+#include "object/dictionary.h"
 
 /*************************************************************************/
 /*  object.h                                                             */
@@ -17,61 +18,82 @@
 
 class ObjectRC;
 
-#define SFW_OBJECT(m_class, m_inherits)                                                    \
-private:                                                                                   \
-	void operator=(const m_class &p_rval) {}                                               \
-                                                                                           \
-public:                                                                                    \
-	virtual String get_class() const override {                                            \
-		return String(#m_class);                                                           \
-	}                                                                                      \
-	virtual const StringName *_get_class_namev() const {                                   \
-		if (!_class_name)                                                                  \
-			_class_name = get_class_static();                                              \
-		return &_class_name;                                                               \
-	}                                                                                      \
-	static void *get_class_ptr_static() {                                                  \
-		static int ptr;                                                                    \
-		return &ptr;                                                                       \
-	}                                                                                      \
-	static String get_class_static() {                                                     \
-		return String(#m_class);                                                           \
-	}                                                                                      \
-	static String get_parent_class_static() {                                              \
-		return m_inherits::get_class_static();                                             \
-	}                                                                                      \
-	static void get_inheritance_list_static(Vector<String> *p_inheritance_list) {          \
-		m_inherits::get_inheritance_list_static(p_inheritance_list);                       \
-		p_inheritance_list->push_back(String(#m_class));                                   \
-	}                                                                                      \
-	static String inherits_static() {                                                      \
-		return String(#m_inherits);                                                        \
-	}                                                                                      \
-	virtual bool is_class(const String &p_class) const override {                          \
-		return (p_class == (#m_class)) ? true : m_inherits::is_class(p_class);             \
-	}                                                                                      \
-	virtual bool is_class_ptr(void *p_ptr) const override {                                \
-		return (p_ptr == get_class_ptr_static()) ? true : m_inherits::is_class_ptr(p_ptr); \
-	}                                                                                      \
-	static void get_valid_parents_static(Vector<String> *p_parents) {                      \
-		if (m_class::_get_valid_parents_static != m_inherits::_get_valid_parents_static) { \
-			m_class::_get_valid_parents_static(p_parents);                                 \
-		}                                                                                  \
-		m_inherits::get_valid_parents_static(p_parents);                                   \
-	}                                                                                      \
-	_FORCE_INLINE_ void (Object::*_get_notification() const)(int) {                        \
-		return (void(Object::*)(int)) & m_class::_notification;                            \
-	}                                                                                      \
-	virtual void _notificationv(int p_notification, bool p_reversed) {                     \
-		if (!p_reversed)                                                                   \
-			m_inherits::_notificationv(p_notification, p_reversed);                        \
-		if (m_class::_get_notification() != m_inherits::_get_notification()) {             \
-			_notification(p_notification);                                                 \
-		}                                                                                  \
-		if (p_reversed)                                                                    \
-			m_inherits::_notificationv(p_notification, p_reversed);                        \
-	}                                                                                      \
-                                                                                           \
+#define SFW_OBJECT(m_class, m_inherits)                                                                    \
+private:                                                                                                   \
+	void operator=(const m_class &p_rval) {}                                                               \
+                                                                                                           \
+public:                                                                                                    \
+	virtual String get_class() const override {                                                            \
+		return String(#m_class);                                                                           \
+	}                                                                                                      \
+	virtual const StringName *_get_class_namev() const {                                                   \
+		if (!_class_name)                                                                                  \
+			_class_name = get_class_static();                                                              \
+		return &_class_name;                                                                               \
+	}                                                                                                      \
+	static void *get_class_ptr_static() {                                                                  \
+		static int ptr;                                                                                    \
+		return &ptr;                                                                                       \
+	}                                                                                                      \
+	static String get_class_static() {                                                                     \
+		return String(#m_class);                                                                           \
+	}                                                                                                      \
+	static String get_parent_class_static() {                                                              \
+		return m_inherits::get_class_static();                                                             \
+	}                                                                                                      \
+	static void get_inheritance_list_static(Vector<String> *p_inheritance_list) {                          \
+		m_inherits::get_inheritance_list_static(p_inheritance_list);                                       \
+		p_inheritance_list->push_back(String(#m_class));                                                   \
+	}                                                                                                      \
+	static String inherits_static() {                                                                      \
+		return String(#m_inherits);                                                                        \
+	}                                                                                                      \
+	virtual bool is_class(const String &p_class) const override {                                          \
+		return (p_class == (#m_class)) ? true : m_inherits::is_class(p_class);                             \
+	}                                                                                                      \
+	virtual bool is_class_ptr(void *p_ptr) const override {                                                \
+		return (p_ptr == get_class_ptr_static()) ? true : m_inherits::is_class_ptr(p_ptr);                 \
+	}                                                                                                      \
+	static void get_valid_parents_static(Vector<String> *p_parents) {                                      \
+		if (m_class::_get_valid_parents_static != m_inherits::_get_valid_parents_static) {                 \
+			m_class::_get_valid_parents_static(p_parents);                                                 \
+		}                                                                                                  \
+		m_inherits::get_valid_parents_static(p_parents);                                                   \
+	}                                                                                                      \
+	_FORCE_INLINE_ void (Object::*_get_notification() const)(int) {                                        \
+		return (void(Object::*)(int)) & m_class::_notification;                                            \
+	}                                                                                                      \
+	virtual void _notificationv(int p_notification, bool p_reversed) {                                     \
+		if (!p_reversed)                                                                                   \
+			m_inherits::_notificationv(p_notification, p_reversed);                                        \
+		if (m_class::_get_notification() != m_inherits::_get_notification()) {                             \
+			_notification(p_notification);                                                                 \
+		}                                                                                                  \
+		if (p_reversed)                                                                                    \
+			m_inherits::_notificationv(p_notification, p_reversed);                                        \
+	}                                                                                                      \
+	_FORCE_INLINE_ bool (Object::*_get_get() const)(const StringName &p_name, Variant &) const {           \
+		return (bool(Object::*)(const StringName &, Variant &) const) & m_class::_get;                     \
+	}                                                                                                      \
+	virtual bool _getv(const StringName &p_name, Variant &r_ret) const {                                   \
+		if (m_class::_get_get() != m_inherits::_get_get()) {                                               \
+			if (_get(p_name, r_ret))                                                                       \
+				return true;                                                                               \
+		}                                                                                                  \
+		return m_inherits::_getv(p_name, r_ret);                                                           \
+	}                                                                                                      \
+	_FORCE_INLINE_ bool (Object::*_get_set() const)(const StringName &p_name, const Variant &p_property) { \
+		return (bool(Object::*)(const StringName &, const Variant &)) & m_class::_set;                     \
+	}                                                                                                      \
+	virtual bool _setv(const StringName &p_name, const Variant &p_property) {                              \
+		if (m_inherits::_setv(p_name, p_property))                                                         \
+			return true;                                                                                   \
+		if (m_class::_get_set() != m_inherits::_get_set()) {                                               \
+			return _set(p_name, p_property);                                                               \
+		}                                                                                                  \
+		return false;                                                                                      \
+	}                                                                                                      \
+                                                                                                           \
 private:
 
 class Object {
@@ -80,6 +102,12 @@ public:
 		NOTIFICATION_POSTINITIALIZE = 0,
 		NOTIFICATION_PREDELETE = 1
 	};
+
+	void set(const StringName &p_name, const Variant &p_value, bool *r_valid = nullptr);
+	Variant get(const StringName &p_name, bool *r_valid = nullptr) const;
+
+	//less than. < "operator" used for cutrom sorting Arrays.
+	virtual bool lt(const Variant &p_value_l, const Variant &p_value_r);
 
 	virtual String get_class() const { return "Object"; }
 	static void *get_class_ptr_static() {
@@ -129,13 +157,11 @@ public:
 
 	void cancel_free();
 
-	/*
 	bool has_meta(const String &p_name) const;
 	void set_meta(const String &p_name, const Variant &p_value);
 	void remove_meta(const String &p_name);
 	Variant get_meta(const String &p_name, const Variant &p_default = Variant()) const;
 	void get_meta_list(List<String> *p_list) const;
-	*/
 
 	Object();
 	virtual ~Object();
@@ -165,6 +191,27 @@ protected:
 		return &Object::_notification;
 	}
 
+	bool _set(const StringName &p_name, const Variant &p_property) {
+		return false;
+	};
+	bool _get(const StringName &p_name, Variant &r_property) const {
+		return false;
+	};
+
+	virtual bool _setv(const StringName &p_name, const Variant &p_property) {
+		return false;
+	};
+	virtual bool _getv(const StringName &p_name, Variant &r_property) const {
+		return false;
+	};
+
+	_FORCE_INLINE_ bool (Object::*_get_get() const)(const StringName &p_name, Variant &r_ret) const {
+		return &Object::_get;
+	}
+	_FORCE_INLINE_ bool (Object::*_get_set() const)(const StringName &p_name, const Variant &p_property) {
+		return &Object::_set;
+	}
+
 	virtual void _notificationv(int p_notification, bool p_reversed){};
 	void _notification(int p_notification){};
 
@@ -181,7 +228,7 @@ protected:
 	ObjectID _instance_id;
 	std::atomic<ObjectRC *> _rc;
 
-	//Dictionary metadata;
+	Dictionary metadata;
 };
 
 bool predelete_handler(Object *p_object);

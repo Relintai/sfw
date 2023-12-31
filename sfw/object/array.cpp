@@ -288,24 +288,16 @@ Array &Array::sort() {
 
 struct _ArrayVariantSortCustom {
 	Object *obj;
-	StringName func;
 
 	_FORCE_INLINE_ bool operator()(const Variant &p_l, const Variant &p_r) const {
-		const Variant *args[2] = { &p_l, &p_r };
-		Variant::CallError err;
-		bool res = obj->call(func, args, 2, err);
-		if (err.error != Variant::CallError::CALL_OK) {
-			res = false;
-		}
-		return res;
+		return obj->lt(p_l, p_r);
 	}
 };
-Array &Array::sort_custom(Object *p_obj, const StringName &p_function) {
-	ERR_FAIL_NULL_V(p_obj, *this);
+Array &Array::sort_custom(Object *p_obj) {
+	ERR_FAIL_COND_V(!p_obj, *this);
 
 	SortArray<Variant, _ArrayVariantSortCustom, true> avs;
 	avs.compare.obj = p_obj;
-	avs.compare.func = p_function;
 	avs.sort(_p->array.ptrw(), _p->array.size());
 	return *this;
 }
@@ -355,11 +347,10 @@ int Array::bsearch(const Variant &p_value, bool p_before) {
 }
 
 int Array::bsearch_custom(const Variant &p_value, Object *p_obj, const StringName &p_function, bool p_before) {
-	ERR_FAIL_NULL_V(p_obj, 0);
+	ERR_FAIL_COND_V(!p_obj, 0);
 
 	_ArrayVariantSortCustom less;
 	less.obj = p_obj;
-	less.func = p_function;
 
 	return bisect(_p->array, p_value, p_before, less);
 }

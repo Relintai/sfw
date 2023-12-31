@@ -123,6 +123,9 @@ void RLogger::log_msg_error(const char *p_function, const char *p_file, int p_li
 void RLogger::log_index_error(const char *p_function, const char *p_file, int p_line, const int index, const int size, const char *str) {
 	printf("E (INDEX) | %s::%s:%d | :: index: %d/%d. %s\n", p_file, p_function, p_line, index, size, str);
 }
+void RLogger::log_index_error(const char *p_function, const char *p_file, int p_line, const int index, const int size, const String &str) {
+	printf("E (INDEX) | %s::%s:%d | :: index: %d/%d. %s\n", p_file, p_function, p_line, index, size, str.utf8().get_data());
+}
 
 String *RLogger::get_string_ptr(const int p_default_size) {
 	return memnew(String());

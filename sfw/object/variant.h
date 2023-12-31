@@ -23,6 +23,8 @@
 #include "core/vector4i.h"
 #include "object/array.h"
 #include "object/dictionary.h"
+#include "object/ref_ptr.h"
+#include "object/object_id.h"
 
 class Object;
 class ObjectRC;
@@ -279,7 +281,6 @@ public:
 	Variant(const Transform2D &p_transform);
 	Variant(const Transform &p_transform);
 	Variant(const Color &p_color);
-	Variant(const NodePath &p_node_path);
 	Variant(const RefPtr &p_resource);
 	Variant(const Object *p_object);
 	Variant(const Dictionary &p_dictionary);
@@ -309,7 +310,6 @@ public:
 	Variant(const Vector<Vector3i> &p_array);
 	Variant(const Vector<Color> &p_array);
 	Variant(const Vector<Plane> &p_array);
-	Variant(const Vector<::RID> &p_array);
 	Variant(const Vector<Vector2> &p_array);
 	Variant(const Vector<Vector2i> &p_array);
 	Variant(const Vector<Vector4> &p_array);

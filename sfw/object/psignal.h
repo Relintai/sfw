@@ -1,10 +1,10 @@
 #ifndef SIGNAL_H
 #define SIGNAL_H
 
-#include "core/containers/vector.h"
-#include "core/string.h"
-#include "core/variant.h"
+#include "core/vector.h"
+#include "core/ustring.h"
 
+#include "object/variant.h"
 #include "object/reference.h"
 
 class Signal {
@@ -138,7 +138,7 @@ void Signal::disconnect(T *obj, void (*func)(T*, Signal *)) {
 			ClassSignalEntry *se = static_cast<ClassSignalEntry *>(e);
 
 			if (se->get_obj_ptr() == obj_ptr && se->get_func_ptr() == func_ptr) {
-				entries.remove_keep_order(i);
+				entries.remove(i);
 				return;
 			}
 		}

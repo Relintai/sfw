@@ -42,6 +42,13 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/stime.cpp -o sfw/core/stime.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/object.cpp -o sfw/object/object.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/reference.cpp -o sfw/object/reference.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/core_string_names.cpp -o sfw/object/core_string_names.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/variant.cpp -o sfw/object/variant.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/variant_op.cpp -o sfw/object/variant_op.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/psignal.cpp -o sfw/object/psignal.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/array.cpp -o sfw/object/array.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/dictionary.cpp -o sfw/object/dictionary.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/ref_ptr.cpp -o sfw/object/ref_ptr.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/application.cpp -o sfw/render_core/application.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
@@ -76,7 +83,9 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
                         sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/stime.o \
-                        sfw/object/object.o sfw/object/reference.o \
+                        sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
+                        sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \
+                        sfw/object/array.o sfw/object/dictionary.o sfw/object/ref_ptr.o \
                         sfw/render_core/image.o \
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
