@@ -7,8 +7,9 @@
 /*************************************************************************/
 
 #include "core/memory.h"
-#include "object/object.h"
 #include "core/safe_refcount.h"
+#include "object/object.h"
+#include "object/ref_ptr.h"
 
 class Reference : public Object {
 	SFW_OBJECT(Reference, Object);
@@ -167,6 +168,73 @@ public:
 
 	void instance() {
 		ref(memnew(T));
+	}
+
+	RefPtr get_ref_ptr() const {
+		RefPtr refptr;
+		Ref<Reference> *irr = reinterpret_cast<Ref<Reference> *>(refptr.get_data());
+		*irr = *this;
+		return refptr;
+	};
+
+	operator Variant() const {
+		return Variant(get_ref_ptr());
+	}
+
+	void operator=(const RefPtr &p_refptr) {
+		Ref<Reference> *irr = reinterpret_cast<Ref<Reference> *>(p_refptr.get_data());
+		Reference *refb = irr->ptr();
+		if (!refb) {
+			unref();
+			return;
+		}
+		Ref r;
+		r.reference = Object::cast_to<T>(refb);
+		ref(r);
+		r.reference = nullptr;
+	}
+
+	void operator=(const Variant &p_variant) {
+		RefPtr refptr = p_variant;
+		Ref<Reference> *irr = reinterpret_cast<Ref<Reference> *>(refptr.get_data());
+		Reference *refb = irr->ptr();
+		if (!refb) {
+			unref();
+			return;
+		}
+		Ref r;
+		r.reference = Object::cast_to<T>(refb);
+		ref(r);
+		r.reference = nullptr;
+	}
+
+	Ref(const Variant &p_variant) {
+		RefPtr refptr = p_variant;
+		Ref<Reference> *irr = reinterpret_cast<Ref<Reference> *>(refptr.get_data());
+		reference = nullptr;
+		Reference *refb = irr->ptr();
+		if (!refb) {
+			unref();
+			return;
+		}
+		Ref r;
+		r.reference = Object::cast_to<T>(refb);
+		ref(r);
+		r.reference = nullptr;
+	}
+
+	Ref(const RefPtr &p_refptr) {
+		Ref<Reference> *irr = reinterpret_cast<Ref<Reference> *>(p_refptr.get_data());
+		reference = nullptr;
+		Reference *refb = irr->ptr();
+		if (!refb) {
+			unref();
+			return;
+		}
+		Ref r;
+		r.reference = Object::cast_to<T>(refb);
+		ref(r);
+		r.reference = nullptr;
 	}
 
 	Ref() {

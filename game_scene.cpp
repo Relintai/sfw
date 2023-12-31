@@ -2,8 +2,8 @@
 
 #include "render_core/application.h"
 
-#include "render_core/3rd_glad.h"
 #include "core/memory.h"
+#include "render_core/3rd_glad.h"
 #include "render_core/mesh_utils.h"
 
 void GameScene::event() {
@@ -104,7 +104,6 @@ void GameScene::render() {
 	rot += 0.01;
 
 	Ref<Image> d = texture->get_data();
-
 	texture->create_from_image(d);
 
 	camera->bind();
