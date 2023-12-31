@@ -1,7 +1,7 @@
 #include "resource.h"
 
 void Resource::emit_changed() {
-	//emit
+	changed.emit(this);
 }
 
 Error Resource::load(const String &path) {

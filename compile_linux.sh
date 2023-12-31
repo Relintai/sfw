@@ -49,6 +49,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/psignal.cpp -o sfw/object/p
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/array.cpp -o sfw/object/array.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/dictionary.cpp -o sfw/object/dictionary.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/ref_ptr.cpp -o sfw/object/ref_ptr.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/resource.cpp -o sfw/object/resource.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/application.cpp -o sfw/render_core/application.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
@@ -86,6 +87,7 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
                         sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \
                         sfw/object/array.o sfw/object/dictionary.o sfw/object/ref_ptr.o \
+                        sfw/object/resource.o \
                         sfw/render_core/image.o \
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
