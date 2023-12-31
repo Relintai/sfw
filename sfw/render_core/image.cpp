@@ -66,32 +66,6 @@ const char *Image::format_names[Image::FORMAT_MAX] = {
 	"RGFloat",
 	"RGBFloat",
 	"RGBAFloat",
-	"RHalf", // half float
-	"RGHalf",
-	"RGBHalf",
-	"RGBAHalf",
-	"RGBE9995",
-	"DXT1 RGB8", // s3tc
-	"DXT3 RGBA8",
-	"DXT5 RGBA8",
-	"RGTC Red8",
-	"RGTC RedGreen8",
-	"BPTC_RGBA",
-	"BPTC_RGBF",
-	"BPTC_RGBFU",
-	"PVRTC2", // pvrtc
-	"PVRTC2A",
-	"PVRTC4",
-	"PVRTC4A",
-	"ETC", // etc1
-	"ETC2_R11", // etc2
-	"ETC2_R11S", // signed", NOT srgb.
-	"ETC2_RG11",
-	"ETC2_RG11S",
-	"ETC2_RGB8",
-	"ETC2_RGBA8",
-	"ETC2_RGB8A1",
-
 };
 
 void Image::_put_pixelb(int p_x, int p_y, uint32_t p_pixel_size, uint8_t *p_data, const uint8_t *p_pixel) {
@@ -130,56 +104,7 @@ int Image::get_format_pixel_size(Format p_format) {
 			return 12;
 		case FORMAT_RGBAF:
 			return 16;
-		case FORMAT_RH:
-			return 2; // half float
-		case FORMAT_RGH:
-			return 4;
-		case FORMAT_RGBH:
-			return 6;
-		case FORMAT_RGBAH:
-			return 8;
-		case FORMAT_RGBE9995:
-			return 4;
-		case FORMAT_DXT1:
-			return 1; // s3tc bc1
-		case FORMAT_DXT3:
-			return 1; // bc2
-		case FORMAT_DXT5:
-			return 1; // bc3
-		case FORMAT_RGTC_R:
-			return 1; // bc4
-		case FORMAT_RGTC_RG:
-			return 1; // bc5
-		case FORMAT_BPTC_RGBA:
-			return 1; // btpc bc6h
-		case FORMAT_BPTC_RGBF:
-			return 1; // float /
-		case FORMAT_BPTC_RGBFU:
-			return 1; // unsigned float
-		case FORMAT_PVRTC2:
-			return 1; // pvrtc
-		case FORMAT_PVRTC2A:
-			return 1;
-		case FORMAT_PVRTC4:
-			return 1;
-		case FORMAT_PVRTC4A:
-			return 1;
-		case FORMAT_ETC:
-			return 1; // etc1
-		case FORMAT_ETC2_R11:
-			return 1; // etc2
-		case FORMAT_ETC2_R11S:
-			return 1; // signed: return 1; NOT srgb.
-		case FORMAT_ETC2_RG11:
-			return 1;
-		case FORMAT_ETC2_RG11S:
-			return 1;
-		case FORMAT_ETC2_RGB8:
-			return 1;
-		case FORMAT_ETC2_RGBA8:
-			return 1;
-		case FORMAT_ETC2_RGB8A1:
-			return 1;
+
 		case FORMAT_MAX: {
 		}
 	}
@@ -187,104 +112,15 @@ int Image::get_format_pixel_size(Format p_format) {
 }
 
 void Image::get_format_min_pixel_size(Format p_format, int &r_w, int &r_h) {
-	switch (p_format) {
-		case FORMAT_DXT1: // s3tc bc1
-		case FORMAT_DXT3: // bc2
-		case FORMAT_DXT5: // bc3
-		case FORMAT_RGTC_R: // bc4
-		case FORMAT_RGTC_RG: { // bc5		case case FORMAT_DXT1:
-
-			r_w = 4;
-			r_h = 4;
-		} break;
-		case FORMAT_PVRTC2:
-		case FORMAT_PVRTC2A: {
-			r_w = 16;
-			r_h = 8;
-		} break;
-		case FORMAT_PVRTC4A:
-		case FORMAT_PVRTC4: {
-			r_w = 8;
-			r_h = 8;
-		} break;
-		case FORMAT_ETC: {
-			r_w = 4;
-			r_h = 4;
-		} break;
-		case FORMAT_BPTC_RGBA:
-		case FORMAT_BPTC_RGBF:
-		case FORMAT_BPTC_RGBFU: {
-			r_w = 4;
-			r_h = 4;
-		} break;
-		case FORMAT_ETC2_R11: // etc2
-		case FORMAT_ETC2_R11S: // signed: NOT srgb.
-		case FORMAT_ETC2_RG11:
-		case FORMAT_ETC2_RG11S:
-		case FORMAT_ETC2_RGB8:
-		case FORMAT_ETC2_RGBA8:
-		case FORMAT_ETC2_RGB8A1: {
-			r_w = 4;
-			r_h = 4;
-
-		} break;
-
-		default: {
-			r_w = 1;
-			r_h = 1;
-		} break;
-	}
+	r_w = 1;
+	r_h = 1;
 }
 
 int Image::get_format_pixel_rshift(Format p_format) {
-	if (p_format == FORMAT_DXT1 || p_format == FORMAT_RGTC_R || p_format == FORMAT_PVRTC4 || p_format == FORMAT_PVRTC4A || p_format == FORMAT_ETC || p_format == FORMAT_ETC2_R11 || p_format == FORMAT_ETC2_R11S || p_format == FORMAT_ETC2_RGB8 || p_format == FORMAT_ETC2_RGB8A1) {
-		return 1;
-	} else if (p_format == FORMAT_PVRTC2 || p_format == FORMAT_PVRTC2A) {
-		return 2;
-	} else {
-		return 0;
-	}
+	return 0;
 }
 
 int Image::get_format_block_size(Format p_format) {
-	switch (p_format) {
-		case FORMAT_DXT1: // s3tc bc1
-		case FORMAT_DXT3: // bc2
-		case FORMAT_DXT5: // bc3
-		case FORMAT_RGTC_R: // bc4
-		case FORMAT_RGTC_RG: { // bc5		case case FORMAT_DXT1:
-
-			return 4;
-		}
-		case FORMAT_PVRTC2:
-		case FORMAT_PVRTC2A: {
-			return 4;
-		}
-		case FORMAT_PVRTC4A:
-		case FORMAT_PVRTC4: {
-			return 4;
-		}
-		case FORMAT_ETC: {
-			return 4;
-		}
-		case FORMAT_BPTC_RGBA:
-		case FORMAT_BPTC_RGBF:
-		case FORMAT_BPTC_RGBFU: {
-			return 4;
-		}
-		case FORMAT_ETC2_R11: // etc2
-		case FORMAT_ETC2_R11S: // signed: NOT srgb.
-		case FORMAT_ETC2_RG11:
-		case FORMAT_ETC2_RG11S:
-		case FORMAT_ETC2_RGB8:
-		case FORMAT_ETC2_RGBA8:
-		case FORMAT_ETC2_RGB8A1: {
-			return 4;
-		}
-		default: {
-		}
-	}
-
 	return 1;
 }
 
@@ -420,10 +256,7 @@ void Image::convert(Format p_new_format) {
 
 	ERR_FAIL_COND_MSG(write_lock, "Cannot convert image when it is locked.");
 
-	if (format > FORMAT_RGBE9995 || p_new_format > FORMAT_RGBE9995) {
-		ERR_FAIL_MSG("Cannot convert to <-> from compressed formats. Use compress() and decompress() instead.");
-
-	} else if (format > FORMAT_RGBA8 || p_new_format > FORMAT_RGBA8) {
+	if (format > FORMAT_RGBA8 || p_new_format > FORMAT_RGBA8) {
 		// use put/set pixel which is slower but works with non byte formats
 		Image new_img(width, height, false, p_new_format);
 		lock();
@@ -1008,22 +841,6 @@ void Image::resize(int p_width, int p_height, Interpolation p_interpolation) {
 						_scale_nearest<4, float>(r_ptr, w_ptr, width, height, p_width, p_height);
 						break;
 				}
-
-			} else if (format >= FORMAT_RH && format <= FORMAT_RGBAH) {
-				switch (get_format_pixel_size(format)) {
-					case 2:
-						_scale_nearest<1, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 4:
-						_scale_nearest<2, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 6:
-						_scale_nearest<3, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 8:
-						_scale_nearest<4, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-				}
 			}
 
 		} break;
@@ -1094,21 +911,6 @@ void Image::resize(int p_width, int p_height, Interpolation p_interpolation) {
 							_scale_bilinear<4, float>(src_ptr, w_ptr, src_width, src_height, p_width, p_height);
 							break;
 					}
-				} else if (format >= FORMAT_RH && format <= FORMAT_RGBAH) {
-					switch (get_format_pixel_size(format)) {
-						case 2:
-							_scale_bilinear<1, uint16_t>(src_ptr, w_ptr, src_width, src_height, p_width, p_height);
-							break;
-						case 4:
-							_scale_bilinear<2, uint16_t>(src_ptr, w_ptr, src_width, src_height, p_width, p_height);
-							break;
-						case 6:
-							_scale_bilinear<3, uint16_t>(src_ptr, w_ptr, src_width, src_height, p_width, p_height);
-							break;
-						case 8:
-							_scale_bilinear<4, uint16_t>(src_ptr, w_ptr, src_width, src_height, p_width, p_height);
-							break;
-					}
 				}
 			}
 
@@ -1149,21 +951,6 @@ void Image::resize(int p_width, int p_height, Interpolation p_interpolation) {
 						_scale_cubic<4, float>(r_ptr, w_ptr, width, height, p_width, p_height);
 						break;
 				}
-			} else if (format >= FORMAT_RH && format <= FORMAT_RGBAH) {
-				switch (get_format_pixel_size(format)) {
-					case 2:
-						_scale_cubic<1, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 4:
-						_scale_cubic<2, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 6:
-						_scale_cubic<3, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 8:
-						_scale_cubic<4, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-				}
 			}
 		} break;
 		case INTERPOLATE_LANCZOS: {
@@ -1195,21 +982,6 @@ void Image::resize(int p_width, int p_height, Interpolation p_interpolation) {
 						break;
 					case 16:
 						_scale_lanczos<4, float>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-				}
-			} else if (format >= FORMAT_RH && format <= FORMAT_RGBAH) {
-				switch (get_format_pixel_size(format)) {
-					case 2:
-						_scale_lanczos<1, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 4:
-						_scale_lanczos<2, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 6:
-						_scale_lanczos<3, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
-						break;
-					case 8:
-						_scale_lanczos<4, uint16_t>(r_ptr, w_ptr, width, height, p_width, p_height);
 						break;
 				}
 			}
@@ -1397,7 +1169,7 @@ int Image::_get_dst_image_size(int p_width, int p_height, Format p_format, int &
 }
 
 bool Image::_can_modify(Format p_format) const {
-	return p_format <= FORMAT_RGBE9995;
+	return p_format <= FORMAT_RGBAF;
 }
 
 template <class Component, int CC, bool renormalize,
@@ -1502,22 +1274,6 @@ void Image::shrink_x2() {
 					_generate_po2_mipmap<float, 4, false, Image::average_4_float, Image::renormalize_float>(reinterpret_cast<const float *>(data.ptr()), reinterpret_cast<float *>(new_img.ptrw()), width, height);
 					break;
 
-				case FORMAT_RH:
-					_generate_po2_mipmap<uint16_t, 1, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(data.ptr()), reinterpret_cast<uint16_t *>(new_img.ptrw()), width, height);
-					break;
-				case FORMAT_RGH:
-					_generate_po2_mipmap<uint16_t, 2, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(data.ptr()), reinterpret_cast<uint16_t *>(new_img.ptrw()), width, height);
-					break;
-				case FORMAT_RGBH:
-					_generate_po2_mipmap<uint16_t, 3, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(data.ptr()), reinterpret_cast<uint16_t *>(new_img.ptrw()), width, height);
-					break;
-				case FORMAT_RGBAH:
-					_generate_po2_mipmap<uint16_t, 4, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(data.ptr()), reinterpret_cast<uint16_t *>(new_img.ptrw()), width, height);
-					break;
-
-				case FORMAT_RGBE9995:
-					_generate_po2_mipmap<uint32_t, 1, false, Image::average_4_rgbe9995, Image::renormalize_rgbe9995>(reinterpret_cast<const uint32_t *>(data.ptr()), reinterpret_cast<uint32_t *>(new_img.ptrw()), width, height);
-					break;
 				default: {
 				}
 			}
@@ -1626,36 +1382,7 @@ int Image::generate_mipmaps(bool p_renormalize) {
 				}
 
 				break;
-			case FORMAT_RH:
-				_generate_po2_mipmap<uint16_t, 1, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(&wp[prev_ofs]), reinterpret_cast<uint16_t *>(&wp[ofs]), prev_w, prev_h);
-				break;
-			case FORMAT_RGH:
-				_generate_po2_mipmap<uint16_t, 2, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(&wp[prev_ofs]), reinterpret_cast<uint16_t *>(&wp[ofs]), prev_w, prev_h);
-				break;
-			case FORMAT_RGBH:
-				if (p_renormalize) {
-					_generate_po2_mipmap<uint16_t, 3, true, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(&wp[prev_ofs]), reinterpret_cast<uint16_t *>(&wp[ofs]), prev_w, prev_h);
-				} else {
-					_generate_po2_mipmap<uint16_t, 3, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(&wp[prev_ofs]), reinterpret_cast<uint16_t *>(&wp[ofs]), prev_w, prev_h);
-				}
 
-				break;
-			case FORMAT_RGBAH:
-				if (p_renormalize) {
-					_generate_po2_mipmap<uint16_t, 4, true, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(&wp[prev_ofs]), reinterpret_cast<uint16_t *>(&wp[ofs]), prev_w, prev_h);
-				} else {
-					_generate_po2_mipmap<uint16_t, 4, false, Image::average_4_half, Image::renormalize_half>(reinterpret_cast<const uint16_t *>(&wp[prev_ofs]), reinterpret_cast<uint16_t *>(&wp[ofs]), prev_w, prev_h);
-				}
-
-				break;
-			case FORMAT_RGBE9995:
-				if (p_renormalize) {
-					_generate_po2_mipmap<uint32_t, 1, true, Image::average_4_rgbe9995, Image::renormalize_rgbe9995>(reinterpret_cast<const uint32_t *>(&wp[prev_ofs]), reinterpret_cast<uint32_t *>(&wp[ofs]), prev_w, prev_h);
-				} else {
-					_generate_po2_mipmap<uint32_t, 1, false, Image::average_4_rgbe9995, Image::renormalize_rgbe9995>(reinterpret_cast<const uint32_t *>(&wp[prev_ofs]), reinterpret_cast<uint32_t *>(&wp[ofs]), prev_w, prev_h);
-				}
-
-				break;
 			default: {
 			}
 		}
@@ -1999,12 +1726,6 @@ bool Image::is_invisible() const {
 
 		} break;
 
-		case FORMAT_PVRTC2A:
-		case FORMAT_PVRTC4A:
-		case FORMAT_DXT3:
-		case FORMAT_DXT5: {
-			detected = true;
-		} break;
 		default: {
 		}
 	}
@@ -2040,12 +1761,7 @@ Image::AlphaMode Image::detect_alpha() const {
 			}
 
 		} break;
-		case FORMAT_PVRTC2A:
-		case FORMAT_PVRTC4A:
-		case FORMAT_DXT3:
-		case FORMAT_DXT5: {
-			detected = true;
-		} break;
+
 		default: {
 		}
 	}
@@ -2079,7 +1795,7 @@ int Image::get_image_mipmap_offset(int p_width, int p_height, Format p_format, i
 }
 
 bool Image::is_compressed() const {
-	return format > FORMAT_RGBE9995;
+	return format > FORMAT_RGBAF;
 }
 
 Image::Image(const char **p_xpm) {
@@ -2110,7 +1826,7 @@ Image::Image(int p_width, int p_height, bool p_mipmaps, Format p_format, const V
 }
 
 Rect2 Image::get_used_rect() const {
-	if (format != FORMAT_LA8 && format != FORMAT_RGBA8 && format != FORMAT_RGBAF && format != FORMAT_RGBAH && format != FORMAT_RGBA4444 && format != FORMAT_RGBA5551) {
+	if (format != FORMAT_LA8 && format != FORMAT_RGBA8 && format != FORMAT_RGBAF && format != FORMAT_RGBA4444 && format != FORMAT_RGBA5551) {
 		return Rect2(Vector2(), Vector2(width, height));
 	}
 
@@ -2541,31 +2257,6 @@ Color Image::get_pixel(int p_x, int p_y) const {
 			float a = ((float *)ptr)[ofs * 4 + 3];
 			return Color(r, g, b, a);
 		}
-		case FORMAT_RH: {
-			uint16_t r = ((uint16_t *)ptr)[ofs];
-			return Color(Math::half_to_float(r), 0, 0, 1);
-		}
-		case FORMAT_RGH: {
-			uint16_t r = ((uint16_t *)ptr)[ofs * 2 + 0];
-			uint16_t g = ((uint16_t *)ptr)[ofs * 2 + 1];
-			return Color(Math::half_to_float(r), Math::half_to_float(g), 0, 1);
-		}
-		case FORMAT_RGBH: {
-			uint16_t r = ((uint16_t *)ptr)[ofs * 3 + 0];
-			uint16_t g = ((uint16_t *)ptr)[ofs * 3 + 1];
-			uint16_t b = ((uint16_t *)ptr)[ofs * 3 + 2];
-			return Color(Math::half_to_float(r), Math::half_to_float(g), Math::half_to_float(b), 1);
-		}
-		case FORMAT_RGBAH: {
-			uint16_t r = ((uint16_t *)ptr)[ofs * 4 + 0];
-			uint16_t g = ((uint16_t *)ptr)[ofs * 4 + 1];
-			uint16_t b = ((uint16_t *)ptr)[ofs * 4 + 2];
-			uint16_t a = ((uint16_t *)ptr)[ofs * 4 + 3];
-			return Color(Math::half_to_float(r), Math::half_to_float(g), Math::half_to_float(b), Math::half_to_float(a));
-		}
-		case FORMAT_RGBE9995: {
-			return Color::from_rgbe9995(((uint32_t *)ptr)[ofs]);
-		}
 		default: {
 			ERR_FAIL_V_MSG(Color(), "Can't get_pixel() on compressed image, sorry.");
 		}
@@ -2654,28 +2345,6 @@ void Image::set_pixel(int p_x, int p_y, const Color &p_color) {
 			((float *)ptr)[ofs * 4 + 1] = p_color.g;
 			((float *)ptr)[ofs * 4 + 2] = p_color.b;
 			((float *)ptr)[ofs * 4 + 3] = p_color.a;
-		} break;
-		case FORMAT_RH: {
-			((uint16_t *)ptr)[ofs] = Math::make_half_float(p_color.r);
-		} break;
-		case FORMAT_RGH: {
-			((uint16_t *)ptr)[ofs * 2 + 0] = Math::make_half_float(p_color.r);
-			((uint16_t *)ptr)[ofs * 2 + 1] = Math::make_half_float(p_color.g);
-		} break;
-		case FORMAT_RGBH: {
-			((uint16_t *)ptr)[ofs * 3 + 0] = Math::make_half_float(p_color.r);
-			((uint16_t *)ptr)[ofs * 3 + 1] = Math::make_half_float(p_color.g);
-			((uint16_t *)ptr)[ofs * 3 + 2] = Math::make_half_float(p_color.b);
-		} break;
-		case FORMAT_RGBAH: {
-			((uint16_t *)ptr)[ofs * 4 + 0] = Math::make_half_float(p_color.r);
-			((uint16_t *)ptr)[ofs * 4 + 1] = Math::make_half_float(p_color.g);
-			((uint16_t *)ptr)[ofs * 4 + 2] = Math::make_half_float(p_color.b);
-			((uint16_t *)ptr)[ofs * 4 + 3] = Math::make_half_float(p_color.a);
-		} break;
-		case FORMAT_RGBE9995: {
-			((uint32_t *)ptr)[ofs] = p_color.to_rgbe9995();
-
 		} break;
 		default: {
 			ERR_FAIL_MSG("Can't set_pixel() on compressed image, sorry.");
@@ -2780,34 +2449,7 @@ void Image::normalmap_to_xy() {
 }
 
 Ref<Image> Image::rgbe_to_srgb() {
-	if (data.size() == 0) {
-		return Ref<Image>();
-	}
-
-	ERR_FAIL_COND_V(format != FORMAT_RGBE9995, Ref<Image>());
-
-	Ref<Image> new_image;
-	new_image.instance();
-	new_image->create(width, height, false, Image::FORMAT_RGB8);
-
-	lock();
-
-	new_image->lock();
-
-	for (int row = 0; row < height; row++) {
-		for (int col = 0; col < width; col++) {
-			new_image->set_pixel(col, row, get_pixel(col, row).to_srgb());
-		}
-	}
-
-	unlock();
-	new_image->unlock();
-
-	if (has_mipmaps()) {
-		new_image->generate_mipmaps();
-	}
-
-	return new_image;
+	return Ref<Image>();
 }
 
 void Image::bumpmap_to_normalmap(float bump_scale) {

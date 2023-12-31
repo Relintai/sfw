@@ -61,31 +61,6 @@ public:
 		FORMAT_RGF,
 		FORMAT_RGBF,
 		FORMAT_RGBAF,
-		FORMAT_RH, //half float
-		FORMAT_RGH,
-		FORMAT_RGBH,
-		FORMAT_RGBAH,
-		FORMAT_RGBE9995,
-		FORMAT_DXT1, //s3tc bc1
-		FORMAT_DXT3, //bc2
-		FORMAT_DXT5, //bc3
-		FORMAT_RGTC_R,
-		FORMAT_RGTC_RG,
-		FORMAT_BPTC_RGBA, //btpc bc7
-		FORMAT_BPTC_RGBF, //float bc6h
-		FORMAT_BPTC_RGBFU, //unsigned float bc6hu
-		FORMAT_PVRTC2, //pvrtc
-		FORMAT_PVRTC2A,
-		FORMAT_PVRTC4,
-		FORMAT_PVRTC4A,
-		FORMAT_ETC, //etc1
-		FORMAT_ETC2_R11, //etc2
-		FORMAT_ETC2_R11S, //signed, NOT srgb.
-		FORMAT_ETC2_RG11,
-		FORMAT_ETC2_RG11S,
-		FORMAT_ETC2_RGB8,
-		FORMAT_ETC2_RGBA8,
-		FORMAT_ETC2_RGB8A1,
 		FORMAT_MAX
 	};
 
@@ -99,14 +74,6 @@ public:
 		INTERPOLATE_LANCZOS,
 		/* INTERPOLATE_TRICUBIC, */
 		/* INTERPOLATE GAUSS */
-	};
-
-	enum CompressSource {
-		COMPRESS_SOURCE_GENERIC,
-		COMPRESS_SOURCE_SRGB,
-		COMPRESS_SOURCE_NORMAL,
-		COMPRESS_SOURCE_LAYERED,
-		COMPRESS_SOURCE_MAX,
 	};
 
 	bool write_lock;
@@ -268,8 +235,6 @@ public:
 	Rect2 get_used_rect() const;
 	Ref<Image> get_rect(const Rect2 &p_area) const;
 
-	static void set_compress_bc_func(void (*p_compress_func)(Image *, float, CompressSource));
-	static void set_compress_bptc_func(void (*p_compress_func)(Image *, float, CompressSource));
 	static String get_format_name(Format p_format);
 
 	Image(const char **p_xpm);
