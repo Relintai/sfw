@@ -17,9 +17,8 @@ public:
 		return _texture;
 	}
 
-	//TODO
-	//set_as_render_target()
-	//unset_render_target()
+	void set_as_render_target();
+	void unset_render_target();
 
 	void create_from_image(const Ref<Image> &img);
 
@@ -43,8 +42,12 @@ protected:
 	int _texture_index;
 	int _data_size;
 	int _mipmaps;
-	bool _render_target;
+
 	GLuint _texture;
+
+	int _fbo_width;
+	int _fbo_height;
+	GLuint _fbo;
 };
 
 #endif // TEXTURE_H

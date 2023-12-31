@@ -3,6 +3,18 @@
 #include "memory.h"
 #include <stdio.h>
 
+#include "window.h"
+
+void Texture::set_as_render_target() {
+	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+	glViewport(0, 0, _fbo_width, _fbo_height);
+}
+
+void Texture::unset_render_target() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
+}
+
 void Texture::create_from_image(const Ref<Image> &img) {
 	if (_image == img) {
 		return;
@@ -28,7 +40,6 @@ void Texture::create_from_image(const Ref<Image> &img) {
 Ref<Image> Texture::get_data() {
 	ERR_FAIL_COND_V(!_texture, Ref<Image>());
 	ERR_FAIL_COND_V(_data_size == 0, Ref<Image>());
-	//TODO Error if not render target
 
 	//GLES
 
@@ -256,8 +267,12 @@ Texture::Texture() {
 	_data_size = 0;
 	_texture_index = 0;
 	_flags = 0;
-	_render_target = false;
+
 	_texture_format = Image::FORMAT_RGBA8;
+
+	_fbo_width = 0;
+	_fbo_height = 0;
+	_fbo = 0;
 }
 
 Texture::~Texture() {
