@@ -1260,14 +1260,12 @@ void Variant::evaluate(const Operator &p_op, const Variant &p_a,
 				if (p_b.type == ARRAY) {
 					// e.g. "frog %s %d" % ["fish", 12]
 					const Array *args = reinterpret_cast<const Array *>(p_b._data._mem);
-					//TODO
-					//result = format->sprintf(*args, &error);
+					result = args->sprintf(*format, &error);
 				} else {
 					// e.g. "frog %d" % 12
 					Array args;
 					args.push_back(p_b);
-					//TODO
-					//result = format->sprintf(args, &error);
+					result = args.sprintf(*format, &error);
 				}
 				r_valid = !error;
 				_RETURN(result);

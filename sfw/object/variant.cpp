@@ -3728,10 +3728,7 @@ String vformat(const String &p_text, const Variant &p1, const Variant &p2, const
 	}
 
 	bool error = false;
-	//TODO
-	//String fmt = p_text.sprintf(args, &error);
-
-	String fmt;
+	String fmt = args.sprintf(p_text, &error);
 
 	ERR_FAIL_COND_V_MSG(error, String(), fmt);
 

@@ -12,6 +12,7 @@ class Variant;
 class ArrayPrivate;
 class Object;
 class StringName;
+class String;
 
 class Array {
 	mutable ArrayPrivate *_p;
@@ -78,6 +79,8 @@ public:
 	Variant max() const;
 
 	const void *id() const;
+
+	String sprintf(const String &p_format, bool *error) const;
 
 	Array(const Array &p_from);
 	Array();

@@ -316,6 +316,7 @@ public:
 	String lpad(int min_length, const String &character = " ") const;
 	String rpad(int min_length, const String &character = " ") const;
 
+	//Moved this to Array to simplify the library's design
 	//String sprintf(const Array &values, bool *error) const;
 
 	String quote(String quotechar = "\"") const;
