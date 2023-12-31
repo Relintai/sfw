@@ -71,8 +71,6 @@ class StringName {
 	friend void unregister_core_types();
 
 	static Mutex lock;
-	static void setup();
-	static void cleanup();
 	static bool configured;
 #ifdef DEBUG_ENABLED
 	struct DebugSortReferences {
@@ -177,6 +175,9 @@ public:
 			unref();
 		}
 	}
+
+	static void setup();
+	static void cleanup();
 };
 
 /*

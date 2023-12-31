@@ -8,6 +8,9 @@
 #include "game_application.h"
 #include "render_core/window.h"
 
+#include "core/pool_vector.h"
+#include "core/string_name.h"
+
 Application *application = NULL;
 
 void handle_frame() {
@@ -15,6 +18,10 @@ void handle_frame() {
 }
 
 int main(int argc, char **argv) {
+	//TODO centralize these
+	StringName::setup();
+	MemoryPool::setup();
+
 	AppWindow *w = memnew(AppWindow());
 	w->create(100, 0);
 
@@ -42,6 +49,9 @@ int main(int argc, char **argv) {
 	delete application;
 
 #endif // __EMSCRIPTEN__
+
+	StringName::cleanup();
+	MemoryPool::cleanup();
 
 	return 0;
 }

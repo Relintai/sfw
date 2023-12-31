@@ -1,21 +1,34 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include "core/hash_map.h"
+#include "core/rw_lock.h"
+#include "core/string_name.h"
 #include "core/ustring.h"
 #include "core/vector.h"
+#include "object/object_id.h"
+
+//#include "object/dictionary.h"
 
 /*************************************************************************/
 /*  object.h                                                             */
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#define SFW_OBJECT(m_class, m_inherits)                                                   \
+class ObjectRC;
+
+#define SFW_OBJECT(m_class, m_inherits)                                                    \
 private:                                                                                   \
 	void operator=(const m_class &p_rval) {}                                               \
                                                                                            \
 public:                                                                                    \
 	virtual String get_class() const override {                                            \
 		return String(#m_class);                                                           \
+	}                                                                                      \
+	virtual const StringName *_get_class_namev() const {                                   \
+		if (!_class_name)                                                                  \
+			_class_name = get_class_static();                                              \
+		return &_class_name;                                                               \
 	}                                                                                      \
 	static void *get_class_ptr_static() {                                                  \
 		static int ptr;                                                                    \
@@ -40,19 +53,34 @@ public:                                                                         
 	virtual bool is_class_ptr(void *p_ptr) const override {                                \
 		return (p_ptr == get_class_ptr_static()) ? true : m_inherits::is_class_ptr(p_ptr); \
 	}                                                                                      \
-                                                                                           \
 	static void get_valid_parents_static(Vector<String> *p_parents) {                      \
 		if (m_class::_get_valid_parents_static != m_inherits::_get_valid_parents_static) { \
 			m_class::_get_valid_parents_static(p_parents);                                 \
 		}                                                                                  \
-                                                                                           \
 		m_inherits::get_valid_parents_static(p_parents);                                   \
+	}                                                                                      \
+	_FORCE_INLINE_ void (Object::*_get_notification() const)(int) {                        \
+		return (void(Object::*)(int)) & m_class::_notification;                            \
+	}                                                                                      \
+	virtual void _notificationv(int p_notification, bool p_reversed) {                     \
+		if (!p_reversed)                                                                   \
+			m_inherits::_notificationv(p_notification, p_reversed);                        \
+		if (m_class::_get_notification() != m_inherits::_get_notification()) {             \
+			_notification(p_notification);                                                 \
+		}                                                                                  \
+		if (p_reversed)                                                                    \
+			m_inherits::_notificationv(p_notification, p_reversed);                        \
 	}                                                                                      \
                                                                                            \
 private:
 
 class Object {
 public:
+	enum {
+		NOTIFICATION_POSTINITIALIZE = 0,
+		NOTIFICATION_PREDELETE = 1
+	};
+
 	virtual String get_class() const { return "Object"; }
 	static void *get_class_ptr_static() {
 		static int ptr;
@@ -69,6 +97,45 @@ public:
 
 	static void get_valid_parents_static(Vector<String> *p_parents) {}
 	static void _get_valid_parents_static(Vector<String> *p_parents) {}
+
+	virtual const StringName *_get_class_namev() const {
+		if (!_class_name) {
+			_class_name = get_class_static();
+		}
+		return &_class_name;
+	}
+
+	_FORCE_INLINE_ const StringName &get_class_name() const {
+		if (!_class_ptr) {
+			return *_get_class_namev();
+		} else {
+			return *_class_ptr;
+		}
+	}
+
+	ObjectRC *_use_rc();
+
+	_FORCE_INLINE_ ObjectID get_instance_id() const {
+		return _instance_id;
+	}
+
+	void notification(int p_notification, bool p_reversed = false);
+	virtual String to_string();
+
+	bool _is_queued_for_deletion;
+	bool is_queued_for_deletion() const {
+		return _is_queued_for_deletion;
+	}
+
+	void cancel_free();
+
+	/*
+	bool has_meta(const String &p_name) const;
+	void set_meta(const String &p_name, const Variant &p_value);
+	void remove_meta(const String &p_name);
+	Variant get_meta(const String &p_name, const Variant &p_default = Variant()) const;
+	void get_meta_list(List<String> *p_list) const;
+	*/
 
 	Object();
 	virtual ~Object();
@@ -91,6 +158,76 @@ public:
 			return static_cast<const T *>(p_object);
 		else
 			return NULL;
+	}
+
+protected:
+	_FORCE_INLINE_ void (Object::*_get_notification() const)(int) {
+		return &Object::_notification;
+	}
+
+	virtual void _notificationv(int p_notification, bool p_reversed){};
+	void _notification(int p_notification){};
+
+	friend bool predelete_handler(Object *);
+	friend void postinitialize_handler(Object *);
+
+	int _predelete_ok;
+	bool _predelete();
+	void _postinitialize();
+
+	mutable StringName _class_name;
+	mutable const StringName *_class_ptr;
+
+	ObjectID _instance_id;
+	std::atomic<ObjectRC *> _rc;
+
+	//Dictionary metadata;
+};
+
+bool predelete_handler(Object *p_object);
+void postinitialize_handler(Object *p_object);
+
+class ObjectDB {
+	struct ObjectPtrHash {
+		static _FORCE_INLINE_ uint32_t hash(const Object *p_obj) {
+			union {
+				const Object *p;
+				unsigned long i;
+			} u;
+			u.p = p_obj;
+			return HashMapHasherDefault::hash((uint64_t)u.i);
+		}
+	};
+
+	static HashMap<ObjectID, Object *> instances;
+	static HashMap<Object *, ObjectID, ObjectPtrHash> instance_checks;
+
+	static ObjectID instance_counter;
+	friend class Object;
+	friend void unregister_core_types();
+
+	static RWLock rw_lock;
+	static void cleanup();
+	static ObjectID add_instance(Object *p_object);
+	static void remove_instance(Object *p_object);
+	friend void register_core_types();
+
+public:
+	typedef void (*DebugFunc)(Object *p_obj);
+
+	static Object *get_instance(ObjectID p_instance_id);
+	static void debug_objects(DebugFunc p_func);
+	static int get_object_count();
+
+	// This one may give false positives because a new object may be allocated at the same memory of a previously freed one
+	_FORCE_INLINE_ static bool instance_validate(Object *p_ptr) {
+		rw_lock.read_lock();
+
+		bool exists = instance_checks.has(p_ptr);
+
+		rw_lock.read_unlock();
+
+		return exists;
 	}
 };
 
