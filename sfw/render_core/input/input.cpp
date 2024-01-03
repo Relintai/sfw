@@ -5,13 +5,13 @@
 
 #include "input.h"
 
+#include "core/logger.h"
+#include "core/stime.h"
+#include "render_core/application.h"
 #include "render_core/input/default_controller_mappings.h"
 #include "render_core/input/input_map.h"
 #include "render_core/texture.h"
-#include "render_core/application.h"
 #include "render_core/window.h"
-#include "core/stime.h"
-#include "core/logger.h"
 
 Input *Input::get_singleton() {
 	return singleton;
@@ -70,11 +70,7 @@ bool Input::is_action_just_pressed(const StringName &p_action, bool p_exact) con
 	// Backward compatibility for legacy behavior, only return true if currently pressed.
 	bool pressed_requirement = legacy_just_pressed_behavior ? E->get().pressed : true;
 
-	if (Application::get_singleton()->is_in_physics_frame()) {
-		return pressed_requirement && E->get().pressed_physics_frame == Application::get_singleton()->get_physics_frames();
-	} else {
-		return pressed_requirement && E->get().pressed_idle_frame == Application::get_singleton()->get_idle_frames();
-	}
+	return pressed_requirement && E->get().pressed_idle_frame == Application::get_singleton()->get_idle_frames();
 }
 
 bool Input::is_action_just_released(const StringName &p_action, bool p_exact) const {
@@ -91,11 +87,7 @@ bool Input::is_action_just_released(const StringName &p_action, bool p_exact) co
 	// Backward compatibility for legacy behavior, only return true if currently released.
 	bool released_requirement = legacy_just_pressed_behavior ? !E->get().pressed : true;
 
-	if (Application::get_singleton()->is_in_physics_frame()) {
-		return released_requirement && E->get().released_physics_frame == Application::get_singleton()->get_physics_frames();
-	} else {
-		return released_requirement && E->get().released_idle_frame == Application::get_singleton()->get_idle_frames();
-	}
+	return released_requirement && E->get().released_idle_frame == Application::get_singleton()->get_idle_frames();
 }
 
 float Input::get_action_strength(const StringName &p_action, bool p_exact) const {
@@ -614,7 +606,7 @@ Point2i Input::warp_mouse_motion(const Ref<InputEventMouseMotion> &p_motion, con
 	const Point2i pos_local = p_motion->get_global_position() - p_rect.position;
 	const Point2i pos_warped(Math::fposmod(pos_local.x, p_rect.size.x), Math::fposmod(pos_local.y, p_rect.size.y));
 	//if (pos_warped != pos_local) {
-		//OS::get_singleton()->warp_mouse_position(pos_warped + p_rect.position);
+	//OS::get_singleton()->warp_mouse_position(pos_warped + p_rect.position);
 	//}
 
 	return rel_warped;
@@ -668,7 +660,6 @@ void Input::action_press(const StringName &p_action, float p_strength) {
 	// Create or retrieve existing action.
 	Action &action = action_state[p_action];
 
-	action.pressed_physics_frame = Application::get_singleton()->get_physics_frames();
 	action.pressed_idle_frame = Application::get_singleton()->get_idle_frames();
 	action.pressed = true;
 	action.exact = true;
@@ -680,7 +671,6 @@ void Input::action_release(const StringName &p_action) {
 	// Create or retrieve existing action.
 	Action &action = action_state[p_action];
 
-	action.released_physics_frame = Application::get_singleton()->get_physics_frames();
 	action.released_idle_frame = Application::get_singleton()->get_idle_frames();
 	action.pressed = false;
 	action.exact = true;
@@ -956,7 +946,10 @@ void Input::set_main_loop(Application *p_main_loop) {
 	main_loop = p_main_loop;
 }
 
-void Input::iteration(float p_step) {
+void Input::iteration(real_t p_step) {
+	if (is_using_input_buffering()) {
+		flush_buffered_events();
+	}
 }
 
 Input::Input() {
@@ -981,7 +974,7 @@ Input::Input() {
 	}
 
 	// If defined, parse SDL_GAMECONTROLLERCONFIG for possible new mappings/overrides.
-	String env_mapping = "";//OS::get_singleton()->get_environment("SDL_GAMECONTROLLERCONFIG");
+	String env_mapping = ""; //OS::get_singleton()->get_environment("SDL_GAMECONTROLLERCONFIG");
 	if (env_mapping != "") {
 		Vector<String> entries = env_mapping.split("\n");
 		for (int i = 0; i < entries.size(); i++) {
@@ -992,7 +985,7 @@ Input::Input() {
 		}
 	}
 
-	String env_ignore_devices = "";//OS::get_singleton()->get_environment("SDL_GAMECONTROLLER_IGNORE_DEVICES");
+	String env_ignore_devices = ""; //OS::get_singleton()->get_environment("SDL_GAMECONTROLLER_IGNORE_DEVICES");
 	if (!env_ignore_devices.empty()) {
 		Vector<String> entries = env_ignore_devices.split(",");
 		for (int i = 0; i < entries.size(); i++) {
@@ -1400,11 +1393,9 @@ void Input::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_em
 			if (!p_event->is_echo() && is_action_pressed(E->key(), false) != p_event->is_action_pressed(E->key())) {
 				if (p_event->is_action_pressed(E->key())) {
 					action.pressed = true;
-					action.pressed_physics_frame = Application::get_singleton()->get_physics_frames();
 					action.pressed_idle_frame = Application::get_singleton()->get_idle_frames();
 				} else {
 					action.pressed = false;
-					action.released_physics_frame = Application::get_singleton()->get_physics_frames();
 					action.released_idle_frame = Application::get_singleton()->get_idle_frames();
 				}
 
@@ -1439,7 +1430,7 @@ String Input::_hex_str(uint8_t p_byte) {
 Input *Input::singleton = nullptr;
 
 void Input::SpeedTrack::update(const Vector2 &p_delta_p) {
-	uint64_t tick = STime::time_us(); 
+	uint64_t tick = STime::time_us();
 	uint32_t tdiff = tick - last_tick;
 	float delta_t = tdiff / 1000000.0;
 	last_tick = tick;

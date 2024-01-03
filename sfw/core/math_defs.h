@@ -34,6 +34,7 @@
 #endif
 
 #define USEC_TO_SEC(m_usec) ((m_usec) / 1000000.0)
+#define SEC_TO_USEC(m_usec) ((m_usec) * 1000000.0)
 
 enum ClockDirection {
 	CLOCKWISE,

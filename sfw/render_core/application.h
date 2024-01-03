@@ -27,14 +27,6 @@ public:
 		return _idle_frames;
 	}
 
-	uint64_t get_physics_frames() const {
-		return _physics_frames;
-	}
-
-	bool is_in_physics_frame() const {
-		return _is_in_physics_frame;
-	}
-
 	void main_loop();
 
 	Application();
@@ -46,14 +38,14 @@ public:
 
 	static Application *get_singleton();
 
-	double frame_delta;
+	real_t frame_delta;
 
 protected:
 	static Application *_instance;
 
 	uint64_t _idle_frames;
-	uint64_t _physics_frames;
-	bool _is_in_physics_frame;
+
+	float _time_scale;
 };
 
 #endif // APPLICATION_H

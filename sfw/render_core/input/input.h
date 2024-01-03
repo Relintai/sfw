@@ -9,11 +9,11 @@
 #include "core/vector2i.h"
 #include "object/object.h"
 //#include "core/os/main_loop.h"
-#include "core/rb_set.h"
 #include "core/rb_map.h"
+#include "core/rb_set.h"
 #include "core/thread_safe.h"
-#include "object/reference.h"
 #include "object/psignal.h"
+#include "object/reference.h"
 #include "render_core/input/input_event.h"
 
 class Application;
@@ -178,7 +178,7 @@ public:
 	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options, const String &quote_style) const;
 
 	void set_main_loop(Application *p_main_loop);
-	void iteration(float p_step);
+	void iteration(real_t p_step);
 
 	Input();
 
@@ -283,9 +283,7 @@ protected:
 	};
 
 	struct Action {
-		uint64_t pressed_physics_frame;
 		uint64_t pressed_idle_frame;
-		uint64_t released_physics_frame;
 		uint64_t released_idle_frame;
 		bool pressed;
 		bool exact;
@@ -293,9 +291,7 @@ protected:
 		float raw_strength;
 
 		Action() {
-			pressed_physics_frame = UINT64_MAX;
 			pressed_idle_frame = UINT64_MAX;
-			released_physics_frame = UINT64_MAX;
 			released_idle_frame = UINT64_MAX;
 			pressed = false;
 			exact = true;
