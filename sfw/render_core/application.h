@@ -50,7 +50,7 @@ protected:
 
 	uint64_t _idle_frames;
 
-	float _time_scale;
+	real_t _time_scale;
 };
 
 #endif // APPLICATION_H

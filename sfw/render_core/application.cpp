@@ -71,6 +71,8 @@ void Application::main_loop() {
 	} else {
 		frame_delta = elapsed_seconds;
 	}
+
+	frame_delta *= _time_scale;
 }
 
 void Application::_init_window() {
@@ -84,6 +86,8 @@ Application::Application() {
 	target_fps = 60;
 
 	frame_delta = 0;
+
+	_time_scale = 1;
 
 	// TODO Move these to a central place in core!
 	StringName::setup();
