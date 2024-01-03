@@ -303,7 +303,7 @@ void Input::set_main_loop(Application *p_main_loop) {
 }
 
 void Input::iteration(real_t p_step) {
-	if (is_using_input_buffering()) {
+	if (use_input_buffering || use_accumulated_input) {
 		flush_buffered_events();
 	}
 }
@@ -312,7 +312,7 @@ Input::Input() {
 	singleton = this;
 
 	use_input_buffering = false;
-	use_accumulated_input = false;
+	use_accumulated_input = true;
 	mouse_button_mask = 0;
 	main_loop = NULL;
 	default_shape = CURSOR_ARROW;
