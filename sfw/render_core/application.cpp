@@ -96,10 +96,7 @@ Application::Application() {
 
 	// TODO add a helper static method
 	memnew(AppWindow());
-
-	if (!Input::get_singleton()) {
-		memnew(Input());
-	}
+	memnew(Input());
 
 	_init_window();
 }

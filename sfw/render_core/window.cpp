@@ -28,6 +28,7 @@
 #include "core/ustring.h"
 #include "core/vector4.h"
 #include "render_core/application.h"
+#include "render_core/input/input.h"
 
 /*
 static volatile float framerate = 0;
@@ -187,19 +188,17 @@ void AppWindow::window_hints(unsigned flags) {
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 
-
-/*
-#if defined(_WIN64) || defined(_WIN32)
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-#else
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
-*/
-
+	/*
+	#if defined(_WIN64) || defined(_WIN32)
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	#else
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+	#endif
+	*/
 
 	//glfwWindowHint( GLFW_RED_BITS, 8 );
 	//glfwWindowHint( GLFW_GREEN_BITS, 8 );
@@ -424,6 +423,8 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	//fwk_pre_init();
 
 	//fwk_post_init(mode->refreshRate);
+
+	Input::get_singleton()->_setup_window_callbacks();
 
 	return true;
 }

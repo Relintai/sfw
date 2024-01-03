@@ -13,6 +13,8 @@
 #include "render_core/texture.h"
 #include "render_core/window.h"
 
+#include "render_core/3rd_glfw3.h"
+
 Input *Input::get_singleton() {
 	return singleton;
 }
@@ -1005,6 +1007,48 @@ Input::Input() {
 			ignored_device_ids.insert(full_id);
 		}
 	}
+}
+
+void Input::GLFWkeyfunCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+	ERR_PRINT("GLFWkeyfunCallback");
+}
+void Input::GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint) {
+	ERR_PRINT("GLFWcharfunCallback");
+}
+void Input::GLFWcharmodsfunCallback(GLFWwindow *window, unsigned int codepoint, int mods) {
+	ERR_PRINT("GLFWcharmodsfunCallback");
+}
+void Input::GLFWmousebuttonfunCallback(GLFWwindow *window, int button, int action, int mods) {
+	ERR_PRINT("GLFWmousebuttonfunCallback");
+}
+void Input::GLFWcursorposfunCallback(GLFWwindow *window, double xpos, double ypos) {
+	ERR_PRINT("GLFWcursorposfunCallback");
+}
+void Input::GLFWcursorenterfunCallback(GLFWwindow *window, int entered) {
+	ERR_PRINT("GLFWcursorenterfunCallback");
+}
+void Input::GLFWscrollfunCallback(GLFWwindow *window, double xoffset, double yoffset) {
+	ERR_PRINT("GLFWscrollfunCallback");
+}
+void Input::GLFWdropfunCallback(GLFWwindow *window, int path_count, const char *paths[]) {
+	ERR_PRINT("GLFWdropfunCallback");
+}
+void Input::GLFWjoystickfunCallback(int jid, int event) {
+	ERR_PRINT("GLFWjoystickfunCallback");
+}
+
+void Input::_setup_window_callbacks() {
+	GLFWwindow *window = (GLFWwindow *)AppWindow::get_singleton()->get_handle();
+
+	glfwSetKeyCallback(window, &Input::GLFWkeyfunCallback);
+	glfwSetCharCallback(window, &Input::GLFWcharfunCallback);
+	glfwSetCharModsCallback(window, &Input::GLFWcharmodsfunCallback);
+	glfwSetMouseButtonCallback(window, &Input::GLFWmousebuttonfunCallback);
+	glfwSetCursorPosCallback(window, &Input::GLFWcursorposfunCallback);
+	glfwSetCursorEnterCallback(window, &Input::GLFWcursorenterfunCallback);
+	glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
+	glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
+	glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
 }
 
 Input::JoyEvent Input::_get_mapped_button_event(const JoyDeviceMapping &mapping, int p_button) {
