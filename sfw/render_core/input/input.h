@@ -30,8 +30,7 @@ public:
 	enum MouseMode {
 		MOUSE_MODE_VISIBLE,
 		MOUSE_MODE_HIDDEN,
-		MOUSE_MODE_CAPTURED,
-		MOUSE_MODE_CONFINED
+		MOUSE_MODE_CAPTURED
 	};
 
 #undef CursorShape
@@ -196,6 +195,7 @@ protected:
 	static void GLFWscrollfunCallback(GLFWwindow *window, double xoffset, double yoffset);
 	static void GLFWdropfunCallback(GLFWwindow *window, int path_count, const char *paths[]);
 	static void GLFWjoystickfunCallback(int jid, int event);
+	static void GLFWwindowfocusfunCallback(GLFWwindow *window, int focused);
 
 protected:
 	enum JoyType {

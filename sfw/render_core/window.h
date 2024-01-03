@@ -69,8 +69,14 @@ public:
 	void set_fullscreen(int enabled);
 	int has_fullscreen();
 
-	void set_cursor(int visible);
-	int has_cursor();
+	enum MouseMode {
+		MOUSE_MODE_VISIBLE, //=GLFW_CURSOR_NORMAL
+		MOUSE_MODE_HIDDEN, //=GLFW_CURSOR_HIDDEN
+		MOUSE_MODE_CAPTURED //=GLFW_CURSOR_DISABLED
+	};
+
+	void set_mouse_mode(MouseMode p_mode);
+	MouseMode get_mouse_mode() const;
 
 	void set_pause(int paused);
 	int has_pause();
@@ -93,6 +99,7 @@ public:
 
 	double get_fps();
 	double get_fps_target();
+
 	void fps_lock(float fps);
 	void fps_unlock();
 

@@ -826,7 +826,7 @@ void AppWindow::set_focus() {
 	glfwFocusWindow(_window);
 }
 int AppWindow::has_focus() {
-	return !!glfwGetWindowAttrib(_window, GLFW_FOCUSED);
+	return glfwGetWindowAttrib(_window, GLFW_FOCUSED);
 }
 
 void AppWindow::create_default_cursors() {
@@ -856,17 +856,33 @@ void AppWindow::set_cursor_shape(unsigned mode) {
 
 	create_default_cursors();
 
-	if (mode == CURSOR_SW_AUTO) { // UI (nuklear) driven cursor
-		glfwSetCursor(_window, cursors[0]);
+	glfwSetCursor(_window, mode < 7 ? cursors[mode] : NULL);
+}
+
+void AppWindow::set_mouse_mode(MouseMode p_mode) {
+	int im;
+
+	if (p_mode == MOUSE_MODE_HIDDEN) {
+		im = GLFW_CURSOR_HIDDEN;
+	} else if (p_mode == MOUSE_MODE_CAPTURED) {
+		im = GLFW_CURSOR_DISABLED;
 	} else {
-		glfwSetCursor(_window, mode < 7 ? cursors[mode] : NULL);
+		//MOUSE_MODE_VISIBLE
+		im = GLFW_CURSOR_NORMAL;
 	}
+
+	glfwSetInputMode(_window, GLFW_CURSOR, im);
 }
-void AppWindow::set_cursor(int visible) {
-	glfwSetInputMode(_window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-}
-int AppWindow::has_cursor() {
-	return glfwGetInputMode(_window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL;
+AppWindow::MouseMode AppWindow::get_mouse_mode() const {
+	int im = glfwGetInputMode(_window, GLFW_CURSOR);
+
+	if (im == GLFW_CURSOR_HIDDEN) {
+		return MOUSE_MODE_HIDDEN;
+	} else if (im == GLFW_CURSOR_DISABLED) {
+		return MOUSE_MODE_CAPTURED;
+	}
+
+	return MOUSE_MODE_VISIBLE;
 }
 
 void AppWindow::set_visible(int visible) {

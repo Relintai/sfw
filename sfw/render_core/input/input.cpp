@@ -20,13 +20,11 @@ Input *Input::get_singleton() {
 }
 
 void Input::set_mouse_mode(MouseMode p_mode) {
-	//ERR_FAIL_INDEX((int)p_mode, 4);
-	//OS::get_singleton()->set_mouse_mode((OS::MouseMode)p_mode);
+	AppWindow::get_singleton()->set_mouse_mode((AppWindow::MouseMode)p_mode);
 }
 
 Input::MouseMode Input::get_mouse_mode() const {
-	//return (MouseMode)OS::get_singleton()->get_mouse_mode();
-	return MOUSE_MODE_VISIBLE;
+	return (MouseMode)AppWindow::get_singleton()->get_mouse_mode();
 }
 
 bool Input::is_key_pressed(int p_scancode) const {
@@ -1010,7 +1008,6 @@ Input::Input() {
 }
 
 void Input::GLFWkeyfunCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-	ERR_PRINT("GLFWkeyfunCallback");
 }
 void Input::GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint) {
 	ERR_PRINT("GLFWcharfunCallback");
@@ -1037,18 +1034,30 @@ void Input::GLFWjoystickfunCallback(int jid, int event) {
 	ERR_PRINT("GLFWjoystickfunCallback");
 }
 
+void Input::GLFWwindowfocusfunCallback(GLFWwindow *window, int focused) {
+	Input *self = Input::get_singleton();
+
+	if (focused) {
+		self->main_loop->notification(Application::NOTIFICATION_WM_FOCUS_IN);
+	} else {
+		self->release_pressed_events();
+		self->main_loop->notification(Application::NOTIFICATION_WM_FOCUS_OUT);
+	}
+}
+
 void Input::_setup_window_callbacks() {
 	GLFWwindow *window = (GLFWwindow *)AppWindow::get_singleton()->get_handle();
 
 	glfwSetKeyCallback(window, &Input::GLFWkeyfunCallback);
-	glfwSetCharCallback(window, &Input::GLFWcharfunCallback);
-	glfwSetCharModsCallback(window, &Input::GLFWcharmodsfunCallback);
+	//glfwSetCharCallback(window, &Input::GLFWcharfunCallback);
+	//glfwSetCharModsCallback(window, &Input::GLFWcharmodsfunCallback);
 	glfwSetMouseButtonCallback(window, &Input::GLFWmousebuttonfunCallback);
 	glfwSetCursorPosCallback(window, &Input::GLFWcursorposfunCallback);
 	glfwSetCursorEnterCallback(window, &Input::GLFWcursorenterfunCallback);
 	glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
 	glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
 	glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
+	glfwSetWindowFocusCallback(window, &Input::GLFWwindowfocusfunCallback);
 }
 
 Input::JoyEvent Input::_get_mapped_button_event(const JoyDeviceMapping &mapping, int p_button) {
