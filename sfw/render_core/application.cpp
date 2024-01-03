@@ -87,6 +87,7 @@ Application::Application() {
 	MemoryPool::setup();
 	CoreStringNames::create();
 
+    // TODO add a helper static method
 	memnew(AppWindow());
 
 	if (!Input::get_singleton()) {
@@ -142,6 +143,10 @@ Application::~Application() {
 	StringName::cleanup();
 	MemoryPool::cleanup();
 	CoreStringNames::free();
+
+    // TODO add a helper static method
+	memdelete(AppWindow::get_singleton());
+	memdelete(Input::get_singleton());
 
 	//SDL_DestroyWindow(window);
 
