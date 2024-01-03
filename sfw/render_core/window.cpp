@@ -483,10 +483,6 @@ int AppWindow::frame_begin() {
 
 	glfwSetWindowTitle(_window, title);
 
-	//input_update();
-
-	Application::get_singleton()->render();
-
 	return 1;
 }
 

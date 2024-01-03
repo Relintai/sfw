@@ -40,11 +40,10 @@ public:
 		return _idle_frames;
 	}
 
-	void core_loop();
 	void main_loop();
 
-	_FORCE_INLINE_ void core_loop_static() {
-		Application::get_singleton()->core_loop();
+	_FORCE_INLINE_ void main_loop_static() {
+		Application::get_singleton()->main_loop();
 	}
 
 	Application();

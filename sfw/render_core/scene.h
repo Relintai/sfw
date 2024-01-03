@@ -2,8 +2,7 @@
 #define SCENE_H
 
 #include "object/reference.h"
-
-class InputEvent;
+#include "render_core/input/input_event.h"
 
 class Scene : public Reference {
 	SFW_OBJECT(Scene, Reference);

@@ -8,10 +8,10 @@ int main(int argc, char **argv) {
 	Application *application = memnew(GameApplication());
 
 #ifdef __EMSCRIPTEN__
-	emscripten_set_main_loop(&Application::core_loop_static, 0, 1);
+	emscripten_set_main_loop(&Application::main_loop_static, 0, 1);
 #else
 	while (application->running) {
-		application->core_loop();
+		application->main_loop();
 	}
 #endif // __EMSCRIPTEN__
 

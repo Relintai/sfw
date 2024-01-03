@@ -4,6 +4,7 @@
 
 #include "core/stime.h"
 #include "render_core/input/input.h"
+#include "render_core/input/input_map.h"
 #include "render_core/window.h"
 
 #include "core/pool_vector.h"
@@ -28,21 +29,15 @@ void Application::render() {
 	scene->render();
 }
 
-void Application::core_loop() {
-	AppWindow *w = AppWindow::get_singleton();
-
-	if (w->frame_begin()) { // calls Application::main_loop()
-		//w->resize();
-		//w->render_callback(loopArg);
-		w->frame_end();
-		w->frame_swap();
-	} else {
-		w->shutdown();
-	}
-}
-
 void Application::main_loop() {
 	uint64_t start = STime::time_us();
+
+	AppWindow *w = AppWindow::get_singleton();
+
+	if (!w->frame_begin()) { // calls Application::main_loop()
+		w->shutdown();
+		return;
+	}
 
 	//handle input
 	Input::get_singleton()->iteration(frame_delta);
@@ -73,6 +68,9 @@ void Application::main_loop() {
 	}
 
 	frame_delta *= _time_scale;
+
+	w->frame_end();
+	w->frame_swap();
 }
 
 void Application::_init_window() {
@@ -96,6 +94,7 @@ Application::Application() {
 
 	// TODO add a helper static method
 	memnew(AppWindow());
+	memnew(InputMap());
 	memnew(Input());
 	Input::get_singleton()->set_main_loop(this);
 
@@ -112,6 +111,7 @@ Application::~Application() {
 	// TODO add a helper static method
 	memdelete(AppWindow::get_singleton());
 	memdelete(Input::get_singleton());
+	memdelete(InputMap::get_singleton());
 }
 
 Application *Application::get_singleton() {

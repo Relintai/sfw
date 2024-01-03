@@ -4,95 +4,66 @@
 
 #include "core/memory.h"
 #include "render_core/3rd_glad.h"
+#include "render_core/input/keyboard.h"
 #include "render_core/mesh_utils.h"
 
-void GameScene::event() {
-	/*
-	switch (ev.type) {
-		case SDL_WINDOWEVENT: {
-			switch (ev.window.event) {
-				case SDL_WINDOWEVENT_SIZE_CHANGED: {
-					int width = ev.window.data1;
-					int height = ev.window.data2;
+void GameScene::input_event(const Ref<InputEvent> &event) {
+	//ERR_PRINT(event->as_text());
 
-					float ar = static_cast<float>(width) / static_cast<float>(height);
+	Ref<InputEventKey> k = event;
 
-					camera->width = camera->height * ar;
-
-					glViewport(0, 0, width, height);
-
-					break;
-				}
-			}
-
-			break;
+	if (k.is_valid()) {
+		if (k->is_echo()) {
+			return;
 		}
-		case SDL_KEYDOWN: {
 
-			if (ev.key.keysym.scancode == SDL_SCANCODE_A) {
-				left = true;
-			} else if (ev.key.keysym.scancode == SDL_SCANCODE_W) {
-				up = true;
-			} else if (ev.key.keysym.scancode == SDL_SCANCODE_S) {
-				down = true;
-			} else if (ev.key.keysym.scancode == SDL_SCANCODE_D) {
-				right = true;
-			}
+		uint32_t scancode = k->get_scancode();
+		bool pressed = k->is_pressed();
 
-			break;
+		if (scancode == KEY_W) {
+			up = pressed;
+		} else if (scancode == KEY_A) {
+			left = pressed;
+		} else if (scancode == KEY_S) {
+			down = pressed;
+		} else if (scancode == KEY_D) {
+			right = pressed;
 		}
-		case SDL_KEYUP: {
 
-			if (ev.key.keysym.scancode == SDL_SCANCODE_A) {
-				left = false;
-			} else if (ev.key.keysym.scancode == SDL_SCANCODE_W) {
-				up = false;
-			} else if (ev.key.keysym.scancode == SDL_SCANCODE_S) {
-				down = false;
-			} else if (ev.key.keysym.scancode == SDL_SCANCODE_D) {
-				right = false;
-			}
+		return;
+	}
 
-			break;
+	Ref<InputEventMouseMotion> mm = event;
+
+	if (mm.is_valid()) {
+		if (mm->get_button_mask() & BUTTON_MASK_LEFT) {
+			tile_map->transform.translate(mm->get_relative());
 		}
 	}
-	*/
 }
 
 void GameScene::update(float delta) {
-	/*
+	Vector2 trn;
+
 	if (up) {
-		sprite->position.y += delta * 3.0;
+		trn.y -= delta * 30.0;
 	}
 
 	if (down) {
-		sprite->position.y -= delta * 3.0;
+		trn.y += delta * 30.0;
 	}
 
 	if (left) {
-		sprite->position.x -= delta * 3.0;
+		trn.x -= delta * 30.0;
 	}
 
 	if (right) {
-		sprite->position.x += delta * 3.0;
+		trn.x += delta * 30.0;
 	}
 
-	if (sprite->position.x < 1.5) {
-		sprite->position.x = 1.5;
+	if (up || down || left || right) {
+		sprite->transform.translate(trn);
 	}
-
-	if (sprite->position.x > 14.5) {
-		sprite->position.x = 14.5;
-	}
-
-	if (sprite->position.y < 1.5) {
-		sprite->position.y = 1.5;
-	}
-
-	if (sprite->position.y > 14.5) {
-		sprite->position.y = 14.5;
-	}
-	*/
 }
 
 void GameScene::render() {
@@ -126,12 +97,10 @@ void GameScene::render() {
 }
 
 GameScene::GameScene() {
-	/*
 	left = false;
 	right = false;
 	up = false;
 	down = false;
-	*/
 
 	//int w;
 	//int h;
@@ -195,7 +164,7 @@ GameScene::GameScene() {
 	//camera->position.z = -2;
 	t.origin.z -= 2;
 	camera->set_camera_transform(t);
-	
+
 	camera->screen_aspect_ratio = 1920.0 / 1080.0;
 
 	camera_2d = memnew(Camera2D);

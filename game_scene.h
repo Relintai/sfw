@@ -20,18 +20,17 @@ class GameScene : public Scene {
 	SFW_OBJECT(GameScene, Scene);
 
 public:
-	virtual void event();
+	virtual void input_event(const Ref<InputEvent> &event);
 	virtual void update(float delta);
 	virtual void render();
 
 	GameScene();
 	~GameScene();
-	/*
+
 	bool left;
 	bool right;
 	bool up;
 	bool down;
-	*/
 
 	Ref<Image> image;
 	Texture *texture;

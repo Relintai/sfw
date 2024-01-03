@@ -186,6 +186,11 @@ public:
 	void _setup_window_callbacks();
 
 protected:
+	static int glfw_to_sfw_code(int glfw_code);
+
+	unsigned int get_mouse_button_state(unsigned int p_button, int p_type);
+	static void get_key_modifier_state(int mods, Ref<InputEventWithModifiers> state);
+
 	static void GLFWkeyfunCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
 	static void GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint);
 	static void GLFWcharmodsfunCallback(GLFWwindow *window, unsigned int codepoint, int mods);
@@ -343,8 +348,20 @@ protected:
 	Vector3 magnetometer;
 	Vector3 gyroscope;
 	Vector2 mouse_pos;
+
 	Application *main_loop;
 	bool legacy_just_pressed_behavior;
+
+	Point2 last_mouse_pos;
+	bool last_mouse_pos_valid;
+	Point2i last_click_pos;
+	uint64_t last_click_ms;
+	int last_click_button_index;
+	uint32_t last_button_state;
+
+	int last_key_modifier_state;
+
+	bool window_has_focus;
 
 	RBMap<StringName, Action> action_state;
 

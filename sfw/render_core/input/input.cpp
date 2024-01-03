@@ -10,6 +10,7 @@
 #include "render_core/application.h"
 #include "render_core/input/default_controller_mappings.h"
 #include "render_core/input/input_map.h"
+#include "render_core/input/keyboard.h"
 #include "render_core/texture.h"
 #include "render_core/window.h"
 
@@ -956,7 +957,7 @@ Input::Input() {
 	singleton = this;
 
 	use_input_buffering = false;
-	use_accumulated_input = true;
+	use_accumulated_input = false;
 	mouse_button_mask = 0;
 	emulate_touch_from_mouse = false;
 	emulate_mouse_from_touch = false;
@@ -964,6 +965,14 @@ Input::Input() {
 	//main_loop = nullptr;
 	default_shape = CURSOR_ARROW;
 	fallback_mapping = -1;
+	window_has_focus = true;
+
+	last_mouse_pos_valid = false;
+	last_click_ms = 0;
+	last_click_button_index = 0;
+	last_button_state = 0;
+
+	last_key_modifier_state = 0;
 
 	// Parse default mappings.
 	{
@@ -1007,7 +1016,226 @@ Input::Input() {
 	}
 }
 
-void Input::GLFWkeyfunCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) {
+	unsigned int mask = 1 << (p_button - 1);
+
+	if (p_action == GLFW_PRESS) {
+		last_button_state |= mask;
+	} else {
+		last_button_state &= ~mask;
+	}
+
+	return last_button_state;
+}
+
+void Input::get_key_modifier_state(int mods, Ref<InputEventWithModifiers> state) {
+	state->set_shift((mods & GLFW_MOD_SHIFT));
+	state->set_control((mods & GLFW_MOD_CONTROL));
+	state->set_alt((mods & GLFW_MOD_ALT)); //altgr should not count as alt
+	state->set_metakey((mods & GLFW_MOD_SUPER));
+}
+
+struct GLFWKeyMap {
+	int glfw_code;
+	int sfw_code;
+} glfw_keymap[] = {
+	/* The unknown key */
+	{ GLFW_KEY_UNKNOWN, 0 },
+
+	/* Printable keys */
+	{ GLFW_KEY_SPACE, KEY_SPACE },
+	{ GLFW_KEY_APOSTROPHE, KEY_APOSTROPHE },
+	{ GLFW_KEY_COMMA, KEY_COMMA },
+	{ GLFW_KEY_MINUS, KEY_MINUS },
+	{ GLFW_KEY_PERIOD, KEY_PERIOD },
+	{ GLFW_KEY_SLASH, KEY_SLASH },
+	{ GLFW_KEY_0, KEY_0 },
+	{ GLFW_KEY_1, KEY_1 },
+	{ GLFW_KEY_2, KEY_2 },
+	{ GLFW_KEY_3, KEY_3 },
+	{ GLFW_KEY_4, KEY_4 },
+	{ GLFW_KEY_5, KEY_5 },
+	{ GLFW_KEY_6, KEY_6 },
+	{ GLFW_KEY_7, KEY_7 },
+	{ GLFW_KEY_8, KEY_8 },
+	{ GLFW_KEY_9, KEY_9 },
+	{ GLFW_KEY_SEMICOLON, KEY_SEMICOLON },
+	{ GLFW_KEY_EQUAL, KEY_EQUAL },
+	{ GLFW_KEY_A, KEY_A },
+	{ GLFW_KEY_B, KEY_B },
+	{ GLFW_KEY_C, KEY_C },
+	{ GLFW_KEY_D, KEY_D },
+	{ GLFW_KEY_E, KEY_E },
+	{ GLFW_KEY_F, KEY_F },
+	{ GLFW_KEY_G, KEY_G },
+	{ GLFW_KEY_H, KEY_H },
+	{ GLFW_KEY_I, KEY_I },
+	{ GLFW_KEY_J, KEY_J },
+	{ GLFW_KEY_K, KEY_K },
+	{ GLFW_KEY_L, KEY_L },
+	{ GLFW_KEY_M, KEY_M },
+	{ GLFW_KEY_N, KEY_N },
+	{ GLFW_KEY_O, KEY_O },
+	{ GLFW_KEY_P, KEY_P },
+	{ GLFW_KEY_Q, KEY_Q },
+	{ GLFW_KEY_R, KEY_R },
+	{ GLFW_KEY_S, KEY_S },
+	{ GLFW_KEY_T, KEY_T },
+	{ GLFW_KEY_U, KEY_U },
+	{ GLFW_KEY_V, KEY_V },
+	{ GLFW_KEY_W, KEY_W },
+	{ GLFW_KEY_X, KEY_X },
+	{ GLFW_KEY_Y, KEY_Y },
+	{ GLFW_KEY_Z, KEY_Z },
+	{ GLFW_KEY_LEFT_BRACKET, KEY_BRACKETLEFT },
+	{ GLFW_KEY_BACKSLASH, KEY_BACKSLASH },
+	{ GLFW_KEY_RIGHT_BRACKET, KEY_BRACKETRIGHT },
+	{ GLFW_KEY_GRAVE_ACCENT, KEY_QUOTELEFT },
+	{ GLFW_KEY_WORLD_1, KEY_EXCLAMDOWN },
+	{ GLFW_KEY_WORLD_2, KEY_CENT },
+
+	/* Function keys */
+	{ GLFW_KEY_ESCAPE, KEY_ESCAPE },
+	{ GLFW_KEY_ENTER, KEY_ENTER },
+	{ GLFW_KEY_TAB, KEY_TAB },
+	{ GLFW_KEY_BACKSPACE, KEY_BACKSPACE },
+	{ GLFW_KEY_INSERT, KEY_INSERT },
+	{ GLFW_KEY_DELETE, KEY_DELETE },
+	{ GLFW_KEY_RIGHT, KEY_RIGHT },
+	{ GLFW_KEY_LEFT, KEY_LEFT },
+	{ GLFW_KEY_DOWN, KEY_DOWN },
+	{ GLFW_KEY_UP, KEY_UP },
+	{ GLFW_KEY_PAGE_UP, KEY_PAGEUP },
+	{ GLFW_KEY_PAGE_DOWN, KEY_PAGEDOWN },
+	{ GLFW_KEY_HOME, KEY_HOME },
+	{ GLFW_KEY_END, KEY_END },
+	{ GLFW_KEY_CAPS_LOCK, KEY_CAPSLOCK },
+	{ GLFW_KEY_SCROLL_LOCK, KEY_SCROLLLOCK },
+	{ GLFW_KEY_NUM_LOCK, KEY_NUMLOCK },
+	{ GLFW_KEY_PRINT_SCREEN, KEY_PRINT },
+	{ GLFW_KEY_PAUSE, KEY_PAUSE },
+	{ GLFW_KEY_F1, KEY_F1 },
+	{ GLFW_KEY_F2, KEY_F2 },
+	{ GLFW_KEY_F3, KEY_F3 },
+	{ GLFW_KEY_F4, KEY_F4 },
+	{ GLFW_KEY_F5, KEY_F5 },
+	{ GLFW_KEY_F6, KEY_F6 },
+	{ GLFW_KEY_F7, KEY_F7 },
+	{ GLFW_KEY_F8, KEY_F8 },
+	{ GLFW_KEY_F9, KEY_F9 },
+	{ GLFW_KEY_F10, KEY_F10 },
+	{ GLFW_KEY_F11, KEY_F11 },
+	{ GLFW_KEY_F12, KEY_F12 },
+	{ GLFW_KEY_F13, KEY_F13 },
+	{ GLFW_KEY_F14, KEY_F14 },
+	{ GLFW_KEY_F15, KEY_F15 },
+	{ GLFW_KEY_F16, KEY_F16 },
+	{ GLFW_KEY_F17, 0 },
+	{ GLFW_KEY_F18, 0 },
+	{ GLFW_KEY_F19, 0 },
+	{ GLFW_KEY_F20, 0 },
+	{ GLFW_KEY_F21, 0 },
+	{ GLFW_KEY_F22, 0 },
+	{ GLFW_KEY_F23, 0 },
+	{ GLFW_KEY_F24, 0 },
+	{ GLFW_KEY_F25, 0 },
+	{ GLFW_KEY_KP_0, KEY_KP_0 },
+	{ GLFW_KEY_KP_1, KEY_KP_1 },
+	{ GLFW_KEY_KP_2, KEY_KP_2 },
+	{ GLFW_KEY_KP_3, KEY_KP_3 },
+	{ GLFW_KEY_KP_4, KEY_KP_4 },
+	{ GLFW_KEY_KP_5, KEY_KP_5 },
+	{ GLFW_KEY_KP_6, KEY_KP_6 },
+	{ GLFW_KEY_KP_7, KEY_KP_7 },
+	{ GLFW_KEY_KP_8, KEY_KP_8 },
+	{ GLFW_KEY_KP_9, KEY_KP_9 },
+	{ GLFW_KEY_KP_DECIMAL, KEY_KP_PERIOD },
+	{ GLFW_KEY_KP_DIVIDE, KEY_KP_DIVIDE },
+	{ GLFW_KEY_KP_MULTIPLY, KEY_KP_MULTIPLY },
+	{ GLFW_KEY_KP_SUBTRACT, KEY_KP_SUBTRACT },
+	{ GLFW_KEY_KP_ADD, KEY_KP_ADD },
+	{ GLFW_KEY_KP_ENTER, KEY_KP_ENTER },
+	{ GLFW_KEY_KP_EQUAL, KEY_EQUAL },
+	{ GLFW_KEY_LEFT_SHIFT, KEY_SHIFT },
+	{ GLFW_KEY_LEFT_CONTROL, KEY_CONTROL },
+	{ GLFW_KEY_LEFT_ALT, KEY_ALT },
+	{ GLFW_KEY_LEFT_SUPER, KEY_SUPER_L },
+	{ GLFW_KEY_RIGHT_SHIFT, KEY_SHIFT },
+	{ GLFW_KEY_RIGHT_CONTROL, KEY_CONTROL },
+	{ GLFW_KEY_RIGHT_ALT, 0 }, //altgr?
+	{ GLFW_KEY_RIGHT_SUPER, KEY_SUPER_R },
+	{ GLFW_KEY_MENU, KEY_MENU },
+	{ 0, 0 },
+};
+
+int Input::glfw_to_sfw_code(int glfw_code) {
+	for (int i = 0; glfw_keymap[i].glfw_code; i++) {
+		if (glfw_keymap[i].glfw_code == glfw_code) {
+			return glfw_keymap[i].sfw_code;
+		}
+	}
+
+	return 0;
+}
+
+void Input::GLFWkeyfunCallback(GLFWwindow *window, int glfw_keycode, int scancode, int action, int mods) {
+	Input *self = Input::get_singleton();
+
+	self->last_key_modifier_state = mods;
+
+	unsigned int keycode = glfw_to_sfw_code(glfw_keycode);
+	unsigned int physical_keycode = keycode;
+	unsigned int unicode = scancode;
+
+	bool keypress = action == GLFW_PRESS;
+	bool echo = action == GLFW_REPEAT;
+
+	if (physical_keycode == 0 && keycode == 0 && unicode == 0) {
+		return;
+	}
+
+	if (keycode == 0) {
+		keycode = physical_keycode;
+	}
+
+	Ref<InputEventKey> k;
+	k.instance();
+
+	get_key_modifier_state(mods, k);
+
+	k->set_pressed(keypress);
+
+	if (keycode >= 'a' && keycode <= 'z') {
+		keycode -= 'a' - 'A';
+	}
+
+	k->set_scancode(keycode);
+	k->set_physical_scancode(physical_keycode);
+	k->set_unicode(unicode);
+	k->set_echo(echo);
+
+	//don't set mod state if modifier keys are released by themselves
+	//else event.is_action() will not work correctly here
+	if (!k->is_pressed()) {
+		if (k->get_scancode() == KEY_SHIFT) {
+			k->set_shift(false);
+		} else if (k->get_scancode() == KEY_CONTROL) {
+			k->set_control(false);
+		} else if (k->get_scancode() == KEY_ALT) {
+			k->set_alt(false);
+		} else if (k->get_scancode() == KEY_META) {
+			k->set_metakey(false);
+		}
+	}
+
+	bool last_is_pressed = Input::get_singleton()->is_key_pressed(k->get_scancode());
+	if (k->is_pressed()) {
+		if (last_is_pressed) {
+			k->set_echo(true);
+		}
+	}
+
+	self->parse_input_event(k);
 }
 void Input::GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint) {
 	ERR_PRINT("GLFWcharfunCallback");
@@ -1015,14 +1243,111 @@ void Input::GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint) {
 void Input::GLFWcharmodsfunCallback(GLFWwindow *window, unsigned int codepoint, int mods) {
 	ERR_PRINT("GLFWcharmodsfunCallback");
 }
+
 void Input::GLFWmousebuttonfunCallback(GLFWwindow *window, int button, int action, int mods) {
-	ERR_PRINT("GLFWmousebuttonfunCallback");
+	Input *self = Input::get_singleton();
+
+	self->last_key_modifier_state = mods;
+
+	bool pressed = action == GLFW_PRESS;
+
+	Vector2 last_mouse_pos = self->last_mouse_pos;
+
+	Ref<InputEventMouseButton> mb;
+	mb.instance();
+
+	get_key_modifier_state(mods, mb);
+
+	mb->set_button_index(button + 1);
+	mb->set_button_mask(self->get_mouse_button_state(mb->get_button_index(), action));
+	mb->set_position(last_mouse_pos);
+	mb->set_global_position(mb->get_position());
+
+	mb->set_pressed(pressed);
+
+	if (pressed) {
+		uint64_t diff = STime::time_us() / 1000 - self->last_click_ms;
+
+		if (mb->get_button_index() == self->last_click_button_index) {
+			if (diff < 400 && Point2(self->last_click_pos).distance_to(last_mouse_pos) < 5) {
+				self->last_click_ms = 0;
+				self->last_click_pos = Point2(-100, -100);
+				self->last_click_button_index = -1;
+				mb->set_doubleclick(true);
+			}
+
+		} else if (mb->get_button_index() < 4 || mb->get_button_index() > 7) {
+			self->last_click_button_index = mb->get_button_index();
+		}
+
+		if (!mb->is_doubleclick()) {
+			self->last_click_ms += diff;
+			self->last_click_pos = last_mouse_pos;
+		}
+	}
+
+	self->parse_input_event(mb);
 }
 void Input::GLFWcursorposfunCallback(GLFWwindow *window, double xpos, double ypos) {
-	ERR_PRINT("GLFWcursorposfunCallback");
+	Input *self = Input::get_singleton();
+
+	Point2 pos(xpos, ypos);
+
+	if (!self->last_mouse_pos_valid) {
+		self->last_mouse_pos = pos;
+		self->last_mouse_pos_valid = true;
+	}
+
+	Point2 rel = pos - self->last_mouse_pos;
+
+	MouseMode mouse_mode = self->get_mouse_mode();
+
+	if (mouse_mode == MOUSE_MODE_CAPTURED) {
+		int w = AppWindow::get_singleton()->get_width();
+		int h = AppWindow::get_singleton()->get_height();
+
+		pos = Point2i(w / 2, h / 2);
+	}
+
+	Ref<InputEventMouseMotion> mm;
+	mm.instance();
+	mm->set_pressure((self->last_button_state & (1 << (BUTTON_LEFT - 1))) ? 1.0f : 0.0f);
+
+	// Make the absolute position integral so it doesn't look _too_ weird :)
+	Point2i posi(pos);
+
+	get_key_modifier_state(self->last_key_modifier_state, mm);
+	mm->set_button_mask(self->last_button_state);
+	mm->set_position(posi);
+	mm->set_global_position(posi);
+	mm->set_speed(self->get_last_mouse_speed());
+
+	mm->set_relative(rel);
+
+	self->last_mouse_pos = pos;
+
+	// printf("rel: %d,%d\n", rel.x, rel.y );
+	// Don't propagate the motion event unless we have focus
+	// this is so that the relative motion doesn't get messed up
+	// after we regain focus.
+	if (self->window_has_focus || mouse_mode != MOUSE_MODE_CAPTURED) {
+		self->parse_input_event(mm);
+	}
 }
 void Input::GLFWcursorenterfunCallback(GLFWwindow *window, int entered) {
-	ERR_PRINT("GLFWcursorenterfunCallback");
+	Input *self = Input::get_singleton();
+
+	self->last_mouse_pos_valid = false;
+
+	if (entered) {
+		if (self->main_loop && (self->get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
+			self->main_loop->notification(Application::NOTIFICATION_WM_MOUSE_ENTER);
+		}
+	} else {
+		if (self->main_loop && (self->get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
+			self->main_loop->notification(Application::NOTIFICATION_WM_MOUSE_EXIT);
+		}
+	}
 }
 void Input::GLFWscrollfunCallback(GLFWwindow *window, double xoffset, double yoffset) {
 	ERR_PRINT("GLFWscrollfunCallback");
@@ -1036,6 +1361,8 @@ void Input::GLFWjoystickfunCallback(int jid, int event) {
 
 void Input::GLFWwindowfocusfunCallback(GLFWwindow *window, int focused) {
 	Input *self = Input::get_singleton();
+
+	self->window_has_focus = focused;
 
 	if (focused) {
 		self->main_loop->notification(Application::NOTIFICATION_WM_FOCUS_IN);
@@ -1054,9 +1381,9 @@ void Input::_setup_window_callbacks() {
 	glfwSetMouseButtonCallback(window, &Input::GLFWmousebuttonfunCallback);
 	glfwSetCursorPosCallback(window, &Input::GLFWcursorposfunCallback);
 	glfwSetCursorEnterCallback(window, &Input::GLFWcursorenterfunCallback);
-	glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
-	glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
-	glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
+	//glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
+	//glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
+	//glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
 	glfwSetWindowFocusCallback(window, &Input::GLFWwindowfocusfunCallback);
 }
 
