@@ -4,8 +4,8 @@
 
 #include "render_core/window.h"
 
-void Application::event() {
-    scene->event();
+void Application::input_event(const Ref<InputEvent> &event) {
+    scene->input_event(event);
 }
 
 void Application::update(float delta) {

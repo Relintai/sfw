@@ -6,9 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/math/transform_2d.h"
-#include "core/object/resource.h"
-#include "core/string/ustring.h"
+#include "core/transform_2d.h"
+#include "object/resource.h"
+#include "core/ustring.h"
 #include "core/typedefs.h"
 
 /**
@@ -172,15 +172,13 @@ enum MidiMessageList {
  */
 
 class InputEvent : public Resource {
-	GDCLASS(InputEvent, Resource);
+	SFW_OBJECT(InputEvent, Resource);
 
 	int device;
 
 protected:
 	bool canceled;
 	bool pressed;
-
-	static void _bind_methods();
 
 public:
 	static const int DEVICE_ID_TOUCH_MOUSE;
@@ -214,7 +212,7 @@ public:
 };
 
 class InputEventWithModifiers : public InputEvent {
-	GDCLASS(InputEventWithModifiers, InputEvent);
+	SFW_OBJECT(InputEventWithModifiers, InputEvent);
 
 	bool shift;
 	bool alt;
@@ -233,9 +231,6 @@ class InputEventWithModifiers : public InputEvent {
 	bool meta; //< windows/mac key
 
 #endif
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_shift(bool p_enabled);
@@ -261,7 +256,7 @@ public:
 };
 
 class InputEventKey : public InputEventWithModifiers {
-	GDCLASS(InputEventKey, InputEventWithModifiers);
+	SFW_OBJECT(InputEventKey, InputEventWithModifiers);
 
 	uint32_t scancode; ///< check keyboard.h , KeyCode enum, without modifier masks
 	uint32_t physical_scancode;
@@ -270,9 +265,6 @@ class InputEventKey : public InputEventWithModifiers {
 	bool echo; /// true if this is an echo key
 
 	bool action_match_force_exact;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_pressed(bool p_pressed);
@@ -306,15 +298,12 @@ public:
 };
 
 class InputEventMouse : public InputEventWithModifiers {
-	GDCLASS(InputEventMouse, InputEventWithModifiers);
+	SFW_OBJECT(InputEventMouse, InputEventWithModifiers);
 
 	int button_mask;
 
 	Vector2 pos;
 	Vector2 global_pos;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_button_mask(int p_mask);
@@ -330,14 +319,11 @@ public:
 };
 
 class InputEventMouseButton : public InputEventMouse {
-	GDCLASS(InputEventMouseButton, InputEventMouse);
+	SFW_OBJECT(InputEventMouseButton, InputEventMouse);
 
 	float factor;
 	int button_index;
 	bool doubleclick; //last even less than doubleclick time
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_factor(float p_factor);
@@ -363,16 +349,13 @@ public:
 };
 
 class InputEventMouseMotion : public InputEventMouse {
-	GDCLASS(InputEventMouseMotion, InputEventMouse);
+	SFW_OBJECT(InputEventMouseMotion, InputEventMouse);
 
 	Vector2 tilt;
 	float pressure;
 	Vector2 relative;
 	Vector2 speed;
 	bool pen_inverted;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_tilt(const Vector2 &p_tilt);
@@ -399,13 +382,10 @@ public:
 };
 
 class InputEventJoypadMotion : public InputEvent {
-	GDCLASS(InputEventJoypadMotion, InputEvent);
+	SFW_OBJECT(InputEventJoypadMotion, InputEvent);
 
 	int axis; ///< Joypad axis
 	float axis_value; ///< -1 to 1
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_axis(int p_axis);
@@ -424,12 +404,10 @@ public:
 };
 
 class InputEventJoypadButton : public InputEvent {
-	GDCLASS(InputEventJoypadButton, InputEvent);
+	SFW_OBJECT(InputEventJoypadButton, InputEvent);
 
 	int button_index;
 	float pressure; //0 to 1
-protected:
-	static void _bind_methods();
 
 public:
 	void set_button_index(int p_index);
@@ -450,13 +428,10 @@ public:
 };
 
 class InputEventScreenTouch : public InputEvent {
-	GDCLASS(InputEventScreenTouch, InputEvent);
+	SFW_OBJECT(InputEventScreenTouch, InputEvent);
 	int index;
 	Vector2 pos;
 	bool double_tap;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_index(int p_index);
@@ -478,14 +453,11 @@ public:
 };
 
 class InputEventScreenDrag : public InputEvent {
-	GDCLASS(InputEventScreenDrag, InputEvent);
+	SFW_OBJECT(InputEventScreenDrag, InputEvent);
 	int index;
 	Vector2 pos;
 	Vector2 relative;
 	Vector2 speed;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_index(int p_index);
@@ -509,13 +481,10 @@ public:
 };
 
 class InputEventAction : public InputEvent {
-	GDCLASS(InputEventAction, InputEvent);
+	SFW_OBJECT(InputEventAction, InputEvent);
 
 	StringName action;
 	float strength;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_action(const StringName &p_action);
@@ -538,12 +507,9 @@ public:
 };
 
 class InputEventGesture : public InputEventWithModifiers {
-	GDCLASS(InputEventGesture, InputEventWithModifiers);
+	SFW_OBJECT(InputEventGesture, InputEventWithModifiers);
 
 	Vector2 pos;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_position(const Vector2 &p_pos);
@@ -551,11 +517,8 @@ public:
 };
 
 class InputEventMagnifyGesture : public InputEventGesture {
-	GDCLASS(InputEventMagnifyGesture, InputEventGesture);
+	SFW_OBJECT(InputEventMagnifyGesture, InputEventGesture);
 	real_t factor;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_factor(real_t p_factor);
@@ -568,11 +531,8 @@ public:
 };
 
 class InputEventPanGesture : public InputEventGesture {
-	GDCLASS(InputEventPanGesture, InputEventGesture);
+	SFW_OBJECT(InputEventPanGesture, InputEventGesture);
 	Vector2 delta;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_delta(const Vector2 &p_delta);
@@ -585,7 +545,7 @@ public:
 };
 
 class InputEventMIDI : public InputEvent {
-	GDCLASS(InputEventMIDI, InputEvent);
+	SFW_OBJECT(InputEventMIDI, InputEvent);
 
 	int channel;
 	int message;
@@ -595,9 +555,6 @@ class InputEventMIDI : public InputEvent {
 	int pressure;
 	int controller_number;
 	int controller_value;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_channel(const int p_channel);
@@ -630,12 +587,9 @@ public:
 };
 
 class InputEventShortCut : public InputEvent {
-	GDCLASS(InputEventShortCut, InputEvent);
+	SFW_OBJECT(InputEventShortCut, InputEvent);
 
 	Ref<ShortCut> shortcut;
-
-protected:
-	static void _bind_methods();
 
 public:
 	void set_shortcut(Ref<ShortCut> p_shortcut);

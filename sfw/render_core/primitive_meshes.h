@@ -18,7 +18,7 @@
 	This class is set apart that it assumes a single surface is always generated for our mesh.
 */
 class PrimitiveMesh : public Mesh {
-	GDCLASS(PrimitiveMesh, Mesh);
+	SFW_OBJECT(PrimitiveMesh, Mesh);
 
 private:
 	RID mesh;
@@ -74,7 +74,7 @@ public:
 	Mesh for a simple capsule
 */
 class CapsuleMesh : public PrimitiveMesh {
-	GDCLASS(CapsuleMesh, PrimitiveMesh);
+	SFW_OBJECT(CapsuleMesh, PrimitiveMesh);
 
 private:
 	float radius;
@@ -108,7 +108,7 @@ public:
 	Similar to test cube but with subdivision support and different texture coordinates
 */
 class CubeMesh : public PrimitiveMesh {
-	GDCLASS(CubeMesh, PrimitiveMesh);
+	SFW_OBJECT(CubeMesh, PrimitiveMesh);
 
 private:
 	Vector3 size;
@@ -143,7 +143,7 @@ public:
 */
 
 class CylinderMesh : public PrimitiveMesh {
-	GDCLASS(CylinderMesh, PrimitiveMesh);
+	SFW_OBJECT(CylinderMesh, PrimitiveMesh);
 
 private:
 	float top_radius;
@@ -181,7 +181,7 @@ public:
 	Similar to quadmesh but with tessellation support
 */
 class PlaneMesh : public PrimitiveMesh {
-	GDCLASS(PlaneMesh, PrimitiveMesh);
+	SFW_OBJECT(PlaneMesh, PrimitiveMesh);
 
 private:
 	Size2 size;
@@ -213,7 +213,7 @@ public:
 	A prism shapen, handy for ramps, triangles, etc.
 */
 class PrismMesh : public PrimitiveMesh {
-	GDCLASS(PrismMesh, PrimitiveMesh);
+	SFW_OBJECT(PrismMesh, PrimitiveMesh);
 
 private:
 	float left_to_right;
@@ -250,7 +250,7 @@ public:
 */
 
 class QuadMesh : public PrimitiveMesh {
-	GDCLASS(QuadMesh, PrimitiveMesh);
+	SFW_OBJECT(QuadMesh, PrimitiveMesh);
 
 private:
 	Size2 size;
@@ -274,7 +274,7 @@ public:
 	A sphere..
 */
 class SphereMesh : public PrimitiveMesh {
-	GDCLASS(SphereMesh, PrimitiveMesh);
+	SFW_OBJECT(SphereMesh, PrimitiveMesh);
 
 private:
 	float radius;
@@ -313,7 +313,7 @@ public:
 */
 
 class PointMesh : public PrimitiveMesh {
-	GDCLASS(PointMesh, PrimitiveMesh)
+	SFW_OBJECT(PointMesh, PrimitiveMesh)
 
 protected:
 	virtual void _create_mesh_array(Array &p_arr) const;
@@ -327,7 +327,7 @@ public:
 */
 
 class TextMesh : public PrimitiveMesh {
-	GDCLASS(TextMesh, PrimitiveMesh);
+	SFW_OBJECT(TextMesh, PrimitiveMesh);
 
 public:
 	enum Align {

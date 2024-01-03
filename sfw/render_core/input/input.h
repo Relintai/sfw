@@ -6,17 +6,26 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/math/vector2i.h"
-#include "core/object/object.h"
-#include "core/os/main_loop.h"
-#include "core/os/thread_safe.h"
+#include "core/vector2i.h"
+#include "object/object.h"
+//#include "core/os/main_loop.h"
+#include "core/rb_set.h"
+#include "core/rb_map.h"
+#include "core/thread_safe.h"
+#include "object/reference.h"
+#include "object/psignal.h"
+#include "render_core/input/input_event.h"
+
+class Application;
 
 class Input : public Object {
-	GDCLASS(Input, Object);
+	SFW_OBJECT(Input, Object);
 
 	_THREAD_SAFE_CLASS_
 
 public:
+	Signal joy_connection_changed_signal;
+
 	enum MouseMode {
 		MOUSE_MODE_VISIBLE,
 		MOUSE_MODE_HIDDEN,
@@ -143,7 +152,7 @@ public:
 	virtual CursorShape get_default_cursor_shape() const;
 	virtual void set_default_cursor_shape(CursorShape p_shape);
 	virtual CursorShape get_current_cursor_shape() const;
-	virtual void set_custom_mouse_cursor(const RES &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2());
+	virtual void set_custom_mouse_cursor(const Ref<Reference> &p_cursor, CursorShape p_shape = CURSOR_ARROW, const Vector2 &p_hotspot = Vector2());
 
 	virtual String get_joy_button_string(int p_button);
 	virtual String get_joy_axis_string(int p_axis);
@@ -168,116 +177,12 @@ public:
 
 	void get_argument_options(const StringName &p_function, int p_idx, List<String> *r_options, const String &quote_style) const;
 
-	void set_main_loop(MainLoop *p_main_loop);
+	void set_main_loop(Application *p_main_loop);
 	void iteration(float p_step);
 
 	Input();
 
 protected:
-	JoyEvent _get_mapped_button_event(const JoyDeviceMapping &mapping, int p_button);
-	JoyEvent _get_mapped_axis_event(const JoyDeviceMapping &mapping, int p_axis, float p_value);
-	void _get_mapped_hat_events(const JoyDeviceMapping &mapping, int p_hat, JoyEvent r_events[HAT_MAX]);
-	JoystickList _get_output_button(String output);
-	JoystickList _get_output_axis(String output);
-	void _button_event(int p_device, int p_index, bool p_pressed);
-	void _axis_event(int p_device, int p_axis, float p_value);
-
-	void _parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_emulated);
-
-	static String _hex_str(uint8_t p_byte);
-
-	List<Ref<InputEvent>> buffered_events;
-	bool use_input_buffering;
-	bool use_accumulated_input;
-
-	int mouse_button_mask;
-
-	RBSet<int> physical_keys_pressed;
-	RBSet<int> keys_pressed;
-	RBSet<int> joy_buttons_pressed;
-	RBMap<int, float> _joy_axis;
-	//Map<StringName,int> custom_action_press;
-	Vector3 gravity;
-	Vector3 accelerometer;
-	Vector3 magnetometer;
-	Vector3 gyroscope;
-	Vector2 mouse_pos;
-	MainLoop *main_loop;
-	bool legacy_just_pressed_behavior;
-
-	struct Action {
-		uint64_t pressed_physics_frame;
-		uint64_t pressed_idle_frame;
-		uint64_t released_physics_frame;
-		uint64_t released_idle_frame;
-		bool pressed;
-		bool exact;
-		float strength;
-		float raw_strength;
-
-		Action() {
-			pressed_physics_frame = UINT64_MAX;
-			pressed_idle_frame = UINT64_MAX;
-			released_physics_frame = UINT64_MAX;
-			released_idle_frame = UINT64_MAX;
-			pressed = false;
-			exact = true;
-			strength = 0.0f;
-			raw_strength = 0.0f;
-		}
-	};
-
-	RBMap<StringName, Action> action_state;
-
-	bool emulate_touch_from_mouse;
-	bool emulate_mouse_from_touch;
-
-	int mouse_from_touch_index;
-
-	struct SpeedTrack {
-		uint64_t last_tick;
-		Vector2 speed;
-		Vector2 accum;
-		float accum_t;
-		float min_ref_frame;
-		float max_ref_frame;
-
-		void update(const Vector2 &p_delta_p);
-		void reset();
-		SpeedTrack();
-	};
-
-	struct Joypad {
-		StringName name;
-		StringName uid;
-		bool connected;
-		bool last_buttons[JOY_BUTTON_MAX + 12]; //apparently SDL specifies 35 possible buttons on android
-		float last_axis[JOY_AXIS_MAX];
-		int last_hat;
-		int mapping;
-		int hat_current;
-
-		Joypad() {
-			for (int i = 0; i < JOY_AXIS_MAX; i++) {
-				last_axis[i] = 0.0f;
-			}
-			for (int i = 0; i < JOY_BUTTON_MAX + 12; i++) {
-				last_buttons[i] = false;
-			}
-			connected = false;
-			last_hat = HAT_MASK_CENTER;
-			mapping = -1;
-			hat_current = 0;
-		}
-	};
-
-	SpeedTrack mouse_speed_track;
-	RBMap<int, SpeedTrack> touch_speed_track;
-	RBMap<int, Joypad> joy_names;
-	int fallback_mapping;
-
-	CursorShape default_shape;
-
 	enum JoyType {
 		TYPE_BUTTON,
 		TYPE_AXIS,
@@ -333,9 +238,42 @@ protected:
 		Vector<JoyBinding> bindings;
 	};
 
-	Vector<JoyDeviceMapping> map_db;
+	struct SpeedTrack {
+		uint64_t last_tick;
+		Vector2 speed;
+		Vector2 accum;
+		float accum_t;
+		float min_ref_frame;
+		float max_ref_frame;
 
-	RBSet<uint32_t> ignored_device_ids;
+		void update(const Vector2 &p_delta_p);
+		void reset();
+		SpeedTrack();
+	};
+
+	struct Joypad {
+		StringName name;
+		StringName uid;
+		bool connected;
+		bool last_buttons[JOY_BUTTON_MAX + 12]; //apparently SDL specifies 35 possible buttons on android
+		float last_axis[JOY_AXIS_MAX];
+		int last_hat;
+		int mapping;
+		int hat_current;
+
+		Joypad() {
+			for (int i = 0; i < JOY_AXIS_MAX; i++) {
+				last_axis[i] = 0.0f;
+			}
+			for (int i = 0; i < JOY_BUTTON_MAX + 12; i++) {
+				last_buttons[i] = false;
+			}
+			connected = false;
+			last_hat = HAT_MASK_CENTER;
+			mapping = -1;
+			hat_current = 0;
+		}
+	};
 
 	struct VibrationInfo {
 		float weak_magnitude;
@@ -344,12 +282,80 @@ protected:
 		uint64_t timestamp;
 	};
 
+	struct Action {
+		uint64_t pressed_physics_frame;
+		uint64_t pressed_idle_frame;
+		uint64_t released_physics_frame;
+		uint64_t released_idle_frame;
+		bool pressed;
+		bool exact;
+		float strength;
+		float raw_strength;
+
+		Action() {
+			pressed_physics_frame = UINT64_MAX;
+			pressed_idle_frame = UINT64_MAX;
+			released_physics_frame = UINT64_MAX;
+			released_idle_frame = UINT64_MAX;
+			pressed = false;
+			exact = true;
+			strength = 0.0f;
+			raw_strength = 0.0f;
+		}
+	};
+
+	JoyEvent _get_mapped_button_event(const JoyDeviceMapping &mapping, int p_button);
+	JoyEvent _get_mapped_axis_event(const JoyDeviceMapping &mapping, int p_axis, float p_value);
+	void _get_mapped_hat_events(const JoyDeviceMapping &mapping, int p_hat, JoyEvent r_events[HAT_MAX]);
+	JoystickList _get_output_button(String output);
+	JoystickList _get_output_axis(String output);
+	void _button_event(int p_device, int p_index, bool p_pressed);
+	void _axis_event(int p_device, int p_axis, float p_value);
+
+	void _parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_emulated);
+
+	static String _hex_str(uint8_t p_byte);
+
+	List<Ref<InputEvent>> buffered_events;
+	bool use_input_buffering;
+	bool use_accumulated_input;
+
+	int mouse_button_mask;
+
+	RBSet<int> physical_keys_pressed;
+	RBSet<int> keys_pressed;
+	RBSet<int> joy_buttons_pressed;
+	RBMap<int, float> _joy_axis;
+	//Map<StringName,int> custom_action_press;
+	Vector3 gravity;
+	Vector3 accelerometer;
+	Vector3 magnetometer;
+	Vector3 gyroscope;
+	Vector2 mouse_pos;
+	Application *main_loop;
+	bool legacy_just_pressed_behavior;
+
+	RBMap<StringName, Action> action_state;
+
+	bool emulate_touch_from_mouse;
+	bool emulate_mouse_from_touch;
+
+	int mouse_from_touch_index;
+
+	SpeedTrack mouse_speed_track;
+	RBMap<int, SpeedTrack> touch_speed_track;
+	RBMap<int, Joypad> joy_names;
+	int fallback_mapping;
+
+	CursorShape default_shape;
+
+	Vector<JoyDeviceMapping> map_db;
+
+	RBSet<uint32_t> ignored_device_ids;
+
 	RBMap<int, VibrationInfo> joy_vibration;
 
 	static Input *singleton;
 };
-
-VARIANT_ENUM_CAST(Input::MouseMode);
-VARIANT_ENUM_CAST(Input::CursorShape);
 
 #endif // INPUT_H

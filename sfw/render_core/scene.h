@@ -1,14 +1,20 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-class Scene {
-public:
-    virtual void event() = 0;
-    virtual void update(float delta) = 0;
-    virtual void render() = 0;
+#include "object/reference.h"
 
-    Scene();
-    virtual ~Scene();
+class InputEvent;
+
+class Scene : Reference {
+	SFW_OBJECT(Scene, Reference);
+
+public:
+	virtual void input_event(const Ref<InputEvent> &event);
+	virtual void update(float delta);
+	virtual void render();
+
+	Scene();
+	virtual ~Scene();
 };
 
 #endif // APPLICATION_H

@@ -6,12 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "resource.h"
+#include "object/resource.h"
 
 class InputEvent;
 
 class ShortCut : public Resource {
-	GDCLASS(ShortCut, Resource);
+	SFW_OBJECT(ShortCut, Resource);
 
 public:
 	void set_shortcut(const Ref<InputEvent> &p_shortcut);

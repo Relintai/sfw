@@ -5,7 +5,7 @@
 
 #include "shortcut.h"
 
-#include "core/render_core/input_event.h"
+#include "render_core/input/input_event.h"
 
 void ShortCut::set_shortcut(const Ref<InputEvent> &p_shortcut) {
 	shortcut = p_shortcut;

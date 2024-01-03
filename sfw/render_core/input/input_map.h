@@ -6,11 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "core/input/input_event.h"
-#include "core/object/object.h"
+#include "render_core/input/input_event.h"
+#include "object/object.h"
+#include "core/rb_map.h"
 
 class InputMap : public Object {
-	GDCLASS(InputMap, Object);
+	SFW_OBJECT(InputMap, Object);
 
 public:
 	/**
@@ -34,9 +35,6 @@ private:
 	Array _get_action_list(const StringName &p_action);
 	Array _get_actions();
 
-protected:
-	static void _bind_methods();
-
 public:
 	static _FORCE_INLINE_ InputMap *get_singleton() { return singleton; }
 
@@ -57,7 +55,6 @@ public:
 	bool event_get_action_status(const Ref<InputEvent> &p_event, const StringName &p_action, bool p_exact_match = false, bool *p_pressed = nullptr, float *p_strength = nullptr, float *p_raw_strength = nullptr) const;
 
 	const RBMap<StringName, Action> &get_action_map() const;
-	void load_from_globals();
 	void load_default();
 
 	String suggest_actions(const StringName &p_action) const;

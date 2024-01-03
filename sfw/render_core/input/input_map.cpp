@@ -5,30 +5,12 @@
 
 #include "input_map.h"
 
-#include "core/config/project_settings.h"
-#include "core/input/input.h"
-#include "core/os/keyboard.h"
+#include "render_core/input/input.h"
+#include "render_core/input/keyboard.h"
 
 InputMap *InputMap::singleton = nullptr;
 
 int InputMap::ALL_DEVICES = -1;
-
-void InputMap::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("has_action", "action"), &InputMap::has_action);
-	ClassDB::bind_method(D_METHOD("get_actions"), &InputMap::_get_actions);
-	ClassDB::bind_method(D_METHOD("add_action", "action", "deadzone"), &InputMap::add_action, DEFVAL(0.5f));
-	ClassDB::bind_method(D_METHOD("erase_action", "action"), &InputMap::erase_action);
-
-	ClassDB::bind_method(D_METHOD("action_set_deadzone", "action", "deadzone"), &InputMap::action_set_deadzone);
-	ClassDB::bind_method(D_METHOD("action_get_deadzone", "action"), &InputMap::action_get_deadzone);
-	ClassDB::bind_method(D_METHOD("action_add_event", "action", "event"), &InputMap::action_add_event);
-	ClassDB::bind_method(D_METHOD("action_has_event", "action", "event"), &InputMap::action_has_event);
-	ClassDB::bind_method(D_METHOD("action_erase_event", "action", "event"), &InputMap::action_erase_event);
-	ClassDB::bind_method(D_METHOD("action_erase_events", "action"), &InputMap::action_erase_events);
-	ClassDB::bind_method(D_METHOD("get_action_list", "action"), &InputMap::_get_action_list);
-	ClassDB::bind_method(D_METHOD("event_is_action", "event", "action", "exact_match"), &InputMap::event_is_action, DEFVAL(false));
-	ClassDB::bind_method(D_METHOD("load_from_globals"), &InputMap::load_from_globals);
-}
 
 /**
  * Returns an nonexistent action error message with a suggestion of the closest
@@ -234,36 +216,6 @@ bool InputMap::event_get_action_status(const Ref<InputEvent> &p_event, const Str
 
 const RBMap<StringName, InputMap::Action> &InputMap::get_action_map() const {
 	return input_map;
-}
-
-void InputMap::load_from_globals() {
-	input_map.clear();
-
-	List<PropertyInfo> pinfo;
-	ProjectSettings::get_singleton()->get_property_list(&pinfo);
-
-	for (List<PropertyInfo>::Element *E = pinfo.front(); E; E = E->next()) {
-		const PropertyInfo &pi = E->get();
-
-		if (!pi.name.begins_with("input/")) {
-			continue;
-		}
-
-		String name = pi.name.substr(pi.name.find("/") + 1, pi.name.length());
-
-		Dictionary action = ProjectSettings::get_singleton()->get(pi.name);
-		float deadzone = action.has("deadzone") ? (float)action["deadzone"] : 0.5f;
-		Array events = action["events"];
-
-		add_action(name, deadzone);
-		for (int i = 0; i < events.size(); i++) {
-			Ref<InputEvent> event = events[i];
-			if (event.is_null()) {
-				continue;
-			}
-			action_add_event(name, event);
-		}
-	}
 }
 
 void InputMap::load_default() {

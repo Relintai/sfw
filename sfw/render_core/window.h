@@ -65,18 +65,25 @@ public:
 
 	void set_focus(); // window attribute using haz catz language for now
 	int has_focus();
+	
 	void set_fullscreen(int enabled);
 	int has_fullscreen();
+
 	void set_cursor(int visible);
 	int has_cursor();
+
 	void set_pause(int paused);
 	int has_pause();
+
 	void set_visible(int visible);
 	int has_visible();
+
 	void set_maximize(int enabled);
 	int has_maximize();
+
 	void set_transparent(int enabled);
 	int has_transparent();
+
 	void set_icon(const char *file_icon);
 	int has_icon();
 

@@ -63,6 +63,11 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/texture.cpp -o sfw/ren
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/image.cpp -o sfw/render_core/image.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/render_state.cpp -o sfw/render_core/render_state.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input/keyboard.cpp -o sfw/render_core/input/keyboard.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input/default_controller_mappings.gen.cpp -o sfw/render_core/input/default_controller_mappings.gen.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input/input_event.cpp -o sfw/render_core/input/input_event.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input/input_map.cpp -o sfw/render_core/input/input_map.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input/input.cpp -o sfw/render_core/input/input.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input/shortcut.cpp -o sfw/render_core/input/shortcut.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
@@ -94,13 +99,14 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
                         sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
-                        sfw/render_core/input/keyboard.o \
+                        sfw/render_core/input/input_event.o sfw/render_core/input/input_map.o \
+                        sfw/render_core/input/input.o sfw/render_core/input/shortcut.o \
+                        sfw/render_core/input/keyboard.o sfw/render_core/input/default_controller_mappings.gen.o \
                         sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
                         sfw/render_objects/object_2d.o \
                         sfw/render_objects/sprite.o sfw/render_objects/tile_map.o \
                         sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
                         game_scene.o main.o \
                          -o game 
-
 
 #export args="-lm -ldl -lpthread -lX11 -w -Iengine/ $args"
