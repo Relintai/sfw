@@ -5,8 +5,8 @@
 
 #include "input_map.h"
 
-#include "render_core/input/input.h"
-#include "render_core/input/keyboard.h"
+#include "render_core/input.h"
+#include "render_core/keyboard.h"
 
 InputMap *InputMap::singleton = nullptr;
 

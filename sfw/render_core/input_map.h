@@ -6,7 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
-#include "render_core/input/input_event.h"
+#include "render_core/input_event.h"
 #include "object/object.h"
 #include "core/rb_map.h"
 

@@ -8,8 +8,8 @@
 #include "core/logger.h"
 #include "core/stime.h"
 #include "render_core/application.h"
-#include "render_core/input/input_map.h"
-#include "render_core/input/keyboard.h"
+#include "render_core/input_map.h"
+#include "render_core/keyboard.h"
 #include "render_core/texture.h"
 #include "render_core/window.h"
 

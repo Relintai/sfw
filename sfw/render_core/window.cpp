@@ -28,7 +28,7 @@
 #include "core/ustring.h"
 #include "core/vector4.h"
 #include "render_core/application.h"
-#include "render_core/input/input.h"
+#include "render_core/input.h"
 
 /*
 static volatile float framerate = 0;

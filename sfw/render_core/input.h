@@ -14,7 +14,7 @@
 #include "core/thread_safe.h"
 #include "object/psignal.h"
 #include "object/reference.h"
-#include "render_core/input/input_event.h"
+#include "render_core/input_event.h"
 
 class Application;
 struct GLFWwindow;

@@ -5,9 +5,9 @@
 
 #include "input_event.h"
 
-#include "render_core/input/input_map.h"
-#include "render_core/input/keyboard.h"
-#include "render_core/input/shortcut.h"
+#include "render_core/input_map.h"
+#include "render_core/keyboard.h"
+#include "render_core/shortcut.h"
 
 const int InputEvent::DEVICE_ID_TOUCH_MOUSE = -1;
 const int InputEvent::DEVICE_ID_INTERNAL = -2;

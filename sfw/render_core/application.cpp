@@ -3,8 +3,8 @@
 #include "core/math_defs.h"
 
 #include "core/stime.h"
-#include "render_core/input/input.h"
-#include "render_core/input/input_map.h"
+#include "render_core/input.h"
+#include "render_core/input_map.h"
 #include "render_core/window.h"
 
 #include "core/pool_vector.h"

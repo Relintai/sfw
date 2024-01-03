@@ -4,7 +4,7 @@
 
 #include "core/memory.h"
 #include "render_core/3rd_glad.h"
-#include "render_core/input/keyboard.h"
+#include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
