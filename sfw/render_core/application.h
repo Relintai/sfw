@@ -30,6 +30,10 @@ public:
 	void core_loop();
 	void main_loop();
 
+	_FORCE_INLINE_ void core_loop_static() {
+		Application::get_singleton()->core_loop();
+	}
+
 	Application();
 	virtual ~Application();
 

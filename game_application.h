@@ -9,8 +9,7 @@ class GameApplication : public Application {
 	SFW_OBJECT(GameApplication, Application);
 
 public:
-	GameApplication() :
-			Application() {
+	GameApplication() {
 		scene = new GameScene();
 	}
 

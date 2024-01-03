@@ -20,8 +20,6 @@ void Application::update(float delta) {
 
 void Application::render() {
 	scene->render();
-
-	//SDL_GL_SwapWindow(window);
 }
 
 void Application::core_loop() {
@@ -83,6 +81,7 @@ Application::Application() {
 
 	frame_delta = 0;
 
+	// TODO Move these to a central place in core!
 	StringName::setup();
 	MemoryPool::setup();
 	CoreStringNames::create();
@@ -95,51 +94,11 @@ Application::Application() {
 	}
 
     _init_window();
-
-	/*
-	SDL_SetMainReady();
-
-	int error = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
-
-	if (error) {
-		SDL_Log("SDL_Init fail: %s\n", SDL_GetError());
-
-		running = false;
-		return;
-	}
-
-#if defined(_WIN64) || defined(_WIN32)
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-#else
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-#endif
-
-	window = SDL_CreateWindow("SDL + OpenGL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-
-	if (!window) {
-		SDL_Log("SDL_CreateWindow Failed! %s\n", SDL_GetError());
-
-		running = false;
-
-		return;
-	}
-
-	context = SDL_GL_CreateContext(window);
-
-	#if defined(_WIN64) || defined(_WIN32)
-	gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
-	#endif // defined
-
-	printf("%s\n", glGetString(GL_VERSION));
-	*/
 }
 Application::~Application() {
 	_instance = NULL;
 
+	// TODO Move these to a central place in core!
 	StringName::cleanup();
 	MemoryPool::cleanup();
 	CoreStringNames::free();
@@ -147,12 +106,6 @@ Application::~Application() {
     // TODO add a helper static method
 	memdelete(AppWindow::get_singleton());
 	memdelete(Input::get_singleton());
-
-	//SDL_DestroyWindow(window);
-
-	// window = NULL;
-
-	//SDL_Quit();
 }
 
 Application *Application::get_singleton() {
