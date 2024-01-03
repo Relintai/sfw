@@ -37,9 +37,7 @@ public:
 	Application();
 	virtual ~Application();
 
-	Scene *scene;
-
-	AppWindow *window;
+	Ref<Scene> scene;
 
 	static Application *get_singleton();
 

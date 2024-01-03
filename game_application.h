@@ -10,11 +10,11 @@ class GameApplication : public Application {
 
 public:
 	GameApplication() {
-		scene = new GameScene();
+		scene = Ref<Scene>(memnew(GameScene()));
 	}
 
 	~GameApplication() {
-		delete scene;
+		scene.unref();
 	}
 };
 

@@ -5,7 +5,7 @@
 
 class InputEvent;
 
-class Scene : Reference {
+class Scene : public Reference {
 	SFW_OBJECT(Scene, Reference);
 
 public:

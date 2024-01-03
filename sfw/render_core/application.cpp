@@ -77,8 +77,6 @@ Application::Application() {
 	running = true;
 	target_fps = 60;
 
-	scene = NULL;
-
 	frame_delta = 0;
 
 	// TODO Move these to a central place in core!
