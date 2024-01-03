@@ -21,9 +21,9 @@ int main(int argc, char **argv) {
 		application->core_loop();
 	}
 
-	memdelete(application);
-
 #endif // __EMSCRIPTEN__
+
+	memdelete(application);
 
 	return 0;
 }
