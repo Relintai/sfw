@@ -6,6 +6,10 @@
 #include "render_core/input/input.h"
 #include "render_core/window.h"
 
+#include "core/pool_vector.h"
+#include "core/string_name.h"
+#include "object/core_string_names.h"
+
 void Application::input_event(const Ref<InputEvent> &event) {
 	scene->input_event(event);
 }
@@ -18,6 +22,19 @@ void Application::render() {
 	scene->render();
 
 	//SDL_GL_SwapWindow(window);
+}
+
+void Application::core_loop() {
+	AppWindow *w = AppWindow::get_singleton();
+
+	if (w->frame_begin()) { // calls Application::main_loop()
+		//w->resize();
+		//w->render_callback(loopArg);
+		w->frame_end();
+		w->frame_swap();
+	} else {
+		w->shutdown();
+	}
 }
 
 void Application::main_loop() {
@@ -46,10 +63,14 @@ void Application::main_loop() {
 	if (remaining > 0) {
 		frame_delta = tfps;
 
-        STime::sleep_us((double)SEC_TO_USEC(remaining));
+		STime::sleep_us((double)SEC_TO_USEC(remaining));
 	} else {
 		frame_delta = elapsed_seconds;
 	}
+}
+
+void Application::_init_window() {
+	AppWindow::get_singleton()->create(100, 0);
 }
 
 Application::Application() {
@@ -62,9 +83,17 @@ Application::Application() {
 
 	frame_delta = 0;
 
-    if (!Input::get_singleton()) {
-        memnew(Input());
-    }
+	StringName::setup();
+	MemoryPool::setup();
+	CoreStringNames::create();
+
+	memnew(AppWindow());
+
+	if (!Input::get_singleton()) {
+		memnew(Input());
+	}
+
+    _init_window();
 
 	/*
 	SDL_SetMainReady();
@@ -108,6 +137,12 @@ Application::Application() {
 	*/
 }
 Application::~Application() {
+	_instance = NULL;
+
+	StringName::cleanup();
+	MemoryPool::cleanup();
+	CoreStringNames::free();
+
 	//SDL_DestroyWindow(window);
 
 	// window = NULL;

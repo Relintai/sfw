@@ -12,7 +12,7 @@
 class AppWindow;
 class InputEvent;
 
-class Application : Object {
+class Application : public Object {
 	SFW_OBJECT(Application, Object);
 
 public:
@@ -27,6 +27,7 @@ public:
 		return _idle_frames;
 	}
 
+	void core_loop();
 	void main_loop();
 
 	Application();
@@ -41,6 +42,8 @@ public:
 	real_t frame_delta;
 
 protected:
+	virtual void _init_window();
+
 	static Application *_instance;
 
 	uint64_t _idle_frames;

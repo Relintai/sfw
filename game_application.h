@@ -6,15 +6,17 @@
 #include "game_scene.h"
 
 class GameApplication : public Application {
+	SFW_OBJECT(GameApplication, Application);
+
 public:
-    GameApplication() : Application() {
-        scene = new GameScene();
-    }
+	GameApplication() :
+			Application() {
+		scene = new GameScene();
+	}
 
-    ~GameApplication() {
-        delete scene;
-    }
+	~GameApplication() {
+		delete scene;
+	}
 };
-
 
 #endif // GAME_APPLICATION_H
