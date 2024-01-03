@@ -11,14 +11,20 @@
 #include "object/core_string_names.h"
 
 void Application::input_event(const Ref<InputEvent> &event) {
+	ERR_FAIL_COND(scene.is_null());
+
 	scene->input_event(event);
 }
 
 void Application::update(float delta) {
+	ERR_FAIL_COND(scene.is_null());
+
 	scene->update(delta);
 }
 
 void Application::render() {
+	ERR_FAIL_COND(scene.is_null());
+
 	scene->render();
 }
 
@@ -84,14 +90,14 @@ Application::Application() {
 	MemoryPool::setup();
 	CoreStringNames::create();
 
-    // TODO add a helper static method
+	// TODO add a helper static method
 	memnew(AppWindow());
 
 	if (!Input::get_singleton()) {
 		memnew(Input());
 	}
 
-    _init_window();
+	_init_window();
 }
 Application::~Application() {
 	_instance = NULL;
@@ -101,7 +107,7 @@ Application::~Application() {
 	MemoryPool::cleanup();
 	CoreStringNames::free();
 
-    // TODO add a helper static method
+	// TODO add a helper static method
 	memdelete(AppWindow::get_singleton());
 	memdelete(Input::get_singleton());
 }
