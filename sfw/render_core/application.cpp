@@ -11,6 +11,8 @@
 #include "core/string_name.h"
 #include "object/core_string_names.h"
 
+#include "render_core/text_renderer.h"
+
 void Application::input_event(const Ref<InputEvent> &event) {
 	ERR_FAIL_COND(scene.is_null());
 
@@ -97,6 +99,7 @@ Application::Application() {
 	memnew(InputMap());
 	memnew(Input());
 	Input::get_singleton()->set_main_loop(this);
+	memnew(TextRenderer());
 
 	_init_window();
 }
@@ -112,6 +115,7 @@ Application::~Application() {
 	memdelete(AppWindow::get_singleton());
 	memdelete(Input::get_singleton());
 	memdelete(InputMap::get_singleton());
+	memdelete(TextRenderer::get_singleton());
 }
 
 Application *Application::get_singleton() {

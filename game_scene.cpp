@@ -6,6 +6,7 @@
 #include "render_core/3rd_glad.h"
 #include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
+#include "render_core/text_renderer.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
 	//ERR_PRINT(event->as_text());
@@ -94,6 +95,9 @@ void GameScene::render() {
 	camera_2d->bind();
 	sprite->render();
 	tile_map->render();
+
+	//TextRenderer::get_singleton()->font_init();
+	//TextRenderer::get_singleton()->font_print("test");
 }
 
 GameScene::GameScene() {

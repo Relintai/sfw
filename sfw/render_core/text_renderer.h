@@ -7,6 +7,13 @@
 
 #include "object/object.h"
 
+#include "core/ustring.h"
+
+#include "text_material.h"
+
+// TODO figure out how to forward declare stbtt_packedchar
+#include "3rd_stb_truetype.h"
+
 // font size tags
 #define FONT_H1 "\1" // largest
 #define FONT_H2 "\2"
@@ -86,6 +93,8 @@ public:
 		float linedist; // distance between the baseline of two lines (ascent - descent + linegap)
 	} font_metrics_t;
 
+	void font_init();
+
 	// configures
 	void font_face(const char *face_tag, const char *filename_ttf, float font_size, unsigned flags);
 	void font_face_from_mem(const char *tag, const void *ttf_buffer, unsigned ttf_len, float font_size, unsigned flags);
@@ -93,24 +102,81 @@ public:
 	void font_color(const char *color_tag, uint32_t color);
 
 	// commands
-	vec2 font_xy();
+	Vector2 font_xy();
 	void font_goto(float x, float y);
-	vec2 font_print(const char *text);
-	vec2 font_rect(const char *text);
-	font_metrics_t font_metrics(const char *text);
-	//  void  font_clip(vec2 topleft, vec2 bottomright);
-	//  void  font_wrap(vec2 topleft, vec2 bottomright);
-
-	// syntax highlighting
-	void *font_colorize(const char *text, const char *comma_types, const char *comma_keywords); // comma separated tokens. expensive, please cache result.
-	vec2 font_highlight(const char *text, const void *colors);
-
-	// ui
-	void ui_font();
+	Vector2 font_print(const String &text);
+	Vector2 font_rect(const String &str);
+	font_metrics_t font_metrics(const String &text);
 
 	static TextRenderer *get_singleton();
 
+	TextRenderer();
+
 protected:
+	bool _fonts_initialized;
+
+	enum { FONT_MAX_COLORS = 256 };
+	enum { FONT_MAX_STRING_LEN = 40000 }; // more glyphs than any reasonable person would show on the screen at once. you can only fit 20736 10x10 rects in a 1920x1080 window
+
+	static uint32_t font_palette[FONT_MAX_COLORS];
+
+	typedef struct font_t {
+		bool initialized; 
+
+		//char filename[256];
+
+		// character info
+		// filled up by stb_truetype.h
+		stbtt_packedchar *cdata;
+		unsigned num_glyphs;
+		unsigned *cp2iter;
+		unsigned *iter2cp;
+		unsigned begin; // first glyph. used in cp2iter table to clamp into a lesser range
+
+		// font info and data
+		int height; // bitmap height
+		int width; // bitmap width
+		float font_size; // font size in pixels (matches scale[0+1] size below)
+		float factor; // font factor (font_size / (ascent - descent))
+		float scale[7]; // user defined font scale (match H1..H6 tags)
+
+		// displacement info
+		float ascent; // max distance above baseline for all glyphs
+		float descent; // max distance below baseline for all glyphs
+		float linegap; // distance betwen ascent of next line and descent of current line
+		float linedist; // distance between the baseline of two lines (ascent - descent + linegap)
+
+		// opengl stuff
+		GLuint vao;
+		Ref<TextMaterial> program;
+
+		// font bitmap texture
+		// generated using stb_truetype.h
+		GLuint texture_fontdata;
+
+		// metadata texture.
+		// first row contains information on which parts of the bitmap correspond to a glyph.
+		// the second row contain information about the relative displacement of the glyph relative to the cursor position
+		GLuint texture_offsets;
+
+		// color texture
+		// used to color each glyph individually, e.g. for syntax highlighting
+		GLuint texture_colors;
+
+		// vbos
+		GLuint vbo_quad; // Vector2: simply just a regular [0,1]x[0,1] quad
+		GLuint vbo_instances; // vec4: (char_pos_x, char_pos_y, char_index, color_index)
+	} font_t;
+
+	enum { FONTS_MAX = 10 };
+
+	font_t fonts[FONTS_MAX];
+
+	static void font_draw_cmd(font_t *f, const float *glyph_data, int glyph_idx, float factor, Vector2 offset);
+	Vector2 font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(font_t *, const float *, int, float, Vector2));
+
+	Vector2 gotoxy;
+
 	static TextRenderer *_singleton;
 };
 

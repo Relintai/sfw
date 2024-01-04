@@ -67,6 +67,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input_event.cpp -o sfw
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input_map.cpp -o sfw/render_core/input_map.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input.cpp -o sfw/render_core/input.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/shortcut.cpp -o sfw/render_core/shortcut.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/text_renderer.cpp -o sfw/render_core/text_renderer.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
@@ -100,7 +101,7 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
                         sfw/render_core/input_event.o sfw/render_core/input_map.o \
                         sfw/render_core/input.o sfw/render_core/shortcut.o \
-                        sfw/render_core/keyboard.o \
+                        sfw/render_core/keyboard.o sfw/render_core/text_renderer.o \
                         sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
                         sfw/render_objects/object_2d.o \
                         sfw/render_objects/sprite.o sfw/render_objects/tile_map.o \

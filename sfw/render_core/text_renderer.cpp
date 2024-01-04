@@ -28,72 +28,19 @@
 // http://bitmapmania.m78.com
 // cooz@m78.com
 
+#include "text_renderer.h"
+
+#include "window.h"
+
+#include "3rd_glad.h"
+#define STB_TRUETYPE_IMPLEMENTATION
+#include "3rd_stb_truetype.h"
+
 #include "font_data_bm_mini.inc.h"
 
-// -----------------------------------------------------------------------------
+#define RGB4(r, g, b, a) ((((uint32_t)a) << 24) | (((uint32_t)b) << 16) | (((uint32_t)g) << 8) | ((uint32_t)r))
 
-static const char mv_vs_source[] = "//" FILELINE /*#version 330 core\n\*/ "\
-\n\
-in vec2 vertexPosition;\n\
-in vec4 instanceGlyph;\n\
-\n\
-uniform sampler2D sampler_font;\n\
-uniform sampler2D sampler_meta;\n\
-\n\
-uniform float offset_firstline; // ascent - descent - linegap/2\n\
-uniform float scale_factor;     // scaling factor proportional to font size\n\
-uniform vec2 string_offset;     // offset of upper-left corner\n\
-\n\
-uniform vec2 res_meta;   // 96x2 \n\
-uniform vec2 res_bitmap; // 512x256\n\
-uniform vec2 resolution; // screen resolution\n\
-\n\
-out vec2 uv;\n\
-out float color_index; // for syntax highlighting\n\
-\n\
-void main() { \
-    // (xoff, yoff, xoff2, yoff2), from second row of texture\n\
-    vec4 q2 = texture(sampler_meta, vec2((instanceGlyph.z + 0.5)/res_meta.x, 0.75))*vec4(res_bitmap, res_bitmap);\n\
-\n\
-    vec2 p = vertexPosition*(q2.zw - q2.xy) + q2.xy; // offset and scale it properly relative to baseline\n\
-    p *= vec2(1.0, -1.0);                            // flip y, since texture is upside-down\n\
-    p.y -= offset_firstline;                         // make sure the upper-left corner of the string is in the upper-left corner of the screen\n\
-    p *= scale_factor;                               // scale relative to font size\n\
-    p += instanceGlyph.xy + string_offset;           // move glyph into the right position\n\
-    p *= 2.0/resolution;                             // to NDC\n\
-    p += vec2(-1.0, 1.0);                            // move to upper-left corner instead of center\n\
-\n\
-    gl_Position = vec4(p, 0.0, 1.0);\n\
-\n\
-    // (x0, y0, x1-x0, y1-y0), from first row of texture\n\
-    vec4 q = texture(sampler_meta, vec2((instanceGlyph.z + 0.5)/res_meta.x, 0.25));\n\
-\n\
-    // send the correct uv's in the font atlas to the fragment shader\n\
-    uv = q.xy + vertexPosition*q.zw;\n\
-    color_index = instanceGlyph.w;\n\
-}\n";
-
-static const char mv_fs_source[] = "//" FILELINE /*#version 330 core\n\*/ "\
-\n\
-in vec2 uv;\n\
-in float color_index;\n\
-\n\
-uniform sampler2D sampler_font;\n\
-uniform sampler1D sampler_colors;\n\
-uniform float num_colors;\n\
-\n\
-out vec4 outColor;\n\
-\n\
-void main() {\
-    vec4 col = texture(sampler_colors, (color_index+0.5)/num_colors);\n\
-    float s = texture(sampler_font, uv).r;\n\
-    outColor = vec4(col.rgb, s*col.a);\n\
-}\n";
-
-enum { FONT_MAX_COLORS = 256 };
-enum { FONT_MAX_STRING_LEN = 40000 }; // more glyphs than any reasonable person would show on the screen at once. you can only fit 20736 10x10 rects in a 1920x1080 window
-
-static unsigned font_palette[FONT_MAX_COLORS] = {
+uint32_t TextRenderer::font_palette[FONT_MAX_COLORS] = {
 	RGB4(248, 248, 242, 255), // foreground color
 	RGB4(249, 38, 114, 255), // operator
 	RGB4(174, 129, 255, 255), // numeric
@@ -105,77 +52,27 @@ static unsigned font_palette[FONT_MAX_COLORS] = {
 	RGB4(39, 40, 34, 255), // clear color
 };
 
-typedef struct font_t {
-	bool initialized;
-
-	//char filename[256];
-
-	// character info
-	// filled up by stb_truetype.h
-	stbtt_packedchar *cdata;
-	unsigned num_glyphs;
-	unsigned *cp2iter;
-	unsigned *iter2cp;
-	unsigned begin; // first glyph. used in cp2iter table to clamp into a lesser range
-
-	// font info and data
-	int height; // bitmap height
-	int width; // bitmap width
-	float font_size; // font size in pixels (matches scale[0+1] size below)
-	float factor; // font factor (font_size / (ascent - descent))
-	float scale[7]; // user defined font scale (match H1..H6 tags)
-
-	// displacement info
-	float ascent; // max distance above baseline for all glyphs
-	float descent; // max distance below baseline for all glyphs
-	float linegap; // distance betwen ascent of next line and descent of current line
-	float linedist; // distance between the baseline of two lines (ascent - descent + linegap)
-
-	// opengl stuff
-	GLuint vao;
-	GLuint program;
-
-	// font bitmap texture
-	// generated using stb_truetype.h
-	GLuint texture_fontdata;
-
-	// metadata texture.
-	// first row contains information on which parts of the bitmap correspond to a glyph.
-	// the second row contain information about the relative displacement of the glyph relative to the cursor position
-	GLuint texture_offsets;
-
-	// color texture
-	// used to color each glyph individually, e.g. for syntax highlighting
-	GLuint texture_colors;
-
-	// vbos
-	GLuint vbo_quad; // vec2: simply just a regular [0,1]x[0,1] quad
-	GLuint vbo_instances; // vec4: (char_pos_x, char_pos_y, char_index, color_index)
-} font_t;
-
-enum { FONTS_MAX = 10 };
-
-static font_t fonts[FONTS_MAX] = { 0 };
-
-static void font_init() {
-	do_once {
-		font_face_from_mem(FONT_FACE1, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE2, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE3, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE4, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE5, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE6, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE7, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE8, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE9, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
-		font_face_from_mem(FONT_FACE10, bm_mini_ttf, countof(bm_mini_ttf), 42.5f, 0);
+void TextRenderer::font_init() {
+	if (_fonts_initialized) {
+		return;
 	}
+
+	_fonts_initialized = true;
+
+	font_face_from_mem(FONT_FACE1, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE2, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE3, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE4, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE5, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE6, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE7, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE8, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE9, bm_mini_ttf, 20176, 42.5f, 0);
+	font_face_from_mem(FONT_FACE10, bm_mini_ttf, 20176, 42.5f, 0);
 }
 
 // Remap color within all existing color textures
-void font_color(const char *tag, uint32_t color) {
-	font_init();
-
+void TextRenderer::font_color(const char *tag, uint32_t color) {
 	unsigned index = *tag - FONT_COLOR1[0];
 	if (index < FONT_MAX_COLORS) {
 		font_palette[index] = color;
@@ -191,22 +88,7 @@ void font_color(const char *tag, uint32_t color) {
 	}
 }
 
-void ui_font() {
-	for (int i = 0; i < countof(fonts); ++i) {
-		if (ui_collapse(va("Font %d", i), va("%p%d", &fonts[i], i))) {
-			font_t *f = &fonts[i];
-			ui_float("Ascent", &f->ascent);
-			ui_float("Descent", &f->descent);
-			ui_float("Line Gap", &f->linegap);
-			f->linedist = (f->ascent - f->descent + f->linegap);
-			ui_collapse_end();
-		}
-	}
-}
-
-void font_scales(const char *tag, float h1, float h2, float h3, float h4, float h5, float h6) {
-	font_init();
-
+void TextRenderer::font_scales(const char *tag, float h1, float h2, float h3, float h4, float h5, float h6) {
 	unsigned index = *tag - FONT_FACE1[0];
 	if (index > FONTS_MAX)
 		return;
@@ -228,17 +110,23 @@ void font_scales(const char *tag, float h1, float h2, float h3, float h4, float 
 // 1. Call stb_truetype.h routines to read and parse a .ttf file.
 // 1. Create a bitmap that is uploaded to the gpu using opengl.
 // 1. Calculate and save a bunch of useful variables and put them in the global font variable.
-void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len, float font_size, unsigned flags) {
+void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len, float font_size, unsigned flags) {
 	unsigned index = *tag - FONT_FACE1[0];
-	if (index > FONTS_MAX)
+	if (index > FONTS_MAX) {
 		return;
-	if (font_size <= 0 || font_size > 72)
-		return;
-	if (!ttf_data || !ttf_len)
-		return;
+	}
 
-	if (!(flags & FONT_EM))
+	if (font_size <= 0 || font_size > 72) {
+		return;
+	}
+
+	if (!ttf_data || !ttf_len) {
+		return;
+	}
+
+	if (!(flags & FONT_EM)) {
 		flags |= FONT_ASCII; // ensure this minimal range [0020-00FF] is almost always in
+	}
 
 	font_t *f = &fonts[index];
 	f->initialized = 1;
@@ -260,91 +148,117 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 	f->scale[5] = 0.3750f; // H5
 	f->scale[6] = 0.2500f; // H6
 
-	const char *vs_filename = 0, *fs_filename = 0;
-	const char *vs = vs_filename ? vfs_read(vs_filename) : mv_vs_source;
-	const char *fs = fs_filename ? vfs_read(fs_filename) : mv_fs_source;
-	f->program = shader(vs, fs, "vertexPosition,instanceGlyph", "outColor", NULL);
+	//f->program = shader(vs, fs, "vertexPosition,instanceGlyph", "outColor", NULL);
+
+	f->program.instance();
 
 // figure out what ranges we're about to bake
-#define MERGE_TABLE(table)                                     \
-	do {                                                       \
-		for (unsigned i = 0; table[i]; i += 2) {               \
-			uint64_t begin = table[i + 0], end = table[i + 1]; \
-			for (unsigned j = begin; j <= end; ++j) {          \
-				array_push(sorted, j);                         \
-			}                                                  \
-		}                                                      \
-	} while (0)
-#define MERGE_PACKED_TABLE(codepoint_begin, table)                                     \
-	do {                                                                               \
-		for (int i = 0, begin = codepoint_begin, end = countof(table); i < end; i++) { \
-			array_push(sorted, (unsigned)(begin + table[i]));                          \
-			begin += table[i];                                                         \
-		}                                                                              \
-	} while (0)
+#define MERGE_TABLE(table, table_size)     \
+	int orig_size = sorted.size();         \
+	sorted.resize(orig_size + table_size); \
+                                           \
+	uint64_t *p = sorted.ptrw();           \
+                                           \
+	for (int i = 0; i < table_size; ++i) { \
+		p[orig_size + i] = table[i];       \
+	}
 
-	array(uint64_t) sorted = 0;
+#define MERGE_PACKED_TABLE(codepoint_begin, table, table_size) \
+	int orig_size = sorted.size();                             \
+	int begin = codepoint_begin;                               \
+	sorted.resize(orig_size + table_size);                     \
+                                                               \
+	uint64_t *p = sorted.ptrw();                               \
+                                                               \
+	for (int i = 0; i < table_size; ++i) {                     \
+		p[orig_size + i] = (unsigned)(begin + table[i]);       \
+		begin += table[i];                                     \
+	}
+
+	Vector<uint64_t> sorted;
 	if (flags & FONT_ASCII) {
-		MERGE_TABLE(table_common);
+		MERGE_TABLE(table_common, 5);
 	}
 	if (flags & FONT_EM) {
-		MERGE_TABLE(table_emoji);
+		MERGE_TABLE(table_emoji, 7);
 	}
 	if (flags & FONT_EU) {
-		MERGE_TABLE(table_eastern_europe);
+		MERGE_TABLE(table_eastern_europe, 19);
 	}
 	if (flags & FONT_RU) {
-		MERGE_TABLE(table_western_europe);
+		MERGE_TABLE(table_western_europe, 15);
 	}
 	if (flags & FONT_EL) {
-		MERGE_TABLE(table_western_europe);
+		MERGE_TABLE(table_western_europe, 15);
 	}
 	if (flags & FONT_AR) {
-		MERGE_TABLE(table_middle_east);
+		MERGE_TABLE(table_middle_east, 7);
 	}
 	if (flags & FONT_HE) {
-		MERGE_TABLE(table_middle_east);
+		MERGE_TABLE(table_middle_east, 7);
 	}
 	if (flags & FONT_TH) {
-		MERGE_TABLE(table_thai);
+		MERGE_TABLE(table_thai, 5);
 	}
 	if (flags & FONT_VI) {
-		MERGE_TABLE(table_vietnamese);
+		MERGE_TABLE(table_vietnamese, 15);
 	}
 	if (flags & FONT_KR) {
-		MERGE_TABLE(table_korean);
+		MERGE_TABLE(table_korean, 7);
 	}
 	if (flags & FONT_JP) {
-		MERGE_TABLE(table_chinese_japanese_common);
-		MERGE_PACKED_TABLE(0x4E00, packed_table_japanese);
+		{
+			MERGE_TABLE(table_chinese_japanese_common, 7);
+		}
+		{
+			MERGE_PACKED_TABLE(0x4E00, packed_table_japanese, 2999);
+		}
 	}
 	if (flags & FONT_ZH) {
-		MERGE_TABLE(table_chinese_japanese_common);
-		MERGE_PACKED_TABLE(0x4E00, packed_table_chinese);
+		{
+			MERGE_TABLE(table_chinese_japanese_common, 7);
+		}
+		{
+			MERGE_PACKED_TABLE(0x4E00, packed_table_chinese, 2500);
+		}
 	} // zh-simplified
 	if (flags & FONT_ZH) {
-		MERGE_TABLE(table_chinese_punctuation);
+		MERGE_TABLE(table_chinese_punctuation, 3);
 	} // both zh-simplified and zh-full
 	//  if(flags & FONT_ZH)    { MERGE_TABLE(table_chinese_full); } // zh-full
-	array_sort(sorted, less_64_ptr);
-	array_unique(sorted, less_64_ptr); // sort + unique pass
+
+	sorted.sort();
+
+	for (int i = 0; i < sorted.size(); ++i) {
+		uint64_t current_element = sorted[i];
+
+		for (int j = i + 1; j < sorted.size(); ++j) {
+			if (sorted[j] == current_element) {
+				sorted.remove(j);
+				--j;
+			} else {
+				break;
+			}
+		}
+	}
 
 	// pack and create bitmap
-	unsigned char *bitmap = (unsigned char *)MALLOC(f->height * f->width);
+	unsigned char *bitmap = memnew_arr(unsigned char, f->height * f->width);
 
-	int charCount = *array_back(sorted) - sorted[0] + 1; // 0xEFFFF;
-	f->cdata = (stbtt_packedchar *)CALLOC(1, sizeof(stbtt_packedchar) * charCount);
-	f->iter2cp = (unsigned *)MALLOC(sizeof(unsigned) * charCount);
-	f->cp2iter = (unsigned *)MALLOC(sizeof(unsigned) * charCount);
-	for (int i = 0; i < charCount; ++i)
+	int charCount = sorted[sorted.size() - 1] - sorted[0] + 1; // 0xEFFFF;
+	f->cdata = (stbtt_packedchar *)calloc(1, sizeof(stbtt_packedchar) * charCount);
+	f->iter2cp = memnew_arr(unsigned, charCount);
+	f->cp2iter = memnew_arr(unsigned, charCount);
+	for (int i = 0; i < charCount; ++i) {
 		f->iter2cp[i] = f->cp2iter[i] = 0xFFFD; // default invalid glyph
+	}
 
 	// find first char
 	{
 		stbtt_fontinfo info = { 0 };
-		stbtt_InitFont(&info, ttf_data, stbtt_GetFontOffsetForIndex(ttf_data, 0));
+		stbtt_InitFont(&info, (const unsigned char *)ttf_data, stbtt_GetFontOffsetForIndex((const unsigned char *)ttf_data, 0));
 
-		for (int i = 0, end = array_count(sorted); i < end; ++i) {
+		for (int i = 0, end = sorted.size(); i < end; ++i) {
 			unsigned glyph = sorted[i];
 			if (!stbtt_FindGlyphIndex(&info, glyph))
 				continue;
@@ -355,43 +269,43 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 
 	stbtt_pack_context pc;
 	if (!stbtt_PackBegin(&pc, bitmap, f->width, f->height, 0, 1, NULL)) {
-		PANIC("Failed to initialize atlas font");
+		ERR_FAIL_COND("Failed to initialize atlas font");
 	}
 	stbtt_PackSetOversampling(&pc, flags & FONT_OVERSAMPLE_X ? 2 : 1, flags & FONT_OVERSAMPLE_Y ? 2 : 1); /*useful on small fonts*/
 	int count = 0;
-	for (int i = 0, num = array_count(sorted); i < num; ++i) {
+	for (int i = 0, num = sorted.size(); i < num; ++i) {
 		uint64_t begin = sorted[i], end = sorted[i];
-		while (i < (num - 1) && (sorted[i + 1] - sorted[i]) == 1)
+		while (i < (num - 1) && (sorted[i + 1] - sorted[i]) == 1) {
 			end = sorted[++i];
+		}
 		//printf("(%d,%d)", (unsigned)begin, (unsigned)end);
 
 		if (begin < f->begin)
 			continue;
 
-		if (stbtt_PackFontRange(&pc, ttf_data, 0, f->font_size, begin, end - begin + 1, (stbtt_packedchar *)f->cdata + begin - f->begin)) {
+		if (stbtt_PackFontRange(&pc, (const unsigned char *)ttf_data, 0, f->font_size, begin, end - begin + 1, (stbtt_packedchar *)f->cdata + begin - f->begin)) {
 			for (uint64_t cp = begin; cp <= end; ++cp) {
 				// unicode->index runtime lookup
 				f->cp2iter[cp - f->begin] = count;
 				f->iter2cp[count++] = cp;
 			}
 		} else {
-			PRINTF("!Failed to pack atlas font. Likely out of texture mem.");
+			ERR_PRINT("!Failed to pack atlas font. Likely out of texture mem.");
 		}
 	}
 	stbtt_PackEnd(&pc);
 	f->num_glyphs = count;
 
-	assert(f->num_glyphs < charCount);
-
-	array_free(sorted);
+	//CRASH_COND(f->num_glyphs < (unsigned int)charCount);
 
 	// calculate vertical font metrics
 	stbtt_fontinfo info = { 0 };
-	stbtt_InitFont(&info, ttf_data, stbtt_GetFontOffsetForIndex(ttf_data, 0));
+	stbtt_InitFont(&info, (const unsigned char *)ttf_data, stbtt_GetFontOffsetForIndex((const unsigned char *)ttf_data, 0));
 
 	int a, d, l;
-	if (!stbtt_GetFontVMetricsOS2(&info, &a, &d, &l))
+	if (!stbtt_GetFontVMetricsOS2(&info, &a, &d, &l)) {
 		stbtt_GetFontVMetrics(&info, &a, &d, &l);
+	}
 
 	f->ascent = a;
 	f->descent = d;
@@ -402,7 +316,7 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 	// save some gpu memory by truncating unused vertical space in atlas texture
 	{
 		int max_y1 = 0;
-		for (int i = 0; i < f->num_glyphs; i++) {
+		for (unsigned int i = 0; i < f->num_glyphs; i++) {
 			int cp = f->iter2cp[i];
 			if (cp == 0xFFFD)
 				continue;
@@ -415,7 +329,7 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 		f->height = max_y1 + 1;
 	}
 
-	PRINTF("Font atlas size %dx%d (GL_R, %5.2fKiB) (%u glyphs)\n", f->width, f->height, f->width * f->height / 1024.f, f->num_glyphs);
+	LOG_MSG("Font atlas size %dx%d (GL_R, %5.2fKiB) (%u glyphs)\n", f->width, f->height, f->width * f->height / 1024.f, f->num_glyphs);
 
 	// vao
 	glGenVertexArrays(1, &f->vao);
@@ -454,10 +368,10 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	// last chance to inspect the font atlases
-	if (flag("--font-debug"))
-		stbi_write_png(va("font_debug%d.png", index), f->width, f->height, 1, bitmap, 0);
+	//if (flag("--font-debug"))
+	//	stbi_write_png(va("font_debug%d.png", index), f->width, f->height, 1, bitmap, 0);
 
-	FREE(bitmap);
+	memfree(bitmap);
 
 	// setup and upload font metadata texture
 	// used for lookup in the bitmap texture
@@ -465,10 +379,10 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, f->texture_offsets);
 
-	float *texture_offsets = (float *)MALLOC(sizeof(float) * 8 * f->num_glyphs);
+	float *texture_offsets = memnew_arr(float, 8 * f->num_glyphs);
 
 	// remap larger 0xFFFF unicodes into smaller NUM_GLYPHS glyphs
-	for (int i = 0, count = 0; i < f->num_glyphs; i++) {
+	for (unsigned i = 0, count = 0; i < f->num_glyphs; i++) {
 		unsigned cp = f->iter2cp[i];
 		if (cp == 0xFFFD)
 			continue;
@@ -497,7 +411,7 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f->num_glyphs, 2, 0, GL_RGBA, GL_FLOAT, texture_offsets);
 
-	FREE(texture_offsets);
+	memfree(texture_offsets);
 
 	// setup color texture
 	glGenTextures(1, &f->texture_colors);
@@ -509,18 +423,19 @@ void font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len,
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
 	// upload constant uniforms
-	glUseProgram(f->program);
-	glUniform1i(glGetUniformLocation(f->program, "sampler_font"), 0);
-	glUniform1i(glGetUniformLocation(f->program, "sampler_meta"), 1);
-	glUniform1i(glGetUniformLocation(f->program, "sampler_colors"), 2);
+	glUseProgram(f->program->get_program());
+	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_font"), 0);
+	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_meta"), 1);
+	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_colors"), 2);
 
-	glUniform2f(glGetUniformLocation(f->program, "res_bitmap"), f->width, f->height);
-	glUniform2f(glGetUniformLocation(f->program, "res_meta"), f->num_glyphs, 2);
-	glUniform1f(glGetUniformLocation(f->program, "num_colors"), FONT_MAX_COLORS);
+	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_bitmap"), f->width, f->height);
+	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_meta"), f->num_glyphs, 2);
+	glUniform1f(glGetUniformLocation(f->program->get_program(), "num_colors"), FONT_MAX_COLORS);
 	(void)flags;
 }
 
-void font_face(const char *tag, const char *filename_ttf, float font_size, unsigned flags) {
+void TextRenderer::font_face(const char *tag, const char *filename_ttf, float font_size, unsigned flags) {
+	/*
 	font_init();
 
 	int len;
@@ -529,9 +444,10 @@ void font_face(const char *tag, const char *filename_ttf, float font_size, unsig
 		buffer = file_load(filename_ttf, &len);
 
 	font_face_from_mem(tag, buffer, len, font_size, flags);
+	*/
 }
 
-static void font_draw_cmd(font_t *f, const float *glyph_data, int glyph_idx, float factor, vec2 offset) {
+void TextRenderer::font_draw_cmd(font_t *f, const float *glyph_data, int glyph_idx, float factor, Vector2 offset) {
 	// Backup GL state
 	GLint last_program, last_vertex_array;
 	GLint last_texture0, last_texture1, last_texture2;
@@ -574,14 +490,14 @@ static void font_draw_cmd(font_t *f, const float *glyph_data, int glyph_idx, flo
 	glBindVertexArray(f->vao);
 
 	// update uniforms
-	glUseProgram(f->program);
-	glUniform1f(glGetUniformLocation(f->program, "scale_factor"), factor);
-	glUniform2fv(glGetUniformLocation(f->program, "string_offset"), 1, &offset.x);
-	glUniform1f(glGetUniformLocation(f->program, "offset_firstline"), f->ascent * f->factor);
+	glUseProgram(f->program->get_program());
+	glUniform1f(glGetUniformLocation(f->program->get_program(), "scale_factor"), factor);
+	glUniform2fv(glGetUniformLocation(f->program->get_program(), "string_offset"), 1, &offset.x);
+	glUniform1f(glGetUniformLocation(f->program->get_program(), "offset_firstline"), f->ascent * f->factor);
 
 	GLint dims[4] = { 0 };
 	glGetIntegerv(GL_VIEWPORT, dims);
-	glUniform2f(glGetUniformLocation(f->program, "resolution"), dims[2], dims[3]);
+	glUniform2f(glGetUniformLocation(f->program->get_program(), "resolution"), dims[2], dims[3]);
 
 	// actual uploading
 	glBindBuffer(GL_ARRAY_BUFFER, f->vbo_instances);
@@ -611,18 +527,20 @@ static void font_draw_cmd(font_t *f, const float *glyph_data, int glyph_idx, flo
 // 1. call font_face() if it's the first time it's called.
 // 1. parse the string and update the instance vbo, then upload it
 // 1. draw the string
-static vec2 font_draw_ex(const char *text, vec2 offset, const char *col, void (*draw_cmd)(font_t *, const float *, int, float, vec2)) {
+Vector2 TextRenderer::font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(font_t *, const float *, int, float, Vector2)) {
 	font_init();
 
 	// sanity checks
-	int len = strlen(text);
+	int len = text.length();
 	if (len >= FONT_MAX_STRING_LEN) {
-		return vec2(0, 0);
+		return Vector2(0, 0);
 	}
 
 	// pre-init
-	static __thread float *text_glyph_data;
-	do_once text_glyph_data = MALLOC(4 * FONT_MAX_STRING_LEN * sizeof(float));
+	static __thread float *text_glyph_data = NULL;
+	if (!text_glyph_data) {
+		text_glyph_data = memnew_arr(float, 4 * FONT_MAX_STRING_LEN);
+	}
 
 	// ready
 	font_t *f = &fonts[0];
@@ -631,13 +549,10 @@ static vec2 font_draw_ex(const char *text, vec2 offset, const char *col, void (*
 	float X = 0, Y = 0, W = 0, L = f->ascent * f->factor * f->scale[S], LL = L; // LL=largest linedist
 	offset.y = -offset.y; // invert y polarity
 
-	// utf8 to utf32
-	array(uint32_t) unicode = string32(text);
-
 	// parse string
 	float *t = text_glyph_data;
-	for (int i = 0, end = array_count(unicode); i < end; ++i) {
-		uint32_t ch = unicode[i];
+	for (int i = 0, end = text.length(); i < end; ++i) {
+		uint32_t ch = text[i];
 
 		if (ch == '\n') {
 			// change cursor, advance y, record largest x as width, increase height
@@ -701,304 +616,74 @@ static vec2 font_draw_ex(const char *text, vec2 offset, const char *col, void (*
 		draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, f->scale[S], offset);
 
 	//if(strstr(text, "fps")) printf("(%f,%f) (%f) L:%f LINEDIST:%f\n", X, Y, W, L, f->linedist);
-	return abs2(vec2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL));
+	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
 }
-
-void *font_colorize(const char *text, const char *comma_types, const char *comma_keywords) {
-	// reallocate memory
-	static __thread int slot = 0;
-	static __thread char *buf[16] = { 0 };
-	static __thread array(char *) list[16] = { 0 };
-
-	slot = (slot + 1) % 16;
-	buf[slot] = REALLOC(buf[slot], strlen(text) + 1);
-	memset(buf[slot], 0, strlen(text) + 1);
-
-	// ready
-	char *col = buf[slot];
-	char *str = STRDUP(text);
-
-	// split inputs
-	array(char *) TYPES = strsplit(comma_types, ", ");
-	array(char *) KEYWORDS = strsplit(comma_keywords, ", ");
-
-	// ignored characters
-	char delims[] = " ,(){}[];\t\n";
-	int num_delims = strlen(delims);
-
-	char operators[] = "/+-*<>=&|";
-	int num_operators = strlen(operators);
-
-	struct token {
-		char *start, *stop;
-		enum {
-			TOKEN_OTHER,
-			TOKEN_OPERATOR,
-			TOKEN_NUMERIC,
-			TOKEN_FUNCTION,
-			TOKEN_KEYWORD,
-			TOKEN_COMMENT,
-			TOKEN_VARIABLE,
-			TOKEN_UNSET
-		} type;
-	} tokens[9999]; // hurr
-	int num_tokens = 0; // running counter
-
-	char *ptr = str;
-	while (*ptr) {
-		// skip delimiters
-		int is_delim = 0;
-		for (int i = 0; i < num_delims; i++) {
-			if (*ptr == delims[i]) {
-				is_delim = 1;
-				break;
-			}
-		}
-
-		if (is_delim == 1) {
-			ptr++;
-			continue;
-		}
-
-		// found a token!
-		char *start = ptr;
-
-		if (*ptr == '/' && *(ptr + 1) == '/') {
-			// found a line comment, go to end of line or end of file
-			while (*ptr != '\n' && *ptr != '\0') {
-				ptr++;
-			}
-
-			tokens[num_tokens].start = start;
-			tokens[num_tokens].stop = ptr;
-			tokens[num_tokens].type = TOKEN_COMMENT;
-			num_tokens++;
-
-			ptr++;
-			continue;
-		}
-
-		if (*ptr == '/' && *(ptr + 1) == '*') {
-			// found a block comment, go to end of line or end of file
-			while (!(*ptr == '*' && *(ptr + 1) == '/') && *ptr != '\0') {
-				ptr++;
-			}
-			ptr++;
-
-			tokens[num_tokens].start = start;
-			tokens[num_tokens].stop = ptr + 1;
-			tokens[num_tokens].type = TOKEN_COMMENT;
-			num_tokens++;
-
-			ptr++;
-			continue;
-		}
-
-		// check if it's an operator
-		int is_operator = 0;
-		for (int i = 0; i < num_operators; i++) {
-			if (*ptr == operators[i]) {
-				is_operator = 1;
-				break;
-			}
-		}
-
-		if (is_operator == 1) {
-			tokens[num_tokens].start = start;
-			tokens[num_tokens].stop = ptr + 1;
-			tokens[num_tokens].type = TOKEN_OPERATOR;
-			num_tokens++;
-			ptr++;
-			continue;
-		}
-
-		// it's either a name, type, a keyword, a function, or an names separated by an operator without spaces
-		while (*ptr) {
-			// check whether it's an operator stuck between two names
-			int is_operator2 = 0;
-			for (int i = 0; i < num_operators; i++) {
-				if (*ptr == operators[i]) {
-					is_operator2 = 1;
-					break;
-				}
-			}
-
-			if (is_operator2 == 1) {
-				tokens[num_tokens].start = start;
-				tokens[num_tokens].stop = ptr;
-				tokens[num_tokens].type = TOKEN_UNSET;
-				num_tokens++;
-				break;
-			}
-
-			// otherwise go until we find the next delimiter
-			int is_delim2 = 0;
-			for (int i = 0; i < num_delims; i++) {
-				if (*ptr == delims[i]) {
-					is_delim2 = 1;
-					break;
-				}
-			}
-
-			if (is_delim2 == 1) {
-				tokens[num_tokens].start = start;
-				tokens[num_tokens].stop = ptr;
-				tokens[num_tokens].type = TOKEN_UNSET;
-				num_tokens++;
-				ptr++;
-				break;
-			}
-
-			// did not find delimiter, check next char
-			ptr++;
-		}
-	}
-
-	// determine the types of the unset tokens, i.e. either
-	// a name, a type, a keyword, or a function
-	int num_keywords = array_count(KEYWORDS);
-	int num_types = array_count(TYPES);
-
-	for (int i = 0; i < num_tokens; i++) {
-		// TOKEN_OPERATOR and TOKEN_COMMENT should already be set, so skip those
-		if (tokens[i].type != TOKEN_UNSET) {
-			continue;
-		}
-
-		char end_char = *tokens[i].stop;
-
-		// temporarily null terminate at end of token, restored after parsing
-		*tokens[i].stop = '\0';
-
-		// parse
-
-		// if it's a keyword
-		int is_keyword = 0;
-		for (int j = 0; j < num_keywords; j++) {
-			if (strcmp(tokens[i].start, KEYWORDS[j]) == 0) {
-				is_keyword = 1;
-				break;
-			}
-		}
-		if (is_keyword == 1) {
-			tokens[i].type = TOKEN_KEYWORD;
-			*tokens[i].stop = end_char;
-			continue;
-		}
-
-		// Check if it's a function
-		float f;
-		if (end_char == '(') {
-			tokens[i].type = TOKEN_FUNCTION;
-			*tokens[i].stop = end_char;
-			continue;
-		}
-
-		// or if it's a numeric value. catches both integers and floats
-		if (sscanf(tokens[i].start, "%f", &f) == 1) {
-			tokens[i].type = TOKEN_NUMERIC;
-			*tokens[i].stop = end_char;
-			continue;
-		}
-
-		// if it's a variable type
-		int is_type = 0;
-		for (int j = 0; j < num_types; j++) {
-			if (strcmp(tokens[i].start, TYPES[j]) == 0) {
-				is_type = 1;
-				break;
-			}
-		}
-		if (is_type == 1) {
-			tokens[i].type = TOKEN_VARIABLE;
-			*tokens[i].stop = end_char;
-			continue;
-		}
-
-		// otherwise it's a regular variable name
-		tokens[i].type = TOKEN_OTHER;
-		*tokens[i].stop = end_char;
-	}
-
-	// print all tokens and their types
-	for (int i = 0; i < num_tokens; i++) {
-		for (char *p = tokens[i].start; p != tokens[i].stop; p++) {
-			col[(p - str)] = tokens[i].type;
-		}
-	}
-
-	FREE(str);
-	return col;
-}
-
-static vec2 gotoxy = { 0 };
 
 // Return cursor
-vec2 font_xy() {
+Vector2 TextRenderer::font_xy() {
 	return gotoxy;
 }
 
 // Relocate cursor
-void font_goto(float x, float y) {
-	gotoxy = vec2(x, y);
+void TextRenderer::font_goto(float x, float y) {
+	gotoxy = Vector2(x, y);
 }
 
 // Print and linefeed. Text may include markup code
-vec2 font_print(const char *text) {
+Vector2 TextRenderer::font_print(const String &text) {
 	// @fixme: remove this hack
 	if (text[0] == FONT_LEFT[0]) {
+		int window_width = AppWindow::get_singleton()->get_width();
+		int window_height = AppWindow::get_singleton()->get_height();
+
 		int l = text[1] == FONT_LEFT[1];
 		int c = text[1] == FONT_CENTER[1];
 		int r = text[1] == FONT_RIGHT[1];
 		if (l || c || r) {
-			vec2 rect = font_rect(text + 2);
-			gotoxy.x = l ? 0 : r ? (window_width() - rect.x)
-								 : window_width() / 2 - rect.x / 2;
-			return font_print(text + 2);
+			String ntext = text.substr(2);
+
+			Vector2 rect = font_rect(ntext);
+			gotoxy.x = l ? 0 : r ? (window_width - rect.x)
+								 : window_width / 2 - rect.x / 2;
+			return font_print(ntext);
 		}
 		int t = text[1] == FONT_TOP[1];
 		int b = text[1] == FONT_BOTTOM[1];
 		int m = text[1] == FONT_MIDDLE[1];
 		int B = text[1] == FONT_BASELINE[1];
 		if (t || b || m || B) {
-			vec2 rect = font_rect(text + 2);
-			gotoxy.y = t ? 0 : b ? (window_height() - rect.y)
-					: m			 ? window_height() / 2 - rect.y / 2
-								 : window_height() / 2 - rect.y / 1;
-			return font_print(text + 2);
+			String ntext = text.substr(2);
+
+			Vector2 rect = font_rect(ntext);
+			gotoxy.y = t ? 0 : b ? (window_height - rect.y)
+					: m			 ? window_height / 2 - rect.y / 2
+								 : window_height / 2 - rect.y / 1;
+			return font_print(ntext);
 		}
 	}
 
-	vec2 dims = font_draw_ex(text, gotoxy, NULL, font_draw_cmd);
-	gotoxy.y += strchr(text, '\n') ? dims.y : 0;
-	gotoxy.x = strchr(text, '\n') ? 0 : gotoxy.x + dims.x;
-	return dims;
-}
+	Vector2 dims = font_draw_ex(text, gotoxy, NULL, font_draw_cmd);
 
-// Print a code snippet with syntax highlighting
-vec2 font_highlight(const char *text, const void *colors) {
-	vec2 dims = font_draw_ex(text, gotoxy, (const char *)colors, font_draw_cmd);
-	gotoxy.y += strchr(text, '\n') ? dims.y : 0;
-	gotoxy.x = strchr(text, '\n') ? 0 : gotoxy.x + dims.x;
+	int nindex = text.find_char('\n');
+
+	gotoxy.y += nindex ? dims.y : 0;
+	gotoxy.x = nindex ? 0 : gotoxy.x + dims.x;
 	return dims;
 }
 
 // Calculate the size of a string, in the pixel size specified. Count stray newlines too.
-vec2 font_rect(const char *str) {
+Vector2 TextRenderer::font_rect(const String &str) {
 	return font_draw_ex(str, gotoxy, NULL, NULL);
 }
 
-font_metrics_t font_metrics(const char *text) {
+TextRenderer::font_metrics_t TextRenderer::font_metrics(const String &text) {
 	font_metrics_t m = { 0 };
 	int S = 3;
 	font_t *f = &fonts[0];
 
-	// utf8 to utf32
-	array(uint32_t) unicode = string32(text);
-
 	// parse string
-	for (int i = 0, end = array_count(unicode); i < end; ++i) {
-		uint32_t ch = unicode[i];
+	for (int i = 0, end = text.length(); i < end; ++i) {
+		uint32_t ch = text[i];
 		if (ch >= 1 && ch <= 6) {
 			S = ch;
 			continue;
@@ -1019,6 +704,13 @@ font_metrics_t font_metrics(const char *text) {
 	return m;
 }
 
-TextRenderer *TextRenderer::get_singleton();
+TextRenderer *TextRenderer::get_singleton() {
+	return _singleton;
+}
 
-TextRenderer *TextRenderer::_singleton;
+TextRenderer::TextRenderer() {
+	_singleton = this;
+	_fonts_initialized = false;
+}
+
+TextRenderer *TextRenderer::_singleton = NULL;

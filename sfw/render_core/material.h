@@ -2,11 +2,14 @@
 #define MATERIAL_H
 
 #include "core/projection.h"
-#include "render_core/shader.h"
 #include "core/transform.h"
 #include "core/transform_2d.h"
+#include "object/reference.h"
+#include "render_core/shader.h"
 
-class Material {
+class Material : public Reference {
+	SFW_OBJECT(Material, Reference);
+
 public:
 	void bind();
 
