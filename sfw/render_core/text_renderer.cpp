@@ -40,6 +40,7 @@
 #include "stb_image_write.h"
 
 #include "font_data_bm_mini.inc.h"
+#include "font_data_tables.inc.h"
 
 #define RGB4(r, g, b, a) ((((uint32_t)a) << 24) | (((uint32_t)b) << 16) | (((uint32_t)g) << 8) | ((uint32_t)r))
 
@@ -364,7 +365,7 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 	//if (flag("--font-debug"))
 	//String pngname = "font_debug" + itos(index) + " .png";
 	//stbi_write_png(pngname.utf8().get_data(), f->width, f->height, 1, bitmap, 0);
-	
+
 	memdelete_arr(bitmap);
 
 	/*
