@@ -5,6 +5,7 @@
 
 #include "render_core/color_material.h"
 #include "render_core/colored_material.h"
+#include "render_core/font.h"
 #include "render_core/image.h"
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
@@ -35,6 +36,10 @@ public:
 	Ref<Image> image;
 	Texture *texture;
 	TextureMaterial2D *material;
+
+	Ref<Font> _font;
+	Sprite *_font_test_sprite;
+	TextureMaterial2D *_font_test_mat;
 
 	Camera2D *camera_2d;
 	TileMap *tile_map;

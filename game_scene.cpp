@@ -96,6 +96,8 @@ void GameScene::render() {
 	sprite->render();
 	tile_map->render();
 
+	_font_test_sprite->render();
+
 	//TextRenderer::get_singleton()->font_init();
 	//TextRenderer::get_singleton()->font_print("test");
 }
@@ -112,6 +114,19 @@ GameScene::GameScene() {
 
 	//float ar = static_cast<float>(w) / static_cast<float>(h);
 	//camera->width = camera->height * ar;
+
+	_font.instance();
+	_font->load_default(31.5);
+
+	_font_test_sprite = memnew(Sprite);
+
+	_font_test_mat = new TextureMaterial2D();
+	_font_test_mat->texture = _font->get_texture().ptr();
+	_font_test_sprite->mesh_instance->material = _font_test_mat;
+	_font_test_sprite->width = _font->get_atlas_width();
+	_font_test_sprite->height = _font->get_atlas_height();
+	_font_test_sprite->transform.set_origin(Vector2(1000, 100));
+	_font_test_sprite->update_mesh();
 
 	image.instance();
 	image->load_from_file("icon.png");

@@ -42,84 +42,21 @@
 #include "font_data_bm_mini.inc.h"
 #include "font_data_tables.inc.h"
 
-#define RGB4(r, g, b, a) ((((uint32_t)a) << 24) | (((uint32_t)b) << 16) | (((uint32_t)g) << 8) | ((uint32_t)r))
+#include "render_core/image.h"
+#include "render_core/texture.h"
 
-uint32_t TextRenderer::font_palette[FONT_MAX_COLORS] = {
-	RGB4(248, 248, 242, 255), // foreground color
-	RGB4(249, 38, 114, 255), // operator
-	RGB4(174, 129, 255, 255), // numeric
-	RGB4(102, 217, 239, 255), // function
-	RGB4(249, 38, 114, 255), // keyword
-	RGB4(117, 113, 94, 255), // comment
-	RGB4(102, 217, 239, 255), // type
-	RGB4(73, 72, 62, 255), // background color
-	RGB4(39, 40, 34, 255), // clear color
-};
-
-void TextRenderer::font_init() {
-	if (_fonts_initialized) {
-		return;
-	}
-
-	_fonts_initialized = true;
-
-	font_face_from_mem(FONT_FACE1, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE2, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE3, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE4, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE5, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE6, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE7, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE8, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE9, bm_mini_ttf, 20176, 42.5f, 0);
-	font_face_from_mem(FONT_FACE10, bm_mini_ttf, 20176, 42.5f, 0);
+void Font::load_default(const float size, const uint32_t flags) {
+	font_face_from_mem(bm_mini_ttf, 20176, size, flags);
 }
 
-// Remap color within all existing color textures
-void TextRenderer::font_color(const char *tag, uint32_t color) {
-	unsigned index = *tag - FONT_COLOR1[0];
-	if (index < FONT_MAX_COLORS) {
-		font_palette[index] = color;
-
-		for (int i = 0; i < FONTS_MAX; ++i) {
-			font_t *f = &fonts[i];
-			if (f->initialized) {
-				glActiveTexture(GL_TEXTURE2);
-				glBindTexture(GL_TEXTURE_1D, f->texture_colors);
-				glTexSubImage1D(GL_TEXTURE_1D, 0, 0, FONT_MAX_COLORS, GL_RGBA, GL_UNSIGNED_BYTE, font_palette);
-			}
-		}
-	}
+float Font::get_scale() const {
+	return _scale;
+}
+void Font::set_scale(const float p_scale) {
+	_scale = p_scale;
 }
 
-void TextRenderer::font_scales(const char *tag, float h1, float h2, float h3, float h4, float h5, float h6) {
-	unsigned index = *tag - FONT_FACE1[0];
-	if (index > FONTS_MAX)
-		return;
-
-	font_t *f = &fonts[index];
-	if (!f->initialized)
-		return;
-
-	f->scale[0] = h1 / f->font_size;
-	f->scale[1] = h1 / f->font_size;
-	f->scale[2] = h2 / f->font_size;
-	f->scale[3] = h3 / f->font_size;
-	f->scale[4] = h4 / f->font_size;
-	f->scale[5] = h5 / f->font_size;
-	f->scale[6] = h6 / f->font_size;
-}
-
-// 1. Compile the shaders.
-// 1. Call stb_truetype.h routines to read and parse a .ttf file.
-// 1. Create a bitmap that is uploaded to the gpu using opengl.
-// 1. Calculate and save a bunch of useful variables and put them in the global font variable.
-void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, unsigned ttf_len, float font_size, unsigned flags) {
-	unsigned index = *tag - FONT_FACE1[0];
-	if (index > FONTS_MAX) {
-		return;
-	}
-
+void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font_size, uint32_t flags) {
 	if (font_size <= 0 || font_size > 72) {
 		return;
 	}
@@ -132,29 +69,18 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 		flags |= FONT_ASCII; // ensure this minimal range [0020-00FF] is almost always in
 	}
 
-	font_t *f = &fonts[index];
-	f->initialized = 1;
+	_initialized = 1;
 
 	// load .ttf into a bitmap using stb_truetype.h
 	int dim = flags & FONT_4096 ? 4096 : flags & FONT_2048 ? 2048
 			: flags & FONT_1024							   ? 1024
 														   : 512;
-	f->width = dim;
-	f->height = dim;
+	_width = dim;
+	_height = dim;
 
 	// change size [h1(largest) to h3(regular) to h6(smallest)]
-	f->font_size = font_size;
-	f->scale[0] = 1.0000f; // H1
-	f->scale[1] = 1.0000f; // H1
-	f->scale[2] = 0.7500f; // H2
-	f->scale[3] = 0.6600f; // H3
-	f->scale[4] = 0.5000f; // H4
-	f->scale[5] = 0.3750f; // H5
-	f->scale[6] = 0.2500f; // H6
-
-	//f->program = shader(vs, fs, "vertexPosition,instanceGlyph", "outColor", NULL);
-
-	//f->program.instance();
+	_font_size = font_size;
+	_scale = 1.0000f;
 
 // figure out what ranges we're about to bake
 #define MERGE_TABLE(table)                                     \
@@ -236,14 +162,17 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 	}
 
 	// pack and create bitmap
-	unsigned char *bitmap = memnew_arr(unsigned char, f->height * f->width);
+	//unsigned char *bitmap = memnew_arr(unsigned char, _height * _width);
+	Vector<uint8_t> bitmap_data;
+	bitmap_data.resize(_height * _width);
+	unsigned char *bitmap = (unsigned char *)bitmap_data.ptrw();
 
 	int charCount = sorted[sorted.size() - 1] - sorted[0] + 1; // 0xEFFFF;
-	f->cdata = (stbtt_packedchar *)calloc(1, sizeof(stbtt_packedchar) * charCount);
-	f->iter2cp = memnew_arr(unsigned int, charCount);
-	f->cp2iter = memnew_arr(unsigned int, charCount);
+	_cdata = (stbtt_packedchar *)calloc(1, sizeof(stbtt_packedchar) * charCount);
+	_iter2cp = memnew_arr(unsigned int, charCount);
+	_cp2iter = memnew_arr(unsigned int, charCount);
 	for (int i = 0; i < charCount; ++i) {
-		f->iter2cp[i] = f->cp2iter[i] = 0xFFFD; // default invalid glyph
+		_iter2cp[i] = _cp2iter[i] = 0xFFFD; // default invalid glyph
 	}
 
 	// find first ch./co
@@ -255,13 +184,13 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 			unsigned glyph = sorted[i];
 			if (!stbtt_FindGlyphIndex(&info, glyph))
 				continue;
-			f->begin = glyph;
+			_begin = glyph;
 			break;
 		}
 	}
 
 	stbtt_pack_context pc;
-	if (!stbtt_PackBegin(&pc, bitmap, f->width, f->height, 0, 1, NULL)) {
+	if (!stbtt_PackBegin(&pc, bitmap, _width, _height, 0, 1, NULL)) {
 		ERR_FAIL_COND("Failed to initialize atlas font");
 	}
 	stbtt_PackSetOversampling(&pc, flags & FONT_OVERSAMPLE_X ? 2 : 1, flags & FONT_OVERSAMPLE_Y ? 2 : 1); /*useful on small fonts*/
@@ -273,21 +202,21 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 		}
 		//printf("(%d,%d)", (unsigned)begin, (unsigned)end);
 
-		if (begin < f->begin)
+		if (begin < _begin)
 			continue;
 
-		if (stbtt_PackFontRange(&pc, (const unsigned char *)ttf_data, 0, f->font_size, begin, end - begin + 1, (stbtt_packedchar *)f->cdata + begin - f->begin)) {
+		if (stbtt_PackFontRange(&pc, (const unsigned char *)ttf_data, 0, _font_size, begin, end - begin + 1, (stbtt_packedchar *)_cdata + begin - _begin)) {
 			for (uint64_t cp = begin; cp <= end; ++cp) {
 				// unicode->index runtime lookup
-				f->cp2iter[cp - f->begin] = count;
-				f->iter2cp[count++] = cp;
+				_cp2iter[cp - _begin] = count;
+				_iter2cp[count++] = cp;
 			}
 		} else {
 			ERR_PRINT("!Failed to pack atlas font. Likely out of texture mem.");
 		}
 	}
 	stbtt_PackEnd(&pc);
-	f->num_glyphs = count;
+	_num_glyphs = count;
 
 	// calculate vertical font metrics
 	stbtt_fontinfo info = { 0 };
@@ -298,141 +227,122 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 		stbtt_GetFontVMetrics(&info, &a, &d, &l);
 	}
 
-	f->ascent = a;
-	f->descent = d;
-	f->linegap = l;
-	f->linedist = (a - d + l);
-	f->factor = (f->font_size / (f->ascent - f->descent));
+	_ascent = a;
+	_descent = d;
+	_linegap = l;
+	_linedist = (a - d + l);
+	_factor = (_font_size / (_ascent - _descent));
 
 	// save some gpu memory by truncating unused vertical space in atlas texture
 	{
 		int max_y1 = 0;
-		for (unsigned int i = 0; i < f->num_glyphs; i++) {
-			int cp = f->iter2cp[i];
+		for (unsigned int i = 0; i < _num_glyphs; i++) {
+			int cp = _iter2cp[i];
 			if (cp == 0xFFFD)
 				continue;
-			stbtt_packedchar *cd = &f->cdata[cp - f->begin];
+			stbtt_packedchar *cd = &_cdata[cp - _begin];
 			if (cd->y1 > max_y1) {
 				max_y1 = cd->y1;
 			}
 		}
 		// cut away the unused part of the bitmap
-		f->height = max_y1 + 1;
+		_height = max_y1 + 1;
 	}
 
-	LOG_MSG("Font atlas size %dx%d (GL_R, %5.2fKiB) (%u glyphs)\n", f->width, f->height, f->width * f->height / 1024.f, f->num_glyphs);
+	//LOG_MSG("Font atlas size %dx%d (GL_R, %5.2fKiB) (%u glyphs)\n", _width, _height, _width * _height / 1024.f, _num_glyphs);
 
 	/*
-	// vao
-	glGenVertexArrays(1, &f->vao);
-	glBindVertexArray(f->vao);
-
-	// quad vbo setup, used for glyph vertex positions,
-	// just uv coordinates that will be stretched accordingly by the glyphs width and height
-	float v[] = { 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1 };
-
-	glGenBuffers(1, &f->vbo_quad);
-	glBindBuffer(GL_ARRAY_BUFFER, f->vbo_quad);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(v), v, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
-	glVertexAttribDivisor(0, 0);
-
-	// instance vbo setup: for glyph positions, glyph index and color index
-	glGenBuffers(1, &f->vbo_instances);
-	glBindBuffer(GL_ARRAY_BUFFER, f->vbo_instances);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * FONT_MAX_STRING_LEN, NULL, GL_DYNAMIC_DRAW);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void *)0);
-	glVertexAttribDivisor(1, 1);
-	//glEnable(GL_FRAMEBUFFER_SRGB);
-
 	// setup and upload font bitmap texture
 	glGenTextures(1, &f->texture_fontdata);
-	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, f->texture_fontdata);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, f->width, f->height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _width, _height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
 	*/
 
 	// last chance to inspect the font atlases
 	//if (flag("--font-debug"))
 	//String pngname = "font_debug" + itos(index) + " .png";
-	//stbi_write_png(pngname.utf8().get_data(), f->width, f->height, 1, bitmap, 0);
+	//stbi_write_png(pngname.utf8().get_data(), _width, _height, 1, bitmap, 0);
 
-	memdelete_arr(bitmap);
+	if (!_image.is_valid()) {
+		_image.instance();
+	}
 
-	/*
+	bitmap_data.resize(_width * _height);
 
-	// setup and upload font metadata texture
-	// used for lookup in the bitmap texture
-	glGenTextures(1, &f->texture_offsets);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, f->texture_offsets);
+	_image->create(_width, _height, false, Image::FORMAT_L8, bitmap_data);
 
-	float *texture_offsets = memnew_arr(float, 8 * f->num_glyphs);
+	if (!_texture.is_valid()) {
+		_texture.instance();
+	}
+
+	_texture->create_from_image(_image);
+
+	_texture_offsets.resize(_num_glyphs);
 
 	// remap larger 0xFFFF unicodes into smaller NUM_GLYPHS glyphs
-	for (unsigned i = 0, count = 0; i < f->num_glyphs; i++) {
-		unsigned cp = f->iter2cp[i];
+	for (unsigned i = 0; i < _num_glyphs; i++) {
+		unsigned cp = _iter2cp[i];
+		if (cp == 0xFFFD) {
+			continue;
+		}
+
+		stbtt_packedchar *cd = &_cdata[cp - _begin];
+		//      if(cd->x1==cd->x0) { _iter2cp[i] = _cp2iter[cp - _begin] = 0xFFFD; continue; }
+
+		TextureOffset offset;
+
+		offset.x = cd->x0 / (double)_width;
+		offset.y = cd->y0 / (double)_height;
+		offset.w = (cd->x1 - cd->x0) / (double)_width;
+		offset.h = (cd->y1 - cd->y0) / (double)_height;
+
+		offset.xoff = cd->xoff / (double)_width;
+		offset.yoff = cd->yoff / (double)_height;
+		offset.woff = cd->xoff2 / (double)_width;
+		offset.hoff = cd->yoff2 / (double)_height;
+
+		_texture_offsets.write[i] = offset;
+	}
+
+	/*
+	float *texture_offsets = memnew_arr(float, 8 * _num_glyphs);
+
+	// remap larger 0xFFFF unicodes into smaller NUM_GLYPHS glyphs
+	for (unsigned i = 0, count = 0; i < _num_glyphs; i++) {
+		unsigned cp = _iter2cp[i];
 		if (cp == 0xFFFD)
 			continue;
 
-		stbtt_packedchar *cd = &f->cdata[cp - f->begin];
-		//      if(cd->x1==cd->x0) { f->iter2cp[i] = f->cp2iter[cp - f->begin] = 0xFFFD; continue; }
+		stbtt_packedchar *cd = &_cdata[cp - _begin];
+		//      if(cd->x1==cd->x0) { _iter2cp[i] = _cp2iter[cp - _begin] = 0xFFFD; continue; }
 
-		int k1 = 0 * f->num_glyphs + count;
-		int k2 = 1 * f->num_glyphs + count;
+		int k1 = 0 * _num_glyphs + count;
+		int k2 = 1 * _num_glyphs + count;
 		++count;
 
-		texture_offsets[4 * k1 + 0] = cd->x0 / (double)f->width;
-		texture_offsets[4 * k1 + 1] = cd->y0 / (double)f->height;
-		texture_offsets[4 * k1 + 2] = (cd->x1 - cd->x0) / (double)f->width;
-		texture_offsets[4 * k1 + 3] = (cd->y1 - cd->y0) / (double)f->height;
+		texture_offsets[4 * k1 + 0] = cd->x0 / (double)_width;
+		texture_offsets[4 * k1 + 1] = cd->y0 / (double)_height;
+		texture_offsets[4 * k1 + 2] = (cd->x1 - cd->x0) / (double)_width;
+		texture_offsets[4 * k1 + 3] = (cd->y1 - cd->y0) / (double)_height;
 
-		texture_offsets[4 * k2 + 0] = cd->xoff / (double)f->width;
-		texture_offsets[4 * k2 + 1] = cd->yoff / (double)f->height;
-		texture_offsets[4 * k2 + 2] = cd->xoff2 / (double)f->width;
-		texture_offsets[4 * k2 + 3] = cd->yoff2 / (double)f->height;
+		texture_offsets[4 * k2 + 0] = cd->xoff / (double)_width;
+		texture_offsets[4 * k2 + 1] = cd->yoff / (double)_height;
+		texture_offsets[4 * k2 + 2] = cd->xoff2 / (double)_width;
+		texture_offsets[4 * k2 + 3] = cd->yoff2 / (double)_height;
 	}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, f->num_glyphs, 2, 0, GL_RGBA, GL_FLOAT, texture_offsets);
-
-	memfree(texture_offsets);
-
-	// setup color texture
-	glGenTextures(1, &f->texture_colors);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_1D, f->texture_colors);
-	glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, FONT_MAX_COLORS, 0, GL_RGBA, GL_UNSIGNED_BYTE, font_palette);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-
-	// upload constant uniforms
-	glUseProgram(f->program->get_program());
 	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_font"), 0);
 	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_meta"), 1);
 	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_colors"), 2);
 
-	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_bitmap"), f->width, f->height);
-	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_meta"), f->num_glyphs, 2);
+	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_bitmap"), _width, _height);
+	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_meta"), _num_glyphs, 2);
 	glUniform1f(glGetUniformLocation(f->program->get_program(), "num_colors"), FONT_MAX_COLORS);
 	(void)flags;
 	*/
 }
 
-void TextRenderer::font_face(const char *tag, const char *filename_ttf, float font_size, unsigned flags) {
+void Font::font_face(const char *filename_ttf, float font_size, unsigned flags) {
 	/*
 	font_init();
 
@@ -445,7 +355,8 @@ void TextRenderer::font_face(const char *tag, const char *filename_ttf, float fo
 	*/
 }
 
-void TextRenderer::font_draw_cmd(font_t *f, const float *glyph_data, int glyph_idx, float factor, Vector2 offset) {
+void Font::font_draw_cmd(const float *glyph_data, int glyph_idx, float factor, Vector2 offset) {
+	/*
 	// Backup GL state
 	GLint last_program, last_vertex_array;
 	GLint last_texture0, last_texture1, last_texture2;
@@ -491,7 +402,7 @@ void TextRenderer::font_draw_cmd(font_t *f, const float *glyph_data, int glyph_i
 	glUseProgram(f->program->get_program());
 	glUniform1f(glGetUniformLocation(f->program->get_program(), "scale_factor"), factor);
 	glUniform2fv(glGetUniformLocation(f->program->get_program(), "string_offset"), 1, &offset.x);
-	glUniform1f(glGetUniformLocation(f->program->get_program(), "offset_firstline"), f->ascent * f->factor);
+	glUniform1f(glGetUniformLocation(f->program->get_program(), "offset_firstline"), _ascent * _factor);
 
 	GLint dims[4] = { 0 };
 	glGetIntegerv(GL_VIEWPORT, dims);
@@ -520,12 +431,14 @@ void TextRenderer::font_draw_cmd(font_t *f, const float *glyph_data, int glyph_i
 
 	(last_enable_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST));
 	(last_enable_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND));
+	*/
 }
 
 // 1. call font_face() if it's the first time it's called.
 // 1. parse the string and update the instance vbo, then upload it
 // 1. draw the string
-Vector2 TextRenderer::font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(font_t *, const float *, int, float, Vector2)) {
+Vector2 Font::font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(const float *, int, float, Vector2)) {
+	/*
 	font_init();
 
 	// sanity checks
@@ -544,7 +457,7 @@ Vector2 TextRenderer::font_draw_ex(const String &text, Vector2 offset, const cha
 	font_t *f = &fonts[0];
 	int S = 3;
 	uint32_t color = 0;
-	float X = 0, Y = 0, W = 0, L = f->ascent * f->factor * f->scale[S], LL = L; // LL=largest linedist
+	float X = 0, Y = 0, W = 0, L = _ascent * _factor * _scale[S], LL = L; // LL=largest linedist
 	offset.y = -offset.y; // invert y polarity
 
 	// parse string
@@ -557,25 +470,25 @@ Vector2 TextRenderer::font_draw_ex(const String &text, Vector2 offset, const cha
 			if (X > W)
 				W = X;
 			X = 0.0;
-			Y -= f->linedist * f->factor * f->scale[S];
+			Y -= _linedist * _factor * _scale[S];
 			if (i + 1 == end) { //@hack: ensures we terminate the height at the correct position
-				Y -= (f->descent + f->linegap) * f->factor * f->scale[S];
+				Y -= (_descent + _linegap) * _factor * _scale[S];
 			}
 			continue;
 		}
 		if (ch >= 1 && ch <= 6) {
 			// flush previous state
 			if (draw_cmd)
-				draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, f->scale[S], offset);
+				draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, _scale[S], offset);
 			t = text_glyph_data;
 
 			// reposition offset to align new baseline
 			// @fixme:
-			// offset.y += (f->linedist - f->linegap) * ( f->scale[ch] - f->scale[S] );
+			// offset.y += (_linedist - _linegap) * ( _scale[ch] - _scale[S] );
 
 			// change size
 			S = ch;
-			L = f->ascent * f->factor * f->scale[S];
+			L = _ascent * _factor * _scale[S];
 			if (L > LL)
 				LL = L;
 			continue;
@@ -588,7 +501,7 @@ Vector2 TextRenderer::font_draw_ex(const String &text, Vector2 offset, const cha
 			if (fonts[ch - 0x10].initialized) {
 				// flush previous state
 				if (draw_cmd)
-					draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, f->scale[S], offset);
+					draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, _scale[S], offset);
 				t = text_glyph_data;
 
 				// change face
@@ -598,86 +511,47 @@ Vector2 TextRenderer::font_draw_ex(const String &text, Vector2 offset, const cha
 		}
 
 		// convert to vbo data
-		int cp = ch - f->begin; // f->cp2iter[ch - f->begin];
+		int cp = ch - _begin; // _cp2iter[ch - _begin];
 		//if(cp == 0xFFFD) continue;
-		//if (cp > f->num_glyphs) continue;
+		//if (cp > _num_glyphs) continue;
 
 		*t++ = X;
 		*t++ = Y;
-		*t++ = f->cp2iter[cp];
+		*t++ = _cp2iter[cp];
 		*t++ = col ? col[i] : color;
 
-		X += f->cdata[cp].xadvance * f->scale[S];
+		X += _cdata[cp].xadvance * _scale[S];
 	}
 
 	if (draw_cmd)
-		draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, f->scale[S], offset);
+		draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, _scale[S], offset);
 
-	//if(strstr(text, "fps")) printf("(%f,%f) (%f) L:%f LINEDIST:%f\n", X, Y, W, L, f->linedist);
+	//if(strstr(text, "fps")) printf("(%f,%f) (%f) L:%f LINEDIST:%f\n", X, Y, W, L, _linedist);
 	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
+	*/
+
+	return Vector2();
 }
 
 // Return cursor
-Vector2 TextRenderer::font_xy() {
+Vector2 Font::font_xy() {
 	return gotoxy;
 }
 
 // Relocate cursor
-void TextRenderer::font_goto(float x, float y) {
+void Font::font_goto(float x, float y) {
 	gotoxy = Vector2(x, y);
 }
 
-// Print and linefeed. Text may include markup code
-Vector2 TextRenderer::font_print(const String &text) {
-	// @fixme: remove this hack
-	if (text[0] == FONT_LEFT[0]) {
-		int window_width = AppWindow::get_singleton()->get_width();
-		int window_height = AppWindow::get_singleton()->get_height();
-
-		int l = text[1] == FONT_LEFT[1];
-		int c = text[1] == FONT_CENTER[1];
-		int r = text[1] == FONT_RIGHT[1];
-		if (l || c || r) {
-			String ntext = text.substr(2);
-
-			Vector2 rect = font_rect(ntext);
-			gotoxy.x = l ? 0 : r ? (window_width - rect.x)
-								 : window_width / 2 - rect.x / 2;
-			return font_print(ntext);
-		}
-		int t = text[1] == FONT_TOP[1];
-		int b = text[1] == FONT_BOTTOM[1];
-		int m = text[1] == FONT_MIDDLE[1];
-		int B = text[1] == FONT_BASELINE[1];
-		if (t || b || m || B) {
-			String ntext = text.substr(2);
-
-			Vector2 rect = font_rect(ntext);
-			gotoxy.y = t ? 0 : b ? (window_height - rect.y)
-					: m			 ? window_height / 2 - rect.y / 2
-								 : window_height / 2 - rect.y / 1;
-			return font_print(ntext);
-		}
-	}
-
-	Vector2 dims = font_draw_ex(text, gotoxy, NULL, font_draw_cmd);
-
-	int nindex = text.find_char('\n');
-
-	gotoxy.y += nindex ? dims.y : 0;
-	gotoxy.x = nindex ? 0 : gotoxy.x + dims.x;
-	return dims;
-}
-
 // Calculate the size of a string, in the pixel size specified. Count stray newlines too.
-Vector2 TextRenderer::font_rect(const String &str) {
+Vector2 Font::font_rect(const String &str) {
 	return font_draw_ex(str, gotoxy, NULL, NULL);
 }
 
-TextRenderer::font_metrics_t TextRenderer::font_metrics(const String &text) {
+Font::font_metrics_t Font::font_metrics(const String &text) {
 	font_metrics_t m = { 0 };
-	int S = 3;
-	font_t *f = &fonts[0];
+
+	/*
 
 	// parse string
 	for (int i = 0, end = text.length(); i < end; ++i) {
@@ -695,20 +569,31 @@ TextRenderer::font_metrics_t TextRenderer::font_metrics(const String &text) {
 		}
 	}
 
-	m.ascent = f->ascent * f->factor * f->scale[S];
-	m.descent = f->descent * f->factor * f->scale[S];
-	m.linegap = f->linegap * f->factor * f->scale[S];
-	m.linedist = f->linedist * f->factor * f->scale[S];
+	*/
+
+	m.ascent = _ascent * _factor * _scale;
+	m.descent = _descent * _factor * _scale;
+	m.linegap = _linegap * _factor * _scale;
+	m.linedist = _linedist * _factor * _scale;
+
 	return m;
 }
 
-TextRenderer *TextRenderer::get_singleton() {
-	return _singleton;
+int Font::get_atlas_width() {
+	return _width;
 }
 
-TextRenderer::TextRenderer() {
-	_singleton = this;
-	_fonts_initialized = false;
+int Font::get_atlas_height() {
+	return _height;
 }
 
-TextRenderer *TextRenderer::_singleton = NULL;
+Ref<Image> Font::get_image() {
+	return _image;
+}
+Ref<Texture> Font::get_texture() {
+	return _texture;
+}
+
+Font::Font() {
+	_initialized = false;
+}
