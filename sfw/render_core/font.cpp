@@ -63,11 +63,11 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 		return;
 	}
 
+	unload();
+
 	if (!(flags & FONT_ASCII)) {
 		flags |= FONT_ASCII; // ensure this minimal range [0020-00FF] is almost always in
 	}
-
-	_initialized = 1;
 
 	// load .ttf into a bitmap using stb_truetype.h
 	int dim = flags & FONT_4096 ? 4096 : flags & FONT_2048 ? 2048
@@ -304,6 +304,9 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 	memdelete_arr(cdata);
 
 	_initialized = true;
+
+#undef MERGE_TABLE
+#undef MERGE_PACKED_TABLE
 }
 
 void Font::font_face(const char *filename_ttf, float font_size, unsigned flags) {
@@ -442,6 +445,55 @@ Ref<Texture> Font::get_texture() {
 	return _texture;
 }
 
-Font::Font() {
+void Font::unload() {
+	if (!_initialized) {
+		return;
+	}
+
+	_num_glyphs = 0;
+	_cp2iter = NULL;
+	_iter2cp = NULL;
+	_begin = 0;
+
 	_initialized = false;
+
+	_height = 0;
+	_width = 0;
+	_font_size = 0;
+	_factor = 0;
+	_scale = 0;
+
+	_ascent = 0;
+	_descent = 0;
+	_linegap = 0;
+	_linedist = 0;
+
+	_image.unref();
+	_texture.unref();
+
+	_texture_offsets.clear();
+}
+
+Font::Font() {
+	_num_glyphs = 0;
+	_cp2iter = NULL;
+	_iter2cp = NULL;
+	_begin = 0;
+
+	_initialized = false;
+
+	_height = 0;
+	_width = 0;
+	_font_size = 0;
+	_factor = 0;
+	_scale = 0;
+
+	_ascent = 0;
+	_descent = 0;
+	_linegap = 0;
+	_linedist = 0;
+}
+
+Font::~Font() {
+	unload();
 }

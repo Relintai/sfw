@@ -79,15 +79,18 @@ public:
 	Ref<Image> get_image();
 	Ref<Texture> get_texture();
 
+	void unload();
+
 	Font();
+	~Font();
 
 protected:
 	// character info
 	// filled up by stb_truetype.h
-	unsigned _num_glyphs;
-	unsigned *_cp2iter;
-	unsigned *_iter2cp;
-	unsigned _begin; // first glyph. used in cp2iter table to clamp into a lesser range
+	uint32_t _num_glyphs;
+	uint32_t *_cp2iter;
+	uint32_t *_iter2cp;
+	uint32_t _begin; // first glyph. used in cp2iter table to clamp into a lesser range
 
 	// font info and data
 	bool _initialized;
