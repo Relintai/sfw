@@ -44,7 +44,16 @@ public:
 	void draw_text_2d_tf(const String &p_text, const Ref<Font> &p_font, const Transform2D &p_transform_2d, const Color &p_color = Color(1, 1, 1));
 	void draw_text_2d_tf_material(const String &p_text, const Ref<Font> &p_font, const Ref<Material> &p_material, const Transform2D &p_transform_2d, const Color &p_color = Color(1, 1, 1));
 
+	//add draw colored, draw textured, also with and without transform -> p_transform give default arg
 	void draw_mesh_3d(const Ref<Mesh> &p_mesh, const Ref<Material> &p_material, const Transform &p_transform);
+
+	//TODO
+	//camera set transform
+	//3d cam matrix stack
+	//3d cam proj setup
+	//reset -> rename camera_2d_projection_setup(), push etc
+	//3d proj setup
+	//3d camera matrix stack
 
 	Transform2D camera_2d_get_current_model_view_matrix() const;
 	void camera_2d_push_model_view_matrix(const Transform2D &p_transform_2d);
