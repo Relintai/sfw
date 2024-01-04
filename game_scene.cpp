@@ -98,6 +98,8 @@ void GameScene::render() {
 	_font_test_sprite->render();
 	_font_test_mi->render();
 
+	_text_2d->render();
+
 	//TextRenderer::get_singleton()->font_init();
 	//TextRenderer::get_singleton()->font_print("test");
 }
@@ -121,7 +123,7 @@ GameScene::GameScene() {
 	_font_test_sprite = memnew(Sprite);
 
 	_font_test_mat = memnew(FontMaterial());
-	_font_test_mat->texture = _font->get_texture().ptr();
+	_font_test_mat->texture = _font->get_texture();
 	_font_test_sprite->mesh_instance->material = _font_test_mat;
 	_font_test_sprite->width = _font->get_atlas_width();
 	_font_test_sprite->height = _font->get_atlas_height();
@@ -255,6 +257,13 @@ GameScene::GameScene() {
 
 	mesh->upload();
 	*/
+
+	_text_2d = memnew(Text2D);
+	_text_2d->set_font(_font);
+	_text_2d->set_text("Test Text2D.\n Newline.");
+	_text_2d->set_text_color(Color(1, 1, 0));
+	_text_2d->update();
+	_text_2d->transform.set_origin(Vector2(1200, 250));
 }
 
 GameScene::~GameScene() {

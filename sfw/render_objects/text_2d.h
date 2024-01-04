@@ -1,26 +1,44 @@
-#ifndef MESH_INSTACE_2D_H
-#define MESH_INSTACE_2D_H
+#ifndef TEXT_2D_H
+#define TEXT_2D_H
 
-#include "core/vector.h"
+#include "core/color.h"
+#include "core/ustring.h"
+#include "core/vector2.h"
 
-#include "render_core/material.h"
-#include "render_core/mesh.h"
+#include "object/reference.h"
 
-#include "core/transform.h"
+#include "object_2d.h"
 
-class MeshInstance2D {
+class Font;
+class FontMaterial;
+class Mesh;
+
+class Text2D : public Object2D {
 public:
-    void render();
+	Color get_text_color() const;
+	void set_text_color(const Color &p_color);
 
-    MeshInstance2D();
-    ~MeshInstance2D();
+	String get_text() const;
+	void set_text(const String &p_text);
 
-    Material *material;
-    Mesh *mesh;
+	Ref<Font> get_font() const;
+	void set_font(const Ref<Font> &p_font);
 
-    Transform2D transform;
+	Vector2 get_text_size();
 
-   Vector<MeshInstance2D *> children;
+	void update();
+	void render();
+
+	Text2D();
+	~Text2D();
+
+protected:
+	Ref<Font> _font;
+	Ref<FontMaterial> _material;
+	Ref<Mesh> _mesh;
+	String _text;
+	Color _text_color;
+	Vector2 _text_size;
 };
 
 #endif // MESH_INSTACE_H

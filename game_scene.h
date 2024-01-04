@@ -16,6 +16,7 @@
 #include "render_objects/mesh_instance_2d.h"
 #include "render_objects/mesh_instance_3d.h"
 #include "render_objects/sprite.h"
+#include "render_objects/text_2d.h"
 #include "render_objects/tile_map.h"
 
 class GameScene : public Scene {
@@ -54,6 +55,8 @@ public:
 	MeshInstance3D *mi;
 	MeshInstance3D *mi2;
 	ColorMaterial *color_material;
+
+	Text2D *_text_2d;
 
 	//ColoredMaterial *cmaterial;
 };

@@ -255,17 +255,9 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 	//String pngname = "font_debug" + itos(index) + " .png";
 	//stbi_write_png(pngname.utf8().get_data(), _width, _height, 1, bitmap, 0);
 
-	if (!_image.is_valid()) {
-		_image.instance();
-	}
-
 	bitmap_data.resize(_width * _height);
 
 	_image->create(_width, _height, false, Image::FORMAT_L8, bitmap_data);
-
-	if (!_texture.is_valid()) {
-		_texture.instance();
-	}
 
 	_texture->create_from_image(_image);
 
@@ -492,6 +484,9 @@ Font::Font() {
 	_descent = 0;
 	_linegap = 0;
 	_linedist = 0;
+
+	_image.instance();
+	_texture.instance();
 }
 
 Font::~Font() {
