@@ -153,80 +153,69 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 
 	//f->program = shader(vs, fs, "vertexPosition,instanceGlyph", "outColor", NULL);
 
-	f->program.instance();
+	//f->program.instance();
 
 // figure out what ranges we're about to bake
-#define MERGE_TABLE(table, table_size)     \
-	int orig_size = sorted.size();         \
-	sorted.resize(orig_size + table_size); \
-                                           \
-	uint64_t *p = sorted.ptrw();           \
-                                           \
-	for (int i = 0; i < table_size; ++i) { \
-		p[orig_size + i] = table[i];       \
-	}
+#define MERGE_TABLE(table)                                     \
+	do {                                                       \
+		for (unsigned i = 0; table[i]; i += 2) {               \
+			uint64_t begin = table[i + 0], end = table[i + 1]; \
+			for (unsigned j = begin; j <= end; ++j) {          \
+				sorted.push_back(j);                           \
+			}                                                  \
+		}                                                      \
+	} while (0)
 
-#define MERGE_PACKED_TABLE(codepoint_begin, table, table_size) \
-	int orig_size = sorted.size();                             \
-	int begin = codepoint_begin;                               \
-	sorted.resize(orig_size + table_size);                     \
-                                                               \
-	uint64_t *p = sorted.ptrw();                               \
-                                                               \
-	for (int i = 0; i < table_size; ++i) {                     \
-		p[orig_size + i] = (unsigned)(begin + table[i]);       \
-		begin += table[i];                                     \
-	}
+#define MERGE_PACKED_TABLE(codepoint_begin, table, table_size)                     \
+	do {                                                                           \
+		for (int i = 0, begin = codepoint_begin, end = table_size; i < end; i++) { \
+			sorted.push_back((unsigned)(begin + table[i]));                        \
+			begin += table[i];                                                     \
+		}                                                                          \
+	} while (0)
 
 	Vector<uint64_t> sorted;
 	if (flags & FONT_ASCII) {
-		MERGE_TABLE(table_common, 5);
+		MERGE_TABLE(table_common);
 	}
 	if (flags & FONT_EM) {
-		MERGE_TABLE(table_emoji, 7);
+		MERGE_TABLE(table_emoji);
 	}
 	if (flags & FONT_EU) {
-		MERGE_TABLE(table_eastern_europe, 19);
+		MERGE_TABLE(table_eastern_europe);
 	}
 	if (flags & FONT_RU) {
-		MERGE_TABLE(table_western_europe, 15);
+		MERGE_TABLE(table_western_europe);
 	}
 	if (flags & FONT_EL) {
-		MERGE_TABLE(table_western_europe, 15);
+		MERGE_TABLE(table_western_europe);
 	}
 	if (flags & FONT_AR) {
-		MERGE_TABLE(table_middle_east, 7);
+		MERGE_TABLE(table_middle_east);
 	}
 	if (flags & FONT_HE) {
-		MERGE_TABLE(table_middle_east, 7);
+		MERGE_TABLE(table_middle_east);
 	}
 	if (flags & FONT_TH) {
-		MERGE_TABLE(table_thai, 5);
+		MERGE_TABLE(table_thai);
 	}
 	if (flags & FONT_VI) {
-		MERGE_TABLE(table_vietnamese, 15);
+		MERGE_TABLE(table_vietnamese);
 	}
 	if (flags & FONT_KR) {
-		MERGE_TABLE(table_korean, 7);
+		MERGE_TABLE(table_korean);
 	}
 	if (flags & FONT_JP) {
-		{
-			MERGE_TABLE(table_chinese_japanese_common, 7);
-		}
-		{
-			MERGE_PACKED_TABLE(0x4E00, packed_table_japanese, 2999);
-		}
+		MERGE_TABLE(table_chinese_japanese_common);
+		MERGE_PACKED_TABLE(0x4E00, packed_table_japanese, 2999);
 	}
 	if (flags & FONT_ZH) {
-		{
-			MERGE_TABLE(table_chinese_japanese_common, 7);
-		}
-		{
-			MERGE_PACKED_TABLE(0x4E00, packed_table_chinese, 2500);
-		}
+		MERGE_TABLE(table_chinese_japanese_common);
+		MERGE_PACKED_TABLE(0x4E00, packed_table_chinese, 2500);
+
 	} // zh-simplified
 	if (flags & FONT_ZH) {
-		MERGE_TABLE(table_chinese_punctuation, 3);
+		MERGE_TABLE(table_chinese_punctuation);
 	} // both zh-simplified and zh-full
 	//  if(flags & FONT_ZH)    { MERGE_TABLE(table_chinese_full); } // zh-full
 
@@ -250,18 +239,18 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 
 	int charCount = sorted[sorted.size() - 1] - sorted[0] + 1; // 0xEFFFF;
 	f->cdata = (stbtt_packedchar *)calloc(1, sizeof(stbtt_packedchar) * charCount);
-	f->iter2cp = memnew_arr(unsigned, charCount);
-	f->cp2iter = memnew_arr(unsigned, charCount);
+	f->iter2cp = memnew_arr(unsigned int, charCount);
+	f->cp2iter = memnew_arr(unsigned int, charCount);
 	for (int i = 0; i < charCount; ++i) {
 		f->iter2cp[i] = f->cp2iter[i] = 0xFFFD; // default invalid glyph
 	}
 
-	// find first char
+	// find first ch./co
 	{
 		stbtt_fontinfo info = { 0 };
 		stbtt_InitFont(&info, (const unsigned char *)ttf_data, stbtt_GetFontOffsetForIndex((const unsigned char *)ttf_data, 0));
 
-		for (int i = 0, end = sorted.size(); i < end; ++i) {
+		for (int i = 0, end = sorted.size() - 1; i < end; ++i) {
 			unsigned glyph = sorted[i];
 			if (!stbtt_FindGlyphIndex(&info, glyph))
 				continue;
@@ -275,8 +264,8 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 		ERR_FAIL_COND("Failed to initialize atlas font");
 	}
 	stbtt_PackSetOversampling(&pc, flags & FONT_OVERSAMPLE_X ? 2 : 1, flags & FONT_OVERSAMPLE_Y ? 2 : 1); /*useful on small fonts*/
-	int count = 0;
-	for (int i = 0, num = sorted.size(); i < num; ++i) {
+	unsigned int count = 0;
+	for (int i = 0, num = sorted.size() - 1; i < num; ++i) {
 		uint64_t begin = sorted[i], end = sorted[i];
 		while (i < (num - 1) && (sorted[i + 1] - sorted[i]) == 1) {
 			end = sorted[++i];
@@ -298,8 +287,6 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 	}
 	stbtt_PackEnd(&pc);
 	f->num_glyphs = count;
-
-	//CRASH_COND(f->num_glyphs < (unsigned int)charCount);
 
 	// calculate vertical font metrics
 	stbtt_fontinfo info = { 0 };
@@ -375,9 +362,10 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 
 	// last chance to inspect the font atlases
 	//if (flag("--font-debug"))
-	String pngname = "font_debug" + itos(index) + " .png";
-	stbi_write_png(pngname.utf8().get_data(), f->width, f->height, 1, bitmap, 0);
-	memfree(bitmap);
+	//String pngname = "font_debug" + itos(index) + " .png";
+	//stbi_write_png(pngname.utf8().get_data(), f->width, f->height, 1, bitmap, 0);
+	
+	memdelete_arr(bitmap);
 
 	/*
 
