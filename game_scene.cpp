@@ -96,7 +96,7 @@ void GameScene::render() {
 	sprite->render();
 	tile_map->render();
 
-	//TextRenderer::get_singleton()->font_init();
+	TextRenderer::get_singleton()->font_init();
 	//TextRenderer::get_singleton()->font_print("test");
 }
 

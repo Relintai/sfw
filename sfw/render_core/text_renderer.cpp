@@ -36,6 +36,9 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "3rd_stb_truetype.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #include "font_data_bm_mini.inc.h"
 
 #define RGB4(r, g, b, a) ((((uint32_t)a) << 24) | (((uint32_t)b) << 16) | (((uint32_t)g) << 8) | ((uint32_t)r))
@@ -124,7 +127,7 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 		return;
 	}
 
-	if (!(flags & FONT_EM)) {
+	if (!(flags & FONT_ASCII)) {
 		flags |= FONT_ASCII; // ensure this minimal range [0020-00FF] is almost always in
 	}
 
@@ -331,6 +334,7 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 
 	LOG_MSG("Font atlas size %dx%d (GL_R, %5.2fKiB) (%u glyphs)\n", f->width, f->height, f->width * f->height / 1024.f, f->num_glyphs);
 
+	/*
 	// vao
 	glGenVertexArrays(1, &f->vao);
 	glBindVertexArray(f->vao);
@@ -367,11 +371,15 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+	*/
+
 	// last chance to inspect the font atlases
 	//if (flag("--font-debug"))
-	//	stbi_write_png(va("font_debug%d.png", index), f->width, f->height, 1, bitmap, 0);
-
+	String pngname = "font_debug" + itos(index) + " .png";
+	stbi_write_png(pngname.utf8().get_data(), f->width, f->height, 1, bitmap, 0);
 	memfree(bitmap);
+
+	/*
 
 	// setup and upload font metadata texture
 	// used for lookup in the bitmap texture
@@ -432,6 +440,7 @@ void TextRenderer::font_face_from_mem(const char *tag, const void *ttf_data, uns
 	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_meta"), f->num_glyphs, 2);
 	glUniform1f(glGetUniformLocation(f->program->get_program(), "num_colors"), FONT_MAX_COLORS);
 	(void)flags;
+	*/
 }
 
 void TextRenderer::font_face(const char *tag, const char *filename_ttf, float font_size, unsigned flags) {
