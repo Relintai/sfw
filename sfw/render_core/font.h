@@ -73,7 +73,6 @@ public:
 
 	// commands
 	Vector2 generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color = Color(1, 1, 1, 1));
-	Vector2 font_print(const String &p_text);
 	Vector2 get_string_size(const String &p_text);
 	FontMetrics font_metrics();
 
@@ -127,9 +126,6 @@ protected:
 	};
 
 	Vector<TextureOffset> _texture_offsets;
-
-	static void font_draw_cmd(const float *glyph_data, int glyph_idx, float factor, Vector2 offset);
-	Vector2 font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(const float *, int, float, Vector2));
 };
 
 #endif

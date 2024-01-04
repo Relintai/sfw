@@ -36,9 +36,6 @@
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "3rd_stb_truetype.h"
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
 #include "font_data_bm_mini.inc.h"
 #include "font_data_tables.inc.h"
 
@@ -163,7 +160,6 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 	}
 
 	// pack and create bitmap
-	//unsigned char *bitmap = memnew_arr(unsigned char, _height * _width);
 	Vector<uint8_t> bitmap_data;
 	bitmap_data.resize(_height * _width);
 	unsigned char *bitmap = (unsigned char *)bitmap_data.ptrw();
@@ -201,7 +197,6 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 		while (i < (num - 1) && (sorted[i + 1] - sorted[i]) == 1) {
 			end = sorted[++i];
 		}
-		//printf("(%d,%d)", (unsigned)begin, (unsigned)end);
 
 		if (begin < _begin)
 			continue;
@@ -250,17 +245,7 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 		_height = max_y1 + 1;
 	}
 
-	//LOG_MSG("Font atlas size %dx%d (GL_R, %5.2fKiB) (%u glyphs)\n", _width, _height, _width * _height / 1024.f, _num_glyphs);
-
-	/*
-	// setup and upload font bitmap texture
-	glGenTextures(1, &f->texture_fontdata);
-	glBindTexture(GL_TEXTURE_2D, f->texture_fontdata);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, _width, _height, 0, GL_RED, GL_UNSIGNED_BYTE, bitmap);
-	*/
-
-	// last chance to inspect the font atlases
-	//if (flag("--font-debug"))
+	// last chance to inspect the original font atlases
 	//String pngname = "font_debug" + itos(index) + " .png";
 	//stbi_write_png(pngname.utf8().get_data(), _width, _height, 1, bitmap, 0);
 
@@ -380,184 +365,6 @@ Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color
 	Y += (-_descent + _linegap) * _factor * _scale;
 
 	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
-}
-
-void Font::font_draw_cmd(const float *glyph_data, int glyph_idx, float factor, Vector2 offset) {
-	/*
-	// Backup GL state
-	GLint last_program, last_vertex_array;
-	GLint last_texture0, last_texture1, last_texture2;
-	GLint last_blend_src, last_blend_dst;
-	GLint last_blend_equation_rgb, last_blend_equation_alpha;
-
-	glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-	glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &last_vertex_array);
-
-	glActiveTexture(GL_TEXTURE0);
-	glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture0);
-	glActiveTexture(GL_TEXTURE1);
-	glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture1);
-	glActiveTexture(GL_TEXTURE2);
-	glGetIntegerv(GL_TEXTURE_BINDING_1D, &last_texture2);
-
-	glGetIntegerv(GL_BLEND_SRC, &last_blend_src);
-	glGetIntegerv(GL_BLEND_DST, &last_blend_dst);
-	glGetIntegerv(GL_BLEND_EQUATION_RGB, &last_blend_equation_rgb);
-	glGetIntegerv(GL_BLEND_EQUATION_ALPHA, &last_blend_equation_alpha);
-
-	GLboolean last_enable_blend = glIsEnabled(GL_BLEND);
-	GLboolean last_enable_depth_test = glIsEnabled(GL_DEPTH_TEST);
-
-	// Setup render state: alpha-blending enabled, no depth testing and bind textures
-	glEnable(GL_BLEND);
-	glBlendEquation(GL_FUNC_ADD);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glDisable(GL_DEPTH_TEST);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, f->texture_fontdata);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, f->texture_offsets);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_1D, f->texture_colors);
-
-	// update bindings
-	glBindVertexArray(f->vao);
-
-	// update uniforms
-	glUseProgram(f->program->get_program());
-	glUniform1f(glGetUniformLocation(f->program->get_program(), "scale_factor"), factor);
-	glUniform2fv(glGetUniformLocation(f->program->get_program(), "string_offset"), 1, &offset.x);
-	glUniform1f(glGetUniformLocation(f->program->get_program(), "offset_firstline"), _ascent * _factor);
-
-	GLint dims[4] = { 0 };
-	glGetIntegerv(GL_VIEWPORT, dims);
-	glUniform2f(glGetUniformLocation(f->program->get_program(), "resolution"), dims[2], dims[3]);
-
-	// actual uploading
-	glBindBuffer(GL_ARRAY_BUFFER, f->vbo_instances);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * 4 * glyph_idx, glyph_data);
-
-	// actual drawing
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, glyph_idx);
-
-	// Restore modified GL state
-	glUseProgram(last_program);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, last_texture0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, last_texture1);
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_1D, last_texture2);
-
-	glBlendEquationSeparate(last_blend_equation_rgb, last_blend_equation_alpha);
-	glBindVertexArray(last_vertex_array);
-	glBlendFunc(last_blend_src, last_blend_dst);
-
-	(last_enable_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST));
-	(last_enable_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND));
-	*/
-}
-
-// 1. call font_face() if it's the first time it's called.
-// 1. parse the string and update the instance vbo, then upload it
-// 1. draw the string
-Vector2 Font::font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(const float *, int, float, Vector2)) {
-	/*
-	font_init();
-
-	// sanity checks
-	int len = text.length();
-	if (len >= FONT_MAX_STRING_LEN) {
-		return Vector2(0, 0);
-	}
-
-	// pre-init
-	static __thread float *text_glyph_data = NULL;
-	if (!text_glyph_data) {
-		text_glyph_data = memnew_arr(float, 4 * FONT_MAX_STRING_LEN);
-	}
-
-	// ready
-	font_t *f = &fonts[0];
-	int S = 3;
-	uint32_t color = 0;
-	float X = 0, Y = 0, W = 0, L = _ascent * _factor * _scale[S], LL = L; // LL=largest linedist
-	offset.y = -offset.y; // invert y polarity
-
-	// parse string
-	float *t = text_glyph_data;
-	for (int i = 0, end = text.length(); i < end; ++i) {
-		uint32_t ch = text[i];
-
-		if (ch == '\n') {
-			// change cursor, advance y, record largest x as width, increase height
-			if (X > W)
-				W = X;
-			X = 0.0;
-			Y -= _linedist * _factor * _scale[S];
-			if (i + 1 == end) { //@hack: ensures we terminate the height at the correct position
-				Y -= (_descent + _linegap) * _factor * _scale[S];
-			}
-			continue;
-		}
-		if (ch >= 1 && ch <= 6) {
-			// flush previous state
-			if (draw_cmd)
-				draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, _scale[S], offset);
-			t = text_glyph_data;
-
-			// reposition offset to align new baseline
-			// @fixme:
-			// offset.y += (_linedist - _linegap) * ( _scale[ch] - _scale[S] );
-
-			// change size
-			S = ch;
-			L = _ascent * _factor * _scale[S];
-			if (L > LL)
-				LL = L;
-			continue;
-		}
-		if (ch >= 0x1a && ch <= 0x1f) {
-			color = ch - 0x1a;
-			continue;
-		}
-		if (ch >= 0x10 && ch <= 0x19) {
-			if (fonts[ch - 0x10].initialized) {
-				// flush previous state
-				if (draw_cmd)
-					draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, _scale[S], offset);
-				t = text_glyph_data;
-
-				// change face
-				f = &fonts[ch - 0x10];
-			}
-			continue;
-		}
-
-		// convert to vbo data
-		int cp = ch - _begin; // _cp2iter[ch - _begin];
-		//if(cp == 0xFFFD) continue;
-		//if (cp > _num_glyphs) continue;
-
-		*t++ = X;
-		*t++ = Y;
-		*t++ = _cp2iter[cp];
-		*t++ = col ? col[i] : color;
-
-		X += _cdata[cp].xadvance * _scale[S];
-	}
-
-	if (draw_cmd)
-		draw_cmd(f, text_glyph_data, (t - text_glyph_data) / 4, _scale[S], offset);
-
-	//if(strstr(text, "fps")) printf("(%f,%f) (%f) L:%f LINEDIST:%f\n", X, Y, W, L, _linedist);
-	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
-	*/
-
-	return Vector2();
 }
 
 // Calculate the size of a string, in the pixel size specified. Count stray newlines too.
