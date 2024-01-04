@@ -2,10 +2,6 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <cstring>
-#include <functional>
-#include <iostream>
-#include <vector>
 
 class String;
 

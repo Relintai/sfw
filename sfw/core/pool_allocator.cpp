@@ -8,6 +8,8 @@
 #include "core/error_macros.h"
 #include "core/memory.h"
 
+#include <cstring>
+
 #define COMPACT_CHUNK(m_entry, m_to_pos)                      \
 	do {                                                      \
 		void *_dst = &((unsigned char *)pool)[m_to_pos];      \

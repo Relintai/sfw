@@ -219,7 +219,7 @@ GameScene::GameScene() {
 	sprite->update_mesh();
 
 	tile_map = new TileMap();
-	tile_map->material = material.ptr();
+	tile_map->material = material;
 	tile_map->atlas_size_x = 2;
 	tile_map->atlas_size_y = 2;
 

@@ -2,7 +2,7 @@
 #define MESH_H
 
 #include "core/vector.h"
-#include <inttypes.h>
+#include "core/int_types.h"
 #include "core/color.h"
 
 #include "object/resource.h"

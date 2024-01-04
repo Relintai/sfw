@@ -8,7 +8,6 @@
 
 #include "core/vector2i.h"
 #include "object/object.h"
-//#include "core/os/main_loop.h"
 #include "core/rb_map.h"
 #include "core/rb_set.h"
 #include "core/thread_safe.h"

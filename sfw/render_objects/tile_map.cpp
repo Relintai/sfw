@@ -3,8 +3,8 @@
 #include "render_objects/camera_2d.h"
 
 void TileMap::build_mesh() {
-	if (!mesh) {
-		mesh = new Mesh(2);
+	if (!mesh.is_valid()) {
+		mesh = Ref<Mesh>(memnew(Mesh(2)));
 	} else {
 		mesh->clear();
 	}
@@ -24,8 +24,9 @@ void TileMap::build_mesh() {
 		for (int y = 0; y < size_y; ++y) {
 			uint8_t d = data[x_offset + y];
 
-			if (d == 0)
+			if (d == 0) {
 				continue;
+			}
 
 			float px;
 			float py;
@@ -52,16 +53,17 @@ void TileMap::build_mesh() {
 }
 
 void TileMap::allocate_data() {
-	if (size_x <= 0 || size_y <= 0)
+	if (size_x <= 0 || size_y <= 0) {
 		return;
+	}
 
 	if (data) {
-		delete[] data;
+		memdelete_arr(data);
 	}
 
 	int size = size_x * size_y;
 
-	data = new uint8_t[size];
+	data = memnew_arr(uint8_t, size);
 
 	for (int i = 0; i < size; ++i) {
 		data[i] = 0;
@@ -98,7 +100,7 @@ void TileMap::set_data(const int x, const int y, const uint8_t value) {
 }
 
 void TileMap::render() {
-	if (!mesh) {
+	if (!mesh.is_valid()) {
 		return;
 	}
 
@@ -106,7 +108,7 @@ void TileMap::render() {
 
 	Camera2D::current_camera->set_model_view_matrix(mat_orig * transform);
 
-	if (material) {
+	if (material.is_valid()) {
 		material->bind();
 	}
 
@@ -115,20 +117,16 @@ void TileMap::render() {
 	Camera2D::current_camera->set_model_view_matrix(mat_orig);
 }
 
-TileMap::TileMap() :
-		Object2D() {
-	data = nullptr;
+TileMap::TileMap() {
+	data = NULL;
 	size_x = 16;
 	size_y = 16;
 
 	atlas_size_x = 1;
 	atlas_size_y = 1;
-
-	mesh = nullptr;
-	material = nullptr;
 }
 TileMap::~TileMap() {
 	if (data) {
-		delete[] data;
+		memdelete_arr(data);
 	}
 }

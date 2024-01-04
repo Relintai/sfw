@@ -9,7 +9,9 @@
 #include "core/transform_2d.h"
 #include "core/vector2.h"
 
-class Camera2D : Object2D {
+class Camera2D : public Object2D {
+	SFW_OBJECT(Camera2D, Object2D);
+
 public:
 	Transform2D get_model_view_matrix();
 	void set_model_view_matrix(const Transform2D &p_value);

@@ -3,11 +3,15 @@
 
 #include "render_core/3rd_glad.h"
 
+#include "render_objects/object_3d.h"
+
 #include "core/projection.h"
 #include "core/transform.h"
 #include "core/vector3.h"
 
-class Camera3D {
+class Camera3D : public Object3D {
+	SFW_OBJECT(Camera3D, Object3D);
+
 public:
 	Transform get_camera_transform();
 	void set_camera_transform(const Transform &p_value);
