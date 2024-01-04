@@ -98,6 +98,8 @@ void GameScene::render() {
 
 	_font_test_sprite->render();
 
+	_font_test_mi->render();
+
 	//TextRenderer::get_singleton()->font_init();
 	//TextRenderer::get_singleton()->font_print("test");
 }
@@ -120,13 +122,24 @@ GameScene::GameScene() {
 
 	_font_test_sprite = memnew(Sprite);
 
-	_font_test_mat = new TextureMaterial2D();
+	_font_test_mat = memnew(TextureMaterial2D());
 	_font_test_mat->texture = _font->get_texture().ptr();
 	_font_test_sprite->mesh_instance->material = _font_test_mat;
 	_font_test_sprite->width = _font->get_atlas_width();
 	_font_test_sprite->height = _font->get_atlas_height();
 	_font_test_sprite->transform.set_origin(Vector2(1000, 100));
 	_font_test_sprite->update_mesh();
+
+	_font_test_mesh.instance();
+
+	_font_test_mi = memnew(MeshInstance2D());
+	_font_test_mi->material = _font_test_mat;
+	_font_test_mi->mesh = _font_test_mesh.ptr();
+	//_font_test_mi->transform.scale(Vector2(32, 32));
+	_font_test_mi->transform.set_origin(Vector2(1000, 500));
+
+	_font->generate_mesh("asdfghjklqwetyuiop\nzxcvbnm", _font_test_mesh);
+	_font_test_mesh->upload();
 
 	image.instance();
 	image->load_from_file("icon.png");

@@ -13,6 +13,7 @@
 #include "render_core/texture_material_2d.h"
 #include "render_objects/camera_2d.h"
 #include "render_objects/camera_3d.h"
+#include "render_objects/mesh_instance_2d.h"
 #include "render_objects/mesh_instance_3d.h"
 #include "render_objects/sprite.h"
 #include "render_objects/tile_map.h"
@@ -40,6 +41,9 @@ public:
 	Ref<Font> _font;
 	Sprite *_font_test_sprite;
 	TextureMaterial2D *_font_test_mat;
+
+	Ref<Mesh> _font_test_mesh;
+	MeshInstance2D *_font_test_mi;
 
 	Camera2D *camera_2d;
 	TileMap *tile_map;

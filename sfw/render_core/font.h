@@ -5,6 +5,9 @@
 // font framework originally from FWK
 // - rlyeh, public domain
 
+#include "core/color.h"
+#include "core/ustring.h"
+
 #include "object/resource.h"
 
 #include "core/ustring.h"
@@ -15,6 +18,7 @@
 
 class Image;
 class Texture;
+class Mesh;
 
 class Font : public Resource {
 	SFW_OBJECT(Font, Resource);
@@ -51,12 +55,12 @@ public:
 		// FONT_DEFAULTS = FONT_512 | FONT_NO_OVERSAMPLE | FONT_ASCII,
 	};
 
-	typedef struct font_metrics_t {
+	struct FontMetrics {
 		float ascent; // max distance above baseline for all glyphs
 		float descent; // max distance below baseline for all glyphs
 		float linegap; // distance betwen ascent of next line and descent of current line
 		float linedist; // distance between the baseline of two lines (ascent - descent + linegap)
-	} font_metrics_t;
+	};
 
 	void load_default(const float size, const uint32_t flags = 0);
 
@@ -68,11 +72,10 @@ public:
 	void font_face_from_mem(const void *ttf_buffer, uint32_t ttf_len, float font_size, uint32_t flags);
 
 	// commands
-	Vector2 font_xy();
-	void font_goto(float x, float y);
+	Vector2 generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color = Color(1, 1, 1, 1));
 	Vector2 font_print(const String &text);
-	Vector2 font_rect(const String &str);
-	font_metrics_t font_metrics(const String &text);
+	Vector2 get_string_size(const String &text);
+	FontMetrics font_metrics();
 
 	int get_atlas_width();
 	int get_atlas_height();
@@ -111,23 +114,22 @@ protected:
 	Ref<Texture> _texture;
 
 	struct TextureOffset {
-		float x;
-		float y;
-		float w;
-		float h;
+		float x0;
+		float y0;
+		float x1;
+		float y1;
 
 		float xoff;
+		float xoff2;
+		float xadvance;
 		float yoff;
-		float woff;
-		float hoff;
+		float yoff2;
 	};
 
 	Vector<TextureOffset> _texture_offsets;
 
 	static void font_draw_cmd(const float *glyph_data, int glyph_idx, float factor, Vector2 offset);
 	Vector2 font_draw_ex(const String &text, Vector2 offset, const char *col, void (*draw_cmd)(const float *, int, float, Vector2));
-
-	Vector2 gotoxy;
 };
 
 #endif
