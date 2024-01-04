@@ -28,7 +28,7 @@
 // http://bitmapmania.m78.com
 // cooz@m78.com
 
-#include "text_renderer.h"
+#include "font.h"
 
 #include "window.h"
 
