@@ -1,10 +1,13 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "object/resource.h"
 #include "render_core/3rd_glad.h"
 #include "render_core/image.h"
 
-class Texture {
+class Texture : public Resource {
+	SFW_OBJECT(Texture, Resource);
+
 public:
 	enum TextureFlags {
 		TEXTURE_FLAG_FILTER = 1 << 0,
