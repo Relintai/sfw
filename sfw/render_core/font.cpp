@@ -280,8 +280,6 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 
 	_texture_offsets.resize(_num_glyphs);
 
-	float y_offset = _linedist * _factor * _scale;
-
 	// remap larger 0xFFFF unicodes into smaller NUM_GLYPHS glyphs
 	for (unsigned i = 0; i < _num_glyphs; i++) {
 		unsigned cp = _iter2cp[i];
@@ -299,9 +297,9 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 		offset.y1 = cd->y1 / (double)_height;
 
 		offset.xoff = cd->xoff;
-		offset.yoff = y_offset + cd->yoff;
+		offset.yoff = cd->yoff;
 		offset.xoff2 = cd->xoff2;
-		offset.yoff2 = y_offset + cd->yoff2;
+		offset.yoff2 = cd->yoff2;
 		offset.xadvance = cd->xadvance;
 
 		_texture_offsets.write[i] = offset;
@@ -328,7 +326,7 @@ Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color
 	ERR_FAIL_COND_V(!p_into.is_valid(), Vector2());
 
 	float X = 0;
-	float Y = 0;
+	float Y = _linedist * _factor * _scale;
 	float W = 0;
 	float L = _ascent * _factor * _scale;
 	float LL = L; // LL=largest linedist
@@ -379,40 +377,7 @@ Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color
 		X += t.xadvance * _scale;
 	}
 
-	Y += (_descent + _linegap) * _factor * _scale;
-
-	/*
-	ERR_PRINT(String::num(_ascent));
-	ERR_PRINT(String::num(_descent));
-	ERR_PRINT(String::num(_linegap));
-	ERR_PRINT(String::num(_linedist));
-	ERR_PRINT(String::num(_factor))
-	ERR_PRINT(String::num(_scale))
-	ERR_PRINT("----");
-
-	Vector2 s = Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
-
-	p_into->add_uv(0, 0);
-	p_into->add_color(p_color);
-	p_into->add_vertex2(0, 0);
-
-	p_into->add_uv(1, 1);
-	p_into->add_color(p_color);
-	p_into->add_vertex2(s.x, s.y);
-
-	p_into->add_uv(0, 1);
-	p_into->add_color(p_color);
-	p_into->add_vertex2(0, s.y);
-
-	p_into->add_uv(1, 0);
-	p_into->add_color(p_color);
-	p_into->add_vertex2(s.x, 0);
-
-	p_into->add_triangle(mesh_index_offset + 1, mesh_index_offset + 0, mesh_index_offset + 2);
-	p_into->add_triangle(mesh_index_offset + 0, mesh_index_offset + 1, mesh_index_offset + 3);
-
-	mesh_index_offset += 4;
-	*/
+	Y += (-_descent + _linegap) * _factor * _scale;
 
 	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
 }
@@ -596,22 +561,18 @@ Vector2 Font::font_draw_ex(const String &text, Vector2 offset, const char *col, 
 }
 
 // Calculate the size of a string, in the pixel size specified. Count stray newlines too.
-Vector2 Font::get_string_size(const String &text) {
+Vector2 Font::get_string_size(const String &p_text) {
 	ERR_FAIL_COND_V(!_initialized, Vector2());
 
-	// sanity checks
-	int len = text.length();
-
-	// ready
 	float X = 0;
-	float Y = 0;
+	float Y = _linedist * _factor * _scale;
 	float W = 0;
 	float L = _ascent * _factor * _scale;
 	float LL = L; // LL=largest linedist
 
 	// parse string
-	for (int i = 0; i < len; ++i) {
-		uint32_t ch = text[i];
+	for (int i = 0, end = p_text.length(); i < end; ++i) {
+		uint32_t ch = p_text[i];
 
 		if (ch == '\n') {
 			// change cursor, advance y, record largest x as width, increase height
@@ -622,26 +583,15 @@ Vector2 Font::get_string_size(const String &text) {
 			X = 0.0;
 			Y += _linedist * _factor * _scale;
 
-			if (i + 1 == len) { //@hack: ensures we terminate the height at the correct position
-				Y += (_descent + _linegap) * _factor * _scale;
-			}
-
-			continue;
-		}
-
-		if (ch >= 1 && ch <= 6) {
-			L = _ascent * _factor * _scale;
-
-			if (L > LL) {
-				LL = L;
-			}
-
 			continue;
 		}
 
 		int cp = ch - _begin;
-		X += _cdata[cp].xadvance * _scale;
+		const TextureOffset &t = _texture_offsets[_cp2iter[cp]];
+		X += t.xadvance * _scale;
 	}
+
+	Y += (-_descent + _linegap) * _factor * _scale;
 
 	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
 }

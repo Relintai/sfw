@@ -73,8 +73,8 @@ public:
 
 	// commands
 	Vector2 generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color = Color(1, 1, 1, 1));
-	Vector2 font_print(const String &text);
-	Vector2 get_string_size(const String &text);
+	Vector2 font_print(const String &p_text);
+	Vector2 get_string_size(const String &p_text);
 	FontMetrics font_metrics();
 
 	int get_atlas_width();
