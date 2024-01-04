@@ -314,7 +314,7 @@ void Font::font_face(const char *filename_ttf, float font_size, unsigned flags) 
 	*/
 }
 
-Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color) {
+Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color) const {
 	ERR_FAIL_COND_V(!_initialized, Vector2());
 	ERR_FAIL_COND_V(!p_into.is_valid(), Vector2());
 
@@ -376,7 +376,7 @@ Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color
 }
 
 // Calculate the size of a string, in the pixel size specified. Count stray newlines too.
-Vector2 Font::get_string_size(const String &p_text) {
+Vector2 Font::get_string_size(const String &p_text) const {
 	ERR_FAIL_COND_V(!_initialized, Vector2());
 
 	float X = 0;
@@ -411,7 +411,7 @@ Vector2 Font::get_string_size(const String &p_text) {
 	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
 }
 
-Font::FontMetrics Font::font_metrics() {
+Font::FontMetrics Font::font_metrics() const {
 	FontMetrics m;
 
 	m.ascent = _ascent * _factor * _scale;
@@ -422,18 +422,18 @@ Font::FontMetrics Font::font_metrics() {
 	return m;
 }
 
-int Font::get_atlas_width() {
+int Font::get_atlas_width() const {
 	return _width;
 }
 
-int Font::get_atlas_height() {
+int Font::get_atlas_height() const {
 	return _height;
 }
 
-Ref<Image> Font::get_image() {
+Ref<Image> Font::get_image() const {
 	return _image;
 }
-Ref<Texture> Font::get_texture() {
+Ref<Texture> Font::get_texture() const {
 	return _texture;
 }
 

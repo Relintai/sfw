@@ -18,7 +18,7 @@ public:
 		set_uniform(projection_matrix_location, RenderState::projection_matrix_2d);
 		set_uniform(model_view_matrix_location, RenderState::model_view_matrix_2d);
 
-		if (texture) {
+		if (texture.is_valid()) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture->get_gl_texture());
 			glUniform1i(texture_location, 0);
@@ -86,7 +86,6 @@ public:
 		model_view_matrix_location = 0;
 
 		texture_location = 0;
-		texture = NULL;
 	}
 
 	GLint projection_matrix_location;
@@ -94,7 +93,7 @@ public:
 
 	GLint texture_location;
 
-	Texture *texture;
+	Ref<Texture> texture;
 };
 
 #endif // COLORED_MATERIAL_H

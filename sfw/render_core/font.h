@@ -69,15 +69,15 @@ public:
 	void font_face_from_mem(const void *ttf_buffer, uint32_t ttf_len, float font_size, uint32_t flags);
 
 	// commands
-	Vector2 generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color = Color(1, 1, 1, 1));
-	Vector2 get_string_size(const String &p_text);
-	FontMetrics font_metrics();
+	Vector2 generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color &p_color = Color(1, 1, 1, 1)) const;
+	Vector2 get_string_size(const String &p_text) const;
+	FontMetrics font_metrics() const;
 
-	int get_atlas_width();
-	int get_atlas_height();
+	int get_atlas_width() const;
+	int get_atlas_height() const;
 
-	Ref<Image> get_image();
-	Ref<Texture> get_texture();
+	Ref<Image> get_image() const;
+	Ref<Texture> get_texture() const;
 
 	void unload();
 

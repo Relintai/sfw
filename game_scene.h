@@ -26,6 +26,8 @@ public:
 	virtual void input_event(const Ref<InputEvent> &event);
 	virtual void update(float delta);
 	virtual void render();
+	virtual void render_immediate();
+	virtual void render_obj();
 
 	GameScene();
 	~GameScene();
@@ -36,12 +38,12 @@ public:
 	bool down;
 
 	Ref<Image> image;
-	Texture *texture;
-	TextureMaterial2D *material;
+	Ref<Texture> texture;
+	Ref<TextureMaterial2D> material;
 
 	Ref<Font> _font;
 	Sprite *_font_test_sprite;
-	FontMaterial *_font_test_mat;
+	Ref<FontMaterial> _font_test_mat;
 
 	Ref<Mesh> _font_test_mesh;
 	MeshInstance2D *_font_test_mi;
@@ -54,7 +56,7 @@ public:
 	Mesh *mesh;
 	MeshInstance3D *mi;
 	MeshInstance3D *mi2;
-	ColorMaterial *color_material;
+	Ref<ColorMaterial> color_material;
 
 	Text2D *_text_2d;
 

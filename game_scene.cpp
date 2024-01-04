@@ -6,6 +6,7 @@
 #include "render_core/3rd_glad.h"
 #include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
+#include "render_immediate/renderer.h"
 //#include "render_core/font.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
@@ -68,6 +69,62 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::render() {
+	//render_obj();
+	render_immediate();
+}
+void GameScene::render_immediate() {
+	Renderer *r = Renderer::get_singleton();
+
+	//r->camera_2d_reset();
+
+	r->clear_screen(Color());
+
+	r->draw_point(Vector2(15, 15));
+	r->draw_point(Vector2(18, 18), Color(1, 1, 0));
+
+	r->draw_line(Vector2(20, 20), Vector2(80, 20));
+	r->draw_line(Vector2(20, 20), Vector2(80, 40));
+	r->draw_line(Vector2(20, 30), Vector2(80, 30), Color(1, 1, 0));
+	r->draw_line(Vector2(20, 40), Vector2(80, 40), Color(1, 1, 0), 4);
+	r->draw_line(Vector2(20, 40), Vector2(80, 60), Color(1, 1, 0), 4);
+
+	r->draw_line_rect(Rect2(100, 100, 40, 40));
+	r->draw_line_rect(Rect2(150, 100, 40, 40), Color(1, 1, 0));
+	r->draw_line_rect(Rect2(200, 100, 40, 40), Color(1, 1, 1), 4);
+
+	r->draw_rect(Rect2(100, 150, 40, 40));
+	r->draw_rect(Rect2(150, 150, 40, 40), Color(1, 1, 0));
+
+	r->draw_texture(texture, Rect2(100, 200, 40, 40));
+	r->draw_texture(texture, Rect2(150, 200, 40, 40), Color(1, 0, 0));
+
+	r->draw_texture_clipped(texture, Rect2(20, 20, 30, 30), Rect2(100, 250, 40, 40));
+	r->draw_texture_clipped(texture, Rect2(20, 20, 30, 30), Rect2(150, 250, 40, 40), Color(1, 0, 0));
+
+	Transform2D t = Transform2D().rotated(Math_PI / 26.0);
+
+	r->draw_texture_tr(t, texture, Rect2(100, 300, 40, 40));
+	r->draw_texture_tr(t, texture, Rect2(150, 300, 40, 40), Color(1, 0, 0));
+
+	r->draw_texture_clipped_tr(t, texture, Rect2(20, 20, 30, 30), Rect2(100, 350, 40, 40));
+	r->draw_texture_clipped_tr(t, texture, Rect2(20, 20, 30, 30), Rect2(150, 350, 40, 40), Color(1, 0, 0));
+
+	//r->draw_mesh_2d(sprite->mesh_instance->mesh, texture, Vector2(1000, 500));
+	//r->draw_mesh_2d_tr(sprite->mesh_instance->mesh, texture, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1000, 500)));
+	//r->draw_mesh_2d_mat(sprite->mesh_instance->mesh, material, Vector2(1000, 500));
+	//r->draw_mesh_2d_mat_tr(sprite->mesh_instance->mesh, material, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1000, 600)));
+
+	r->draw_text_2d("draw_text_2d1", _font, Vector2(700, 100));
+	r->draw_text_2d("draw_text_2d2", _font, Vector2(800, 100), Color(1, 1, 0));
+
+	r->draw_text_2d_tf("draw_text_2d_tf1", _font, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1000, 500)));
+	r->draw_text_2d_tf("draw_text_2d_tf2", _font, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1200, 500)), Color(0, 1, 0));
+
+	r->draw_text_2d_tf_material("draw_text_2d_tf_material1", _font, _font_test_mat, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1000, 800)));
+	r->draw_text_2d_tf_material("draw_text_2d_tf_material2", _font, _font_test_mat, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1200, 800)), Color(1, 0, 0));
+}
+
+void GameScene::render_obj() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -81,11 +138,6 @@ void GameScene::render() {
 	texture->create_from_image(d);
 
 	camera->bind();
-
-	//sprite->render();
-	//material->bind();
-	//color_material->bind();
-	//mesh->render();
 
 	static float rotmi = 0;
 	mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
@@ -122,7 +174,7 @@ GameScene::GameScene() {
 
 	_font_test_sprite = memnew(Sprite);
 
-	_font_test_mat = memnew(FontMaterial());
+	_font_test_mat.instance();
 	_font_test_mat->texture = _font->get_texture();
 	_font_test_sprite->mesh_instance->material = _font_test_mat;
 	_font_test_sprite->width = _font->get_atlas_width();
@@ -135,7 +187,7 @@ GameScene::GameScene() {
 
 	_font_test_mi = memnew(MeshInstance2D());
 	_font_test_mi->material = _font_test_mat;
-	_font_test_mi->mesh = _font_test_mesh.ptr();
+	_font_test_mi->mesh = _font_test_mesh;
 	//_font_test_mi->transform.scale(Vector2(10, 10));
 	_font_test_mi->transform.set_origin(Vector2(1000, 400));
 
@@ -146,13 +198,13 @@ GameScene::GameScene() {
 	image->load_from_file("icon.png");
 	//image->bumpmap_to_normalmap();
 
-	texture = new Texture();
+	texture.instance();
 	//texture->load_image("icon.png");
 	texture->create_from_image(image);
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
 
-	material = new TextureMaterial2D();
+	material.instance();
 	material->texture = texture;
 
 	sprite = new Sprite();
@@ -167,7 +219,7 @@ GameScene::GameScene() {
 	sprite->update_mesh();
 
 	tile_map = new TileMap();
-	tile_map->material = material;
+	tile_map->material = material.ptr();
 	tile_map->atlas_size_x = 2;
 	tile_map->atlas_size_y = 2;
 
@@ -206,7 +258,7 @@ GameScene::GameScene() {
 	mesh = memnew(Mesh());
 	//cmaterial = memnew(ColoredMaterial());
 	//cmaterial->color = glm::vec4(1, 1, 0, 1);
-	color_material = memnew(ColorMaterial());
+	color_material.instance();
 
 	//mesh->clear();
 
@@ -214,11 +266,11 @@ GameScene::GameScene() {
 	mesh->upload();
 
 	mi = memnew(MeshInstance3D());
-	mi->material = color_material;
+	mi->material = color_material.ptr();
 	mi->mesh = mesh;
 
 	mi2 = memnew(MeshInstance3D());
-	mi2->material = color_material;
+	mi2->material = color_material.ptr();
 	mi2->mesh = mesh;
 	mi2->transform.origin.x = 1;
 
@@ -264,18 +316,14 @@ GameScene::GameScene() {
 	_text_2d->set_text_color(Color(1, 1, 0));
 	_text_2d->update();
 	_text_2d->transform.set_origin(Vector2(1200, 250));
+
+	Renderer::initialize();
 }
 
 GameScene::~GameScene() {
+	Renderer::destroy();
+
 	memdelete(tile_map);
-
 	memdelete(camera);
-	memdelete(texture);
-
 	memdelete(sprite);
-
-	memdelete(camera);
-	memdelete(mesh);
-	memdelete(material);
-	memdelete(color_material);
 }

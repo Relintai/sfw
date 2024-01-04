@@ -16,7 +16,7 @@ void Sprite::render() {
 }
 
 void Sprite::update_mesh() {
-	Mesh *mesh = mesh_instance->mesh;
+	Ref<Mesh> mesh = mesh_instance->mesh;
 
 	mesh->clear();
 
@@ -57,10 +57,9 @@ void Sprite::update_mesh() {
 	mesh->upload();
 }
 
-Sprite::Sprite() :
-		Object2D() {
-	mesh_instance = new MeshInstance2D();
-	mesh_instance->mesh = new Mesh(2);
+Sprite::Sprite() {
+	mesh_instance = memnew(MeshInstance2D());
+	mesh_instance->mesh = Ref<Mesh>(memnew(Mesh(2)));
 
 	width = 1;
 	height = 1;
@@ -72,6 +71,5 @@ Sprite::Sprite() :
 }
 
 Sprite::~Sprite() {
-	delete mesh_instance->mesh;
 	delete mesh_instance;
 }

@@ -3,7 +3,7 @@
 #include "render_objects/camera_2d.h"
 
 void MeshInstance2D::render() {
-	if (!mesh) {
+	if (!mesh.is_valid()) {
 		return;
 	}
 
@@ -11,7 +11,7 @@ void MeshInstance2D::render() {
 
 	Camera2D::current_camera->set_model_view_matrix(mat_orig * transform);
 
-	if (material) {
+	if (material.is_valid()) {
 		material->bind();
 	}
 
@@ -29,8 +29,6 @@ void MeshInstance2D::render() {
 }
 
 MeshInstance2D::MeshInstance2D() {
-	material = NULL;
-	mesh = NULL;
 }
 MeshInstance2D::~MeshInstance2D() {
 	children.clear();

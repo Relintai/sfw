@@ -69,6 +69,10 @@ Ref<Image> Texture::get_data() {
 	return Ref<Image>(img);
 }
 
+Vector2i Texture::get_size() const {
+	return Vector2i(_texture_width, _texture_height);
+}
+
 void Texture::upload() {
 	if (!_image.is_valid()) {
 		return;

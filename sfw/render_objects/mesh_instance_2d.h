@@ -10,17 +10,17 @@
 
 class MeshInstance2D {
 public:
-    void render();
+	void render();
 
-    MeshInstance2D();
-    ~MeshInstance2D();
+	MeshInstance2D();
+	~MeshInstance2D();
 
-    Material *material;
-    Mesh *mesh;
+	Ref<Material> material;
+	Ref<Mesh> mesh;
 
-    Transform2D transform;
+	Transform2D transform;
 
-   Vector<MeshInstance2D *> children;
+	Vector<MeshInstance2D *> children;
 };
 
 #endif // MESH_INSTACE_H

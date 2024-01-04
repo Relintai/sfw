@@ -1,6 +1,8 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "core/vector2i.h"
+
 #include "object/resource.h"
 #include "render_core/3rd_glad.h"
 #include "render_core/image.h"
@@ -23,6 +25,8 @@ public:
 	void create_from_image(const Ref<Image> &img);
 
 	Ref<Image> get_data();
+
+	Vector2i get_size() const;
 
 	void upload();
 
