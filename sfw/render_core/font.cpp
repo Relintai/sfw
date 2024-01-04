@@ -280,6 +280,8 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 
 	_texture_offsets.resize(_num_glyphs);
 
+	float y_offset = _linedist * _factor * _scale;
+
 	// remap larger 0xFFFF unicodes into smaller NUM_GLYPHS glyphs
 	for (unsigned i = 0; i < _num_glyphs; i++) {
 		unsigned cp = _iter2cp[i];
@@ -293,64 +295,19 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 
 		offset.x0 = cd->x0 / (double)_width;
 		offset.y0 = cd->y0 / (double)_height;
-		//offset.x1 = (cd->x1 - cd->x0) / (double)_width;
-		//offset.y1 = (cd->y1 - cd->y0) / (double)_height;
 		offset.x1 = cd->x1 / (double)_width;
 		offset.y1 = cd->y1 / (double)_height;
 
-		//offset.xoff = cd->xoff / (double)_width;
-		//offset.yoff = cd->yoff / (double)_height;
-		//offset.xoff2 = cd->xoff / (double)_width;
-		//offset.yoff2 = cd->yoff / (double)_height;
-		//offset.xadvance = cd->xadvance / (double)_width;
-
 		offset.xoff = cd->xoff;
-		offset.yoff = cd->yoff;
-		offset.xoff2 = cd->xoff;
-		offset.yoff2 = cd->yoff;
+		offset.yoff = y_offset + cd->yoff;
+		offset.xoff2 = cd->xoff2;
+		offset.yoff2 = y_offset + cd->yoff2;
 		offset.xadvance = cd->xadvance;
 
 		_texture_offsets.write[i] = offset;
 	}
 
 	_initialized = true;
-
-	/*
-	float *texture_offsets = memnew_arr(float, 8 * _num_glyphs);
-
-	// remap larger 0xFFFF unicodes into smaller NUM_GLYPHS glyphs
-	for (unsigned i = 0, count = 0; i < _num_glyphs; i++) {
-		unsigned cp = _iter2cp[i];
-		if (cp == 0xFFFD)
-			continue;
-
-		stbtt_packedchar *cd = &_cdata[cp - _begin];
-		//      if(cd->x1==cd->x0) { _iter2cp[i] = _cp2iter[cp - _begin] = 0xFFFD; continue; }
-
-		int k1 = 0 * _num_glyphs + count;
-		int k2 = 1 * _num_glyphs + count;
-		++count;
-
-		texture_offsets[4 * k1 + 0] = cd->x0 / (double)_width;
-		texture_offsets[4 * k1 + 1] = cd->y0 / (double)_height;
-		texture_offsets[4 * k1 + 2] = (cd->x1 - cd->x0) / (double)_width;
-		texture_offsets[4 * k1 + 3] = (cd->y1 - cd->y0) / (double)_height;
-
-		texture_offsets[4 * k2 + 0] = cd->xoff / (double)_width;
-		texture_offsets[4 * k2 + 1] = cd->yoff / (double)_height;
-		texture_offsets[4 * k2 + 2] = cd->xoff2 / (double)_width;
-		texture_offsets[4 * k2 + 3] = cd->yoff2 / (double)_height;
-	}
-
-	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_font"), 0);
-	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_meta"), 1);
-	glUniform1i(glGetUniformLocation(f->program->get_program(), "sampler_colors"), 2);
-
-	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_bitmap"), _width, _height);
-	glUniform2f(glGetUniformLocation(f->program->get_program(), "res_meta"), _num_glyphs, 2);
-	glUniform1f(glGetUniformLocation(f->program->get_program(), "num_colors"), FONT_MAX_COLORS);
-	(void)flags;
-	*/
 }
 
 void Font::font_face(const char *filename_ttf, float font_size, unsigned flags) {
@@ -376,7 +333,7 @@ Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color
 	float L = _ascent * _factor * _scale;
 	float LL = L; // LL=largest linedist
 
-	float current_x_pos = 0;
+	int mesh_index_offset = p_into->indices.size();
 
 	// parse string
 	for (int i = 0, end = p_text.length(); i < end; ++i) {
@@ -391,45 +348,71 @@ Vector2 Font::generate_mesh(const String &p_text, Ref<Mesh> &p_into, const Color
 			X = 0.0;
 			Y += _linedist * _factor * _scale;
 
-			if (i + 1 == end) { //@hack: ensures we terminate the height at the correct position
-				Y += (_descent + _linegap) * _factor * _scale;
-			}
-
 			continue;
 		}
 
 		int cp = ch - _begin;
 
-		//*t++ = X;
-		//*t++ = Y;
-		//*t++ = _cp2iter[cp];
-		//*t++ = col ? col[i] : color;
-
 		const TextureOffset &t = _texture_offsets[_cp2iter[cp]];
 
 		p_into->add_uv(t.x0, t.y0);
 		p_into->add_color(p_color);
-		p_into->add_vertex2(current_x_pos, Y);
+		p_into->add_vertex2(X + t.xoff, Y + t.yoff);
 
 		p_into->add_uv(t.x1, t.y1);
 		p_into->add_color(p_color);
-		p_into->add_vertex2(current_x_pos + 20, Y + 20);
+		p_into->add_vertex2(X + t.xoff2, Y + t.yoff2);
 
 		p_into->add_uv(t.x0, t.y1);
 		p_into->add_color(p_color);
-		p_into->add_vertex2(current_x_pos, Y + 20);
+		p_into->add_vertex2(X + t.xoff, Y + t.yoff2);
 
 		p_into->add_uv(t.x1, t.y0);
 		p_into->add_color(p_color);
-		p_into->add_vertex2(current_x_pos + 20, Y + 20);
+		p_into->add_vertex2(X + t.xoff2, Y + t.yoff);
 
-		p_into->add_triangle(1, 0, 2);
-		p_into->add_triangle(0, 1, 3);
+		p_into->add_triangle(mesh_index_offset + 1, mesh_index_offset + 0, mesh_index_offset + 2);
+		p_into->add_triangle(mesh_index_offset + 0, mesh_index_offset + 1, mesh_index_offset + 3);
 
-		current_x_pos += 20;
+		mesh_index_offset += 4;
 
-		X += _cdata[cp].xadvance * _scale;
+		X += t.xadvance * _scale;
 	}
+
+	Y += (_descent + _linegap) * _factor * _scale;
+
+	/*
+	ERR_PRINT(String::num(_ascent));
+	ERR_PRINT(String::num(_descent));
+	ERR_PRINT(String::num(_linegap));
+	ERR_PRINT(String::num(_linedist));
+	ERR_PRINT(String::num(_factor))
+	ERR_PRINT(String::num(_scale))
+	ERR_PRINT("----");
+
+	Vector2 s = Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
+
+	p_into->add_uv(0, 0);
+	p_into->add_color(p_color);
+	p_into->add_vertex2(0, 0);
+
+	p_into->add_uv(1, 1);
+	p_into->add_color(p_color);
+	p_into->add_vertex2(s.x, s.y);
+
+	p_into->add_uv(0, 1);
+	p_into->add_color(p_color);
+	p_into->add_vertex2(0, s.y);
+
+	p_into->add_uv(1, 0);
+	p_into->add_color(p_color);
+	p_into->add_vertex2(s.x, 0);
+
+	p_into->add_triangle(mesh_index_offset + 1, mesh_index_offset + 0, mesh_index_offset + 2);
+	p_into->add_triangle(mesh_index_offset + 0, mesh_index_offset + 1, mesh_index_offset + 3);
+
+	mesh_index_offset += 4;
+	*/
 
 	return Vector2(W * W > X * X ? W : X, Y * Y > LL * LL ? Y : LL).abs();
 }
@@ -637,10 +620,10 @@ Vector2 Font::get_string_size(const String &text) {
 			}
 
 			X = 0.0;
-			Y -= _linedist * _factor * _scale;
+			Y += _linedist * _factor * _scale;
 
 			if (i + 1 == len) { //@hack: ensures we terminate the height at the correct position
-				Y -= (_descent + _linegap) * _factor * _scale;
+				Y += (_descent + _linegap) * _factor * _scale;
 			}
 
 			continue;
@@ -657,12 +640,6 @@ Vector2 Font::get_string_size(const String &text) {
 		}
 
 		int cp = ch - _begin;
-
-		//*t++ = X;
-		//*t++ = Y;
-		//*t++ = _cp2iter[cp];
-		//*t++ = col ? col[i] : color;
-
 		X += _cdata[cp].xadvance * _scale;
 	}
 

@@ -95,9 +95,7 @@ void GameScene::render() {
 	camera_2d->bind();
 	sprite->render();
 	tile_map->render();
-
 	_font_test_sprite->render();
-
 	_font_test_mi->render();
 
 	//TextRenderer::get_singleton()->font_init();
@@ -131,14 +129,15 @@ GameScene::GameScene() {
 	_font_test_sprite->update_mesh();
 
 	_font_test_mesh.instance();
+	_font_test_mesh->vertex_dimesions = 2;
 
 	_font_test_mi = memnew(MeshInstance2D());
 	_font_test_mi->material = _font_test_mat;
 	_font_test_mi->mesh = _font_test_mesh.ptr();
-	//_font_test_mi->transform.scale(Vector2(32, 32));
-	_font_test_mi->transform.set_origin(Vector2(1000, 500));
+	//_font_test_mi->transform.scale(Vector2(10, 10));
+	_font_test_mi->transform.set_origin(Vector2(1000, 400));
 
-	_font->generate_mesh("asdfghjklqwetyuiop\nzxcvbnm", _font_test_mesh);
+	_font->generate_mesh("asdfgh\nasdfvb", _font_test_mesh);
 	_font_test_mesh->upload();
 
 	image.instance();
