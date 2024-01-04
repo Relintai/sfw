@@ -46,7 +46,9 @@ def print_includes(f):
 def process_file(f):
     #print_includes(f)
 
-    return f.replace('#include ', '//#include ')
+    #return f.replace('#include ', '//#include ')
+
+    return f
 
 def process_command(name, value):
     if name == "ARG":

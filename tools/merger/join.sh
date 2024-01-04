@@ -4,6 +4,6 @@ mkdir -p out
 cd ..
 cd ..
 
-python misc/merger/join.py --template misc/merger/sfw.h.inl --path . --output misc/merger/out/sfw.h
-python misc/merger/join.py --template misc/merger/sfw.cpp.inl --path . --output misc/merger/out/sfw.cpp
+python tools/merger/join.py --template tools/merger/sfw.h.inl --path . --output tools/merger/out/sfw.h
+python tools/merger/join.py --template tools/merger/sfw.cpp.inl --path . --output tools/merger/out/sfw.cpp
 
