@@ -45,11 +45,14 @@ public:
 			"\n"
 			"attribute vec4 a_position;\n"
 			"attribute vec2 a_uv;\n"
+			"attribute vec4 a_color;\n"
 			"\n"
 			"varying vec2 v_uv;\n"
+			"varying vec4 v_color;\n"
 			"\n"
 			"void main() {\n"
 			"  v_uv = a_uv;\n"
+			"  v_color = a_color;\n"
 			"  gl_Position = u_proj_matrix * u_model_view_matrix * a_position;\n"
 			"}"
 		};
@@ -64,6 +67,7 @@ public:
 			"uniform sampler2D u_texture;\n"
 			"\n"
 			"varying vec2 v_uv;\n"
+			"varying vec4 v_color;\n"
 			"\n"
 			"void main() {\n"
 			"  vec4 col = texture2D(u_texture, v_uv);\n"
@@ -72,7 +76,7 @@ public:
 			"    discard;\n"
 			"  }\n"
 			"\n"
-			"  gl_FragColor = col;\n"
+			"  gl_FragColor = col * v_color;\n"
 			"}"
 		};
 

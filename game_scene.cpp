@@ -137,7 +137,7 @@ GameScene::GameScene() {
 	//_font_test_mi->transform.scale(Vector2(10, 10));
 	_font_test_mi->transform.set_origin(Vector2(1000, 400));
 
-	_font->generate_mesh("asdfgh\nasdfvb", _font_test_mesh);
+	_font->generate_mesh("asdfgh\nasdfvb", _font_test_mesh, Color(1, 1, 0));
 	_font_test_mesh->upload();
 
 	image.instance();
