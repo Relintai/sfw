@@ -1,4 +1,7 @@
 
+// font framework from FWK. original code by Vassvik (UNLICENSED)
+// - rlyeh, public domain.
+
 // The following data tables are coming from Dear Imgui.
 // Re-licensed under permission as MIT-0.
 //
