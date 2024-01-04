@@ -165,7 +165,7 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 	unsigned char *bitmap = (unsigned char *)bitmap_data.ptrw();
 
 	int charCount = sorted[sorted.size() - 1] - sorted[0] + 1; // 0xEFFFF;
-	_cdata = (stbtt_packedchar *)calloc(1, sizeof(stbtt_packedchar) * charCount);
+	stbtt_packedchar *cdata = memnew_arr(stbtt_packedchar, charCount);
 	_iter2cp = memnew_arr(unsigned int, charCount);
 	_cp2iter = memnew_arr(unsigned int, charCount);
 	for (int i = 0; i < charCount; ++i) {
@@ -179,8 +179,10 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 
 		for (int i = 0, end = sorted.size() - 1; i < end; ++i) {
 			unsigned glyph = sorted[i];
-			if (!stbtt_FindGlyphIndex(&info, glyph))
+			if (!stbtt_FindGlyphIndex(&info, glyph)) {
 				continue;
+			}
+
 			_begin = glyph;
 			break;
 		}
@@ -198,10 +200,11 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 			end = sorted[++i];
 		}
 
-		if (begin < _begin)
+		if (begin < _begin) {
 			continue;
+		}
 
-		if (stbtt_PackFontRange(&pc, (const unsigned char *)ttf_data, 0, _font_size, begin, end - begin + 1, (stbtt_packedchar *)_cdata + begin - _begin)) {
+		if (stbtt_PackFontRange(&pc, (const unsigned char *)ttf_data, 0, _font_size, begin, end - begin + 1, cdata + begin - _begin)) {
 			for (uint64_t cp = begin; cp <= end; ++cp) {
 				// unicode->index runtime lookup
 				_cp2iter[cp - _begin] = count;
@@ -211,6 +214,7 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 			ERR_PRINT("!Failed to pack atlas font. Likely out of texture mem.");
 		}
 	}
+
 	stbtt_PackEnd(&pc);
 	_num_glyphs = count;
 
@@ -234,9 +238,11 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 		int max_y1 = 0;
 		for (unsigned int i = 0; i < _num_glyphs; i++) {
 			int cp = _iter2cp[i];
-			if (cp == 0xFFFD)
+			if (cp == 0xFFFD) {
 				continue;
-			stbtt_packedchar *cd = &_cdata[cp - _begin];
+			}
+
+			stbtt_packedchar *cd = &cdata[cp - _begin];
 			if (cd->y1 > max_y1) {
 				max_y1 = cd->y1;
 			}
@@ -272,7 +278,7 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 			continue;
 		}
 
-		stbtt_packedchar *cd = &_cdata[cp - _begin];
+		stbtt_packedchar *cd = &cdata[cp - _begin];
 
 		TextureOffset offset;
 
@@ -280,6 +286,11 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 		offset.y0 = cd->y0 / (double)_height;
 		offset.x1 = cd->x1 / (double)_width;
 		offset.y1 = cd->y1 / (double)_height;
+
+		offset.x0_orig = cd->x0;
+		offset.y0_orig = cd->y0;
+		offset.x1_orig = cd->x1;
+		offset.y1_orig = cd->y1;
 
 		offset.xoff = cd->xoff;
 		offset.yoff = cd->yoff;
@@ -289,6 +300,8 @@ void Font::font_face_from_mem(const void *ttf_data, uint32_t ttf_len, float font
 
 		_texture_offsets.write[i] = offset;
 	}
+
+	memdelete_arr(cdata);
 
 	_initialized = true;
 }

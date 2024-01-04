@@ -13,9 +13,6 @@
 #include "core/ustring.h"
 #include "font_material.h"
 
-// TODO figure out how to forward declare stbtt_packedchar
-#include "3rd_stb_truetype.h"
-
 class Image;
 class Texture;
 class Mesh;
@@ -87,7 +84,6 @@ public:
 protected:
 	// character info
 	// filled up by stb_truetype.h
-	stbtt_packedchar *_cdata;
 	unsigned _num_glyphs;
 	unsigned *_cp2iter;
 	unsigned *_iter2cp;
@@ -117,6 +113,11 @@ protected:
 		float y0;
 		float x1;
 		float y1;
+
+		float x0_orig;
+		float y0_orig;
+		float x1_orig;
+		float y1_orig;
 
 		float xoff;
 		float xoff2;
