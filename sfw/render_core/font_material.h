@@ -1,5 +1,5 @@
-#ifndef TEXT_MATERIAL_H
-#define TEXT_MATERIAL_H
+#ifndef FONT_MATERIAL_H
+#define FONT_MATERIAL_H
 
 #include "render_core/material.h"
 
@@ -7,7 +7,7 @@
 
 #include "render_core/render_state.h"
 
-class TextMaterial : public Material {
+class FontMaterial : public Material {
 public:
 	int get_material_id() {
 		return 10;
@@ -102,7 +102,7 @@ public:
 		return fragment_shader_source;
 	}
 
-	TextMaterial() {
+	FontMaterial() {
 	}
 
 	GLint projection_matrix_location;

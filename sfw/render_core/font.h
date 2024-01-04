@@ -9,7 +9,7 @@
 
 #include "core/ustring.h"
 
-#include "text_material.h"
+#include "font_material.h"
 
 // TODO figure out how to forward declare stbtt_packedchar
 #include "3rd_stb_truetype.h"
@@ -148,7 +148,7 @@ protected:
 
 		// opengl stuff
 		GLuint vao;
-		Ref<TextMaterial> program;
+		Ref<FontMaterial> program;
 
 		// font bitmap texture
 		// generated using stb_truetype.h
