@@ -13,8 +13,8 @@ public:
 	}
 
 	void bind_uniforms() {
-        set_uniform(projection_matrix_location, RenderState::projection_matrix_2d);
-        set_uniform(model_view_matrix_location, RenderState::model_view_matrix_2d);
+		set_uniform(projection_matrix_location, RenderState::projection_matrix_2d);
+		set_uniform(model_view_matrix_location, RenderState::model_view_matrix_2d);
 
 		if (texture) {
 			glActiveTexture(GL_TEXTURE0);
@@ -66,21 +66,20 @@ public:
 			"varying vec2 v_uv;\n"
 			"\n"
 			"void main() {\n"
-            "  vec4 col = texture2D(u_texture, v_uv);\n"
-            "\n"
-            "  if (col.a < 0.1) {\n"
-            "    discard;\n"
-            "  }\n"
-            "\n"
-            "  gl_FragColor = col;\n"
+			"  vec4 col = texture2D(u_texture, v_uv);\n"
+			"\n"
+			"  if (col.a < 0.1) {\n"
+			"    discard;\n"
+			"  }\n"
+			"\n"
+			"  gl_FragColor = col;\n"
 			"}"
 		};
 
 		return fragment_shader_source;
 	}
 
-	TextureMaterial2D() :
-			Material() {
+	TextureMaterial2D() {
 		projection_matrix_location = 0;
 		model_view_matrix_location = 0;
 

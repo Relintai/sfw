@@ -120,7 +120,7 @@ GameScene::GameScene() {
 
 	_font_test_sprite = memnew(Sprite);
 
-	_font_test_mat = memnew(TextureMaterial2D());
+	_font_test_mat = memnew(FontMaterial());
 	_font_test_mat->texture = _font->get_texture().ptr();
 	_font_test_sprite->mesh_instance->material = _font_test_mat;
 	_font_test_sprite->width = _font->get_atlas_width();

@@ -40,7 +40,7 @@ public:
 
 	Ref<Font> _font;
 	Sprite *_font_test_sprite;
-	TextureMaterial2D *_font_test_mat;
+	FontMaterial *_font_test_mat;
 
 	Ref<Mesh> _font_test_mesh;
 	MeshInstance2D *_font_test_mi;
