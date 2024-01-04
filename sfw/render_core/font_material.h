@@ -7,6 +7,8 @@
 #include "render_core/render_state.h"
 
 class FontMaterial : public Material {
+	SFW_OBJECT(FontMaterial, Material);
+
 public:
 	int get_material_id() {
 		return 11;

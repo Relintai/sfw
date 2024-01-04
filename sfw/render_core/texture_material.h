@@ -7,6 +7,8 @@
 #include "render_core/render_state.h"
 
 class TextureMaterial : public Material {
+	SFW_OBJECT(TextureMaterial, Material);
+
 public:
 	int get_material_id() {
 		return 3;
@@ -17,7 +19,7 @@ public:
 		set_uniform(camera_matrix_location, RenderState::camera_transform_3d);
 		set_uniform(model_view_matrix_location, RenderState::model_view_matrix_3d);
 
-		if (texture) {
+		if (texture.is_valid()) {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texture->get_gl_texture());
 			glUniform1i(texture_location, 0);
@@ -26,7 +28,7 @@ public:
 
 	void setup_uniforms() {
 		projection_matrix_location = get_uniform("u_proj_matrix");
-        camera_matrix_location = get_uniform("u_camera_matrix");
+		camera_matrix_location = get_uniform("u_camera_matrix");
 		model_view_matrix_location = get_uniform("u_model_view_matrix");
 
 		texture_location = get_uniform("u_texture");
@@ -76,14 +78,12 @@ public:
 		return fragment_shader_source;
 	}
 
-	TextureMaterial() :
-			Material() {
+	TextureMaterial() {
 		projection_matrix_location = 0;
 		camera_matrix_location = 0;
 		model_view_matrix_location = 0;
 
 		texture_location = 0;
-		texture = NULL;
 	}
 
 	GLint projection_matrix_location;
@@ -92,7 +92,7 @@ public:
 
 	GLint texture_location;
 
-	Texture *texture;
+	Ref<Texture> texture;
 };
 
 #endif // COLORED_MATERIAL_H

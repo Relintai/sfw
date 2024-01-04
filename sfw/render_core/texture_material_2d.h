@@ -7,6 +7,8 @@
 #include "render_core/render_state.h"
 
 class TextureMaterial2D : public Material {
+	SFW_OBJECT(TextureMaterial2D, Material);
+
 public:
 	int get_material_id() {
 		return 10;
