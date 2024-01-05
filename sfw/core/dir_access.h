@@ -1,6 +1,6 @@
 
-#ifndef DIRECTORY_H
-#define DIRECTORY_H
+#ifndef DIR_ACCESS_H
+#define DIR_ACCESS_H
 
 //--STRIP
 #include "core/error_list.h"
@@ -10,7 +10,7 @@
 struct tinydir_file;
 struct tinydir_dir;
 
-class Directory {
+class DirAccess {
 public:
 	Error open_dir(const String &path, bool skip_specials = true);
 	Error open_dir(const char *path, bool skip_specials = true);
@@ -34,8 +34,8 @@ public:
 	bool is_dir_open();
 	bool is_dir_closed();
 
-	Directory();
-	virtual ~Directory();
+	DirAccess();
+	virtual ~DirAccess();
 
 private:
 	bool _skip_specials;

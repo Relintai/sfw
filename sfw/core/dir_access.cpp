@@ -1,12 +1,12 @@
 
 //--STRIP
-#include "directory.h"
+#include "dir_access.h"
 
 #include "3rd_tinydir.h"
 #include <cstdio>
 //--STRIP
 
-Error Directory::open_dir(const String &path, bool skip_specials) {
+Error DirAccess::open_dir(const String &path, bool skip_specials) {
 	if (_dir_open) {
 		return ERR_CANT_ACQUIRE_RESOURCE;
 	}
@@ -22,7 +22,7 @@ Error Directory::open_dir(const String &path, bool skip_specials) {
 	return OK;
 }
 
-Error Directory::open_dir(const char *path, bool skip_specials) {
+Error DirAccess::open_dir(const char *path, bool skip_specials) {
 	if (_dir_open) {
 		return ERR_CANT_ACQUIRE_RESOURCE;
 	}
@@ -38,7 +38,7 @@ Error Directory::open_dir(const char *path, bool skip_specials) {
 	return OK;
 }
 
-void Directory::close_dir() {
+void DirAccess::close_dir() {
 	if (!_dir_open) {
 		return;
 	}
@@ -48,19 +48,19 @@ void Directory::close_dir() {
 	_dir_open = false;
 }
 
-bool Directory::has_next() {
+bool DirAccess::has_next() {
 	if (!_dir) {
 		return false;
 	}
 
 	return _dir->has_next;
 }
-bool Directory::read() {
+bool DirAccess::read() {
 	_read_file_result = tinydir_readfile(_dir, _file);
 
 	return _read_file_result != -1;
 }
-bool Directory::next() {
+bool DirAccess::next() {
 	if (!_dir->has_next) {
 		return false;
 	}
@@ -86,34 +86,34 @@ bool Directory::next() {
 	return true;
 }
 
-bool Directory::current_is_ok() {
+bool DirAccess::current_is_ok() {
 	return _read_file_result == 01;
 }
-String Directory::current_get_name() {
+String DirAccess::current_get_name() {
 	return String(_file->name);
 }
-String Directory::current_get_path() {
+String DirAccess::current_get_path() {
 	return String(_file->path);
 }
-String Directory::current_get_extension() {
+String DirAccess::current_get_extension() {
 	return String(_file->extension);
 }
-const char *Directory::current_get_name_cstr() {
+const char *DirAccess::current_get_name_cstr() {
 	return _file->name;
 }
-const char *Directory::current_get_path_cstr() {
+const char *DirAccess::current_get_path_cstr() {
 	return _file->path;
 }
-const char *Directory::current_get_extension_cstr() {
+const char *DirAccess::current_get_extension_cstr() {
 	return _file->extension;
 }
-bool Directory::current_is_file() {
+bool DirAccess::current_is_file() {
 	return !_file->is_dir;
 }
-bool Directory::current_is_dir() {
+bool DirAccess::current_is_dir() {
 	return _file->is_dir;
 }
-bool Directory::current_is_special_dir() {
+bool DirAccess::current_is_special_dir() {
 	if ((_file->name[0] == '.' && _file->name[1] == '\0') || (_file->name[0] == '.' && _file->name[1] == '.')) {
 		return true;
 	}
@@ -121,21 +121,21 @@ bool Directory::current_is_special_dir() {
 	return false;
 }
 
-bool Directory::is_dir_open() {
+bool DirAccess::is_dir_open() {
 	return _dir_open;
 }
-bool Directory::is_dir_closed() {
+bool DirAccess::is_dir_closed() {
 	return !_dir_open;
 }
 
-Directory::Directory() {
+DirAccess::DirAccess() {
 	_skip_specials = true;
 	_read_file_result = 0;
 	_dir_open = false;
 	_dir = memnew(tinydir_dir);
 	_file = memnew(tinydir_file);
 }
-Directory::~Directory() {
+DirAccess::~DirAccess() {
 	if (is_dir_open()) {
 		close_dir();
 	}
