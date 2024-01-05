@@ -79,6 +79,12 @@ def process_command(name, value):
             res += process_file(file.read())
             res += "#line 0"
             return res
+    elif name == "FILEINLINE":
+        file_path = os.path.join(input_path, value)
+        print("Appending inline file: " + value)
+        with open(file_path, "r") as file:
+            res = process_file(file.read())
+            return res
 
 def process_template(template):
     regex = r"{{([A-Z]*):([\w./]*)}}"

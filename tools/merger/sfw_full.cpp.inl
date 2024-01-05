@@ -1,6 +1,7 @@
 
 
-//Add the implementation unroll macros here before including sfw.h
+{{FILEINLINE:tools/merger/sfw_readme.inl.h}}
+{{FILEINLINE:tools/merger/sfw_linceses.inl.h}}
 
 #include <cstdio>
 #include <stdio.h>
