@@ -319,12 +319,42 @@
 //--STRIP
 {{FILE:sfw/render_core/shortcut.cpp}}
 //--STRIP
+//{//{FILE:sfw/render_core/primitive_meshes.cpp}}
+//--STRIP
+//--STRIP
 //#include "render_core/material.h"
 //--STRIP
 {{FILE:sfw/render_core/material.cpp}}
+
+
 //--STRIP
-//{//{FILE:sfw/render_core/primitive_meshes.cpp}}
+//#includes own header
 //--STRIP
+{{FILE:sfw/render_core/color_material_2d.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/color_material.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/colored_material.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/font_material.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/texture_material_2d.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/texture_material.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/transparent_texture_material.cpp}}
 
 //--STRIP
 //#include "render_core/image.h"
