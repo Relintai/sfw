@@ -387,4 +387,17 @@
 //--STRIP
 {{FILE:sfw/core/hash_set.h}}
 
+//--STRIP
+//#include "core/error_list.h"
+//#include "core/ustring.h"
+//also needs vector
+//--STRIP
+{{FILE:sfw/core/file_access.h}}
+
+//--STRIP
+//#include "core/error_list.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfw/core/dir_access.h}}
+
 #endif

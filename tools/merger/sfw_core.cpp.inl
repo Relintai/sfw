@@ -181,3 +181,15 @@
 //--STRIP
 {{FILE:sfw/core/vector4.cpp}}
 
+//--STRIP
+//#include "file_access.h"
+//--STRIP
+{{FILE:sfw/core/file_access.cpp}}
+
+{{FILE:sfw/core/3rd_tinydir.h}}
+
+//--STRIP
+//#include "dir_access.h"
+//#include "3rd_tinydir.h"
+//--STRIP
+{{FILE:sfw/core/dir_access.cpp}}
