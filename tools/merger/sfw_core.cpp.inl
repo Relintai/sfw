@@ -193,3 +193,9 @@
 //#include "3rd_tinydir.h"
 //--STRIP
 {{FILE:sfw/core/dir_access.cpp}}
+
+//--STRIP
+//#include "core/pool_vector.h"
+//#include "core/string_name.h"
+//--STRIP
+{{FILE:sfw/core/sfw_core.cpp}}
