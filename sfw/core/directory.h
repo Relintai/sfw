@@ -31,14 +31,6 @@ public:
 	bool current_is_dir();
 	bool current_is_special_dir();
 
-	String read_file(const String &path);
-
-	Vector<uint8_t> read_file_bin(const String &path);
-	Error read_file_into_bin(const String &path, Vector<uint8_t> *data);
-
-	Error write_file(const String &path, const String &str);
-	Error write_file_bin(const String &path, const Vector<uint8_t> &data);
-
 	bool is_dir_open();
 	bool is_dir_closed();
 
