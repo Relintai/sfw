@@ -1,7 +1,7 @@
 
+//--STRIP
 #include "sfw_core.h"
 
-//--STRIP
 #include "core/pool_vector.h"
 #include "core/string_name.h"
 //--STRIP
