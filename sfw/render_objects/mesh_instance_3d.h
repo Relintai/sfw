@@ -13,14 +13,16 @@
 //--STRIP
 
 class MeshInstance3D : public Object3D {
+	SFW_OBJECT(MeshInstance3D, Object3D);
+
 public:
 	void render();
 
 	MeshInstance3D();
 	~MeshInstance3D();
 
-	Material *material;
-	Mesh *mesh;
+	Ref<Material> material;
+	Ref<Mesh> mesh;
 
 	Vector<MeshInstance3D *> children;
 };

@@ -2,6 +2,8 @@
 #define MESH_INSTACE_2D_H
 
 //--STRIP
+#include "object_2d.h"
+
 #include "core/vector.h"
 
 #include "render_core/material.h"
@@ -10,7 +12,9 @@
 #include "core/transform.h"
 //--STRIP
 
-class MeshInstance2D {
+class MeshInstance2D : public Object2D {
+	SFW_OBJECT(MeshInstance2D, Object2D);
+
 public:
 	void render();
 

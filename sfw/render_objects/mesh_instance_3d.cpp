@@ -1,3 +1,4 @@
+
 //--STRIP
 #include "render_objects/mesh_instance_3d.h"
 
@@ -5,7 +6,7 @@
 //--STRIP
 
 void MeshInstance3D::render() {
-	if (!mesh) {
+	if (!mesh.is_valid()) {
 		return;
 	}
 
@@ -13,7 +14,7 @@ void MeshInstance3D::render() {
 
 	Camera3D::current_camera->set_model_view_matrix(mat_orig * transform);
 
-	if (material) {
+	if (material.is_valid()) {
 		material->bind();
 	}
 
@@ -31,9 +32,11 @@ void MeshInstance3D::render() {
 }
 
 MeshInstance3D::MeshInstance3D() {
-	material = NULL;
-	mesh = NULL;
 }
 MeshInstance3D::~MeshInstance3D() {
+	for (int i = 0; i < children.size(); ++i) {
+		memdelete(children[i]);
+	}
+
 	children.clear();
 }

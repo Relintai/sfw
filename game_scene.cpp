@@ -255,7 +255,7 @@ GameScene::GameScene() {
 	camera_2d = memnew(Camera2D);
 	camera_2d->size = Vector2(1920, 1080);
 
-	mesh = memnew(Mesh());
+	mesh = Ref<Mesh>(memnew(Mesh()));
 	//cmaterial = memnew(ColoredMaterial());
 	//cmaterial->color = glm::vec4(1, 1, 0, 1);
 	color_material.instance();
@@ -266,11 +266,11 @@ GameScene::GameScene() {
 	mesh->upload();
 
 	mi = memnew(MeshInstance3D());
-	mi->material = color_material.ptr();
+	mi->material = color_material;
 	mi->mesh = mesh;
 
 	mi2 = memnew(MeshInstance3D());
-	mi2->material = color_material.ptr();
+	mi2->material = color_material;
 	mi2->mesh = mesh;
 	mi2->transform.origin.x = 1;
 

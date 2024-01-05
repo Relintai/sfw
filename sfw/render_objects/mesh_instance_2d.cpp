@@ -33,5 +33,9 @@ void MeshInstance2D::render() {
 MeshInstance2D::MeshInstance2D() {
 }
 MeshInstance2D::~MeshInstance2D() {
+	for (int i = 0; i < children.size(); ++i) {
+		memdelete(children[i]);
+	}
+
 	children.clear();
 }

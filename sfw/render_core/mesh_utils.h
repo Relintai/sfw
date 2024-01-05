@@ -7,7 +7,7 @@
 
 class MeshUtils {
 public:
-    static void create_cone(Mesh *mesh);
+    static void create_cone(Ref<Mesh> mesh);
 };
 
 #endif

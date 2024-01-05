@@ -721,6 +721,7 @@ SOFTWARE.
 //--STRIP
 {{FILE:sfw/render_objects/camera_2d.h}}
 //--STRIP
+//#include "object_2d.h"
 //#include "core/vector.h"
 //#include "render_core/material.h"
 //#include "render_core/mesh.h"

@@ -53,7 +53,7 @@ public:
 	Sprite *sprite;
 
 	Camera3D *camera;
-	Mesh *mesh;
+	Ref<Mesh> mesh;
 	MeshInstance3D *mi;
 	MeshInstance3D *mi2;
 	Ref<ColorMaterial> color_material;
