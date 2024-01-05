@@ -25,38 +25,33 @@ SOFTWARE.
 
 // TODO gather all licenses to here
 
-
-
 #ifdef SFW_3RD_H
+#define GLAD_GL_IMPLEMENTATION // glad
 #endif
 
-//Add implementation defines
-
-
-#define GLAD_GL_IMPLEMENTATION // glad
 {{FILE:sfw/render_core/3rd_glad.h}}
 
+#ifdef SFW_3RD_H
 #define STB_TRUETYPE_IMPLEMENTATION
+#endif
+
 {{FILE:sfw/render_core/3rd_stb_truetype.h}}
 
-
-
+#ifdef SFW_3RD_H
 #define STB_IMAGE_IMPLEMENTATION // stbi
 #define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
 #define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
 #define STB_SPRINTF_NOUNALIGNED // stb_sprintf
+#endif
 
 {{FILE:sfw/render_core/3rd_stb_image.h}}
 
 //{//{//FILE:sfw/render_core/stb_image_write.h}}
 //---
 #undef freelist
-//#define STBTT_malloc(x, u) ((void)(u), MALLOC(x))
-//#define STBTT_free(x, u) ((void)(u), FREE(x))
-//#define NK_ASSERT ASSERT
-//#define NK_DTOA(s, n) strcpy(s, va("%f", n)) // override cos built-in nk_dtoa() will freeze while parsing UINT_MAX otherwise
 
 
+#ifdef SFW_3RD_H
 #define _GLFW_IMPLEMENTATION // glfw337
 #define GLFW_INCLUDE_NONE // glfw337
 #ifdef __APPLE__
@@ -65,6 +60,7 @@ SOFTWARE.
 #define _GLFW_WIN32 // glfw win32
 #else
 #define _GLFW_X11 // glfw linux, also _GLFW_OSMESA or _GLFW_WAYLAND
+#endif
 #endif
 
 #undef _GNU_SOURCE

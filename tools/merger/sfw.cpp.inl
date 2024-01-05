@@ -2,8 +2,6 @@
 
 //Add the implementation unroll macros here before including sfw.h
 
-//#include "sfw.h"
-
 #include <cstdio>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,6 +14,14 @@
 #include <cstdint>
 #include <memory.h>
 
+#ifndef SFW_H
+#include "sfw.h"
+#endif
+
+#ifndef SFW_3RD_H
+#define SFW_3RD_H
+#include "sfw"
+#endif
 
 {{FILE:sfw/core/ucaps.h}}
 
@@ -179,6 +185,10 @@
 {{FILE:sfw/core/vector4.cpp}}
 
 //--STRIP
+//===================  OBJECT SECTION  ===================
+//--STRIP
+
+//--STRIP
 //#include "resource.h"
 //--STRIP
 {{FILE:sfw/object/resource.cpp}}
@@ -241,6 +251,10 @@
 //#include "object/resource.h"
 //--STRIP
 {{FILE:sfw/object/variant_op.cpp}}
+
+//--STRIP
+//===================  RENDER CORE SECTION  ===================
+//--STRIP
 
 {{FILE:sfw/render_core/font_data_bm_mini.inc.h}}
 {{FILE:sfw/render_core/font_data_tables.inc.h}}
@@ -363,6 +377,10 @@
 {{FILE:sfw/render_core/input.cpp}}
 
 //--STRIP
+//===================  RENDER IMMEDIATE SECTION  ===================
+//--STRIP
+
+//--STRIP
 //#include "renderer.h"
 //#include "render_core/color_material_2d.h"
 //#include "render_core/font.h"
@@ -375,6 +393,10 @@
 //#include "render_core/render_state.h"
 //--STRIP
 {{FILE:sfw/render_immediate/renderer.cpp}}
+
+//--STRIP
+//===================  RENDER OBJCTS SECTION  ===================
+//--STRIP
 
 //--STRIP
 //#include "render_objects/camera_3d.h"
