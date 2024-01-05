@@ -109,7 +109,7 @@ def main():
             template_args[arg[2:]] = unknown[i + 1]
 
     with open(args.template, "r") as f:
-        output = process_template(f.read())
+        output = process_template(strip_file(f.read()))
 
     with open(args.output, "w") as f:
         f.write(output)
