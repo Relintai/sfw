@@ -28,6 +28,12 @@ public:
 				down = pressed;
 			} else if (scancode == KEY_D) {
 				right = pressed;
+			} 
+			
+			if (k->get_physical_scancode() == KEY_SPACE) {
+				if (pressed) {
+					immediate = !immediate;
+				}
 			}
 
 			return;
@@ -67,8 +73,11 @@ public:
 	}
 
 	virtual void render() {
-		//render_obj();
-		render_immediate();
+		if (!immediate) {
+			render_obj();
+		} else {
+			render_immediate();
+		}
 	}
 
 	virtual void render_immediate() {
@@ -156,6 +165,8 @@ public:
 	}
 
 	GameApplication() {
+		immediate = false;
+
 		left = false;
 		right = false;
 		up = false;
@@ -326,6 +337,8 @@ public:
 		memdelete(camera);
 		memdelete(sprite);
 	}
+
+	bool immediate;
 
 	bool left;
 	bool right;
