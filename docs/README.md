@@ -6,3 +6,5 @@ version.
 
 I do not accept pull requests through this repository because this is a
 mirror of the private repo. Email <morgan@casual-effects.com> to discuss features.
+
+#1.16
