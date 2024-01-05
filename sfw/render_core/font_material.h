@@ -13,7 +13,7 @@ class FontMaterial : public Material {
 
 public:
 	int get_material_id() {
-		return 11;
+		return 4;
 	}
 
 	void bind_uniforms();

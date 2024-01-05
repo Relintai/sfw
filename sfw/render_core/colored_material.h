@@ -12,7 +12,7 @@
 class ColoredMaterial : public Material {
 public:
 	int get_material_id() {
-		return 1;
+		return 3;
 	}
 
 	void bind_uniforms();

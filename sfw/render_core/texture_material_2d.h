@@ -13,7 +13,7 @@ class TextureMaterial2D : public Material {
 
 public:
 	int get_material_id() {
-		return 10;
+		return 5;
 	}
 
 	void bind_uniforms();

@@ -13,7 +13,7 @@ class TransparentTextureMaterial : public Material {
 
 public:
 	int get_material_id() {
-		return 4;
+		return 7;
 	}
 
 	void bind_uniforms();
