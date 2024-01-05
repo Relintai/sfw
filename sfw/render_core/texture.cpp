@@ -35,9 +35,9 @@ Ref<Image> Texture::get_data() {
 
 	//GLES
 
-	GLenum gl_format;
-	GLenum gl_internal_format;
-	GLenum gl_type;
+	uint32_t gl_format;
+	uint32_t gl_internal_format;
+	uint32_t gl_type;
 	bool supported;
 	_get_gl_format(_texture_format, gl_format, gl_internal_format, gl_type, supported);
 
@@ -80,9 +80,9 @@ void Texture::upload() {
 		return;
 	}
 
-	GLenum gl_format;
-	GLenum gl_internal_format;
-	GLenum gl_type;
+	uint32_t gl_format;
+	uint32_t gl_internal_format;
+	uint32_t gl_type;
 	bool supported;
 	Image::Format image_format = _image->get_format();
 	_get_gl_format(image_format, gl_format, gl_internal_format, gl_type, supported);
@@ -141,7 +141,7 @@ void Texture::upload() {
 		glTexParameterf(_texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	}
 
-	GLenum texture_type = GL_TEXTURE_2D;
+	uint32_t texture_type = GL_TEXTURE_2D;
 
 	glBindTexture(texture_type, _texture);
 
@@ -179,7 +179,7 @@ void Texture::upload() {
 	glBindTexture(texture_type, 0);
 }
 
-void Texture::_get_gl_format(Image::Format p_format, GLenum &r_gl_format, GLenum &r_gl_internal_format, GLenum &r_gl_type, bool &r_supported) const {
+void Texture::_get_gl_format(Image::Format p_format, uint32_t &r_gl_format, uint32_t &r_gl_internal_format, uint32_t &r_gl_type, bool &r_supported) const {
 	r_gl_format = 0;
 	r_supported = true;
 

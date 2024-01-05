@@ -21,8 +21,8 @@ void ColorMaterial2D::setup_state() {
 	glEnable(GL_TEXTURE_2D);
 }
 
-const GLchar **ColorMaterial2D::get_vertex_shader_source() {
-	static const GLchar *vertex_shader_source[] = {
+const char **ColorMaterial2D::get_vertex_shader_source() {
+	static const char *vertex_shader_source[] = {
 		"uniform mat4 u_proj_matrix;\n"
 		"uniform mat4 u_model_view_matrix;\n"
 		"\n"
@@ -40,8 +40,8 @@ const GLchar **ColorMaterial2D::get_vertex_shader_source() {
 	return vertex_shader_source;
 }
 
-const GLchar **ColorMaterial2D::get_fragment_shader_source() {
-	static const GLchar *fragment_shader_source[] = {
+const char **ColorMaterial2D::get_fragment_shader_source() {
+	static const char *fragment_shader_source[] = {
 		"precision mediump float;\n"
 		"\n"
 		"varying vec4 v_color;\n"

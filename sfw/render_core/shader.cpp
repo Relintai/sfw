@@ -37,12 +37,12 @@ void Shader::compile() {
 		fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	}
 
-	const GLchar **vertex_shader_source = get_vertex_shader_source();
+	const char **vertex_shader_source = get_vertex_shader_source();
 
 	glShaderSource(vertex_shader, 1, vertex_shader_source, NULL);
 	glCompileShader(vertex_shader);
 
-	GLint shader_compiled = GL_FALSE;
+	int32_t shader_compiled = GL_FALSE;
 	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &shader_compiled);
 	if (shader_compiled != GL_TRUE) {
 		print_shader_errors(vertex_shader, "compiling Vertex Shader");
@@ -51,7 +51,7 @@ void Shader::compile() {
 
 	glAttachShader(program, vertex_shader);
 
-	const GLchar **fragment_shader_source = get_fragment_shader_source();
+	const char **fragment_shader_source = get_fragment_shader_source();
 
 	glShaderSource(fragment_shader, 1, fragment_shader_source, NULL);
 	glCompileShader(fragment_shader);
@@ -72,7 +72,7 @@ void Shader::compile() {
 
 	glLinkProgram(program);
 
-	GLint program_compiled = GL_FALSE;
+	int32_t program_compiled = GL_FALSE;
 	glGetProgramiv(program, GL_LINK_STATUS, &program_compiled);
 	if (program_compiled != GL_TRUE) {
 		print_program_errors(program);
@@ -85,23 +85,23 @@ void Shader::destroy() {
 	glDeleteProgram(program);
 }
 
-const GLchar **Shader::get_vertex_shader_source() {
+const char **Shader::get_vertex_shader_source() {
 	return vertex_shader_source;
 }
-void Shader::set_vertex_shader_source(const GLchar **source) {
+void Shader::set_vertex_shader_source(const char **source) {
 	vertex_shader_source = source;
 }
 
-const GLchar **Shader::get_fragment_shader_source() {
+const char **Shader::get_fragment_shader_source() {
 	return fragment_shader_source;
 }
-void Shader::set_fragment_shader_source(const GLchar **source) {
+void Shader::set_fragment_shader_source(const char **source) {
 	fragment_shader_source = source;
 }
 
-void Shader::print_shader_errors(const GLuint p_program, const char *name) {
+void Shader::print_shader_errors(const uint32_t p_program, const char *name) {
 	int max_length = 5000;
-	Vector<GLchar> error_log;
+	Vector<char> error_log;
 	error_log.resize(max_length);
 
 	glGetShaderInfoLog(p_program, max_length, &max_length, error_log.ptrw());
@@ -110,7 +110,7 @@ void Shader::print_shader_errors(const GLuint p_program, const char *name) {
 	printf("%s!\n", error_log.ptr());
 }
 
-void Shader::print_program_errors(const GLuint p_program) {
+void Shader::print_program_errors(const uint32_t p_program) {
 	if (glIsProgram(program)) {
 		int info_length = 0;
 		int max_length = 5000;

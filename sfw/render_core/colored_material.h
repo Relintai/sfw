@@ -18,15 +18,15 @@ public:
 	void bind_uniforms();
 	void setup_uniforms();
 
-	const GLchar **get_vertex_shader_source();
-	const GLchar **get_fragment_shader_source();
+	const char **get_vertex_shader_source();
+	const char **get_fragment_shader_source();
 
 	ColoredMaterial();
 
-	GLint projection_matrix_location;
-	GLint model_view_matrix_location;
+	int32_t projection_matrix_location;
+	int32_t model_view_matrix_location;
 
-	GLint tri_color_uniform_location;
+	int32_t tri_color_uniform_location;
 	Color color;
 };
 

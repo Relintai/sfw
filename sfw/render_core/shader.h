@@ -21,27 +21,27 @@ public:
 	void compile();
 	void destroy();
 
-	const GLchar **get_vertex_shader_source();
-	void set_vertex_shader_source(const GLchar **source);
+	const char **get_vertex_shader_source();
+	void set_vertex_shader_source(const char **source);
 
-	const GLchar **get_fragment_shader_source();
-	void set_fragment_shader_source(const GLchar **source);
+	const char **get_fragment_shader_source();
+	void set_fragment_shader_source(const char **source);
 
-	void print_shader_errors(const GLuint p_program, const char *name);
-	void print_program_errors(const GLuint p_program);
+	void print_shader_errors(const uint32_t p_program, const char *name);
+	void print_program_errors(const uint32_t p_program);
 
 	Shader();
 	~Shader();
 
-	GLuint vertex_shader;
-	GLuint fragment_shader;
-	GLuint program;
+	uint32_t vertex_shader;
+	uint32_t fragment_shader;
+	uint32_t program;
 
 	static Shader *current_shader;
 
 protected:
-	const GLchar **vertex_shader_source;
-	const GLchar **fragment_shader_source;
+	const char **vertex_shader_source;
+	const char **fragment_shader_source;
 };
 
 class ShaderCache {

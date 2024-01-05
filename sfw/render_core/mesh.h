@@ -37,8 +37,8 @@ public:
 	Mesh(int vert_dim);
 	virtual ~Mesh();
 
-	GLuint VBO;
-	GLuint IBO;
+	uint32_t VBO;
+	uint32_t IBO;
 
 	int vertex_dimesions;
 

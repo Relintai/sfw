@@ -20,7 +20,7 @@ public:
 		TEXTURE_FLAG_MIP_MAPS = 1 << 3,
 	};
 
-	_FORCE_INLINE_ GLuint get_gl_texture() {
+	_FORCE_INLINE_ uint32_t get_gl_texture() {
 		return _texture;
 	}
 
@@ -36,7 +36,7 @@ public:
 	virtual ~Texture();
 
 protected:
-	void _get_gl_format(Image::Format p_format, GLenum &r_gl_format, GLenum &r_gl_internal_format, GLenum &r_gl_type, bool &r_supported) const;
+	void _get_gl_format(Image::Format p_format, uint32_t &r_gl_format, uint32_t &r_gl_internal_format, uint32_t &r_gl_type, bool &r_supported) const;
 
 	Ref<Image> _image;
 
@@ -49,7 +49,7 @@ protected:
 	int _data_size;
 	int _mipmaps;
 
-	GLuint _texture;
+	uint32_t _texture;
 };
 
 //TODO
@@ -64,7 +64,7 @@ public:
 protected:
 	int _fbo_width;
 	int _fbo_height;
-	GLuint _fbo;
+	uint32_t _fbo;
 };
 
 #endif // TEXTURE_H

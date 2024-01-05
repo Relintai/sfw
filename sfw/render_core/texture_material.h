@@ -21,16 +21,16 @@ public:
 	void unbind();
 	void setup_state();
 
-	const GLchar **get_vertex_shader_source();
-	const GLchar **get_fragment_shader_source();
+	const char **get_vertex_shader_source();
+	const char **get_fragment_shader_source();
 
 	TextureMaterial();
 
-	GLint projection_matrix_location;
-	GLint camera_matrix_location;
-	GLint model_view_matrix_location;
+	int32_t projection_matrix_location;
+	int32_t camera_matrix_location;
+	int32_t model_view_matrix_location;
 
-	GLint texture_location;
+	int32_t texture_location;
 
 	Ref<Texture> texture;
 };
