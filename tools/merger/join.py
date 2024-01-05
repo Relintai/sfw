@@ -42,9 +42,26 @@ def print_includes(f):
                 print(l)
                 print_includes_dict[l] = 1
 
+def strip_file(f):
+    if "//--STRIP" in f:
+        s = f.split("//--STRIP")
+        
+        if len(s) % 2 != 1:
+            print("File likely has non-terminated //--STRIP comments!")
+            return f
+
+        f = ""
+
+        for i in range(len(s)):
+            if i % 2 == 0:
+                f += s[i]
+
+    return f
 
 def process_file(f):
     #print_includes(f)
+
+    f = strip_file(f)
 
     #return f.replace('#include ', '//#include ')
 
