@@ -43,6 +43,8 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/pool_allocator.cpp -o sfw/cor
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/mutex.cpp -o sfw/core/mutex.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/stime.cpp -o sfw/core/stime.o
 
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_core.cpp -o sfw/core/sfw_core.o
+
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/object.cpp -o sfw/object/object.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/reference.cpp -o sfw/object/reference.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/core_string_names.cpp -o sfw/object/core_string_names.o
@@ -105,7 +107,8 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
                         sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/stime.o \
-                        sfw/core/dir_access.o sfw/core/file_access.o\
+                        sfw/core/dir_access.o sfw/core/file_access.o \
+                        sfw/core/sfw_core.o \
                         sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
                         sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \
                         sfw/object/array.o sfw/object/dictionary.o sfw/object/ref_ptr.o \

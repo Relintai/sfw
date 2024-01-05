@@ -8,8 +8,7 @@
 #include "render_core/input_map.h"
 #include "render_core/window.h"
 
-#include "core/pool_vector.h"
-#include "core/string_name.h"
+#include "core/sfw_core.h"
 #include "object/core_string_names.h"
 //--STRIP
 
@@ -89,9 +88,10 @@ Application::Application() {
 
 	_time_scale = 1;
 
+	SFWCore::setup();
+
 	// TODO Move these to a central place in core!
-	StringName::setup();
-	MemoryPool::setup();
+
 	CoreStringNames::create();
 
 	// TODO add a helper static method
@@ -106,14 +106,15 @@ Application::~Application() {
 	_instance = NULL;
 
 	// TODO Move these to a central place in core!
-	StringName::cleanup();
-	MemoryPool::cleanup();
+
 	CoreStringNames::free();
 
 	// TODO add a helper static method
 	memdelete(AppWindow::get_singleton());
 	memdelete(Input::get_singleton());
 	memdelete(InputMap::get_singleton());
+
+	SFWCore::cleanup();
 }
 
 Application *Application::get_singleton() {

@@ -401,6 +401,11 @@
 {{FILE:sfw/core/dir_access.h}}
 
 //--STRIP
+//no includes
+//--STRIP
+{{FILE:sfw/core/sfw_core.h}}
+
+//--STRIP
 //===================  OBJECT SECTION  ===================
 //--STRIP
 
