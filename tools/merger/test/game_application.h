@@ -3,8 +3,8 @@
 
 #include "sfw.h"
 
-class GameScene : public Scene {
-	SFW_OBJECT(GameScene, Scene);
+class GameApplication : public Application {
+	SFW_OBJECT(GameApplication, Application);
 
 public:
 	virtual void input_event(const Ref<InputEvent> &event) {
@@ -155,7 +155,7 @@ public:
 		//TextRenderer::get_singleton()->font_print("test");
 	}
 
-	GameScene() {
+	GameApplication() {
 		left = false;
 		right = false;
 		up = false;
@@ -318,7 +318,8 @@ public:
 
 		Renderer::initialize();
 	}
-	~GameScene() {
+
+	~GameApplication() {
 		Renderer::destroy();
 
 		memdelete(tile_map);
@@ -355,19 +356,6 @@ public:
 	Text2D *_text_2d;
 
 	//ColoredMaterial *cmaterial;
-};
-
-class GameApplication : public Application {
-	SFW_OBJECT(GameApplication, Application);
-
-public:
-	GameApplication() {
-		scene = Ref<Scene>(memnew(GameScene()));
-	}
-
-	~GameApplication() {
-		scene.unref();
-	}
 };
 
 #endif // GAME_APPLICATION_H
