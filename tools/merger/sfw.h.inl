@@ -27,6 +27,8 @@ SOFTWARE.
 
 // TODO gather all licenses to here
 
+#define _REENTRANT
+
 #include <float.h>
 #include <math.h>
 #include <string.h>
