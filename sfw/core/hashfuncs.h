@@ -6,6 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/aabb.h"
 #include "core/math_defs.h"
 #include "core/math_funcs.h"
@@ -20,6 +21,7 @@
 #include "core/string_name.h"
 #include "core/ustring.h"
 #include "core/typedefs.h"
+//--STRIP
 
 /**
  * Hashing functions

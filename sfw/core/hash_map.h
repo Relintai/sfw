@@ -6,12 +6,14 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/hashfuncs.h"
 #include "paged_allocator.h"
 #include "pair.h"
 #include "core/math_funcs.h"
 #include "core/memory.h"
 #include "list.h"
+//--STRIP
 
 /**
  * A HashMap implementation that uses open addressing with Robin Hood hashing.

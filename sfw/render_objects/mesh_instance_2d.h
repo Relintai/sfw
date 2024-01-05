@@ -1,12 +1,14 @@
 #ifndef MESH_INSTACE_2D_H
 #define MESH_INSTACE_2D_H
 
+//--STRIP
 #include "core/vector.h"
 
 #include "render_core/material.h"
 #include "render_core/mesh.h"
 
 #include "core/transform.h"
+//--STRIP
 
 class MeshInstance2D {
 public:

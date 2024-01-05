@@ -1,11 +1,13 @@
 #ifndef RENDER_STATE_H
 #define RENDER_STATE_H
 
+//--STRIP
 #include "core/projection.h"
 #include "core/transform.h"
 #include "core/vector3.h"
 #include "core/transform_2d.h"
 #include "core/vector2.h"
+//--STRIP
 
 class RenderState {
 public:

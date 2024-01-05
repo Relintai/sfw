@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/quaternion.h"
 
 #include "core/basis.h"
+//--STRIP
 
 real_t Quaternion::angle_to(const Quaternion &p_to) const {
 	real_t d = dot(p_to);

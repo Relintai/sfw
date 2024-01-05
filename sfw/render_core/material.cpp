@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_core/material.h"
 
 #include <stdio.h>
+//--STRIP
 
 void Material::bind() {
     //csak main thread!

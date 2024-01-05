@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/color.h"
 
 #include "core/math_funcs.h"
+//--STRIP
 
 uint32_t Color::to_argb32() const {
 	uint32_t c = (uint8_t)Math::round(a * 255);

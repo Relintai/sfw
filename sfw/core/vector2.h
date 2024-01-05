@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/math_funcs.h"
 
 #include "core/error_macros.h"
+//--STRIP
 
 class String;
 

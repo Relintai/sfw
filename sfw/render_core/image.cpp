@@ -3,6 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "render_core/image.h"
 
 #include "core/error_macros.h"
@@ -23,6 +24,7 @@
 //{{FILE:3rd_stb_image_write.h}}
 //---
 #undef freelist
+//--STRIP
 
 const char *Image::format_names[Image::FORMAT_MAX] = {
 	"Lum8", // luminance

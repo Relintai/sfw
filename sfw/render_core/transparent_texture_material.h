@@ -1,10 +1,12 @@
 #ifndef TRANSPARENT_TEXTURE_MATERIAL_H
 #define TRANSPARENT_TEXTURE_MATERIAL_H
 
+//--STRIP
 #include "render_core/material.h"
 #include "render_core/texture.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 class TransparentTextureMaterial : public Material {
 	SFW_OBJECT(TransparentTextureMaterial, Material);

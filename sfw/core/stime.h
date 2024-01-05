@@ -5,7 +5,9 @@
 // time framework utils
 // - originally by rlyeh, public domain.
 
+//--STRIP
 #include "core/int_types.h"
+//--STRIP
 
 class STime {
 public:

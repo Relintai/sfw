@@ -1,11 +1,13 @@
 #ifndef COLORED_MATERIAL_H
 #define COLORED_MATERIAL_H
 
+//--STRIP
 #include "render_core/material.h"
 
 #include "core/color.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 class ColoredMaterial : public Material {
 public:

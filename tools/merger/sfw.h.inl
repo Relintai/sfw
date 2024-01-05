@@ -33,7 +33,8 @@ SOFTWARE.
 #include <stddef.h>
 
 //--STRIP
-//no includes
+//#include "core/int_types.h"
+//#include "core/error_list.h"
 //--STRIP
 {{FILE:sfw/core/typedefs.h}}
 //--STRIP

@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/mutex.h"
 #include "core/safe_refcount.h"
 #include "core/ustring.h"
+//--STRIP
 
 struct StaticCString {
 	const char *ptr;

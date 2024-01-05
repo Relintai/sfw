@@ -1,11 +1,13 @@
 #ifndef SIGNAL_H
 #define SIGNAL_H
 
+//--STRIP
 #include "core/vector.h"
 #include "core/ustring.h"
 
 #include "object/variant.h"
 #include "object/reference.h"
+//--STRIP
 
 class Signal {
 public:

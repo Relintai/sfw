@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_objects/mesh_instance_2d.h"
 
 #include "render_objects/camera_2d.h"
+//--STRIP
 
 void MeshInstance2D::render() {
 	if (!mesh.is_valid()) {

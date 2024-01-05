@@ -3,11 +3,13 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "input_event.h"
 
 #include "render_core/input_map.h"
 #include "render_core/keyboard.h"
 #include "render_core/shortcut.h"
+//--STRIP
 
 const int InputEvent::DEVICE_ID_TOUCH_MOUSE = -1;
 const int InputEvent::DEVICE_ID_INTERNAL = -2;

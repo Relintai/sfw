@@ -6,10 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "cowdata.h"
 #include "core/vector.h"
 #include "char_utils.h"
 #include "core/typedefs.h"
+//--STRIP
 
 /*************************************************************************/
 /*  CharProxy                                                            */

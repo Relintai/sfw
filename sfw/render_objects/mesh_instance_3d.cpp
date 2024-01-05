@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_objects/mesh_instance_3d.h"
 
 #include "render_objects/camera_3d.h"
+//--STRIP
 
 void MeshInstance3D::render() {
 	if (!mesh) {

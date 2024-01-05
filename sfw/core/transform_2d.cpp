@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/transform_2d.h"
+//--STRIP
 
 void Transform2D::invert() {
 	// FIXME: this function assumes the basis is a rotation matrix, with no scaling.

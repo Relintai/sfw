@@ -12,10 +12,12 @@
  * Vector container. Regular Vector Container. Use with care and for smaller arrays when possible. Use PoolVector for large arrays.
  */
 
+//--STRIP
 #include "cowdata.h"
 #include "core/sort_array.h"
 #include "core/error_macros.h"
 #include "core/memory.h"
+//--STRIP
 
 template <class T>
 class VectorWriteProxy {

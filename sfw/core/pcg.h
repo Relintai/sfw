@@ -4,7 +4,9 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
+//--STRIP
 #include "core/typedefs.h"
+//--STRIP
 
 #define PCG_DEFAULT_INC_64 1442695040888963407ULL
 

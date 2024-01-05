@@ -1,3 +1,4 @@
+//--STRIP
 #include "renderer.h"
 
 #include "render_core/color_material_2d.h"
@@ -10,6 +11,7 @@
 #include "render_core/window.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 bool Renderer::get_depth_buffer_enable() const {
 	return _depth_buffer;

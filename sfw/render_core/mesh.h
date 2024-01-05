@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+//--STRIP
 #include "core/vector.h"
 #include "core/int_types.h"
 #include "core/color.h"
@@ -8,6 +9,7 @@
 #include "object/resource.h"
 
 #include "render_core/3rd_glad.h"
+//--STRIP
 
 class Mesh : public Resource {
 	SFW_OBJECT(Mesh, Resource);

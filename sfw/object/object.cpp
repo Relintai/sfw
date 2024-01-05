@@ -1,9 +1,11 @@
+//--STRIP
 #include "object/object.h"
 
 #include "core/error_macros.h"
 #include "core/logger.h"
 #include "object/core_string_names.h"
 #include "object/object_rc.h"
+//--STRIP
 
 void Object::set(const StringName &p_name, const Variant &p_value, bool *r_valid) {
 	if (p_name == CoreStringNames::get_singleton()->_meta) {

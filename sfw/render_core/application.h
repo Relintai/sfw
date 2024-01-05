@@ -1,6 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+//--STRIP
 #include "core/int_types.h"
 #include <stdio.h>
 
@@ -8,6 +9,7 @@
 #include "object/reference.h"
 
 #include "render_core/scene.h"
+//--STRIP
 
 class AppWindow;
 class InputEvent;

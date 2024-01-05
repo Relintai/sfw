@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "render_core/input_event.h"
 #include "object/object.h"
 #include "core/rb_map.h"
+//--STRIP
 
 class InputMap : public Object {
 	SFW_OBJECT(InputMap, Object);

@@ -6,12 +6,14 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/hashfuncs.h"
 #include "core/list.h"
 #include "core/error_macros.h"
 #include "core/math_funcs.h"
 #include "core/memory.h"
 #include "core/ustring.h"
+//--STRIP
 
 /**
  * @class OGHashMap

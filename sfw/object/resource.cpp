@@ -1,4 +1,6 @@
+//--STRIP
 #include "resource.h"
+//--STRIP
 
 void Resource::emit_changed() {
 	changed.emit(this);

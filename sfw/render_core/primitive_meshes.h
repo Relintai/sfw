@@ -6,8 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "scene/resources/font/font.h"
 #include "scene/resources/mesh/mesh.h"
+//--STRIP
 
 ///@TODO probably should change a few integers to unsigned integers...
 

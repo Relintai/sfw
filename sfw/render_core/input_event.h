@@ -6,10 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/transform_2d.h"
 #include "core/typedefs.h"
 #include "core/ustring.h"
 #include "object/resource.h"
+//--STRIP
 
 /**
  * Input Event classes. These are used in the main loop.

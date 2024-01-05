@@ -28,6 +28,7 @@
 // http://bitmapmania.m78.com
 // cooz@m78.com
 
+//--STRIP
 #include "font.h"
 
 #include "window.h"
@@ -42,6 +43,7 @@
 #include "render_core/image.h"
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
+//--STRIP
 
 void Font::load_default(const float size, const uint32_t flags) {
 	font_face_from_mem(bm_mini_ttf, 20176, size, flags);

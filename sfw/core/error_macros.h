@@ -1,8 +1,10 @@
 #ifndef ERROR_MACROS_H
 #define ERROR_MACROS_H
 
+//--STRIP
 #include "core/logger.h"
 #include "core/typedefs.h"
+//--STRIP
 
 // Based on Godot Engine's error_macros.h
 // MIT License

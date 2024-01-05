@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/aabb.h"
+//--STRIP
 
 real_t AABB::get_volume() const {
 	return size.x * size.y * size.z;

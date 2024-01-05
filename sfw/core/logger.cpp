@@ -1,10 +1,12 @@
 
+//--STRIP
 #include "core/logger.h"
 
 #include "core/ustring.h"
 #include <cstdio>
 
 #include <stdio.h>
+//--STRIP
 
 void RLogger::print_trace(const String &str) {
 	print_trace(str.utf8().get_data());

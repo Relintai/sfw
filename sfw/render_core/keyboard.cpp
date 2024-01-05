@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "keyboard.h"
+//--STRIP
 
 struct _KeyCodeText {
 	int code;

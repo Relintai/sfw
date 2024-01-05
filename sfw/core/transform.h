@@ -6,11 +6,13 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/aabb.h"
 #include "core/basis.h"
 #include "core/plane.h"
 #include "core/vector3i.h"
 #include "core/pool_vector.h"
+//--STRIP
 
 struct _NO_DISCARD_CLASS_ Transform {
 	Basis basis;

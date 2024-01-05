@@ -3,6 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/memory.h"
 
 #include "core/error_macros.h"
@@ -10,6 +11,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+//--STRIP
 
 void *operator new(size_t p_size, const char *p_description) {
 	return Memory::alloc_static(p_size, false);

@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/pool_vector.h"
 #include "core/rect2.h" // also includes vector2, math_funcs, and ustring
 #include "core/rect2i.h" // also includes vector2i, math_funcs, and ustring
+//--STRIP
 
 struct _NO_DISCARD_CLASS_ Transform2D {
 	// Warning #1: basis of Transform2D is stored differently from Basis. In terms of columns array, the basis matrix looks like "on paper":

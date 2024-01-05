@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/pool_vector.h"
+//--STRIP
 
 Mutex pool_vector_lock;
 

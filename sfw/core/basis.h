@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/quaternion.h"
 #include "core/vector3.h"
 #include "core/vector3i.h"
+//--STRIP
 
 struct _NO_DISCARD_CLASS_ Basis {
 	Vector3 rows[3] = {

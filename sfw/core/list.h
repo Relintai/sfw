@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/sort_array.h"
 #include "core/error_macros.h"
 #include "core/memory.h"
+//--STRIP
 
 /**
  * Generic Templatized Linked List Implementation.

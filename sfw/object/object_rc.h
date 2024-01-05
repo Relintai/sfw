@@ -6,10 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/memory.h"
 #include "core/typedefs.h"
 
 #include <atomic>
+//--STRIP
 
 class Object;
 

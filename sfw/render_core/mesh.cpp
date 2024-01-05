@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_core/mesh.h"
 
 #include "render_core/shader.h"
+//--STRIP
 
 void Mesh::add_vertex2(float x, float y) {
 	vertices.push_back(x);

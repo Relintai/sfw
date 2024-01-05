@@ -1,10 +1,12 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
+//--STRIP
 #include "render_objects/object_2d.h"
 
 #include "core/transform_2d.h"
 #include "render_objects/mesh_instance_2d.h"
+//--STRIP
 
 class Sprite : public Object2D {
 public:

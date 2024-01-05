@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_core/scene.h"
 
 #include "render_core/input_event.h"
+//--STRIP
 
 void Scene::input_event(const Ref<InputEvent> &event) {
 }

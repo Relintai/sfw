@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/transform.h"
 
 #include "core/math_funcs.h"
+//--STRIP
 
 void Transform::invert() {
 	basis.transpose();

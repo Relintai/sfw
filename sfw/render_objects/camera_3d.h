@@ -1,6 +1,7 @@
 #ifndef CAMERA_3D_H
 #define CAMERA_3D_H
 
+//--STRIP
 #include "render_core/3rd_glad.h"
 
 #include "render_objects/object_3d.h"
@@ -8,6 +9,7 @@
 #include "core/projection.h"
 #include "core/transform.h"
 #include "core/vector3.h"
+//--STRIP
 
 class Camera3D : public Object3D {
 	SFW_OBJECT(Camera3D, Object3D);

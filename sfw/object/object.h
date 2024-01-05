@@ -1,6 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+//--STRIP
 #include "core/hash_map.h"
 #include "core/rw_lock.h"
 #include "core/string_name.h"
@@ -10,6 +11,7 @@
 #include "object/variant.h"
 
 #include "object/dictionary.h"
+//--STRIP
 
 /*************************************************************************/
 /*  object.h                                                             */

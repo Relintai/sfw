@@ -3,12 +3,14 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "pool_allocator.h"
 
 #include "core/error_macros.h"
 #include "core/memory.h"
 
 #include <cstring>
+//--STRIP
 
 #define COMPACT_CHUNK(m_entry, m_to_pos)                      \
 	do {                                                      \
@@ -559,3 +561,5 @@ PoolAllocator::~PoolAllocator() {
 	memdelete_arr(entry_array);
 	memdelete_arr(entry_indices);
 }
+
+#undef COMPACT_CHUNK

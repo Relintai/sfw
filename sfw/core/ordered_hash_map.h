@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/list.h"
 #include "core/og_hash_map.h"
 #include "core/pair.h"
+//--STRIP
 
 /**
  * A hash map which allows to iterate elements in insertion order.

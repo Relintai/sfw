@@ -1,4 +1,6 @@
+//--STRIP
 #include "render_objects/sprite.h"
+//--STRIP
 
 void Sprite::render() {
 	/*

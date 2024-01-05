@@ -6,10 +6,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/memory.h"
 #include "core/safe_refcount.h"
 #include "object/object.h"
 #include "object/ref_ptr.h"
+//--STRIP
 
 class Reference : public Object {
 	SFW_OBJECT(Reference, Object);

@@ -1,8 +1,10 @@
+//--STRIP
 #include "render_objects/camera_2d.h"
 
 #include "core/math_funcs.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 Transform2D Camera2D::get_model_view_matrix() {
 	return _model_view_matrix;

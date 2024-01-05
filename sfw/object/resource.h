@@ -1,9 +1,11 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
+//--STRIP
 #include "object/reference.h"
 
 #include "psignal.h"
+//--STRIP
 
 class Resource : public Reference {
 	SFW_OBJECT(Resource, Reference);

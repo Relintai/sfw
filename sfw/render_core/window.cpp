@@ -1,6 +1,7 @@
 //-----------------------------------------------------------------------------
 // fps locking
 
+//--STRIP
 #include "render_core/window.h"
 
 #define GLAD_GL_IMPLEMENTATION // glad
@@ -29,6 +30,7 @@
 #include "core/vector4.h"
 #include "render_core/application.h"
 #include "render_core/input.h"
+//--STRIP
 
 /*
 static volatile float framerate = 0;

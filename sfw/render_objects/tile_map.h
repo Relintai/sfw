@@ -1,11 +1,13 @@
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
 
+//--STRIP
 #include "render_objects/object_2d.h"
 
 #include "render_core/mesh.h"
 
 #include "render_core/material.h"
+//--STRIP
 
 class TileMap : public Object2D {
 	SFW_OBJECT(TileMap, Object2D);

@@ -6,8 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/hashfuncs.h"
 #include "core/typedefs.h"
+//--STRIP
 
 template <class F, class S>
 struct Pair {

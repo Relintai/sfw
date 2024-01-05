@@ -3,10 +3,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "input_map.h"
 
 #include "render_core/input.h"
 #include "render_core/keyboard.h"
+//--STRIP
 
 InputMap *InputMap::singleton = nullptr;
 

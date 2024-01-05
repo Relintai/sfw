@@ -6,6 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/aabb.h"
 #include "core/basis.h"
 #include "core/color.h"
@@ -25,6 +26,7 @@
 #include "object/dictionary.h"
 #include "object/ref_ptr.h"
 #include "object/object_id.h"
+//--STRIP
 
 class Object;
 class ObjectRC;

@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/plane.h"
 
 #include "core/math_funcs.h"
+//--STRIP
 
 void Plane::set_normal(const Vector3 &p_normal) {
 	normal = p_normal;

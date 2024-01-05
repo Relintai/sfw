@@ -1,10 +1,12 @@
 #ifndef FONT_MATERIAL_H
 #define FONT_MATERIAL_H
 
+//--STRIP
 #include "render_core/material.h"
 #include "render_core/texture.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 class FontMaterial : public Material {
 	SFW_OBJECT(FontMaterial, Material);

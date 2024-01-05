@@ -6,9 +6,11 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
+//--STRIP
 #include "core/math_defs.h"
 #include "core/math_funcs.h"
 #include "core/ustring.h"
+//--STRIP
 
 struct _NO_DISCARD_CLASS_ Vector4 {
 	enum Axis {

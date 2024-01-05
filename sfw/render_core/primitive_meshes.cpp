@@ -3,6 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "primitive_meshes.h"
 #include "servers/rendering_server.h"
 
@@ -11,6 +12,7 @@
 #include "scene/resources/theme.h"
 #include "thirdparty/misc/clipper.hpp"
 #include "thirdparty/misc/triangulator.h"
+//--STRIP
 
 /**
   PrimitiveMesh

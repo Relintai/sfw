@@ -3,6 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/projection.h"
 
 #include "core/aabb.h"
@@ -10,6 +11,7 @@
 #include "core/plane.h"
 #include "core/rect2.h"
 #include "core/transform.h"
+//--STRIP
 
 float Projection::determinant() const {
 	return matrix[0][3] * matrix[1][2] * matrix[2][1] * matrix[3][0] - matrix[0][2] * matrix[1][3] * matrix[2][1] * matrix[3][0] -

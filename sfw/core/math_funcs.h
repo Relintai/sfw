@@ -6,6 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/error_macros.h"
 #include "core/math_defs.h"
 #include "core/random_pcg.h"
@@ -15,6 +16,7 @@
 
 #include <float.h>
 #include <math.h>
+//--STRIP
 
 class Math {
 	static RandomPCG default_rand;

@@ -6,8 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/memory.h"
 #include "core/typedefs.h"
+//--STRIP
 
 // based on the very nice implementation of rb-trees by:
 // https://web.archive.org/web/20120507164830/http://web.mit.edu/~emin/www/source_code/red_black_tree/index.html

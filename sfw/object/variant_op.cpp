@@ -3,12 +3,14 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "variant.h"
 
 #include "object/core_string_names.h"
 #include "object/object.h"
 #include "object/object_rc.h"
 #include "object/resource.h"
+//--STRIP
 
 #define CASE_TYPE_ALL(PREFIX, OP) \
 	CASE_TYPE(PREFIX, OP, INT)    \

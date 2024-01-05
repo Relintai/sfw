@@ -1,9 +1,11 @@
+//--STRIP
 #include "render_core/texture.h"
 
 #include "core/memory.h"
 #include <stdio.h>
 
 #include "render_core/window.h"
+//--STRIP
 
 void Texture::create_from_image(const Ref<Image> &img) {
 	if (_image == img) {

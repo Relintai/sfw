@@ -6,12 +6,14 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include <string.h>
 
 #include "core/error_list.h"
 #include "core/error_macros.h"
 #include "core/memory.h"
 #include "core/safe_refcount.h"
+//--STRIP
 
 template <class T>
 class Vector;

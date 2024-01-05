@@ -1,6 +1,7 @@
 #ifndef TEXT_2D_H
 #define TEXT_2D_H
 
+//--STRIP
 #include "core/color.h"
 #include "core/ustring.h"
 #include "core/vector2.h"
@@ -8,6 +9,7 @@
 #include "object/reference.h"
 
 #include "object_2d.h"
+//--STRIP
 
 class Font;
 class FontMaterial;

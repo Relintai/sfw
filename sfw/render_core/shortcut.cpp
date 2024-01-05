@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "shortcut.h"
 
 #include "render_core/input_event.h"
+//--STRIP
 
 void ShortCut::set_shortcut(const Ref<InputEvent> &p_shortcut) {
 	shortcut = p_shortcut;

@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_core/shader.h"
 
 #include <stdio.h>
+//--STRIP
 
 bool Shader::bind() {
 	if (current_shader != this) {

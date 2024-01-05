@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/basis.h"
 
 #include "core/math_funcs.h"
+//--STRIP
 
 #define cofac(row1, col1, row2, col2) \
 	(rows[row1][col1] * rows[row2][col2] - rows[row1][col2] * rows[row2][col1])
@@ -1175,3 +1177,5 @@ Basis Basis::looking_at(const Vector3 &p_target, const Vector3 &p_up) {
 	basis.set_columns(v_x, v_y, v_z);
 	return basis;
 }
+
+#undef cofac

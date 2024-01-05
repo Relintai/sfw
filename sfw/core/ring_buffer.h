@@ -6,7 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/vector.h"
+//--STRIP
 
 template <typename T>
 class RingBuffer {

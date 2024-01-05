@@ -1,12 +1,14 @@
 // ----------------------------------------------------------------------------
 // time
 
+//--STRIP
 #include "core/stime.h"
 
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 #include <ctime>
+//--STRIP
 
 #if 0
 uint64_t STime::time_gpu() {

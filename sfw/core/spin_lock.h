@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/typedefs.h"
 
 #include <atomic>
+//--STRIP
 
 class SpinLock {
 	std::atomic_flag locked = ATOMIC_FLAG_INIT;

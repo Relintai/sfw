@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/memory.h"
 #include "spin_lock.h"
 #include "core/typedefs.h"
+//--STRIP
 
 template <class T, bool thread_safe = false>
 class PagedAllocator {

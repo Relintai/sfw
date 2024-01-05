@@ -1,8 +1,10 @@
+//--STRIP
 #include "render_objects/camera_3d.h"
 
 #include "core/math_funcs.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 Transform Camera3D::get_camera_transform() {
 	return _camera_transform;

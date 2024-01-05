@@ -1,11 +1,13 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+//--STRIP
 #include "core/vector2i.h"
 
 #include "object/resource.h"
 #include "render_core/3rd_glad.h"
 #include "render_core/image.h"
+//--STRIP
 
 class Texture : public Resource {
 	SFW_OBJECT(Texture, Resource);

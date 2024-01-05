@@ -3,9 +3,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
 
 #include "core/rect2i.h"
+//--STRIP
 
 bool Rect2::is_equal_approx(const Rect2 &p_rect) const {
 	return position.is_equal_approx(p_rect.position) && size.is_equal_approx(p_rect.size);

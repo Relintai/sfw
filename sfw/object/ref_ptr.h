@@ -12,7 +12,9 @@
  * It's basically an opaque container of a Reference reference, so Variant can use it.
 */
 
+//--STRIP
 #include "core/typedefs.h"
+//--STRIP
 
 class RefPtr {
 	enum {

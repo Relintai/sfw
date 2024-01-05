@@ -9,9 +9,11 @@
 // @todo: if WINDOW_PORTRAIT && exist portrait monitor, use that instead of primary one
 // @todo: WINDOW_TRAY
 
+//--STRIP
 #include "core/color.h"
 #include "core/int_types.h"
 #include "core/vector2.h"
+//--STRIP
 
 struct GLFWwindow;
 struct GLFWcursor;

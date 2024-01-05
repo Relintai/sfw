@@ -3,10 +3,12 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/random_pcg.h"
 
 #include "core/stime.h"
 #include "core/error_macros.h"
+//--STRIP
 
 RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
 		pcg(),

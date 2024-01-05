@@ -1,4 +1,6 @@
+//--STRIP
 #include "render_core/mesh_utils.h"
+//--STRIP
 
 void MeshUtils::create_cone(Mesh *mesh) {
     if (!mesh)

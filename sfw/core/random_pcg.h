@@ -6,11 +6,13 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include <math.h>
 
 #include "core/math_defs.h"
 
 #include "core/pcg.h"
+//--STRIP
 
 #if defined(__GNUC__) || (_llvm_has_builtin(__builtin_clz))
 #define CLZ32(x) __builtin_clz(x)

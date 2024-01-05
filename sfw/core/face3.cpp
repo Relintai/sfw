@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "face3.h"
+//--STRIP
 
 int Face3::split_by_plane(const Plane &p_plane, Face3 p_res[3], bool p_is_point_over[3]) const {
 	ERR_FAIL_COND_V(is_degenerate(), 0);

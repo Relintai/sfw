@@ -1,4 +1,6 @@
+//--STRIP
 #include "psignal.h"
+//--STRIP
 
 void Signal::connect_static(void (*func)(Signal *)) {
 	StaticSignalEntry *se = new StaticSignalEntry();

@@ -3,12 +3,14 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "dictionary.h"
 
 #include "core/ordered_hash_map.h"
 #include "core/safe_refcount.h"
 
 #include "object/variant.h"
+//--STRIP
 
 struct DictionaryPrivate {
 	SafeRefCount refcount;

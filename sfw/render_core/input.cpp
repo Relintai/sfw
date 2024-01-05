@@ -3,6 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "input.h"
 
 #include "core/logger.h"
@@ -14,6 +15,7 @@
 #include "render_core/window.h"
 
 #include "render_core/3rd_glfw3.h"
+//--STRIP
 
 Input *Input::get_singleton() {
 	return singleton;

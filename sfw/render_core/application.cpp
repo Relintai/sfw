@@ -1,3 +1,4 @@
+//--STRIP
 #include "render_core/application.h"
 
 #include "core/math_defs.h"
@@ -10,6 +11,7 @@
 #include "core/pool_vector.h"
 #include "core/string_name.h"
 #include "object/core_string_names.h"
+//--STRIP
 
 void Application::input_event(const Ref<InputEvent> &event) {
 	ERR_FAIL_COND(scene.is_null());

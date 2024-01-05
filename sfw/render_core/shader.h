@@ -1,8 +1,10 @@
 #ifndef SHADER_H
 #define SHADER_H
 
+//--STRIP
 #include "render_core/3rd_glad.h"
 #include "core/hash_map.h"
+//--STRIP
 
 class Shader {
 public:

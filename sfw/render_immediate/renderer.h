@@ -1,6 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+//--STRIP
 #include "core/color.h"
 #include "core/rect2.h"
 #include "core/transform.h"
@@ -9,6 +10,7 @@
 
 #include "object/object.h"
 #include "object/reference.h"
+//--STRIP
 
 class Mesh;
 class Material;

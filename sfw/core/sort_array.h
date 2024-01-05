@@ -6,8 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/error_macros.h"
 #include "core/typedefs.h"
+//--STRIP
 
 #define ERR_BAD_COMPARE(cond)                                         \
 	if (unlikely(cond)) {                                             \
@@ -292,5 +294,7 @@ public:
 		introselect(p_first, p_nth, p_last, p_array, bitlog(p_last - p_first) * 2);
 	}
 };
+
+#undef ERR_BAD_COMPARE
 
 #endif // SORT_ARRAY_H

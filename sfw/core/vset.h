@@ -6,8 +6,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/vector.h"
 #include "core/typedefs.h"
+//--STRIP
 
 template <class T>
 class VSet {

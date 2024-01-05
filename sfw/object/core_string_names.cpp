@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core_string_names.h"
+//--STRIP
 
 CoreStringNames *CoreStringNames::singleton = nullptr;
 

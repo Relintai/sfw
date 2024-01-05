@@ -1,6 +1,8 @@
+//--STRIP
 #include "render_objects/tile_map.h"
 
 #include "render_objects/camera_2d.h"
+//--STRIP
 
 void TileMap::build_mesh() {
 	if (!mesh.is_valid()) {

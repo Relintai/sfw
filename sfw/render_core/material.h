@@ -1,11 +1,13 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
+//--STRIP
 #include "core/projection.h"
 #include "core/transform.h"
 #include "core/transform_2d.h"
 #include "object/reference.h"
 #include "render_core/shader.h"
+//--STRIP
 
 class Material : public Reference {
 	SFW_OBJECT(Material, Reference);

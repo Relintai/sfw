@@ -6,7 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include <stddef.h>
+//--STRIP
 
 /**
  * Basic definitions and simple functions to be used everywhere.
@@ -120,9 +122,11 @@ T *_nullptr() {
 #undef CONNECT_DEFERRED // override from Windows SDK, clashes with Object enum
 #endif
 
+//--STRIP
 #include "core/int_types.h"
 
 #include "core/error_list.h"
+//--STRIP
 
 /** Generic ABS function, for math uses please use Math::abs */
 

@@ -5,12 +5,14 @@
 // font framework originally from FWK
 // - rlyeh, public domain
 
+//--STRIP
 #include "core/color.h"
 #include "core/ustring.h"
 
 #include "object/resource.h"
 
 #include "font_material.h"
+//--STRIP
 
 class Image;
 class Texture;

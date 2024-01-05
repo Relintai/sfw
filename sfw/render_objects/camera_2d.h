@@ -1,6 +1,7 @@
 #ifndef CAMERA_2D_H
 #define CAMERA_2D_H
 
+//--STRIP
 #include "render_core/3rd_glad.h"
 
 #include "render_objects/object_2d.h"
@@ -8,6 +9,7 @@
 #include "core/transform.h"
 #include "core/transform_2d.h"
 #include "core/vector2.h"
+//--STRIP
 
 class Camera2D : public Object2D {
 	SFW_OBJECT(Camera2D, Object2D);

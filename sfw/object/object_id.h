@@ -6,7 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/int_types.h"
+//--STRIP
 
 typedef uint64_t ObjectID;
 

@@ -5,9 +5,11 @@
 
 #if defined(DEBUG_ENABLED) && !defined(NO_THREADS)
 
+//--STRIP
 #include "core/safe_refcount.h"
 
 #include "core/error/error_macros.h"
+//--STRIP
 
 // On C++14 we don't have std::atomic::is_always_lockfree, so this is the best we can do
 void check_lockless_atomics() {

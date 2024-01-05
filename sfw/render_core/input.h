@@ -6,6 +6,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/vector2i.h"
 #include "object/object.h"
 #include "core/rb_map.h"
@@ -14,6 +15,7 @@
 #include "object/psignal.h"
 #include "object/reference.h"
 #include "render_core/input_event.h"
+//--STRIP
 
 class Application;
 struct GLFWwindow;

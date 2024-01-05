@@ -6,7 +6,9 @@
 #ifndef CHAR_RANGE_INC
 #define CHAR_RANGE_INC
 
+//--STRIP
 #include "core/typedefs.h"
+//--STRIP
 
 struct CharRange {
 	char32_t start;

@@ -6,7 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/vector2i.h" // also includes math_funcs and ustring
+//--STRIP
 
 struct _NO_DISCARD_CLASS_ Rect2i {
 	Point2i position;

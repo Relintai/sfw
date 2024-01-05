@@ -1,9 +1,11 @@
+//--STRIP
 #include "render_objects/text_2d.h"
 
 #include "render_core/font.h"
 #include "render_core/font_material.h"
 #include "render_core/mesh.h"
 #include "render_objects/camera_2d.h"
+//--STRIP
 
 Color Text2D::get_text_color() const {
 	return _text_color;

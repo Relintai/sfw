@@ -6,8 +6,10 @@
 #ifndef VECTOR3I_H
 #define VECTOR3I_H
 
+//--STRIP
 #include "core/error_macros.h"
 #include "core/math_funcs.h"
+//--STRIP
 
 class String;
 struct Vector3;

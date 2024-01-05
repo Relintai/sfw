@@ -3,7 +3,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/mutex.h"
+//--STRIP
 
 static Mutex _global_mutex;
 

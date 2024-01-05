@@ -6,9 +6,11 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/list.h"
 #include "core/ustring.h"
 #include "object/array.h"
+//--STRIP
 
 class Variant;
 

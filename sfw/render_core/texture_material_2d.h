@@ -1,10 +1,12 @@
 #ifndef TEXTURE_MATERIAL_2D_H
 #define TEXTURE_MATERIAL_2D_H
 
+//--STRIP
 #include "render_core/material.h"
 #include "render_core/texture.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 class TextureMaterial2D : public Material {
 	SFW_OBJECT(TextureMaterial2D, Material);

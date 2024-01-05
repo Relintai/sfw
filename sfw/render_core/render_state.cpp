@@ -1,4 +1,6 @@
+//--STRIP
 #include "render_core/render_state.h"
+//--STRIP
 
 Transform RenderState::camera_transform_3d;
 Transform RenderState::model_view_matrix_3d;

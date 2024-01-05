@@ -6,10 +6,12 @@
 #ifndef PROJECTION_H
 #define PROJECTION_H
 
+//--STRIP
 #include "core/vector.h"
 #include "core/math_defs.h"
 #include "core/vector3.h"
 #include "core/vector4.h"
+//--STRIP
 
 struct AABB;
 struct Plane;

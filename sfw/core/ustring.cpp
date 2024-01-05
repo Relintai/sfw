@@ -7,6 +7,7 @@
 #define _CRT_SECURE_NO_WARNINGS // to disable build-time warning which suggested to use strcpy_s instead strcpy
 #endif
 
+//--STRIP
 #include "core/ustring.h"
 
 #include "core/color.h"
@@ -21,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #endif
+//--STRIP
 
 #if defined(MINGW_ENABLED) || defined(_MSC_VER)
 #define snprintf _snprintf_s

@@ -3,6 +3,7 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "array.h"
 
 #include "core/hashfuncs.h"
@@ -10,6 +11,7 @@
 #include "object/object.h"
 #include "object/variant.h"
 #include "core/ustring.h"
+//--STRIP
 
 class ArrayPrivate {
 public:

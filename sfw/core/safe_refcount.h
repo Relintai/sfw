@@ -6,7 +6,9 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/typedefs.h"
+//--STRIP
 
 #if !defined(NO_THREADS)
 

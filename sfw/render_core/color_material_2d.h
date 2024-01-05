@@ -1,10 +1,12 @@
 #ifndef COLOR_MATERIAL_2D_H
 #define COLOR_MATERIAL_2D_H
 
+//--STRIP
 #include "render_core/material.h"
 #include "render_core/texture.h"
 
 #include "render_core/render_state.h"
+//--STRIP
 
 class ColorMaterial2D : public Material {
 	SFW_OBJECT(ColorMaterial2D, Material);
