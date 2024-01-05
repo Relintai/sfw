@@ -11,6 +11,8 @@
 #include <string.h>
 #include <stddef.h>
 
+//===================  CORE SECTION  ===================
+
 //--STRIP
 //no includes
 //--STRIP

@@ -11,6 +11,8 @@
 #include <string.h>
 #include <stddef.h>
 
+//===================  CORE SECTION  ===================
+
 //--STRIP
 //no includes
 //--STRIP
@@ -405,9 +407,7 @@
 //--STRIP
 {{FILE:sfw/core/sfw_core.h}}
 
-//--STRIP
 //===================  OBJECT SECTION  ===================
-//--STRIP
 
 //--STRIP
 //Dependencyless stuff
@@ -512,9 +512,7 @@
 {{FILE:sfw/object/resource.h}}
 
 
-//--STRIP
 //===================  RENDER CORE SECTION  ===================
-//--STRIP
 
 //--STRIP
 //#include "core/projection.h"
@@ -680,9 +678,7 @@
 {{FILE:sfw/render_core/application.h}}
 
 
-//--STRIP
 //===================  RENDER IMMEDIATE SECTION  ===================
-//--STRIP
 
 //--STRIP
 //#include "core/color.h"
@@ -695,9 +691,7 @@
 //--STRIP
 {{FILE:sfw/render_immediate/renderer.h}}
 
-//--STRIP
 //===================  RENDER OBJCTS SECTION  ===================
-//--STRIP
 
 //--STRIP
 //#include "object/object.h"

@@ -19,6 +19,8 @@
 #include "sfw.h"
 #endif
 
+//===================  CORE SECTION  ===================
+
 {{FILE:sfw/core/ucaps.h}}
 
 //--STRIP

@@ -191,6 +191,8 @@
 
 #endif
 
+//===================  CORE SECTION  ===================
+
 {{FILE:sfw/core/ucaps.h}}
 
 //--STRIP
@@ -373,9 +375,7 @@
 {{FILE:sfw/core/sfw_core.cpp}}
 
 
-//--STRIP
 //===================  OBJECT SECTION  ===================
-//--STRIP
 
 //--STRIP
 //#include "resource.h"
@@ -441,9 +441,7 @@
 //--STRIP
 {{FILE:sfw/object/variant_op.cpp}}
 
-//--STRIP
 //===================  RENDER CORE SECTION  ===================
-//--STRIP
 
 {{FILE:sfw/render_core/font_data_bm_mini.inc.h}}
 {{FILE:sfw/render_core/font_data_tables.inc.h}}
@@ -595,9 +593,7 @@
 //--STRIP
 {{FILE:sfw/render_core/input.cpp}}
 
-//--STRIP
 //===================  RENDER IMMEDIATE SECTION  ===================
-//--STRIP
 
 //--STRIP
 //#include "renderer.h"
@@ -613,9 +609,7 @@
 //--STRIP
 {{FILE:sfw/render_immediate/renderer.cpp}}
 
-//--STRIP
 //===================  RENDER OBJCTS SECTION  ===================
-//--STRIP
 
 //--STRIP
 //#include "render_objects/camera_3d.h"
