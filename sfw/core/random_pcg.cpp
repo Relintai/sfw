@@ -5,7 +5,7 @@
 
 #include "core/random_pcg.h"
 
-//#include "os/os.h"
+#include "core/stime.h"
 #include "core/error_macros.h"
 
 RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
@@ -15,8 +15,7 @@ RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
 }
 
 void RandomPCG::randomize() {
-	//seed((OS::get_singleton()->get_unix_time() + OS::get_singleton()->get_ticks_usec()) * pcg.state + PCG_DEFAULT_INC_64);
-	ERR_PRINT("RandomPCG::randomize() fix!");
+	seed((STime::date() + STime::time_us()) * pcg.state + PCG_DEFAULT_INC_64);
 }
 
 double RandomPCG::random(double p_from, double p_to) {

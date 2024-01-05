@@ -23,10 +23,6 @@
 //{{FILE:3rd_stb_image_write.h}}
 //---
 #undef freelist
-#define STBTT_malloc(x, u) ((void)(u), MALLOC(x))
-#define STBTT_free(x, u) ((void)(u), FREE(x))
-#define NK_ASSERT ASSERT
-#define NK_DTOA(s, n) strcpy(s, va("%f", n)) // override cos built-in nk_dtoa() will freeze while parsing UINT_MAX otherwise
 
 const char *Image::format_names[Image::FORMAT_MAX] = {
 	"Lum8", // luminance

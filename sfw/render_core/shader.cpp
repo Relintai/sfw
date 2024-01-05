@@ -1,7 +1,6 @@
 #include "render_core/shader.h"
 
 #include <stdio.h>
-#include <vector>
 
 bool Shader::bind() {
 	if (current_shader != this) {
