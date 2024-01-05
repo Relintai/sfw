@@ -327,14 +327,6 @@ SOFTWARE.
 {{FILE:sfw/object/array.h}}
 
 
-//TODO
-//we only need a few types from this here, maybe those should be just moved to a common header
-//Or just use normal types in their place
-//GLint, GLChar, GLuint, GLfloat,  GLenum
-//also materials need to be split.
-//{//{FILE:sfw/render_core/3rd_glad.h}}
-
-
 //#include "core/projection.h"
 //#include "core/transform.h"
 //#include "core/vector3.h"
@@ -492,5 +484,26 @@ SOFTWARE.
 //#include "render_core/mesh.h"
 //#include "core/transform.h"
 {{FILE:sfw/render_objects/mesh_instance_2d.h}}
+
+
+
+// expose glfw/glad apis
+#if __EMSCRIPTEN__
+    #include <GL/glew.h>
+    #include <GLFW/glfw3.h>
+    #include <emscripten.h>
+    #include <emscripten/html5.h>
+    #define gladLoadGL(func) (glewExperimental = true, glewInit() == GLEW_OK) ///-
+#else
+    #if is(win32) /*&& is(tcc)*/ // && ENABLE_DLL
+    #ifdef GLAD_API_CALL
+    #undef GLAD_API_CALL
+    #endif
+    #define GLAD_API_CALL extern API ///-
+    #endif
+    #ifndef GLAD_GL_H_
+    #include "sfw"
+    #endif
+#endif
 
 #endif
