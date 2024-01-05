@@ -98,6 +98,16 @@ SOFTWARE.
 {{FILE:sfw/core/thread_safe.h}}
 
 //--STRIP
+//#include "core/typedefs.h"
+//--STRIP
+{{FILE:sfw/core/pcg.h}}
+//--STRIP
+//#include "core/math_defs.h"
+//#include "core/pcg.h"
+//--STRIP
+{{FILE:sfw/core/random_pcg.h}}
+
+//--STRIP
 //#include "core/error_macros.h"
 //#include "core/math_defs.h"
 //#include "core/random_pcg.h"
@@ -290,13 +300,6 @@ SOFTWARE.
 //--STRIP
 {{FILE:sfw/core/aabb.h}}
 //--STRIP
-//#include "core/aabb.h"
-//#include "core/plane.h"
-//#include "core/transform.h"
-//#include "core/vector3.h"
-//--STRIP
-{{FILE:sfw/core/face3.h}}
-//--STRIP
 //#include "core/math_defs.h"
 //#include "core/math_funcs.h"
 //#include "core/vector3.h"
@@ -328,22 +331,19 @@ SOFTWARE.
 {{FILE:sfw/core/transform_2d.h}}
 //--STRIP
 //#include "core/aabb.h"
+//#include "core/plane.h"
+//#include "core/transform.h"
+//#include "core/vector3.h"
+//--STRIP
+{{FILE:sfw/core/face3.h}}
+//--STRIP
+//#include "core/aabb.h"
 //#include "core/basis.h"
 //#include "core/plane.h"
 //#include "core/vector3i.h"
 //#include "core/pool_vector.h"
 //--STRIP
 {{FILE:sfw/core/transform.h}}
-
-//--STRIP
-//#include "core/typedefs.h"
-//--STRIP
-{{FILE:sfw/core/pcg.h}}
-//--STRIP
-//#include "core/math_defs.h"
-//#include "core/pcg.h"
-//--STRIP
-{{FILE:sfw/core/random_pcg.h}}
 
 //--STRIP
 //hashfuncs.h Needs most math classes
@@ -424,11 +424,7 @@ SOFTWARE.
 //#include "core/int_types.h"
 //--STRIP
 {{FILE:sfw/object/object_id.h}}
-//--STRIP
-//#include "core/memory.h"
-//#include "core/typedefs.h"
-//--STRIP
-{{FILE:sfw/object/object_rc.h}}
+
 //--STRIP
 //#include "core/string_name.h"
 //--STRIP
@@ -496,6 +492,13 @@ SOFTWARE.
 //#include "object/dictionary.h"
 //--STRIP
 {{FILE:sfw/object/object.h}}
+
+
+//--STRIP
+//#include "core/memory.h"
+//#include "core/typedefs.h"
+//--STRIP
+{{FILE:sfw/object/object_rc.h}}
 
 //--STRIP
 //#include "core/memory.h"
@@ -767,7 +770,6 @@ SOFTWARE.
 //--STRIP
 {{FILE:sfw/render_objects/mesh_instance_3d.h}}
 
-
 // expose glfw/glad apis
 #if __EMSCRIPTEN__
     #include <GL/glew.h>
@@ -776,14 +778,15 @@ SOFTWARE.
     #include <emscripten/html5.h>
     #define gladLoadGL(func) (glewExperimental = true, glewInit() == GLEW_OK) ///-
 #else
-    #if is(win32) /*&& is(tcc)*/ // && ENABLE_DLL
+    #if defined(_WIN64) || defined(_WIN32) /*&& is(tcc)*/ // && ENABLE_DLL
     #ifdef GLAD_API_CALL
     #undef GLAD_API_CALL
     #endif
     #define GLAD_API_CALL extern API ///-
     #endif
+    
     #ifndef GLAD_GL_H_
-    #include "sfw"
+    #include "sfw_3rd.h"
     #endif
 #endif
 

@@ -1502,14 +1502,14 @@ void Image::create(const char **p_xpm) {
 	mipmaps = false;
 	bool has_alpha = false;
 
-	enum Status {
+	enum ImageXPMStatus {
 		READING_HEADER,
 		READING_COLORS,
 		READING_PIXELS,
 		DONE
 	};
 
-	Status status = READING_HEADER;
+	ImageXPMStatus status = READING_HEADER;
 	int line = 0;
 
 	HashMap<String, Color> colormap;

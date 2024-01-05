@@ -18,9 +18,16 @@
 #include "sfw.h"
 #endif
 
-#ifndef SFW_3RD_H
-#define SFW_3RD_H
-#include "sfw"
+
+
+#ifndef SFW_3RD_IMPL
+#define SFW_3RD_IMPL
+
+//typedef XID Font;
+#define Font The_Font_I_dont_care
+#include "sfw_3rd.h"
+#undef Font
+#undef CursorShape
 #endif
 
 {{FILE:sfw/core/ucaps.h}}
@@ -61,6 +68,13 @@
 //#include "core/memory.h"
 //--STRIP
 {{FILE:sfw/core/pool_allocator.cpp}}
+
+//--STRIP
+//#include "core/random_pcg.h"
+//#include "core/stime.h"
+//#include "core/error_macros.h"
+//--STRIP
+{{FILE:sfw/core/random_pcg.cpp}}
 
 //--STRIP
 //#include "core/math_funcs.h"
@@ -172,12 +186,6 @@
 //#include "core/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
 //--STRIP
 {{FILE:sfw/core/rect2i.cpp}}
-//--STRIP
-//#include "core/random_pcg.h"
-//#include "core/stime.h"
-//#include "core/error_macros.h"
-//--STRIP
-{{FILE:sfw/core/random_pcg.cpp}}
 //--STRIP
 //#include "core/vector4.h"
 //#include "core/basis.h"

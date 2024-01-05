@@ -25,24 +25,21 @@ SOFTWARE.
 
 // TODO gather all licenses to here
 
-#ifdef SFW_3RD_H
+#ifdef SFW_3RD_IMPL
 #define GLAD_GL_IMPLEMENTATION // glad
 #endif
 
 {{FILE:sfw/render_core/3rd_glad.h}}
 
-#ifdef SFW_3RD_H
+#ifdef SFW_3RD_IMPL
 #define STB_TRUETYPE_IMPLEMENTATION
-#endif
 
 {{FILE:sfw/render_core/3rd_stb_truetype.h}}
 
-#ifdef SFW_3RD_H
 #define STB_IMAGE_IMPLEMENTATION // stbi
 #define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
 #define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
 #define STB_SPRINTF_NOUNALIGNED // stb_sprintf
-#endif
 
 {{FILE:sfw/render_core/3rd_stb_image.h}}
 
@@ -50,8 +47,6 @@ SOFTWARE.
 //---
 #undef freelist
 
-
-#ifdef SFW_3RD_H
 #define _GLFW_IMPLEMENTATION // glfw337
 #define GLFW_INCLUDE_NONE // glfw337
 #ifdef __APPLE__
@@ -61,7 +56,6 @@ SOFTWARE.
 #else
 #define _GLFW_X11 // glfw linux, also _GLFW_OSMESA or _GLFW_WAYLAND
 #endif
-#endif
 
 #undef _GNU_SOURCE
 
@@ -69,3 +63,5 @@ SOFTWARE.
 
 #undef timeGetTime
 #undef Time
+
+#endif
