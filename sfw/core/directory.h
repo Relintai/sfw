@@ -1,14 +1,16 @@
+
 #ifndef DIRECTORY_H
 #define DIRECTORY_H
 
-#include "core/string.h"
+//--STRIP
 #include "core/error_list.h"
-#include "3rd_tinydir.h"
+#include "core/ustring.h"
+//--STRIP
 
-#include "core/reference.h"
+struct tinydir_file;
+struct tinydir_dir;
 
-class Directory : public Reference {
-	SFW_OBJECT(Directory, Reference);
+class Directory {
 public:
 	Error open_dir(const String &path, bool skip_specials = true);
 	Error open_dir(const char *path, bool skip_specials = true);
@@ -30,7 +32,7 @@ public:
 	bool current_is_special_dir();
 
 	String read_file(const String &path);
-	Error read_file_into(const String &path, String *str);
+
 	Vector<uint8_t> read_file_bin(const String &path);
 	Error read_file_into_bin(const String &path, Vector<uint8_t> *data);
 
@@ -46,8 +48,8 @@ public:
 private:
 	bool _skip_specials;
 	int _read_file_result;
-	tinydir_dir _dir;
-	tinydir_file _file;
+	tinydir_dir *_dir;
+	tinydir_file *_file;
 
 	bool _dir_open;
 };
