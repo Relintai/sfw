@@ -51,7 +51,7 @@ bool is_structure_template_specialization_or_parent_is_template(const String &da
 
 String generate_section_class_list(const List<String> &list, const String &cls_prefix, const HashSet<String> &used_keywords) {
 	FileAccess f;
-	String code_template = f.read_file("code_template.md.html");
+	String code_template = f.read_file("code_remaining_template.md.html");
 	String d;
 
 	for (const List<String>::Element *E = list.front(); E; E = E->next()) {
