@@ -16,7 +16,7 @@ String FileAccess::read_file(const String &path) {
 	fseek(f, 0, SEEK_SET); /* same as rewind(f); */
 
 	CharString cs;
-	cs.resize(fsize);
+	cs.resize(fsize + 1); // +1 for the null terminator
 
 	fread(cs.ptrw(), 1, fsize, f);
 	fclose(f);
