@@ -16,8 +16,30 @@ License
 CORE
 ====================================================================================
 
+Use <code lang=C++>SFWCore::setup();</code> to initialize the library.
+This is necessary as some components (Like PoolVector, and StringNames.) need additional setup.
+
+Use <code lang=C++>SFWCore::cleanup();</code> to de-initialize the library.
+
+Note that if you use the Application class, it's constructor will do this for you automatically.
+
+Also note that if you don't use classes that doens't rely on this you can get away by not calling it.
+
+
+Initialization
+------------------------------------------------------------------
+
+<a name="CLASS_SFWCore"></a>
+<details><summary>SFWCore</summary>
+
+   |||CLASS_SFWCore|||
+
+</details>
+
 Enums
 ------------------------------------------------------------------
+
+Errors
 
 <a name="ENUM_Error"></a>
 <details><summary>Error</summary>
@@ -26,10 +48,77 @@ Enums
 
 </details>
 
+Keys
+
 <a name="ENUM_KeyList"></a>
 <details><summary>KeyList</summary>
 
 |||ENUM_KeyList|||
+
+</details>
+
+<a name="ENUM_KeyModifierMask"></a>
+<details><summary>KeyModifierMask</summary>
+
+|||ENUM_KeyModifierMask|||
+
+</details>
+
+<a name="ENUM_ButtonList"></a>
+<details><summary>ButtonList</summary>
+
+|||ENUM_ButtonList|||
+
+</details>
+
+Other
+
+<a name="ENUM_ClockDirection"></a>
+<details><summary>ClockDirection</summary>
+
+|||ENUM_ClockDirection|||
+
+</details>
+
+<a name="ENUM_Orientation"></a>
+<details><summary>Orientation</summary>
+
+|||ENUM_Orientation|||
+
+</details>
+
+<a name="ENUM_HAlign"></a>
+<details><summary>HAlign</summary>
+
+|||ENUM_HAlign|||
+
+</details>
+
+<a name="ENUM_VAlign"></a>
+<details><summary>VAlign</summary>
+
+|||ENUM_VAlign|||
+
+</details>
+
+<a name="ENUM_Margin"></a>
+<details><summary>Margin</summary>
+
+|||ENUM_Margin|||
+
+</details>
+
+<a name="ENUM_Side"></a>
+<details><summary>Side</summary>
+
+|||ENUM_Side|||
+
+</details>
+
+<a name="ENUM_Corner"></a>
+<details><summary>Corner</summary>
+
+|||ENUM_Corner|||
 
 </details>
 
@@ -554,11 +643,22 @@ Special
 </details>
 
 
-
-
 Files
 ------------------------------------------------------------------
 
+<a name="CLASS_FileAccess"></a>
+<details><summary>FileAccess</summary>
+
+   |||CLASS_FileAccess|||
+
+</details>
+
+<a name="CLASS_DirAccess"></a>
+<details><summary>DirAccess</summary>
+
+   |||CLASS_DirAccess|||
+
+</details>
 
 Time
 ------------------------------------------------------------------
@@ -655,22 +755,344 @@ SpinLock
 OBJECT
 ====================================================================================
 
+Object
+
+<a name="CLASS_Object"></a>
+<details><summary>Object</summary>
+
+   |||CLASS_Object|||
+
+</details>
+
+<a name="CLASS_ObjectDB"></a>
+<details><summary>ObjectDB</summary>
+
+   |||CLASS_ObjectDB|||
+
+</details>
+
+Reference
+
+<a name="CLASS_Reference"></a>
+<details><summary>Reference</summary>
+
+   |||CLASS_Reference|||
+
+</details>
+
+<a name="CLASS_Ref"></a>
+<details><summary>Ref</summary>
+
+   |||CLASS_Ref|||
+
+</details>
+
+Resource
+
+<a name="CLASS_Resource"></a>
+<details><summary>Resource</summary>
+
+   |||CLASS_Resource|||
+
+</details>
+
+Variant
+
+<a name="CLASS_Variant"></a>
+<details><summary>Variant</summary>
+
+   |||CLASS_Variant|||
+
+</details>
 
 
+Variant Containers
 
+<a name="CLASS_Array"></a>
+<details><summary>Array</summary>
+
+   |||CLASS_Array|||
+
+</details>
+
+<a name="CLASS_Dictionary"></a>
+<details><summary>Dictionary</summary>
+
+   |||CLASS_Dictionary|||
+
+</details>
+
+Utilities
+
+<a name="CLASS_Signal"></a>
+<details><summary>Signal</summary>
+
+   |||CLASS_Signal|||
+
+</details>
+
+<a name="CLASS_CoreStringNames"></a>
+<details><summary>CoreStringNames</summary>
+
+   |||CLASS_CoreStringNames|||
+
+</details>
 
 RENDER CORE
 ====================================================================================
 
-Coordinate Systems
+Application
 ------------------------------------------------------------------
+
+<a name="CLASS_Application"></a>
+<details><summary>Application</summary>
+
+   |||CLASS_Application|||
+
+</details>
+
+<a name="CLASS_Scene"></a>
+<details><summary>Scene</summary>
+
+   |||CLASS_Scene|||
+
+</details>
+
+<a name="CLASS_AppWindow"></a>
+<details><summary>AppWindow</summary>
+
+   |||CLASS_AppWindow|||
+
+</details>
+
+Input
+------------------------------------------------------------------
+
+Singletons
+
+<a name="CLASS_Input"></a>
+<details><summary>Input</summary>
+
+   |||CLASS_Input|||
+
+</details>
+
+<a name="CLASS_InputMap"></a>
+<details><summary>InputMap</summary>
+
+   |||CLASS_InputMap|||
+
+</details>
+
+Events
+
+<a name="CLASS_InputEvent"></a>
+<details><summary>InputEvent</summary>
+
+   |||CLASS_InputEvent|||
+
+</details>
+
+
+<a name="CLASS_InputEventWithModifiers"></a>
+<details><summary>InputEventWithModifiers</summary>
+
+   |||CLASS_InputEventWithModifiers|||
+
+</details>
+
+<a name="CLASS_InputEventKey"></a>
+<details><summary>InputEventKey</summary>
+
+   |||CLASS_InputEventKey|||
+
+</details>
+
+<a name="CLASS_InputEventMouse"></a>
+<details><summary>InputEventMouse</summary>
+
+   |||CLASS_InputEventMouse|||
+
+</details>
+
+<a name="CLASS_InputEventMouseButton"></a>
+<details><summary>InputEventMouseButton</summary>
+
+   |||CLASS_InputEventMouseButton|||
+
+</details>
+
+<a name="CLASS_InputEventMouseMotion"></a>
+<details><summary>InputEventMouseMotion</summary>
+
+   |||CLASS_InputEventMouseMotion|||
+
+</details>
+
+<a name="CLASS_InputEventAction"></a>
+<details><summary>InputEventAction</summary>
+
+   |||CLASS_InputEventAction|||
+
+</details>
+
+<a name="CLASS_InputEventShortCut"></a>
+<details><summary>InputEventShortCut</summary>
+
+   |||CLASS_InputEventShortCut|||
+
+</details>
+
+Utility
+
+<a name="CLASS_ShortCut"></a>
+<details><summary>ShortCut</summary>
+
+   |||CLASS_ShortCut|||
+
+</details>
+
+Rendering
+------------------------------------------------------------------
+
+Images
+
+<a name="CLASS_Image"></a>
+<details><summary>Image</summary>
+
+   |||CLASS_Image|||
+
+</details>
+
+<a name="CLASS_Texture"></a>
+<details><summary>Texture</summary>
+
+   |||CLASS_Texture|||
+
+</details>
+
+Meshes
+
+<a name="CLASS_Mesh"></a>
+<details><summary>Mesh</summary>
+
+   |||CLASS_Mesh|||
+
+</details>
+
+<a name="CLASS_MeshUtils"></a>
+<details><summary>MeshUtils</summary>
+
+   |||CLASS_MeshUtils|||
+
+</details>
+
+Shaders
+
+<a name="CLASS_Shader"></a>
+<details><summary>Shader</summary>
+
+   |||CLASS_Shader|||
+
+</details>
+
+<a name="CLASS_ShaderCache"></a>
+<details><summary>ShaderCache</summary>
+
+   |||CLASS_ShaderCache|||
+
+</details>
+
+Fonts
+
+<a name="CLASS_Font"></a>
+<details><summary>Font</summary>
+
+   |||CLASS_Font|||
+
+</details>
+
+Materials
+
+<a name="CLASS_Material"></a>
+<details><summary>Material</summary>
+
+   |||CLASS_Material|||
+
+</details>
+
+Text Materials
+
+<a name="CLASS_FontMaterial"></a>
+<details><summary>FontMaterial</summary>
+
+   |||CLASS_FontMaterial|||
+
+</details>
+
+2D Materials
+
+<a name="CLASS_ColorMaterial2D"></a>
+<details><summary>ColorMaterial2D</summary>
+
+   |||CLASS_ColorMaterial2D|||
+
+</details>
+
+<a name="CLASS_TextureMaterial2D"></a>
+<details><summary>TextureMaterial2D</summary>
+
+   |||CLASS_TextureMaterial2D|||
+
+</details>
+
+3D Materials
+
+<a name="CLASS_ColorMaterial"></a>
+<details><summary>ColorMaterial</summary>
+
+   |||CLASS_ColorMaterial|||
+
+</details>
+
+<a name="CLASS_TextureMaterial"></a>
+<details><summary>TextureMaterial</summary>
+
+   |||CLASS_TextureMaterial|||
+
+</details>
+
+<a name="CLASS_ColoredMaterial"></a>
+<details><summary>ColoredMaterial</summary>
+
+   |||CLASS_ColoredMaterial|||
+
+</details>
+
+<a name="CLASS_TransparentTextureMaterial"></a>
+<details><summary>TransparentTextureMaterial</summary>
+
+   |||CLASS_TransparentTextureMaterial|||
+
+</details>
+
+State
+
+<a name="CLASS_RenderState"></a>
+<details><summary>RenderState</summary>
+
+   |||CLASS_RenderState|||
+
+</details>
+
+Coordinate System
 
 3D  TODO doube check z
 
 ******************************************************************
 *
 *         +x              
-*     *--->--------.           .--->--------.
+*     *--->--------.           .------------.
 *     |            |           |            |
 *     v +y         |           |            |
 *     |            |        +y ^ ^ +z       |
@@ -682,35 +1104,140 @@ Coordinate Systems
 ******************************************************************
 
 
-Application
-------------------------------------------------------------------
-
-
-Input
-------------------------------------------------------------------
-
-
-Rendering
-------------------------------------------------------------------
-
-
-
-Materials
-------------------------------------------------------------------
-
-
-
-
 RENDER IMMEDIATE
 ====================================================================================
 
 
+<a name="CLASS_Renderer"></a>
+<details><summary>Renderer</summary>
+
+   |||CLASS_Renderer|||
+
+</details>
 
 
 RENDER OBJECTS
 ====================================================================================
 
+Text
+------------------------------------------------------------------
 
+Base
+
+<a name="CLASS_Text2D"></a>
+<details><summary>Text2D</summary>
+
+   |||CLASS_Text2D|||
+
+</details>
+
+2D
+------------------------------------------------------------------
+
+Base
+
+<a name="CLASS_Object2D"></a>
+<details><summary>Object2D</summary>
+
+   |||CLASS_Object2D|||
+
+</details>
+
+Camera
+
+<a name="CLASS_Camera2D"></a>
+<details><summary>Camera2D</summary>
+
+   |||CLASS_Camera2D|||
+
+</details>
+
+Objects
+
+<a name="CLASS_Sprite"></a>
+<details><summary>Sprite</summary>
+
+   |||CLASS_Sprite|||
+
+</details>
+
+<a name="CLASS_TileMap"></a>
+<details><summary>TileMap</summary>
+
+   |||CLASS_TileMap|||
+
+</details>
+
+<a name="CLASS_MeshInstance2D"></a>
+<details><summary>MeshInstance2D</summary>
+
+   |||CLASS_MeshInstance2D|||
+
+</details>
+
+
+3D
+------------------------------------------------------------------
+
+Base
+
+<a name="CLASS_Object3D"></a>
+<details><summary>Object3D</summary>
+
+   |||CLASS_Object3D|||
+
+</details>
+
+Camera
+
+<a name="CLASS_Camera3D"></a>
+<details><summary>Camera3D</summary>
+
+   |||CLASS_Camera3D|||
+
+</details>
+
+<a name="CLASS_OrthographicCamera"></a>
+<details><summary>OrthographicCamera</summary>
+
+   |||CLASS_OrthographicCamera|||
+
+</details>
+
+<a name="CLASS_PerspectiveCamera"></a>
+<details><summary>PerspectiveCamera</summary>
+
+   |||CLASS_PerspectiveCamera|||
+
+</details>
+
+<a name="CLASS_FrustumCamera"></a>
+<details><summary>FrustumCamera</summary>
+
+   |||CLASS_FrustumCamera|||
+
+</details>
+
+Objects
+
+<a name="CLASS_MeshInstance3D"></a>
+<details><summary>MeshInstance3D</summary>
+
+   |||CLASS_MeshInstance3D|||
+
+</details>
+
+
+ADVANCED
+====================================================================================
+
+There are a few remaining classes that were omitted from this document (Like allocators, hashers etc.), 
+as you will normally won't need them. (If you do, you will likely just need to rread the source anyway.)
+
+WHERE TO GO NEXT
+====================================================================================
+
+TODO link a bunch of cool projects.
 
 <script>markdeepOptions = {tocStyle:'long', definitionStyle:'long', linkAPIDefinitions: true};</script>
 <link rel="stylesheet" href="slate.css">
