@@ -53,7 +53,7 @@ String generate_section_class_list(const List<String> &list) {
 
 		String sname = get_structure_name(c);
 
-		if (sname.begins_with("_")) {
+		if (sname.empty() || sname.begins_with("_")) {
 			//ERR_PRINT(sname);
 			continue;
 		}
