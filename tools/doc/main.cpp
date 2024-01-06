@@ -68,7 +68,7 @@ String generate_section_class_list(const List<String> &list, const String &cls_p
 			continue;
 		}
 
-		d += code_template.replace("$CODE$", c).replace("$NAME$", sname);
+		d += code_template.replace("$CODE$", c.xml_escape(true)).replace("$NAME$", sname);
 	}
 
 	return d;
@@ -530,7 +530,7 @@ void process_file(const String &path) {
 		String class_str = class_index[c];
 		//String class_name = get_structure_name(class_str);
 
-		index_str = index_str.replace(keyword, code_template.replace("$CODE$", class_str));
+		index_str = index_str.replace(keyword, code_template.replace("$CODE$", class_str.xml_escape(true)));
 		used_keywords.insert(c);
 	}
 
