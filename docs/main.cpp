@@ -35,12 +35,25 @@ String get_structure_parents(const String &data) {
 	return l;
 }
 
-
 bool is_structure_template_specialization_or_parent_is_template(const String &data) {
 	String fl = data.get_slicec('\n', 0);
 	String l = fl.get_slicec('{', 0);
 
 	return l.contains("<");
+}
+
+String generate_section_class_list(const List<String> &list) {
+	FileAccess f;
+	String code_template = f.read_file("code_template.md.html");
+	String d;
+
+	for (const List<String>::Element *E = list.front(); E; E = E->next()) {
+		String c = E->get();
+
+		d += code_template.replace("$CODE$", c).replace("$NAME$", get_structure_name(c));
+	}
+
+	return d;
 }
 
 List<String> process_classes_and_structs(const List<String> &list) {
@@ -375,6 +388,7 @@ void process_file(const String &path) {
 	//ERR_PRINT("CLASSES");
 	//print_list(classes);
 
+	/*
 	ERR_PRINT("ENUMS");
 
 	for (const List<String>::Element *E = enums.front(); E; E = E->next()) {
@@ -400,12 +414,21 @@ void process_file(const String &path) {
 		if (is_structure_template_specialization_or_parent_is_template(E->get())) {
 			ERR_PRINT("!!!!!!");
 		}
-	}
+	}*/
 
 	//ERR_PRINT("COUNT");
 	//ERR_PRINT(itos(enums.size()));
 	//ERR_PRINT(itos(structs.size()));
 	//ERR_PRINT(itos(classes.size()));
+
+	String index_template = f.read_file("index_template.md.html");
+	String d = index_template;
+
+	d = d.replace("$ENUMS$", generate_section_class_list(enums));
+	d = d.replace("$STRUCTS$", generate_section_class_list(structs));
+	d = d.replace("$CLASSES$", generate_section_class_list(classes));
+
+	f.write_file("index.gen.md.html", d);
 }
 
 int main(int argc, char **argv) {
