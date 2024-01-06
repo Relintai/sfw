@@ -468,11 +468,13 @@ void process_file(const String &path) {
 	d = d.replace("$STRUCTS$", generate_section_class_list(structs));
 	d = d.replace("$CLASSES$", generate_section_class_list(classes));
 
-	f.write_file("index.gen.md.html", d);
+	f.write_file("out/index_remaining.gen.md.html", d);
 }
 
 int main(int argc, char **argv) {
 	SFWCore::setup();
+
+	//todo create folder
 
 	List<String> args;
 

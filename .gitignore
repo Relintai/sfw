@@ -8,7 +8,7 @@ obj/
 
 tools/merger/out/
 
-tools/doc/index.gen.md.html
+tools/doc/out/
 
 tools/doc/sfw.h
 tools/doc/sfw.cpp
