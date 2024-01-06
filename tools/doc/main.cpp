@@ -528,9 +528,9 @@ void process_file(const String &path) {
 		String keyword = "|||" + E->get() + "|||";
 
 		String class_str = class_index[c];
-		String class_name = get_structure_name(class_str);
+		//String class_name = get_structure_name(class_str);
 
-		index_str = index_str.replace(keyword, code_template.replace("$CODE$", class_str).replace("$NAME$", class_name));
+		index_str = index_str.replace(keyword, code_template.replace("$CODE$", class_str));
 		used_keywords.insert(c);
 	}
 
