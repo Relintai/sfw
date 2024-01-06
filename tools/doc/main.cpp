@@ -7,6 +7,12 @@ void print_list(const List<String> &list) {
 	}
 }
 
+void print_class_index_keys(const HashMap<String, String> &class_index) {
+	for (const HashMap<String, String>::Element *E = class_index.front(); E; E = E->next) {
+		ERR_PRINT(E->key());
+	}
+}
+
 String get_structure_name(const String &data) {
 	String fl = data.get_slicec('{', 0);
 	String l = fl.get_slicec('\n', fl.get_slice_count("\n") - 1);
@@ -43,7 +49,7 @@ bool is_structure_template_specialization_or_parent_is_template(const String &da
 	return get_structure_parents(data).contains("<");
 }
 
-String generate_section_class_list(const List<String> &list) {
+String generate_section_class_list(const List<String> &list, const String &cls_prefix, const HashSet<String> &used_keywords) {
 	FileAccess f;
 	String code_template = f.read_file("code_template.md.html");
 	String d;
@@ -53,8 +59,12 @@ String generate_section_class_list(const List<String> &list) {
 
 		String sname = get_structure_name(c);
 
-		if (sname.empty() || sname.begins_with("_")) {
+		if (sname.empty()) {
 			//ERR_PRINT(sname);
+			continue;
+		}
+
+		if (used_keywords.has(cls_prefix + sname)) {
 			continue;
 		}
 
@@ -62,6 +72,38 @@ String generate_section_class_list(const List<String> &list) {
 	}
 
 	return d;
+}
+
+void generate_class_index(const List<String> &list, const String &cls_prefix, HashMap<String, String> *cls_index) {
+	ERR_FAIL_COND(!cls_index);
+
+	for (const List<String>::Element *E = list.front(); E; E = E->next()) {
+		String c = E->get();
+
+		String sname = get_structure_name(c);
+
+		if (sname.empty()) {
+			//ERR_PRINT(sname);
+			continue;
+		}
+
+		(*cls_index)[cls_prefix + sname] = c;
+	}
+}
+
+List<String> get_template_keywords(const String &tmpl) {
+	List<String> ret;
+
+	//awful, but oh well
+	Vector<String> sp = tmpl.split("|||");
+
+	ERR_FAIL_COND_V_MSG(sp.size() % 2 == 0, ret, "Template has unterminated keywords!");
+
+	for (int i = 1; i < sp.size(); i += 2) {
+		ret.push_back(sp[i]);
+	}
+
+	return ret;
 }
 
 List<String> process_classes_and_structs(const List<String> &list) {
@@ -330,7 +372,7 @@ void process_file(const String &path) {
 			//Not we should be able to do this, because of how the code style is
 			if (l.contains("enum ") && l.contains("{")) {
 				if (l.contains("}")) {
-					enums.push_back(current_str);
+					enums.push_back(current_str.strip_edges());
 					//ERR_PRINT("TYPE_ENUM");
 					//ERR_PRINT(current_str);
 					current_str.clear();
@@ -388,7 +430,7 @@ void process_file(const String &path) {
 								//cant happen
 								break;
 							case TYPE_ENUM:
-								enums.push_back(current_str);
+								enums.push_back(current_str.strip_edges());
 								//ERR_PRINT("TYPE_ENUM");
 								break;
 							case TYPE_STRUCT:
@@ -461,12 +503,42 @@ void process_file(const String &path) {
 	//ERR_PRINT(itos(structs.size()));
 	//ERR_PRINT(itos(classes.size()));
 
-	String index_template = f.read_file("index_template.md.html");
-	String d = index_template;
+	HashMap<String, String> class_index;
 
-	d = d.replace("$ENUMS$", generate_section_class_list(enums));
-	d = d.replace("$STRUCTS$", generate_section_class_list(structs));
-	d = d.replace("$CLASSES$", generate_section_class_list(classes));
+	generate_class_index(enums, "ENUM_", &class_index);
+	generate_class_index(structs, "STRUCT_", &class_index);
+	generate_class_index(classes, "CLASS_", &class_index);
+
+	//print_class_index_keys(class_index);
+
+	String index_template = f.read_file("index_template.md.html");
+	List<String> index_template_keywords = get_template_keywords(index_template);
+	HashSet<String> used_keywords;
+
+	//print_list(index_template_keywords);
+
+	String index_str = index_template;
+
+	for (const List<String>::Element *E = index_template_keywords.front(); E; E = E->next()) {
+		String c = E->get();
+
+		ERR_CONTINUE_MSG(!class_index.has(c), "!class_index.has(): " + c);
+
+		String keyword = "|||" + E->get() + "|||";
+
+		index_str = index_str.replace(keyword, class_index[c]);
+		used_keywords.insert(c);
+	}
+
+	f.write_file("out/index.md.html", index_str);
+
+	//Generate a list from the unused classes.
+	String index_remaining_template = f.read_file("index_remaining_template.md.html");
+	String d = index_remaining_template;
+
+	d = d.replace("$ENUMS$", generate_section_class_list(enums, "ENUM_", used_keywords));
+	d = d.replace("$STRUCTS$", generate_section_class_list(structs, "STRUCT_", used_keywords));
+	d = d.replace("$CLASSES$", generate_section_class_list(classes, "CLASS_", used_keywords));
 
 	f.write_file("out/index_remaining.gen.md.html", d);
 }
