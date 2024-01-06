@@ -8,20 +8,18 @@ void print_list(const List<String> &list) {
 }
 
 String get_structure_name(const String &data) {
-	String fl = data.get_slicec('\n', 0);
+	String fl = data.get_slicec('{', 0);
+	String l = fl.get_slicec('\n', fl.get_slice_count("\n") - 1);
 
-	String l = fl.get_slicec('{', 0);
 	l = l.get_slicec(':', 0);
-
 	l = l.replace("struct", "").replace("class", "").replace("enum", "").replace("union", "").strip_edges();
 
 	return l;
 }
 
 String get_structure_parents(const String &data) {
-	String fl = data.get_slicec('\n', 0);
-
-	String l = fl.get_slicec('{', 0);
+	String fl = data.get_slicec('{', 0);
+	String l = fl.get_slicec('\n', fl.get_slice_count("\n") - 1);
 
 	if (!l.contains(":")) {
 		return String();
@@ -37,9 +35,12 @@ String get_structure_parents(const String &data) {
 
 bool is_structure_template_specialization_or_parent_is_template(const String &data) {
 	String fl = data.get_slicec('\n', 0);
-	String l = fl.get_slicec('{', 0);
 
-	return l.contains("<");
+	if (fl.contains("<")) {
+		return true;
+	}
+
+	return get_structure_parents(data).contains("<");
 }
 
 String generate_section_class_list(const List<String> &list) {
@@ -304,6 +305,7 @@ void process_file(const String &path) {
 		if (current_type == TYPE_NONE) {
 			if (l.contains("template")) {
 				current_str = l + "\n";
+				continue;
 			}
 
 			//Not we should be able to do this, because of how the code style is
