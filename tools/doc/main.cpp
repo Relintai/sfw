@@ -512,6 +512,7 @@ void process_file(const String &path) {
 	//print_class_index_keys(class_index);
 
 	String index_template = f.read_file("index_template.md.html");
+	String code_template = f.read_file("code_template.md.html");
 	List<String> index_template_keywords = get_template_keywords(index_template);
 	HashSet<String> used_keywords;
 
@@ -526,7 +527,10 @@ void process_file(const String &path) {
 
 		String keyword = "|||" + E->get() + "|||";
 
-		index_str = index_str.replace(keyword, class_index[c]);
+		String class_str = class_index[c];
+		String class_name = get_structure_name(class_str);
+
+		index_str = index_str.replace(keyword, code_template.replace("$CODE$", class_str).replace("$NAME$", class_name));
 		used_keywords.insert(c);
 	}
 
