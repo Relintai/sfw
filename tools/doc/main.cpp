@@ -95,9 +95,16 @@ List<String> process_classes_and_structs(const List<String> &list) {
 		int current_parenthesis_scope_count = 0;
 		bool in_method = false;
 		bool method_signature_found = false;
+		bool in_enum = false;
+		int enum_scope_start = 0;
 		String processed_line;
 		for (int i = 0; i < lines.size(); ++i) {
 			String l = lines[i];
+
+			if (l.contains("enum ")) {
+				in_enum = true;
+				enum_scope_start = current_scope_count;
+			}
 
 			for (int j = 0; j < l.length(); ++j) {
 				CharType current_char = l[j];
@@ -106,6 +113,14 @@ List<String> process_classes_and_structs(const List<String> &list) {
 					++current_scope_count;
 				} else if (current_char == '}') {
 					--current_scope_count;
+
+					if (in_enum) {
+						if (enum_scope_start == current_scope_count) {
+							in_enum = false;
+						}
+
+						continue;
+					}
 
 					if (in_method) {
 						if (current_target_scope_count == current_scope_count) {
@@ -116,6 +131,10 @@ List<String> process_classes_and_structs(const List<String> &list) {
 							processed_line += ";";
 						}
 					}
+				}
+
+				if (in_enum) {
+					continue;
 				}
 
 				if (method_signature_found) {
