@@ -90,9 +90,10 @@ body#md {
     font-weight: 300;
 }
 
-
 .md pre.listing {
     font-size: 100%;
+    width: 97%; /*hack, i dont know how to align this width with every other element <@r-lyeh*/
+    margin-left: 8px;
 }
 
 .md pre.listing code {
@@ -247,3 +248,59 @@ body#md {
    
 }
 
+/* Cool details theme from FWK */
+/* Stylize details/summary html tags */
+/* Credits:  https://dev.to/vtrpldn/show-and-hide-content-easily-with-details-and-summary-html-tags-3eif */
+
+/* The --padding variable help us control the <details> and <summary> spacing */
+:root {
+  --padding: 4px; /*16px;*/ /*<@r-lyeh*/
+}
+details {
+  padding: 0 var(--padding);
+  box-shadow: inset 0 0 0 0px; /*4px;*/ /*<@r-lyeh*/
+  border-radius: 1px; /*4px*/ /*<@r-lyeh*/
+  
+  background-color:#333; /*<@r-lyeh*/
+  margin: -15px 0 0 0; /*<@r-lyeh*/ /*fits all <details> together */
+}
+summary {
+    padding-left: 16px; /*<@r-lyeh*/
+  
+  
+    text-overflow: ellipsis;
+    /* Both of the following are required for text-overflow */
+    white-space: nowrap;
+    overflow: hidden;
+}
+details[open] {
+  padding-bottom: var(--padding);
+  box-shadow: inset 0 0 0 1px; /*<@r-lyeh*/
+
+    background-color:transparent; /*<@r-lyeh*/
+}
+details > summary {
+  display: flex;
+  padding: var(--padding);
+  margin: 0 calc(var(--padding) * -1);
+  border-radius: 4px;
+  /*font-size: 24px;*/ /*<@r-lyeh*/
+  cursor: pointer;
+  justify-content: space-between;
+  list-style: none; /* Hides the default arrow */
+}
+details[open] > summary {
+  box-shadow: 0 0px; /*4px;*/ /*<@r-lyeh*/
+}
+/* Adds an (+) icon when the <details> is closed... */
+details > summary::after {
+  content: "⇕";
+}
+/* ...and switches it when <details> is open (-) icon */
+details[open] > summary::after {
+  content: "⇕";
+}
+/* Removes the ugly default arrow on Chrome */
+details > summary::-webkit-details-marker {
+  display: none;
+}
