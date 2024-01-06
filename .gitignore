@@ -8,6 +8,9 @@ obj/
 
 tools/merger/out/
 
+tools/doc/sfw.h
+tools/doc/sfw.cpp
+
 # These are tmeporary:
 libs/
 *.bmp
