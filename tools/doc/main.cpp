@@ -50,7 +50,14 @@ String generate_section_class_list(const List<String> &list) {
 	for (const List<String>::Element *E = list.front(); E; E = E->next()) {
 		String c = E->get();
 
-		d += code_template.replace("$CODE$", c).replace("$NAME$", get_structure_name(c));
+		String sname = get_structure_name(c);
+
+		if (sname.begins_with("_")) {
+			//ERR_PRINT(sname);
+			continue;
+		}
+
+		d += code_template.replace("$CODE$", c).replace("$NAME$", sname);
 	}
 
 	return d;
