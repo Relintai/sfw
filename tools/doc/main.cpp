@@ -84,6 +84,7 @@ List<String> process_classes_and_structs(const List<String> &list) {
 		//remove method implementations
 		int current_scope_count = 0;
 		int current_target_scope_count = -1;
+		int current_parenthesis_scope_count = 0;
 		bool in_method = false;
 		bool method_signature_found = false;
 		String processed_line;
@@ -110,16 +111,27 @@ List<String> process_classes_and_structs(const List<String> &list) {
 				}
 
 				if (method_signature_found) {
-					if (current_char == ')') {
-						method_signature_found = false;
-						in_method = true;
+					if (current_char == '(') {
+						++current_parenthesis_scope_count;
+						continue;
+					} else if (current_char == ')') {
+						if (current_parenthesis_scope_count > 1) {
+							--current_parenthesis_scope_count;
+							continue;
+						} else {
+							method_signature_found = false;
+							in_method = true;
 
-						processed_line += l.substr_index(0, j + 1);
+							processed_line += l.substr_index(0, j + 1);
+						}
+					} else {
+						continue;
 					}
 				}
 
 				if (!in_method) {
 					if (current_char == '(') {
+						current_parenthesis_scope_count = 1;
 						method_signature_found = true;
 						current_target_scope_count = current_scope_count;
 					}
@@ -147,7 +159,7 @@ List<String> process_classes_and_structs(const List<String> &list) {
 			}
 		}
 
-		ret.push_back(stripped);
+		ret.push_back(stripped.strip_edges());
 	}
 
 	return ret;
