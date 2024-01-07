@@ -16,77 +16,77 @@
 //--STRIP
 //no includes
 //--STRIP
-{{FILE:sfw/core/int_types.h}}
+{{FILE:sfwl/core/int_types.h}}
 //--STRIP
 //no includes
 //--STRIP
-{{FILE:sfw/core/math_defs.h}}
+{{FILE:sfwl/core/math_defs.h}}
 //--STRIP
 //no includes
 //--STRIP
-{{FILE:sfw/core/error_list.h}}
+{{FILE:sfwl/core/error_list.h}}
 //--STRIP
 //no includes
 //--STRIP
-{{FILE:sfw/core/logger.h}}
+{{FILE:sfwl/core/logger.h}}
 
 //--STRIP
 //#include "core/int_types.h"
 //#include "core/error_list.h"
 //--STRIP
-{{FILE:sfw/core/typedefs.h}}
+{{FILE:sfwl/core/typedefs.h}}
 
 
 //--STRIP
 //#include "core/int_types.h"
 //--STRIP
-{{FILE:sfw/core/stime.h}}
+{{FILE:sfwl/core/stime.h}}
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/safe_refcount.h}}
+{{FILE:sfwl/core/safe_refcount.h}}
 
 //--STRIP
 //#include "core/logger.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/error_macros.h}}
+{{FILE:sfwl/core/error_macros.h}}
 
 
 //--STRIP
 //#include "core/error_macros.h"
 //#include "core/safe_refcount.h"
 //--STRIP
-{{FILE:sfw/core/memory.h}}
+{{FILE:sfwl/core/memory.h}}
 
 
 //--STRIP
 //#include "core/error_list.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/mutex.h}}
+{{FILE:sfwl/core/mutex.h}}
 //--STRIP
 //#include "core/error_list.h"
 //--STRIP
-{{FILE:sfw/core/rw_lock.h}}
+{{FILE:sfwl/core/rw_lock.h}}
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/spin_lock.h}}
+{{FILE:sfwl/core/spin_lock.h}}
 //--STRIP
 //#include "core/mutex.h"
 //--STRIP
-{{FILE:sfw/core/thread_safe.h}}
+{{FILE:sfwl/core/thread_safe.h}}
 
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/pcg.h}}
+{{FILE:sfwl/core/pcg.h}}
 //--STRIP
 //#include "core/math_defs.h"
 //#include "core/pcg.h"
 //--STRIP
-{{FILE:sfw/core/random_pcg.h}}
+{{FILE:sfwl/core/random_pcg.h}}
 
 //--STRIP
 //#include "core/error_macros.h"
@@ -95,7 +95,7 @@
 //#include "core/typedefs.h"
 //#include "core/pcg.h"
 //--STRIP
-{{FILE:sfw/core/math_funcs.h}}
+{{FILE:sfwl/core/math_funcs.h}}
 
 //--STRIP
 //Simple almost dependencyless containers
@@ -107,59 +107,59 @@
 //#include "core/memory.h"
 //#include "core/safe_refcount.h"
 //--STRIP
-{{FILE:sfw/core/cowdata.h}}
+{{FILE:sfwl/core/cowdata.h}}
 //--STRIP
 //#include "core/error_macros.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/sort_array.h}}
+{{FILE:sfwl/core/sort_array.h}}
 //--STRIP
 //#include "core/error_macros.h"
 //#include "core/memory.h"
 //--STRIP
-{{FILE:sfw/core/rb_map.h}}
+{{FILE:sfwl/core/rb_map.h}}
 //--STRIP
 //#include "core/memory.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/rb_set.h}}
+{{FILE:sfwl/core/rb_set.h}}
 //--STRIP
 //#include "cowdata.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/vmap.h}}
+{{FILE:sfwl/core/vmap.h}}
 //--STRIP
 //#include "cowdata.h"
 //#include "core/sort_array.h"
 //#include "core/error_macros.h"
 //#include "core/memory.h"
 //--STRIP
-{{FILE:sfw/core/vector.h}}
+{{FILE:sfwl/core/vector.h}}
 //--STRIP
 //#include "core/vector.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/vset.h}}
+{{FILE:sfwl/core/vset.h}}
 //--STRIP
 //#include "core/sort_array.h"
 //#include "core/error_macros.h"
 //#include "core/memory.h"
 //--STRIP
-{{FILE:sfw/core/list.h}}
+{{FILE:sfwl/core/list.h}}
 //--STRIP
 //#include "core/vector.h"
 //--STRIP
-{{FILE:sfw/core/ring_buffer.h}}
+{{FILE:sfwl/core/ring_buffer.h}}
 //--STRIP
 //#include "core/memory.h"
 //#include "spin_lock.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/paged_allocator.h}}
+{{FILE:sfwl/core/paged_allocator.h}}
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/pool_allocator.h}}
+{{FILE:sfwl/core/pool_allocator.h}}
 
 //--STRIP
 //Strings they need vector.h, and cowdata.h
@@ -168,26 +168,26 @@
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/char_range.inc}}
+{{FILE:sfwl/core/char_range.inc}}
 //--STRIP
 //#include "core/typedefs.h"
 //#include "core/char_range.inc"
 //--STRIP
-{{FILE:sfw/core/char_utils.h}}
+{{FILE:sfwl/core/char_utils.h}}
 //--STRIP
 //#include "cowdata.h"
 //#include "core/vector.h"
 //#include "char_utils.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/ustring.h}}
+{{FILE:sfwl/core/ustring.h}}
 
 //--STRIP
 //#include "core/mutex.h"
 //#include "core/safe_refcount.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/string_name.h}}
+{{FILE:sfwl/core/string_name.h}}
 
 //--STRIP
 //Needs ustring.h
@@ -201,7 +201,7 @@
 //#include "core/safe_refcount.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/pool_vector.h}}
+{{FILE:sfwl/core/pool_vector.h}}
 //--STRIP
 //#include "core/pool_vector.h"
 //#include "core/sort_array.h"
@@ -209,7 +209,7 @@
 //#include "core/error_macros.h"
 //#include "core/memory.h"
 //--STRIP
-{{FILE:sfw/core/tight_local_vector.h}}
+{{FILE:sfwl/core/tight_local_vector.h}}
 //--STRIP
 //#include "core/pool_vector.h"
 //#include "core/sort_array.h"
@@ -217,7 +217,7 @@
 //#include "core/error_macros.h"
 //#include "core/memory.h"
 //--STRIP
-{{FILE:sfw/core/local_vector.h}}
+{{FILE:sfwl/core/local_vector.h}}
 
 //--STRIP
 //Math classes
@@ -227,66 +227,66 @@
 //#include "core/math_funcs.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/color.h}}
+{{FILE:sfwl/core/color.h}}
 //--STRIP
 //#include "core/math_funcs.h"
 //#include "core/error_macros.h"
 //--STRIP
-{{FILE:sfw/core/vector2.h}}
+{{FILE:sfwl/core/vector2.h}}
 //--STRIP
 //#include "core/error_macros.h"
 //#include "core/math_funcs.h"
 //#include "core/vector2.h"
 //--STRIP
-{{FILE:sfw/core/vector2i.h}}
+{{FILE:sfwl/core/vector2i.h}}
 //--STRIP
 //#include "core/vector2.h" // also includes math_funcs and ustring
 //#include "core/vector2i.h"
 //--STRIP
-{{FILE:sfw/core/rect2.h}}
+{{FILE:sfwl/core/rect2.h}}
 //--STRIP
 //#include "core/vector2i.h" // also includes math_funcs and ustring
 //--STRIP
-{{FILE:sfw/core/rect2i.h}}
+{{FILE:sfwl/core/rect2i.h}}
 //--STRIP
 //#include "core/math_funcs.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/vector3.h}}
+{{FILE:sfwl/core/vector3.h}}
 //--STRIP
 //#include "core/error_macros.h"
 //#include "core/math_funcs.h"
 //--STRIP
-{{FILE:sfw/core/vector3i.h}}
+{{FILE:sfwl/core/vector3i.h}}
 //--STRIP
 //#include "core/math_defs.h"
 //#include "core/math_funcs.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/vector4.h}}
+{{FILE:sfwl/core/vector4.h}}
 //--STRIP
 //#include "core/error_macros.h"
 //#include "core/math_funcs.h"
 //--STRIP
-{{FILE:sfw/core/vector4i.h}}
+{{FILE:sfwl/core/vector4i.h}}
 
 //--STRIP
 //#include "core/vector3.h"
 //--STRIP
-{{FILE:sfw/core/plane.h}}
+{{FILE:sfwl/core/plane.h}}
 //--STRIP
 //#include "core/math_defs.h"
 //#include "core/plane.h"
 //#include "core/vector3.h"
 //--STRIP
-{{FILE:sfw/core/aabb.h}}
+{{FILE:sfwl/core/aabb.h}}
 //--STRIP
 //#include "core/math_defs.h"
 //#include "core/math_funcs.h"
 //#include "core/vector3.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/quaternion.h}}
+{{FILE:sfwl/core/quaternion.h}}
 //--STRIP
 //#include "core/vector.h"
 //#include "core/math_defs.h"
@@ -296,27 +296,27 @@
 //#include "core/ustring.h"
 //#include "core/vector4.h"
 //--STRIP
-{{FILE:sfw/core/projection.h}}
+{{FILE:sfwl/core/projection.h}}
 //--STRIP
 //#include "core/quaternion.h"
 //#include "core/vector3.h"
 //#include "core/vector3i.h"
 //--STRIP
-{{FILE:sfw/core/basis.h}}
+{{FILE:sfwl/core/basis.h}}
 
 //--STRIP
 //#include "core/pool_vector.h"
 //#include "core/rect2.h" // also includes vector2, math_funcs, and ustring
 //#include "core/rect2i.h" // also includes vector2i, math_funcs, and ustring
 //--STRIP
-{{FILE:sfw/core/transform_2d.h}}
+{{FILE:sfwl/core/transform_2d.h}}
 //--STRIP
 //#include "core/aabb.h"
 //#include "core/plane.h"
 //#include "core/transform.h"
 //#include "core/vector3.h"
 //--STRIP
-{{FILE:sfw/core/face3.h}}
+{{FILE:sfwl/core/face3.h}}
 //--STRIP
 //#include "core/aabb.h"
 //#include "core/basis.h"
@@ -324,7 +324,7 @@
 //#include "core/vector3i.h"
 //#include "core/pool_vector.h"
 //--STRIP
-{{FILE:sfw/core/transform.h}}
+{{FILE:sfwl/core/transform.h}}
 
 //--STRIP
 //hashfuncs.h Needs most math classes
@@ -346,7 +346,7 @@
 //#include "core/ustring.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/hashfuncs.h}}
+{{FILE:sfwl/core/hashfuncs.h}}
 
 //--STRIP
 //Containers that need hashfuncs.h
@@ -356,7 +356,7 @@
 //#include "core/hashfuncs.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/core/pair.h}}
+{{FILE:sfwl/core/pair.h}}
 //--STRIP
 //#include "core/hashfuncs.h"
 //#include "core/list.h"
@@ -365,13 +365,13 @@
 //#include "core/memory.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/og_hash_map.h}}
+{{FILE:sfwl/core/og_hash_map.h}}
 //--STRIP
 //#include "core/list.h"
 //#include "core/og_hash_map.h"
 //#include "core/pair.h"
 //--STRIP
-{{FILE:sfw/core/ordered_hash_map.h}}
+{{FILE:sfwl/core/ordered_hash_map.h}}
 //--STRIP
 //#include "core/hashfuncs.h"
 //#include "paged_allocator.h"
@@ -380,32 +380,32 @@
 //#include "core/memory.h"
 //#include "list.h"
 //--STRIP
-{{FILE:sfw/core/hash_map.h}}
+{{FILE:sfwl/core/hash_map.h}}
 //--STRIP
 //#include "core/hash_map.h"
 //#include "core/hashfuncs.h"
 //#include "core/math_funcs.h"
 //#include "core/memory.h"
 //--STRIP
-{{FILE:sfw/core/hash_set.h}}
+{{FILE:sfwl/core/hash_set.h}}
 
 //--STRIP
 //#include "core/error_list.h"
 //#include "core/ustring.h"
 //also needs vector
 //--STRIP
-{{FILE:sfw/core/file_access.h}}
+{{FILE:sfwl/core/file_access.h}}
 
 //--STRIP
 //#include "core/error_list.h"
 //#include "core/ustring.h"
 //--STRIP
-{{FILE:sfw/core/dir_access.h}}
+{{FILE:sfwl/core/dir_access.h}}
 
 //--STRIP
 //no includes
 //--STRIP
-{{FILE:sfw/core/sfw_core.h}}
+{{FILE:sfwl/core/sfw_core.h}}
 
 //===================  OBJECT SECTION  ===================
 
@@ -416,16 +416,16 @@
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/object/ref_ptr.h}}
+{{FILE:sfwl/object/ref_ptr.h}}
 //--STRIP
 //#include "core/int_types.h"
 //--STRIP
-{{FILE:sfw/object/object_id.h}}
+{{FILE:sfwl/object/object_id.h}}
 
 //--STRIP
 //#include "core/string_name.h"
 //--STRIP
-{{FILE:sfw/object/core_string_names.h}}
+{{FILE:sfwl/object/core_string_names.h}}
 
 //--STRIP
 //Variants
@@ -434,14 +434,14 @@
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/object/array.h}}
+{{FILE:sfwl/object/array.h}}
 
 //--STRIP
 //#include "core/list.h"
 //#include "core/ustring.h"
 //#include "object/array.h"
 //--STRIP
-{{FILE:sfw/object/dictionary.h}}
+{{FILE:sfwl/object/dictionary.h}}
 
 //--STRIP
 //#include "core/aabb.h"
@@ -464,7 +464,7 @@
 //#include "object/ref_ptr.h"
 //#include "object/object_id.h"
 //--STRIP
-{{FILE:sfw/object/variant.h}}
+{{FILE:sfwl/object/variant.h}}
 
 //--STRIP
 //Stuff that needs Variant
@@ -476,7 +476,7 @@
 //#include "object/variant.h"
 //#include "object/reference.h"
 //--STRIP
-{{FILE:sfw/object/psignal.h}}
+{{FILE:sfwl/object/psignal.h}}
 
 //--STRIP
 //#include "core/hash_map.h"
@@ -488,14 +488,14 @@
 //#include "object/variant.h"
 //#include "object/dictionary.h"
 //--STRIP
-{{FILE:sfw/object/object.h}}
+{{FILE:sfwl/object/object.h}}
 
 
 //--STRIP
 //#include "core/memory.h"
 //#include "core/typedefs.h"
 //--STRIP
-{{FILE:sfw/object/object_rc.h}}
+{{FILE:sfwl/object/object_rc.h}}
 
 //--STRIP
 //#include "core/memory.h"
@@ -503,282 +503,12 @@
 //#include "object/object.h"
 //#include "object/ref_ptr.h"
 //--STRIP
-{{FILE:sfw/object/reference.h}}
+{{FILE:sfwl/object/reference.h}}
 
 //--STRIP
 //#include "object/reference.h"
 //#include "psignal.h"
 //--STRIP
-{{FILE:sfw/object/resource.h}}
-
-
-//===================  RENDER CORE SECTION  ===================
-
-//--STRIP
-//#include "core/projection.h"
-//#include "core/transform.h"
-//#include "core/vector3.h"
-//#include "core/transform_2d.h"
-//#include "core/vector2.h"
-//--STRIP
-{{FILE:sfw/render_core/render_state.h}}
-
-
-//--STRIP
-//#include "core/color.h"
-//#include "core/rect2.h"
-//#include "core/rect2i.h"
-//#include "object/reference.h"
-//#include "core/vector.h"
-//#include "core/vector2i.h"
-//--STRIP
-{{FILE:sfw/render_core/image.h}}
-//--STRIP
-//#include "core/vector2i.h"
-//#include "object/resource.h"
-//#include "render_core/3rd_glad.h"
-//#include "render_core/image.h"
-//--STRIP
-{{FILE:sfw/render_core/texture.h}}
-
-
-//--STRIP
-//#include "core/vector.h"
-//#include "core/int_types.h"
-//#include "core/color.h"
-//#include "object/resource.h"
-//#include "render_core/3rd_glad.h"
-//--STRIP
-{{FILE:sfw/render_core/mesh.h}}
-//--STRIP
-//{//{//FILE:sfw/render_core/primitive_meshes.h}}
-//--STRIP
-//--STRIP
-//#include "render_core/mesh.h"
-//--STRIP
-{{FILE:sfw/render_core/mesh_utils.h}}
-
-
-//--STRIP
-//#include "core/ustring.h"
-//--STRIP
-{{FILE:sfw/render_core/keyboard.h}}
-//--STRIP
-//#include "core/transform_2d.h"
-//#include "core/typedefs.h"
-//#include "core/ustring.h"
-//#include "object/resource.h"
-//--STRIP
-{{FILE:sfw/render_core/input_event.h}}
-//--STRIP
-//#include "object/resource.h"
-//--STRIP
-{{FILE:sfw/render_core/shortcut.h}}
-//--STRIP
-//#include "render_core/input_event.h"
-//#include "object/object.h"
-//#include "core/rb_map.h"
-//--STRIP
-{{FILE:sfw/render_core/input_map.h}}
-//--STRIP
-//#include "core/vector2i.h"
-//#include "object/object.h"
-//#include "core/rb_map.h"
-//#include "core/rb_set.h"
-//#include "core/thread_safe.h"
-//#include "object/psignal.h"
-//#include "object/reference.h"
-//#include "render_core/input_event.h"
-//--STRIP
-{{FILE:sfw/render_core/input.h}}
-
-
-//--STRIP
-//#include "render_core/3rd_glad.h"
-//#include "core/hash_map.h"
-//--STRIP
-{{FILE:sfw/render_core/shader.h}}
-//--STRIP
-//#include "core/projection.h"
-//#include "core/transform.h"
-//#include "core/transform_2d.h"
-//#include "object/reference.h"
-//#include "render_core/shader.h"
-//--STRIP
-{{FILE:sfw/render_core/material.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/color_material.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "render_core/texture.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/color_material_2d.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "render_core/texture.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/texture_material_2d.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "render_core/texture.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/texture_material.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "core/color.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/colored_material.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "render_core/texture.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/font_material.h}}
-//--STRIP
-//#include "render_core/material.h"
-//#include "render_core/texture.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_core/transparent_texture_material.h}}
-
-
-//--STRIP
-//#include "core/color.h"
-//#include "core/ustring.h"
-//#include "object/resource.h"
-//#include "font_material.h"
-//--STRIP
-{{FILE:sfw/render_core/font.h}}
-
-
-//--STRIP
-//#include "object/reference.h"
-//#include "render_core/input_event.h"
-//--STRIP
-{{FILE:sfw/render_core/scene.h}}
-//--STRIP
-//#include "core/color.h"
-//#include "core/int_types.h"
-//#include "core/vector2.h"
-//--STRIP
-{{FILE:sfw/render_core/window.h}}
-//--STRIP
-//#include "core/int_types.h"
-//#include "object/object.h"
-//#include "object/reference.h"
-//#include "render_core/scene.h"
-//--STRIP
-{{FILE:sfw/render_core/application.h}}
-
-
-//===================  RENDER IMMEDIATE SECTION  ===================
-
-//--STRIP
-//#include "core/color.h"
-//#include "core/rect2.h"
-//#include "core/transform.h"
-//#include "core/transform_2d.h"
-//#include "core/vector2i.h"
-//#include "object/object.h"
-//#include "object/reference.h"
-//--STRIP
-{{FILE:sfw/render_immediate/renderer.h}}
-
-//===================  RENDER OBJCTS SECTION  ===================
-
-//--STRIP
-//#include "object/object.h"
-//#include "core/transform_2d.h"
-//--STRIP
-{{FILE:sfw/render_objects/object_2d.h}}
-//--STRIP
-//#include "object/object.h"
-//#include "core/transform.h"
-//--STRIP
-{{FILE:sfw/render_objects/object_3d.h}}
-
-
-
-//--STRIP
-//#include "render_core/3rd_glad.h"
-//#include "render_objects/object_2d.h"
-//#include "core/transform.h"
-//#include "core/transform_2d.h"
-//#include "core/vector2.h"
-//--STRIP
-{{FILE:sfw/render_objects/camera_2d.h}}
-//--STRIP
-//#include "object_2d.h"
-//#include "core/vector.h"
-//#include "render_core/material.h"
-//#include "render_core/mesh.h"
-//#include "core/transform.h"
-//--STRIP
-{{FILE:sfw/render_objects/mesh_instance_2d.h}}
-//--STRIP
-//#include "render_objects/object_2d.h"
-//#include "core/transform_2d.h"
-//#include "render_objects/mesh_instance_2d.h"
-//--STRIP
-{{FILE:sfw/render_objects/sprite.h}}
-//--STRIP
-//#include "core/color.h"
-//#include "core/ustring.h"
-//#include "core/vector2.h"
-//#include "object/reference.h"
-//#include "object_2d.h"
-//--STRIP
-{{FILE:sfw/render_objects/text_2d.h}}
-//--STRIP
-//#include "render_objects/object_2d.h"
-//#include "render_core/mesh.h"
-//#include "render_core/material.h"
-//--STRIP
-{{FILE:sfw/render_objects/tile_map.h}}
-
-
-//--STRIP
-//#include "render_objects/object_3d.h"
-//#include "render_core/3rd_glad.h"
-//#include "core/projection.h"
-//#include "core/transform.h"
-//#include "core/vector3.h"
-//--STRIP
-{{FILE:sfw/render_objects/camera_3d.h}}
-//--STRIP
-//#include "core/vector.h"
-//#include "render_objects/object_3d.h"
-//#include "render_core/material.h"
-//#include "render_core/mesh.h"
-//#include "core/transform.h"
-//--STRIP
-{{FILE:sfw/render_objects/mesh_instance_3d.h}}
-
-// expose glfw/glad apis
-#if __EMSCRIPTEN__
-    #include <GL/glew.h>
-    #include <GLFW/glfw3.h>
-    #include <emscripten.h>
-    #include <emscripten/html5.h>
-    #define gladLoadGL(func) (glewExperimental = true, glewInit() == GLEW_OK) ///-
-#else
-    #if defined(_WIN64) || defined(_WIN32) /*&& is(tcc)*/ // && ENABLE_DLL
-    #ifdef GLAD_API_CALL
-    #undef GLAD_API_CALL
-    #endif
-    #define GLAD_API_CALL extern API ///-
-    #endif
-    
-    #ifndef GLAD_GL_H_
-    #include "sfw_3rd.h"
-    #endif
-#endif
+{{FILE:sfwl/object/resource.h}}
 
 #endif
