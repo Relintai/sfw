@@ -12,6 +12,8 @@ tools/doc/out/
 
 tools/doc/sfw.h
 tools/doc/sfw.cpp
+tools/doc/sfwl.h
+tools/doc/sfwl.cpp
 
 # These are tmeporary:
 libs/
