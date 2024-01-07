@@ -92,96 +92,9 @@
 {{FILE:sfwl/core/string_name.cpp}}
 
 //--STRIP
-//#include "core/aabb.h"
-//--STRIP
-{{FILE:sfwl/core/aabb.cpp}}
-//--STRIP
-//#include "core/vector3i.h"
-//#include "core/vector3.h"
-//#include "core/ustring.h"
-//--STRIP
-{{FILE:sfwl/core/vector3i.cpp}}
-//--STRIP
-//#include "core/transform_2d.h"
-//--STRIP
-{{FILE:sfwl/core/transform_2d.cpp}}
-//--STRIP
-//#include "core/projection.h"
-//#include "core/aabb.h"
-//#include "core/math_funcs.h"
-//#include "core/plane.h"
-//#include "core/rect2.h"
-//#include "core/transform.h"
-//--STRIP
-{{FILE:sfwl/core/projection.cpp}}
-//--STRIP
-//#include "core/vector3.h"
-//#include "core/basis.h"
-//--STRIP
-{{FILE:sfwl/core/vector3.cpp}}
-//--STRIP
 //#include "core/pcg.h"
 //--STRIP
 {{FILE:sfwl/core/pcg.cpp}}
-//--STRIP
-//#include "core/vector2.h"
-//#include "core/ustring.h"
-//--STRIP
-{{FILE:sfwl/core/vector2.cpp}}
-//--STRIP
-//#include "core/basis.h"
-//#include "core/math_funcs.h"
-//--STRIP
-{{FILE:sfwl/core/basis.cpp}}
-//--STRIP
-//#include "face3.h"
-//--STRIP
-{{FILE:sfwl/core/face3.cpp}}
-//--STRIP
-//#include "core/vector4i.h"
-//#include "core/vector4.h"
-//#include "core/ustring.h"
-//--STRIP
-{{FILE:sfwl/core/vector4i.cpp}}
-//--STRIP
-//#include "core/transform.h"
-//#include "core/math_funcs.h"
-//--STRIP
-{{FILE:sfwl/core/transform.cpp}}
-//--STRIP
-//#include "core/color.h"
-//#include "core/math_funcs.h"
-//--STRIP
-{{FILE:sfwl/core/color.cpp}}
-//--STRIP
-//#include "core/quaternion.h"
-//#include "core/basis.h"
-//--STRIP
-{{FILE:sfwl/core/quaternion.cpp}}
-//--STRIP
-//#include "core/plane.h"
-//#include "core/math_funcs.h"
-//--STRIP
-{{FILE:sfwl/core/plane.cpp}}
-//--STRIP
-//#include "core/vector2i.h"
-//#include "core/ustring.h"
-//--STRIP
-{{FILE:sfwl/core/vector2i.cpp}}
-//--STRIP
-//#include "core/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
-//#include "core/rect2i.h"
-//--STRIP
-{{FILE:sfwl/core/rect2.cpp}}
-//--STRIP
-//#include "core/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
-//--STRIP
-{{FILE:sfwl/core/rect2i.cpp}}
-//--STRIP
-//#include "core/vector4.h"
-//#include "core/basis.h"
-//--STRIP
-{{FILE:sfwl/core/vector4.cpp}}
 
 //--STRIP
 //#include "file_access.h"
