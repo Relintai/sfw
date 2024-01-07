@@ -7,21 +7,9 @@
 /*************************************************************************/
 
 //--STRIP
-#include "core/aabb.h"
-#include "core/basis.h"
-#include "core/color.h"
-#include "core/face3.h"
-#include "core/plane.h"
+#include "core/math_defs.h"
 #include "core/pool_vector.h"
-#include "core/projection.h"
-#include "core/quaternion.h"
-#include "core/transform.h"
-#include "core/transform_2d.h"
 #include "core/ustring.h"
-#include "core/vector3.h"
-#include "core/vector3i.h"
-#include "core/vector4.h"
-#include "core/vector4i.h"
 #include "object/array.h"
 #include "object/dictionary.h"
 #include "object/ref_ptr.h"
@@ -35,13 +23,6 @@ typedef PoolVector<uint8_t> PoolByteArray;
 typedef PoolVector<int> PoolIntArray;
 typedef PoolVector<real_t> PoolRealArray;
 typedef PoolVector<String> PoolStringArray;
-typedef PoolVector<Vector2> PoolVector2Array;
-typedef PoolVector<Vector2i> PoolVector2iArray;
-typedef PoolVector<Vector3> PoolVector3Array;
-typedef PoolVector<Vector3i> PoolVector3iArray;
-typedef PoolVector<Vector4> PoolVector4Array;
-typedef PoolVector<Vector4i> PoolVector4iArray;
-typedef PoolVector<Color> PoolColorArray;
 
 // Temporary workaround until c++11 alignas()
 #ifdef __GNUC__
@@ -70,26 +51,7 @@ public:
 		REAL,
 		STRING,
 
-		// math types
-		RECT2,
-		RECT2I,
-		VECTOR2,
-		VECTOR2I,
-		VECTOR3,
-		VECTOR3I,
-		VECTOR4,
-		VECTOR4I,
-
-		PLANE,
-		QUATERNION,
-		AABB,
-		BASIS,
-		TRANSFORM,
-		TRANSFORM2D,
-		PROJECTION,
-
 		// misc types
-		COLOR,
 		OBJECT,
 		STRING_NAME,
 		DICTIONARY,
@@ -100,13 +62,6 @@ public:
 		POOL_INT_ARRAY,
 		POOL_REAL_ARRAY,
 		POOL_STRING_ARRAY,
-		POOL_VECTOR2_ARRAY,
-		POOL_VECTOR2I_ARRAY,
-		POOL_VECTOR3_ARRAY,
-		POOL_VECTOR3I_ARRAY,
-		POOL_VECTOR4_ARRAY,
-		POOL_VECTOR4I_ARRAY,
-		POOL_COLOR_ARRAY,
 
 		VARIANT_MAX // 38
 
@@ -139,11 +94,6 @@ private:
 		bool _bool;
 		int64_t _int;
 		double _real;
-		Transform2D *_transform2d;
-		::AABB *_aabb;
-		Basis *_basis;
-		Transform *_transform;
-		Projection *_projection;
 		void *_ptr; //generic pointer
 		uint8_t _mem[sizeof(ObjData) > (sizeof(real_t) * 4) ? sizeof(ObjData) : (sizeof(real_t) * 4)];
 	} _data GCC_ALIGNED_8;
@@ -188,23 +138,7 @@ public:
 	operator double() const;
 	operator String() const;
 	operator StringName() const;
-	operator Rect2() const;
-	operator Rect2i() const;
-	operator Vector2() const;
-	operator Vector2i() const;
-	operator Vector3() const;
-	operator Vector3i() const;
-	operator Vector4() const;
-	operator Vector4i() const;
-	operator Plane() const;
-	operator ::AABB() const;
-	operator Quaternion() const;
-	operator Basis() const;
-	operator Transform() const;
-	operator Transform2D() const;
-	operator Projection() const;
 
-	operator Color() const;
 	operator RefPtr() const;
 
 	operator Object *() const;
@@ -216,15 +150,6 @@ public:
 	operator PoolVector<int>() const;
 	operator PoolVector<real_t>() const;
 	operator PoolVector<String>() const;
-	operator PoolVector<Vector2>() const;
-	operator PoolVector<Vector2i>() const;
-	operator PoolVector<Vector3>() const;
-	operator PoolVector<Vector3i>() const;
-	operator PoolVector<Vector4>() const;
-	operator PoolVector<Vector4i>() const;
-	operator PoolVector<Color>() const;
-	operator PoolVector<Plane>() const;
-	operator PoolVector<Face3>() const;
 
 	operator Vector<Variant>() const;
 	operator Vector<uint8_t>() const;
@@ -232,15 +157,6 @@ public:
 	operator Vector<real_t>() const;
 	operator Vector<String>() const;
 	operator Vector<StringName>() const;
-	operator Vector<Vector3>() const;
-	operator Vector<Vector3i>() const;
-	operator Vector<Vector4>() const;
-	operator Vector<Vector4i>() const;
-	operator Vector<Color>() const;
-	operator Vector<Vector2>() const;
-	operator Vector<Vector2i>() const;
-
-	operator Vector<Plane>() const;
 
 	// some core type enums to convert to
 	operator Margin() const;
@@ -267,40 +183,16 @@ public:
 	Variant(const StringName &p_string);
 	Variant(const char *const p_cstring);
 	Variant(const CharType *p_wstring);
-	Variant(const Vector2 &p_vector2);
-	Variant(const Vector2i &p_vector2);
-	Variant(const Rect2 &p_rect2);
-	Variant(const Rect2i &p_rect2);
-	Variant(const Vector3 &p_vector3);
-	Variant(const Vector3i &p_vector3);
-	Variant(const Vector4 &p_vector4);
-	Variant(const Vector4i &p_vector4);
-	Variant(const Projection &p_projection);
-	Variant(const Plane &p_plane);
-	Variant(const ::AABB &p_aabb);
-	Variant(const Quaternion &p_quat);
-	Variant(const Basis &p_matrix);
-	Variant(const Transform2D &p_transform);
-	Variant(const Transform &p_transform);
-	Variant(const Color &p_color);
+
 	Variant(const RefPtr &p_resource);
 	Variant(const Object *p_object);
 	Variant(const Dictionary &p_dictionary);
 
 	Variant(const Array &p_array);
-	Variant(const PoolVector<Plane> &p_array);
 	Variant(const PoolVector<uint8_t> &p_raw_array);
 	Variant(const PoolVector<int> &p_int_array);
 	Variant(const PoolVector<real_t> &p_real_array);
 	Variant(const PoolVector<String> &p_string_array);
-	Variant(const PoolVector<Vector3> &p_vector3_array);
-	Variant(const PoolVector<Vector3i> &p_vector3_array);
-	Variant(const PoolVector<Color> &p_color_array);
-	Variant(const PoolVector<Face3> &p_face_array);
-	Variant(const PoolVector<Vector2> &p_vector2_array);
-	Variant(const PoolVector<Vector2i> &p_vector2_array);
-	Variant(const PoolVector<Vector4> &p_vector4_array);
-	Variant(const PoolVector<Vector4i> &p_vector4_array);
 
 	Variant(const Vector<Variant> &p_array);
 	Variant(const Vector<uint8_t> &p_array);
@@ -308,14 +200,6 @@ public:
 	Variant(const Vector<real_t> &p_array);
 	Variant(const Vector<String> &p_array);
 	Variant(const Vector<StringName> &p_array);
-	Variant(const Vector<Vector3> &p_array);
-	Variant(const Vector<Vector3i> &p_array);
-	Variant(const Vector<Color> &p_array);
-	Variant(const Vector<Plane> &p_array);
-	Variant(const Vector<Vector2> &p_array);
-	Variant(const Vector<Vector2i> &p_array);
-	Variant(const Vector<Vector4> &p_array);
-	Variant(const Vector<Vector4i> &p_array);
 
 	// If this changes the table in variant_op must be updated
 	enum Operator {

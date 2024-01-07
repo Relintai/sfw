@@ -10,7 +10,6 @@
 //--STRIP
 #include "core/ustring.h"
 
-#include "core/color.h"
 #include "core/math_funcs.h"
 #include "core/memory.h"
 #include "ucaps.h"
@@ -4562,10 +4561,6 @@ bool String::is_valid_unsigned_integer() const {
 	}
 
 	return true;
-}
-
-bool String::is_valid_html_color() const {
-	return Color::html_is_valid(*this);
 }
 
 bool String::is_valid_filename() const {
