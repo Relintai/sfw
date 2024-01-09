@@ -45,6 +45,14 @@
 //#include "core/typedefs.h"
 //--STRIP
 {{FILE:sfw/core/safe_refcount.h}}
+//--STRIP
+//#include "core/typedefs.h"
+//#if !defined(NO_THREADS)
+//#include "core/safe_refcount.h"
+//#include <thread>
+//#endif
+//--STRIP
+{{FILE:sfw/core/thread.h}}
 
 //--STRIP
 //#include "core/logger.h"
