@@ -32,6 +32,12 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 			right = pressed;
 		}
 
+		if (k->get_physical_scancode() == KEY_SPACE) {
+			if (pressed) {
+				immediate = !immediate;
+			}
+		}
+
 		return;
 	}
 
@@ -69,8 +75,11 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::render() {
-	//render_obj();
-	render_immediate();
+	if (!immediate) {
+		render_obj();
+	} else {
+		render_immediate();
+	}
 }
 void GameScene::render_immediate() {
 	Renderer *r = Renderer::get_singleton();
@@ -157,6 +166,8 @@ void GameScene::render_obj() {
 }
 
 GameScene::GameScene() {
+	immediate = false;
+
 	left = false;
 	right = false;
 	up = false;

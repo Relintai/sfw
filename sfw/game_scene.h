@@ -32,6 +32,8 @@ public:
 	GameScene();
 	~GameScene();
 
+	bool immediate;
+
 	bool left;
 	bool right;
 	bool up;
