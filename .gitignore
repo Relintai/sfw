@@ -2,6 +2,9 @@
 .vscode/
 bin/
 obj/
+venv/
+
+build/
 
 *.layout
 *.depend
@@ -18,6 +21,8 @@ tools/doc/sfwl.cpp
 # These are tmeporary:
 libs/
 *.bmp
+
+compile_commands.json
 
 *.o
 
