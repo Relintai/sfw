@@ -46,6 +46,74 @@ void Mesh::add_triangle(uint32_t i1, uint32_t i2, uint32_t i3) {
 	indices.push_back(i3);
 }
 
+void Mesh::flip_faces() {
+	if (normals.size() > 0 && indices.size() > 0) {
+		{
+			int nc = normals.size();
+			float *w = normals.ptrw();
+			for (int i = 0; i < nc; i++) {
+				w[i] = -w[i];
+			}
+		}
+
+		{
+			int ic = indices.size();
+			uint32_t *w = indices.ptrw();
+			for (int i = 0; i < ic; i += 3) {
+				SWAP(w[i + 0], w[i + 1]);
+			}
+		}
+	}
+}
+
+void Mesh::update_aabb() {
+	aabb = AABB();
+
+	if (vertex_dimesions == 2) {
+		int size = vertices.size();
+
+		if (size < 2) {
+			return;
+		}
+
+		const float *v = vertices.ptr();
+
+		aabb.position.x = v[0];
+		aabb.position.y = v[1];
+
+		Vector3 vert;
+
+		for (int i = 0; i < size; i += 2) {
+			vert.x = v[i];
+			vert.y = v[i + 1];
+
+			aabb.expand_to(vert);
+		}
+	} else if (vertex_dimesions == 3) {
+		int size = vertices.size();
+
+		if (size < 3) {
+			return;
+		}
+
+		const float *v = vertices.ptr();
+
+		aabb.position.x = v[0];
+		aabb.position.y = v[1];
+		aabb.position.z = v[2];
+
+		Vector3 vert;
+
+		for (int i = 0; i < size; i += 2) {
+			vert.x = v[i];
+			vert.y = v[i + 1];
+			vert.z = v[i + 2];
+
+			aabb.expand_to(vert);
+		}
+	}
+}
+
 void Mesh::clear() {
 	vertices.clear();
 	normals.clear();

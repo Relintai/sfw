@@ -5,6 +5,7 @@
 #include "core/vector.h"
 #include "core/int_types.h"
 #include "core/color.h"
+#include "core/aabb.h"
 
 #include "object/resource.h"
 
@@ -27,6 +28,10 @@ public:
 	void add_index(uint32_t index);
 	void add_triangle(uint32_t i1, uint32_t i2, uint32_t i3);
 
+	void flip_faces();
+
+	void update_aabb();
+
 	void clear();
 
 	void upload();
@@ -47,6 +52,8 @@ public:
 	Vector<float> colors;
 	Vector<float> uvs;
 	Vector<uint32_t> indices;
+
+	AABB aabb;
 
 protected:
 	uint32_t vertices_vbo_size;
