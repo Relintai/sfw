@@ -144,8 +144,8 @@ void Socket::bind_address(const InetAddress &address)
 
     if (ret != 0)
     {
-        LOG_ERR("Bind address failed:");
-        LOG_ERR(address.to_ip_port());
+        RLOG_ERR("Bind address failed:");
+        RLOG_ERR(address.to_ip_port());
 
 #ifdef _WIN32
         exit(WSAGetLastError());
@@ -162,7 +162,7 @@ void Socket::listen()
     int ret = ::listen(_socket, SOMAXCONN);
     if (ret < 0)
     {
-        LOG_ERR("listen failed");
+        RLOG_ERR("listen failed");
 
         exit(1);
     }
@@ -200,7 +200,7 @@ void Socket::close_write()
     if (::shutdown(_socket, SD_SEND) < 0)
 #endif
     {
-        LOG_ERR("sockets::shutdownwrite");
+        RLOG_ERR("sockets::shutdownwrite");
     }
 }
 
@@ -255,12 +255,12 @@ void Socket::set_reuse_port(bool on)
 
     if (ret < 0 && on)
     {
-        LOG_ERR("SO_REUSEPORT failed.");
+        RLOG_ERR("SO_REUSEPORT failed.");
     }
 #else
     if (on)
     {
-        LOG_ERR("SO_REUSEPORT is not supported.");
+        RLOG_ERR("SO_REUSEPORT is not supported.");
     }
 #endif
 }
@@ -283,7 +283,7 @@ struct sockaddr_in6 Socket::get_local_addr()
 
     if (::getsockname(_socket, static_cast<struct sockaddr *>((void *)(&localaddr)), &addrlen) < 0)
     {
-        LOG_ERR("sockets::getLocalAddr");
+        RLOG_ERR("sockets::getLocalAddr");
     }
 
     return localaddr;
@@ -297,7 +297,7 @@ struct sockaddr_in6 Socket::get_peer_addr()
 
     if (::getpeername(_socket, static_cast<struct sockaddr *>((void *)(&peeraddr)), &addrlen) < 0)
     {
-        LOG_ERR("sockets::getPeerAddr");
+        RLOG_ERR("sockets::getPeerAddr");
     }
 
     return peeraddr;

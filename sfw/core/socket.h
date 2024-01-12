@@ -17,8 +17,8 @@
  *
  */
 
-#include "error_macros.h"
-#include <string.h>
+#include "core/error_macros.h"
+#include "core/string.h"
 
 #ifndef _WIN32
 #include <unistd.h>
