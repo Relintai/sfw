@@ -84,7 +84,7 @@ public:
 	virtual String get_path_absolute() const; /// returns the absolute path for the current open file
 
 	virtual void seek(uint64_t p_position); ///< seek to a given position
-	virtual void seek_end(int64_t p_position); ///< seek from the end of file with negative offset
+	virtual void seek_end(int64_t p_position = 0); ///< seek from the end of file with negative offset
 	virtual uint64_t get_position() const; ///< get position in the file
 	virtual uint64_t get_len() const; ///< get size of the file
 
@@ -162,6 +162,15 @@ public:
 
 protected:
 #if defined(_WIN64) || defined(_WIN32)
+	void check_errors() const;
+
+	FILE *f;
+	int flags;
+	mutable int prev_op;
+	mutable Error last_error;
+	String path;
+	String path_src;
+	String save_path;
 #else
 	void check_errors() const;
 

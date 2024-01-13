@@ -13,6 +13,7 @@
 //--STRIP
 
 #if defined(_WIN64) || defined(_WIN32)
+struct DirAccessWindowsPrivate;
 #else
 struct __dirstream;
 typedef struct __dirstream DIR;
@@ -77,7 +78,6 @@ public:
 protected:
 #if defined(_WIN64) || defined(_WIN32)
 #else
-	String current_dir;
 	virtual String fix_unicode_name(const char *p_name) const { return String::utf8(p_name); }
 	virtual bool is_hidden(const String &p_name);
 #endif
@@ -86,7 +86,22 @@ protected:
 	bool _skip_specials;
 
 #if defined(_WIN64) || defined(_WIN32)
+	enum {
+		MAX_DRIVES = 26
+	};
+
+	DirAccessWindowsPrivate *p;
+	/* Windows stuff */
+
+	char drives[MAX_DRIVES]; // a-z:
+	int drive_count;
+
+	String current_dir;
+
+	bool _cisdir;
+	bool _cishidden;
 #else
+	String current_dir;
 	DIR *dir_stream;
 
 	bool _cisdir;
