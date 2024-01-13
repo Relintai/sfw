@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TEXTURE_MATERIAL_H
 #define TEXTURE_MATERIAL_H
+//--STRIP
 
 //--STRIP
 #include "render_core/material.h"
@@ -35,4 +37,6 @@ public:
 	Ref<Texture> texture;
 };
 
+//--STRIP
 #endif // COLORED_MATERIAL_H
+//--STRIP

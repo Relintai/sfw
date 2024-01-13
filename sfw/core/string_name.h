@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef STRING_NAME_H
 #define STRING_NAME_H
+//--STRIP
 
 /*************************************************************************/
 /*  string_name.h                                                        */
@@ -205,4 +207,6 @@ StringName _scs_create(const char *p_chr, bool p_static = false);
 
 //#define SNAME(m_arg) ([]() -> const StringName & { static StringName sname = _scs_create(m_arg, true); return sname; })()
 
+//--STRIP
 #endif // STRING_NAME_H
+//--STRIP

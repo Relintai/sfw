@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef COLOR_MATERIAL_H
 #define COLOR_MATERIAL_H
+//--STRIP
 
 //--STRIP
 #include "render_core/material.h"
@@ -28,4 +30,6 @@ public:
 	int32_t model_view_matrix_location;
 };
 
+//--STRIP
 #endif
+//--STRIP

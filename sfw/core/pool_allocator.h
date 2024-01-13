@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef POOL_ALLOCATOR_H
 #define POOL_ALLOCATOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  pool_allocator.h                                                     */
@@ -124,4 +126,6 @@ public:
 	virtual ~PoolAllocator();
 };
 
+//--STRIP
 #endif
+//--STRIP

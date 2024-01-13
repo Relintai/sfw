@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
+//--STRIP
 
 /*************************************************************************/
 /*  transform.h                                                          */
@@ -299,4 +301,6 @@ _FORCE_INLINE_ Plane Transform::xform_inv_fast(const Plane &p_plane, const Trans
 	return Plane(normal, d);
 }
 
+//--STRIP
 #endif // TRANSFORM_H
+//--STRIP

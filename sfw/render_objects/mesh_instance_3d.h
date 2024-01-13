@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MESH_INSTACE_3D_H
 #define MESH_INSTACE_3D_H
+//--STRIP
 
 //--STRIP
 #include "core/vector.h"
@@ -27,4 +29,6 @@ public:
 	Vector<MeshInstance3D *> children;
 };
 
+//--STRIP
 #endif // MESH_INSTACE_H
+//--STRIP

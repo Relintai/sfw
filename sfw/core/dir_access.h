@@ -1,6 +1,7 @@
-
+//--STRIP
 #ifndef DIR_ACCESS_H
 #define DIR_ACCESS_H
+//--STRIP
 
 /*************************************************************************/
 /*  dir_access.h                                                         */
@@ -135,4 +136,6 @@ struct DirAccessRef {
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

@@ -3,8 +3,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #ifndef CHAR_UTILS_H
 #define CHAR_UTILS_H
+//--STRIP
 
 //--STRIP
 #include "core/typedefs.h"
@@ -86,4 +88,6 @@ static _FORCE_INLINE_ bool is_underscore(char32_t p_char) {
 	return (p_char == '_');
 }
 
+//--STRIP
 #endif // CHAR_UTILS_H
+//--STRIP

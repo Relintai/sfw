@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef OBJECT_2D_H
 #define OBJECT_2D_H
+//--STRIP
 
 //--STRIP
 #include "object/object.h"
@@ -17,5 +19,6 @@ public:
     Transform2D transform;
 };
 
-
+//--STRIP
 #endif // OBJECT_2D_h
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef REFERENCE_H
 #define REFERENCE_H
+//--STRIP
 
 /*************************************************************************/
 /*  reference.h                                                          */
@@ -267,4 +269,6 @@ public:
 };
 */
 
+//--STRIP
 #endif
+//--STRIP

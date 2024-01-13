@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef INPUT_EVENT_H
 #define INPUT_EVENT_H
+//--STRIP
 
 /*************************************************************************/
 /*  input_event.h                                                        */
@@ -294,4 +296,6 @@ public:
 	~InputEventShortCut();
 };
 
+//--STRIP
 #endif
+//--STRIP

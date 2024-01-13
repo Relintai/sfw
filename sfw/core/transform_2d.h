@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TRANSFORM_2D_H
 #define TRANSFORM_2D_H
+//--STRIP
 
 /*************************************************************************/
 /*  transform_2d.h                                                       */
@@ -302,4 +304,6 @@ PoolVector<Vector2i> Transform2D::xform_inv(const PoolVector<Vector2i> &p_array)
 	return array;
 }
 
+//--STRIP
 #endif // TRANSFORM_2D_H
+//--STRIP

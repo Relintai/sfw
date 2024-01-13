@@ -1,10 +1,12 @@
+//--STRIP
+#ifndef VECTOR4_H
+#define VECTOR4_H
+//--STRIP
+
 /*************************************************************************/
 /*  vector4.h                                                            */
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
-
-#ifndef VECTOR4_H
-#define VECTOR4_H
 
 //--STRIP
 #include "core/math_defs.h"
@@ -289,4 +291,6 @@ _FORCE_INLINE_ Vector4 operator*(const int64_t p_scalar, const Vector4 &p_vec) {
 	return p_vec * p_scalar;
 }
 
+//--STRIP
 #endif // VECTOR4_H
+//--STRIP

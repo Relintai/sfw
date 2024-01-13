@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef WINDOW_H
 #define WINDOW_H
+//--STRIP
 
 // -----------------------------------------------------------------------------
 // window framework
@@ -179,4 +181,6 @@ protected:
 	unsigned int cursor_enums[7];
 };
 
+//--STRIP
 #endif
+//--STRIP

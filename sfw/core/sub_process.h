@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SUB_PROCESS_H
 #define SUB_PROCESS_H
+//--STRIP
 
 /*************************************************************************/
 /*  sub_process.h                                                        */
@@ -193,4 +195,6 @@ struct SubProcessRef {
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

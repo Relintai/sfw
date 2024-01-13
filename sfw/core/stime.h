@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef STIME_H
 #define STIME_H
+//--STRIP
 
 // -----------------------------------------------------------------------------
 // time framework utils
@@ -26,4 +28,6 @@ public:
 	static void sleep_ns(double us);
 };
 
+//--STRIP
 #endif
+//--STRIP

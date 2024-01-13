@@ -1,10 +1,12 @@
+//--STRIP
+#ifndef PROJECTION_H
+#define PROJECTION_H
+//--STRIP
+
 /*************************************************************************/
 /*  projection.h                                                         */
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
-
-#ifndef PROJECTION_H
-#define PROJECTION_H
 
 //--STRIP
 #include "core/vector.h"
@@ -163,5 +165,6 @@ Vector3 Projection::xform(const Vector3 &p_vec3) const {
 	real_t w = matrix[0][3] * p_vec3.x + matrix[1][3] * p_vec3.y + matrix[2][3] * p_vec3.z + matrix[3][3];
 	return ret / w;
 }
-
+//--STRIP
 #endif // PROJECTION_H
+//--STRIP

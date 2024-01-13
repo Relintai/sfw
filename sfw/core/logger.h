@@ -1,6 +1,7 @@
-
+//--STRIP
 #ifndef LOGGER_H
 #define LOGGER_H
+//--STRIP
 
 
 class String;
@@ -71,4 +72,6 @@ public:
 	static void log_ret_ptr(String *str);
 };
 
+//--STRIP
 #endif
+//--STRIP

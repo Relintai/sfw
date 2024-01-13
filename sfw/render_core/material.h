@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MATERIAL_H
 #define MATERIAL_H
+//--STRIP
 
 //--STRIP
 #include "core/projection.h"
@@ -39,4 +41,6 @@ protected:
 	void set_uniform(int32_t p_uniform, const Projection &p_matrix);
 };
 
+//--STRIP
 #endif // MATERIAL_H
+//--STRIP

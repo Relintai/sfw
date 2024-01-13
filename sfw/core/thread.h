@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef THREAD_H
 #define THREAD_H
+//--STRIP
 
 /*************************************************************************/
 /*  thread.h                                                             */
@@ -92,4 +94,6 @@ public:
 #endif
 };
 
+//--STRIP
 #endif // THREAD_H
+//--STRIP

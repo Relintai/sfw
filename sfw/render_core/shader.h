@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SHADER_H
 #define SHADER_H
+//--STRIP
 
 //--STRIP
 #include "render_core/3rd_glad.h"
@@ -58,4 +60,6 @@ protected:
 	HashMap<int, Shader *> shaders;
 };
 
+//--STRIP
 #endif // SHADER_H
+//--STRIP

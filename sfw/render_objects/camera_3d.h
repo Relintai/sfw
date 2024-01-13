@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef CAMERA_3D_H
 #define CAMERA_3D_H
+//--STRIP
 
 //--STRIP
 #include "render_core/3rd_glad.h"
@@ -73,4 +75,6 @@ public:
 	~FrustumCamera();
 };
 
+//--STRIP
 #endif // CAMERA_H
+//--STRIP

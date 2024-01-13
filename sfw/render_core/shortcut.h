@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SHORTCUT_H
 #define SHORTCUT_H
+//--STRIP
 
 /*************************************************************************/
 /*  shortcut.h                                                           */
@@ -30,4 +32,6 @@ private:
 	Ref<InputEvent> shortcut;
 };
 
+//--STRIP
 #endif // SHORTCUT_H
+//--STRIP

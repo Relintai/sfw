@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RENDERER_H
 #define RENDERER_H
+//--STRIP
 
 //--STRIP
 #include "core/color.h"
@@ -94,4 +96,6 @@ private:
 	Vector<Transform2D> camera_2d_model_view_matrix_stack;
 };
 
+//--STRIP
 #endif
+//--STRIP

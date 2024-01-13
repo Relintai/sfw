@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MEMORY_H
 #define MEMORY_H
+//--STRIP
 
 /*************************************************************************/
 /*  memory.h                                                             */
@@ -179,4 +181,6 @@ struct _GlobalNilClass {
 	static _GlobalNil _nil;
 };
 
+//--STRIP
 #endif
+//--STRIP

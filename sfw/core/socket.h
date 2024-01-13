@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SOCKET_H
 #define SOCKET_H
+//--STRIP
 
 //Based on:
 
@@ -61,4 +63,6 @@ public:
 	InetAddress _address;
 };
 
+//--STRIP
 #endif // SOCKET_H
+//--STRIP

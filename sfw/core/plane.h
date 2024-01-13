@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef PLANE_H
 #define PLANE_H
+//--STRIP
 
 /*************************************************************************/
 /*  plane.h                                                              */
@@ -104,4 +106,6 @@ bool Plane::operator!=(const Plane &p_plane) const {
 	return normal != p_plane.normal || d != p_plane.d;
 }
 
+//--STRIP
 #endif // PLANE_H
+//--STRIP

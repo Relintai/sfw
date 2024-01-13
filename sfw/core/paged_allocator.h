@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef PAGED_ALLOCATOR_H
 #define PAGED_ALLOCATOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  paged_allocator.h                                                    */
@@ -107,4 +109,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif // PAGED_ALLOCATOR_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MUTEX_H
 #define MUTEX_H
+//--STRIP
 
 /*************************************************************************/
 /*  mutex.h                                                              */
@@ -94,4 +96,6 @@ using BinaryMutex = MutexImpl<FakeMutex>; // Non-recursive, handle with care
 
 #endif // !NO_THREADS
 
+//--STRIP
 #endif // MUTEX_H
+//--STRIP

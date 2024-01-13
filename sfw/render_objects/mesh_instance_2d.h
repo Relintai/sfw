@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MESH_INSTACE_2D_H
 #define MESH_INSTACE_2D_H
+//--STRIP
 
 //--STRIP
 #include "object_2d.h"
@@ -29,4 +31,6 @@ public:
 	Vector<MeshInstance2D *> children;
 };
 
+//--STRIP
 #endif // MESH_INSTACE_H
+//--STRIP

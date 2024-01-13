@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef BASIS_H
 #define BASIS_H
+//--STRIP
 
 /*************************************************************************/
 /*  basis.h                                                              */
@@ -377,4 +379,7 @@ Basis Basis::lerp(const Basis &p_to, const real_t &p_weight) const {
 
 	return b;
 }
+
+//--STRIP
 #endif // BASIS_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RENDER_STATE_H
 #define RENDER_STATE_H
+//--STRIP
 
 //--STRIP
 #include "core/projection.h"
@@ -21,5 +23,6 @@ public:
     //TODO should probably add the current shader here, and active material etc.
 };
 
-
+//--STRIP
 #endif // RENDER_STATE_H
+//--STRIP

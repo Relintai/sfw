@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MESH_H
 #define MESH_H
+//--STRIP
 
 //--STRIP
 #include "core/aabb.h"
@@ -73,4 +75,6 @@ protected:
 	uint32_t indices_vbo_size;
 };
 
+//--STRIP
 #endif // MESH_H
+//--STRIP

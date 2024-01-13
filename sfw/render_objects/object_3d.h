@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef OBJECT_3D_H
 #define OBJECT_3D_H
+//--STRIP
 
 //--STRIP
 #include "object/object.h"
@@ -17,4 +19,6 @@ public:
 	Transform transform;
 };
 
+//--STRIP
 #endif // OBJECT_3D_h
+//--STRIP

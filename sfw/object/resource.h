@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RESOURCE_H
 #define RESOURCE_H
+//--STRIP
 
 //--STRIP
 #include "object/reference.h"
@@ -22,4 +24,6 @@ public:
 	virtual ~Resource();
 };
 
+//--STRIP
 #endif
+//--STRIP

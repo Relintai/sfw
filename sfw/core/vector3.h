@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef VECTOR3_H
 #define VECTOR3_H
+//--STRIP
 
 /*************************************************************************/
 /*  vector3.h                                                            */
@@ -481,4 +483,6 @@ bool Vector3::is_equal_approxt(const Vector3 &p_v, real_t p_tolerance) const {
 	return Math::is_equal_approx(x, p_v.x, p_tolerance) && Math::is_equal_approx(y, p_v.y, p_tolerance) && Math::is_equal_approx(z, p_v.z, p_tolerance);
 }
 
+//--STRIP
 #endif // VECTOR3_H
+//--STRIP

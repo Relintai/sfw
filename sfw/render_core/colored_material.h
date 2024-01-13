@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef COLORED_MATERIAL_H
 #define COLORED_MATERIAL_H
+//--STRIP
 
 //--STRIP
 #include "render_core/material.h"
@@ -30,4 +32,6 @@ public:
 	Color color;
 };
 
+//--STRIP
 #endif // COLORED_MATERIAL_H
+//--STRIP

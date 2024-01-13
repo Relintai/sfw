@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef VSET_H
 #define VSET_H
+//--STRIP
 
 /*************************************************************************/
 /*  vset.h                                                               */
@@ -115,4 +117,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif // VSET_H
+//--STRIP

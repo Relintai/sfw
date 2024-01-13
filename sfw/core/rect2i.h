@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RECT2I_H
 #define RECT2I_H
+//--STRIP
 
 /*************************************************************************/
 /*  rect2i.h                                                             */
@@ -8,6 +10,7 @@
 
 //--STRIP
 #include "core/vector2i.h" // also includes math_funcs and ustring
+#include "core/rect2.h"
 //--STRIP
 
 struct _NO_DISCARD_CLASS_ Rect2i {
@@ -230,4 +233,6 @@ struct _NO_DISCARD_CLASS_ Rect2i {
 	}
 };
 
+//--STRIP
 #endif // RECT2_H
+//--STRIP

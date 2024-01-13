@@ -1,6 +1,7 @@
-
+//--STRIP
 #ifndef SFW_CORE_H
 #define SFW_CORE_H
+//--STRIP
 
 class SFWCore {
 public:
@@ -11,4 +12,6 @@ protected:
 	static bool _initialized;
 };
 
+//--STRIP
 #endif
+//--STRIP

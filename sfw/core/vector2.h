@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef VECTOR2_H
 #define VECTOR2_H
+//--STRIP
 
 /*************************************************************************/
 /*  vector2.h                                                            */
@@ -278,4 +280,6 @@ Vector2 Vector2::linear_interpolate(const Vector2 &p_a, const Vector2 &p_b, real
 typedef Vector2 Size2;
 typedef Vector2 Point2;
 
+//--STRIP
 #endif // VECTOR2_H
+//--STRIP

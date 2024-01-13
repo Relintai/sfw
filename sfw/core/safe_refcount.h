@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SAFE_REFCOUNT_H
 #define SAFE_REFCOUNT_H
+//--STRIP
 
 /*************************************************************************/
 /*  safe_refcount.h                                                      */
@@ -307,4 +309,6 @@ public:
 
 #endif
 
+//--STRIP
 #endif // SAFE_REFCOUNT_H
+//--STRIP

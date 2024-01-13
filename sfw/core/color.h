@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef COLOR_H
 #define COLOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  color.h                                                              */
@@ -240,4 +242,6 @@ bool Color::operator<(const Color &p_color) const {
 	}
 }
 
+//--STRIP
 #endif
+//--STRIP

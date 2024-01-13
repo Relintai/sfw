@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RECT2_H
 #define RECT2_H
+//--STRIP
 
 /*************************************************************************/
 /*  rect2.h                                                              */
@@ -337,4 +339,6 @@ struct _NO_DISCARD_CLASS_ Rect2 {
 	}
 };
 
+//--STRIP
 #endif // RECT2_H
+//--STRIP

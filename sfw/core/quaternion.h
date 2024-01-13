@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef QUATERNION_H
 #define QUATERNION_H
+//--STRIP
 
 /*************************************************************************/
 /*  quaternion.h                                                         */
@@ -229,4 +231,6 @@ bool Quaternion::operator!=(const Quaternion &p_quat) const {
 	return x != p_quat.x || y != p_quat.y || z != p_quat.z || w != p_quat.w;
 }
 
+//--STRIP
 #endif
+//--STRIP

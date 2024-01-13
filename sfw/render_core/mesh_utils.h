@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MESH_UTILS_H
 #define MESH_UTILS_H
+//--STRIP
 
 //--STRIP
 #include "render_core/mesh.h"
@@ -19,4 +21,6 @@ public:
 	static void create_point(Ref<Mesh> mesh);
 };
 
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TEXTURE_H
 #define TEXTURE_H
+//--STRIP
 
 //--STRIP
 #include "core/vector2i.h"
@@ -67,4 +69,6 @@ protected:
 	uint32_t _fbo;
 };
 
+//--STRIP
 #endif // TEXTURE_H
+//--STRIP

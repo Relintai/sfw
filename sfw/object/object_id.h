@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef OBJECTID_H
 #define OBJECTID_H
+//--STRIP
 
 /*************************************************************************/
 /*  object_id.h                                                          */
@@ -12,4 +14,6 @@
 
 typedef uint64_t ObjectID;
 
+//--STRIP
 #endif
+//--STRIP

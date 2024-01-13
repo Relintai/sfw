@@ -3,8 +3,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #ifndef CHAR_RANGE_INC
 #define CHAR_RANGE_INC
+//--STRIP
 
 //--STRIP
 #include "core/typedefs.h"
@@ -1430,4 +1432,6 @@ static CharRange xid_continue[] = {
 	{ 0x0, 0x0 },
 };
 
+//--STRIP
 #endif // CHAR_RANGE_INC
+//--STRIP

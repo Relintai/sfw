@@ -3,8 +3,10 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #ifndef ERROR_LIST_H
 #define ERROR_LIST_H
+//--STRIP
 
 /** Error List. Please never compare an error against FAILED
  * Either do result != OK , or !result. This way, Error fail
@@ -65,4 +67,6 @@ enum Error {
 	ERR_PRINTER_ON_FIRE, /// the parallel port printer is engulfed in flames
 };
 
+//--STRIP
 #endif
+//--STRIP

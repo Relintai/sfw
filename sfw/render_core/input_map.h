@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef INPUT_MAP_H
 #define INPUT_MAP_H
+//--STRIP
 
 /*************************************************************************/
 /*  input_map.h                                                          */
@@ -64,4 +66,6 @@ public:
 	InputMap();
 };
 
+//--STRIP
 #endif // INPUT_MAP_H
+//--STRIP

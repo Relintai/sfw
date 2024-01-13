@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef GLOBALS_LIST_H
 #define GLOBALS_LIST_H
+//--STRIP
 
 /*************************************************************************/
 /*  list.h                                                               */
@@ -674,4 +676,6 @@ public:
 	};
 };
 
+//--STRIP
 #endif
+//--STRIP

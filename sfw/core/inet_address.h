@@ -19,8 +19,10 @@
 
 // Author: Tao An
 
+//--STRIP
 #ifndef INET_ADDRESS_H
 #define INET_ADDRESS_H
+//--STRIP
 
 //On windows link to ws2_32
 
@@ -94,4 +96,6 @@ private:
 	bool _is_unspecified;
 };
 
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SPRITE_H
 #define SPRITE_H
+//--STRIP
 
 //--STRIP
 #include "render_objects/object_2d.h"
@@ -29,5 +31,6 @@ public:
     float region_height;
 };
 
-
+//--STRIP
 #endif // SPRITE_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef INPUT_H
 #define INPUT_H
+//--STRIP
 
 /*************************************************************************/
 /*  input.h                                                              */
@@ -216,4 +218,6 @@ protected:
 	static Input *singleton;
 };
 
+//--STRIP
 #endif // INPUT_H
+//--STRIP

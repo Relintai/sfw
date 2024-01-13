@@ -1,10 +1,12 @@
+//--STRIP
+#ifndef VECTOR3I_H
+#define VECTOR3I_H
+//--STRIP
+
 /*************************************************************************/
 /*  vector3i.h                                                           */
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
-
-#ifndef VECTOR3I_H
-#define VECTOR3I_H
 
 //--STRIP
 #include "core/error_macros.h"
@@ -306,4 +308,6 @@ void Vector3i::zero() {
 typedef Vector3i Size3i;
 typedef Vector3i Point3i;
 
+//--STRIP
 #endif // VECTOR3I_H
+//--STRIP

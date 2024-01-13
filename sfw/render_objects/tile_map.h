@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
+//--STRIP
 
 //--STRIP
 #include "render_objects/object_2d.h"
@@ -36,4 +38,6 @@ public:
 	Ref<Material> material;
 };
 
+//--STRIP
 #endif
+//--STRIP

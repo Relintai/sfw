@@ -1,10 +1,12 @@
+//--STRIP
+#ifndef VECTOR4I_H
+#define VECTOR4I_H
+//--STRIP
+
 /*************************************************************************/
 /*  vector4i.h                                                           */
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
-
-#ifndef VECTOR4I_H
-#define VECTOR4I_H
 
 //--STRIP
 #include "core/error_macros.h"
@@ -332,4 +334,6 @@ void Vector4i::zero() {
 typedef Vector4i Size4i;
 typedef Vector4i Point4i;
 
+//--STRIP
 #endif // VECTOR4I_H
+//--STRIP

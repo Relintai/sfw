@@ -261,6 +261,7 @@
 {{FILE:sfw/core/rect2.h}}
 //--STRIP
 //#include "core/vector2i.h" // also includes math_funcs and ustring
+//#include "core/rect2.h"
 //--STRIP
 {{FILE:sfw/core/rect2i.h}}
 //--STRIP

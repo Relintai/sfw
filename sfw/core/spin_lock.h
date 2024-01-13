@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SPIN_LOCK_H
 #define SPIN_LOCK_H
+//--STRIP
 
 /*************************************************************************/
 /*  spin_lock.h                                                          */
@@ -25,4 +27,7 @@ public:
 		locked.clear(std::memory_order_release);
 	}
 };
+
+//--STRIP
 #endif // SPIN_LOCK_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TEXT_2D_H
 #define TEXT_2D_H
+//--STRIP
 
 //--STRIP
 #include "core/color.h"
@@ -45,4 +47,6 @@ protected:
 	Vector2 _text_size;
 };
 
+//--STRIP
 #endif // MESH_INSTACE_H
+//--STRIP

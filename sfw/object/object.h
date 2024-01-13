@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef OBJECT_H
 #define OBJECT_H
+//--STRIP
 
 //--STRIP
 #include "core/hash_map.h"
@@ -280,4 +282,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

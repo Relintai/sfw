@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
+//--STRIP
 
 /*************************************************************************/
 /*  keyboard.h                                                           */
@@ -302,4 +304,6 @@ int keycode_get_count();
 int keycode_get_value_by_index(int p_index);
 const char *keycode_get_name_by_index(int p_index);
 
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RB_MAP_H
 #define RB_MAP_H
+//--STRIP
 
 /*************************************************************************/
 /*  rb_map.h                                                             */
@@ -652,4 +654,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

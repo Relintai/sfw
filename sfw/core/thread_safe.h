@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef THREAD_SAFE_H
 #define THREAD_SAFE_H
+//--STRIP
 
 /*************************************************************************/
 /*  thread_safe.h                                                        */
@@ -15,4 +17,6 @@
 #define _THREAD_SAFE_LOCK_ _thread_safe_.lock();
 #define _THREAD_SAFE_UNLOCK_ _thread_safe_.unlock();
 
+//--STRIP
 #endif
+//--STRIP

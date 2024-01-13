@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef FONT_MATERIAL_H
 #define FONT_MATERIAL_H
+//--STRIP
 
 //--STRIP
 #include "render_core/material.h"
@@ -34,4 +36,6 @@ public:
 	Ref<Texture> texture;
 };
 
+//--STRIP
 #endif // TEXT_MATERIAL_H
+//--STRIP

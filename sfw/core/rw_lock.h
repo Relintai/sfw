@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RWLOCK_H
 #define RWLOCK_H
+//--STRIP
 
 /*************************************************************************/
 /*  rw_lock.h                                                            */
@@ -90,4 +92,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif // RWLOCK_H
+//--STRIP

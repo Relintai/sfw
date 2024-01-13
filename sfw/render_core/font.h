@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef FONT_RENDERER_H
 #define FONT_RENDERER_H
+//--STRIP
 
 // -----------------------------------------------------------------------------
 // font framework originally from FWK
@@ -133,4 +135,6 @@ protected:
 	Vector<TextureOffset> _texture_offsets;
 };
 
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SORT_ARRAY_H
 #define SORT_ARRAY_H
+//--STRIP
 
 /*************************************************************************/
 /*  sort_array.h                                                         */
@@ -297,4 +299,6 @@ public:
 
 #undef ERR_BAD_COMPARE
 
+//--STRIP
 #endif // SORT_ARRAY_H
+//--STRIP

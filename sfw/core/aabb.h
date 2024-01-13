@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef AABB_H
 #define AABB_H
+//--STRIP
 
 /*************************************************************************/
 /*  aabb.h                                                               */
@@ -434,4 +436,6 @@ AABB AABB::quantized(real_t p_unit) const {
 	return ret;
 }
 
+//--STRIP
 #endif // AABB_H
+//--STRIP

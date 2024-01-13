@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef IMAGE_H
 #define IMAGE_H
+//--STRIP
 
 /*************************************************************************/
 /*  image.h                                                              */
@@ -252,4 +254,6 @@ public:
 	~Image();
 };
 
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef CAMERA_2D_H
 #define CAMERA_2D_H
+//--STRIP
 
 //--STRIP
 #include "render_core/3rd_glad.h"
@@ -44,4 +46,6 @@ protected:
 	Transform _projection_matrix;
 };
 
+//--STRIP
 #endif // CAMERA_H
+//--STRIP

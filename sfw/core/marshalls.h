@@ -1,13 +1,17 @@
+//--STRIP
 #ifndef MARSHALLS_H
 #define MARSHALLS_H
+//--STRIP
 
 /*************************************************************************/
 /*  marshalls.h                                                          */
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/int_types.h"
 #include "core/math_defs.h"
+//--STRIP
 
 /**
  * Miscellaneous helpers for marshalling data types, and encoding
@@ -139,4 +143,6 @@ static inline double decode_double(const uint8_t *p_arr) {
 	return md.d;
 }
 
+//--STRIP
 #endif
+//--STRIP

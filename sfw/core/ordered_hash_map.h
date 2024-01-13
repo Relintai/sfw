@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef ORDERED_HASH_MAP_H
 #define ORDERED_HASH_MAP_H
+//--STRIP
 
 /*************************************************************************/
 /*  ordered_hash_map.h                                                   */
@@ -284,4 +286,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif // ORDERED_HASH_MAP_H
+//--STRIP

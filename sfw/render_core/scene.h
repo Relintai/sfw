@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SCENE_H
 #define SCENE_H
+//--STRIP
 
 //--STRIP
 #include "object/reference.h"
@@ -18,4 +20,6 @@ public:
 	virtual ~Scene();
 };
 
+//--STRIP
 #endif // APPLICATION_H
+//--STRIP

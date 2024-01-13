@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef USTRING_H
 #define USTRING_H
+//--STRIP
 
 /*************************************************************************/
 /*  ustring.h                                                            */
@@ -604,4 +606,6 @@ String RTR(const String &);
 
 bool select_word(const String &p_s, int p_col, int &r_beg, int &r_end);
 
+//--STRIP
 #endif // USTRING_H
+//--STRIP

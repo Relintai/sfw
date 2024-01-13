@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef HASHFUNCS_H
 #define HASHFUNCS_H
+//--STRIP
 
 /*************************************************************************/
 /*  hashfuncs.h                                                          */
@@ -499,4 +501,6 @@ static _FORCE_INLINE_ uint32_t fastmod(const uint32_t n, const uint64_t c, const
 #endif // _MSC_VER
 }
 
+//--STRIP
 #endif // HASHFUNCS_H
+//--STRIP

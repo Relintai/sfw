@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef APPLICATION_H
 #define APPLICATION_H
+//--STRIP
 
 //--STRIP
 #include "core/int_types.h"
@@ -69,4 +71,6 @@ protected:
 	real_t _time_scale;
 };
 
+//--STRIP
 #endif // APPLICATION_H
+//--STRIP

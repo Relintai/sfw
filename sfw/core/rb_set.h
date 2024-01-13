@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RB_SET_H
 #define RB_SET_H
+//--STRIP
 
 /*************************************************************************/
 /*  rb_set.h                                                             */
@@ -606,4 +608,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

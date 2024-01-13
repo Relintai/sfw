@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef FACE3_H
 #define FACE3_H
+//--STRIP
 
 /*************************************************************************/
 /*  face3.h                                                              */
@@ -230,4 +232,6 @@ bool Face3::intersects_aabb2(const AABB &p_aabb) const {
 	return true;
 }
 
+//--STRIP
 #endif // FACE3_H
+//--STRIP

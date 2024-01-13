@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef COLOR_MATERIAL_2D_H
 #define COLOR_MATERIAL_2D_H
+//--STRIP
 
 //--STRIP
 #include "render_core/material.h"
@@ -29,5 +31,6 @@ public:
 	int32_t projection_matrix_location;
 	int32_t model_view_matrix_location;
 };
-
+//--STRIP
 #endif // COLORED_MATERIAL_H
+//--STRIP

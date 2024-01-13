@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef ERROR_MACROS_H
 #define ERROR_MACROS_H
+//--STRIP
 
 //--STRIP
 #include "core/logger.h"
@@ -291,4 +293,6 @@ _FORCE_INLINE_ void _RLOG_MACRO_TEMPLATE_FUNC(STR str, A p0, B p1, C p2, D p3, E
 #define DEV_CHECK_ONCE(m_cond)
 #endif
 
+//--STRIP
 #endif
+//--STRIP
