@@ -1,5 +1,7 @@
 
 /*
+SFW - (MIT)
+
 Copyright (c) 2023-present Péter Magyar.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +25,7 @@ SOFTWARE.
 
 // This Library uses code from the following projects:
 
-// Pandemonium Engine
+// Pandemonium Engine (MIT)
 
 /*************************************************************************/
 /*                     PANDEMONIUM ENGINE LICENSE                        */
@@ -70,8 +72,6 @@ Any contribution to this repository is implicitly subjected to the same release 
 */
 
 // Trantor
-
-//https://github.com/an-tao/trantor
 
 //inet_address.h, .cpp, socket.h and .cpp originates from trantor (they were heavily modified):
 
@@ -135,7 +135,7 @@ Any contribution to this repository is implicitly subjected to the same release 
 
 // PCG
 
-// pcg.h License:
+// pcg.h's License:
 
 // *Really* minimal PCG32 code / (c) 2014 M.E. O'Neill / pcg-random.org
 // Licensed under Apache License 2.0 (NO WARRANTY, etc. see website)
