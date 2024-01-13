@@ -36,6 +36,11 @@
 //--STRIP
 {{FILE:sfw/core/typedefs.h}}
 
+//--STRIP
+//#include "core/int_types.h"
+//#include "core/math_defs.h"
+//--STRIP
+{{FILE:sfw/core/marshalls.h}}
 
 //--STRIP
 //#include "core/int_types.h"

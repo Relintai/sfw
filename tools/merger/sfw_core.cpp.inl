@@ -188,8 +188,6 @@
 //--STRIP
 {{FILE:sfw/core/file_access.cpp}}
 
-{{FILE:sfw/core/3rd_tinydir.h}}
-
 //--STRIP
 //#include "dir_access.h"
 //#include "3rd_tinydir.h"
