@@ -8,10 +8,20 @@ void Mesh::add_vertex2(float x, float y) {
 	vertices.push_back(x);
 	vertices.push_back(y);
 }
+void Mesh::add_vertex2(const Vector2 &v) {
+	vertices.push_back(v.x);
+	vertices.push_back(v.y);
+}
+
 void Mesh::add_vertex3(float x, float y, float z) {
 	vertices.push_back(x);
 	vertices.push_back(y);
 	vertices.push_back(z);
+}
+void Mesh::add_vertex3(const Vector3 &v) {
+	vertices.push_back(v.x);
+	vertices.push_back(v.y);
+	vertices.push_back(v.z);
 }
 
 void Mesh::add_normal(float x, float y, float z) {
@@ -19,6 +29,13 @@ void Mesh::add_normal(float x, float y, float z) {
 	normals.push_back(y);
 	normals.push_back(z);
 }
+
+void Mesh::add_normal(const Vector3 &n) {
+	normals.push_back(n.x);
+	normals.push_back(n.y);
+	normals.push_back(n.z);
+}
+
 void Mesh::add_color(float r, float g, float b, float a) {
 	colors.push_back(r);
 	colors.push_back(g);
@@ -35,6 +52,10 @@ void Mesh::add_color(const Color &p_color) {
 void Mesh::add_uv(float u, float v) {
 	uvs.push_back(u);
 	uvs.push_back(v);
+}
+void Mesh::add_uv(const Vector2 &uv) {
+	uvs.push_back(uv.x);
+	uvs.push_back(uv.y);
 }
 
 void Mesh::add_index(uint32_t index) {
@@ -63,6 +84,49 @@ void Mesh::flip_faces() {
 				SWAP(w[i + 0], w[i + 1]);
 			}
 		}
+	}
+}
+
+void Mesh::fill_colors(const Color &p_color) {
+	while (colors.size() % 4 != 0) {
+		colors.push_back(0);
+	}
+
+	int needed_color_count = get_vertex_count() * 4;
+
+	if (colors.size() > needed_color_count) {
+		colors.resize(needed_color_count);
+		return;
+	}
+
+	while (colors.size() < needed_color_count) {
+		colors.push_back(p_color.r);
+		colors.push_back(p_color.g);
+		colors.push_back(p_color.b);
+		colors.push_back(p_color.a);
+	}
+}
+
+void Mesh::fill_colors_random() {
+	while (colors.size() % 4 != 0) {
+		colors.push_back(0);
+	}
+
+	int needed_color_count = get_vertex_count() * 4;
+
+	if (colors.size() > needed_color_count) {
+		colors.resize(needed_color_count);
+		return;
+	}
+
+	RandomPCG r;
+	r.randomize();
+
+	while (colors.size() < needed_color_count) {
+		colors.push_back(r.randf());
+		colors.push_back(r.randf());
+		colors.push_back(r.randf());
+		colors.push_back(1);
 	}
 }
 
@@ -231,6 +295,10 @@ void Mesh::render() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+int Mesh::get_vertex_count() const {
+	return vertices.size() / vertex_dimesions;
 }
 
 Mesh::Mesh() {
