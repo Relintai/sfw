@@ -39,8 +39,8 @@ public:
 		WINDOW_VSYNC_DISABLED = 0x2000,
 	};
 
-	bool create(float scale, unsigned int flags);
-	bool create_from_handle(void *handle, float scale, unsigned int flags);
+	bool create(bool full_Screen, float canvas_scale, unsigned int flags, float window_scale = 0.8);
+	bool create_from_handle(void *handle, bool full_Screen, float canvas_scale, unsigned int flags, float window_scale = 0.8);
 
 	int frame_begin();
 	void frame_end();
@@ -67,7 +67,7 @@ public:
 
 	void set_focus(); // window attribute using haz catz language for now
 	int has_focus();
-	
+
 	void set_fullscreen(int enabled);
 	int has_fullscreen();
 

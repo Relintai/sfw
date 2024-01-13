@@ -75,7 +75,7 @@ void Application::main_loop() {
 }
 
 void Application::_init_window() {
-	AppWindow::get_singleton()->create(100, 0);
+	AppWindow::get_singleton()->create(false, 1, 0);
 }
 
 Application::Application() {

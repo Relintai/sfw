@@ -219,7 +219,7 @@ void AppWindow::window_hints(unsigned flags) {
 	glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
 
 	glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
-	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 	// glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // makes it non-resizable
 	//if(flags & WINDOW_MSAA2) glfwWindowHint(GLFW_SAMPLES, 2); // x2 AA
@@ -277,34 +277,35 @@ void AppWindow::glNewFrame() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
-bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags) {
+bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_scale, unsigned int flags, float window_scale) {
 	// abort run if any test suite failed in unit-test mode
 
 	glfw_init();
 	//fwk_init();
 
-	if (!t)
+	if (!t) {
 		t = glfwGetTime();
-
-#ifdef __EMSCRIPTEN__
-	scale = 100.f;
-#endif
-
-	if (_fullscreen) {
-		scale = 100;
 	}
 
-	scale = (scale < 1 ? scale * 100 : scale);
+#ifdef __EMSCRIPTEN__
+	canvas_scale = 1.f;
+#endif
 
-	bool FLAGS_FULLSCREEN = scale > 100;
-	bool FLAGS_FULLSCREEN_DESKTOP = scale == 100;
-	bool FLAGS_WINDOWED = scale < 100;
+	_fullscreen = full_Screen;
+
+	bool FLAGS_FULLSCREEN = _fullscreen;
+	bool FLAGS_FULLSCREEN_DESKTOP = _fullscreen && canvas_scale == 1;
+	bool FLAGS_WINDOWED = !_fullscreen;
 	bool FLAGS_TRANSPARENT = _transparent || (flags & WINDOW_TRANSPARENT);
-	if (FLAGS_TRANSPARENT)
-		FLAGS_FULLSCREEN = 0, FLAGS_FULLSCREEN_DESKTOP = 0, FLAGS_WINDOWED = 1;
-	scale = (scale > 100 ? 100 : scale) / 100.f;
-	int winWidth = get_canvas().x * scale;
-	int winHeight = get_canvas().y * scale;
+
+	if (FLAGS_TRANSPARENT) {
+		FLAGS_FULLSCREEN = false;
+		FLAGS_FULLSCREEN_DESKTOP = false;
+		FLAGS_WINDOWED = true;
+	}
+
+	int winWidth = get_canvas().x * window_scale;
+	int winHeight = get_canvas().y * window_scale;
 
 	window_hints(flags);
 
@@ -313,15 +314,18 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	if (FLAGS_FULLSCREEN || FLAGS_FULLSCREEN_DESKTOP) {
 		monitor = glfwGetPrimaryMonitor();
 	}
+
 	if (FLAGS_FULLSCREEN_DESKTOP) {
 		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
 		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
 		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
 		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
 		winWidth = mode->width;
 		winHeight = mode->height;
 	}
+
 	if (FLAGS_WINDOWED) {
 #ifndef __EMSCRIPTEN__
 		if (FLAGS_TRANSPARENT) { // @transparent
@@ -329,18 +333,24 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 			//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); // always on top
 			glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
 		}
+
 		if (flags & WINDOW_BORDERLESS) {
 			glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 		}
 #endif
 		// windowed
 		float ratio = (float)winWidth / (winHeight + !winHeight);
-		if (flags & WINDOW_SQUARE)
+
+		if (flags & WINDOW_SQUARE) {
 			winWidth = winHeight = winWidth > winHeight ? winHeight : winWidth;
+		}
+
 		//if( flags & WINDOW_LANDSCAPE ) if( winWidth < winHeight ) winHeight = winWidth * ratio;
-		if (flags & WINDOW_PORTRAIT)
-			if (winWidth > winHeight)
+		if (flags & WINDOW_PORTRAIT) {
+			if (winWidth > winHeight) {
 				winWidth = winHeight * (1.f / ratio);
+			}
+		}
 	}
 #endif
 
@@ -353,6 +363,7 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	if (flags & WINDOW_FIXED) { // disable resizing
 		glfwSetWindowSizeLimits(_window, w, h, w, h);
 	}
+
 	if (flags & (WINDOW_SQUARE | WINDOW_PORTRAIT | WINDOW_LANDSCAPE | WINDOW_ASPECT)) { // keep aspect ratio
 		aspect_lock(w, h);
 	}
@@ -363,21 +374,28 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 		monitor = monitor ? monitor : glfwGetPrimaryMonitor();
 		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
 
-		int area_width = mode->width, area_height = mode->height;
+		int area_width = mode->width;
+		int area_height = mode->height;
 		glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &area_width, &area_height);
-		glfwSetWindowPos(_window, xpos = xpos + (area_width - winWidth) / 2, ypos = ypos + (area_height - winHeight) / 2);
+
+		xpos = xpos + (area_width - winWidth) / 2;
+		ypos = ypos + (area_height - winHeight) / 2;
+		glfwSetWindowPos(_window, xpos, ypos);
 		//printf("%dx%d @(%d,%d) [res:%dx%d]\n", winWidth, winHeight, xpos,ypos, area_width, area_height );
 
-		wprev = w, hprev = h;
-		xprev = xpos, yprev = ypos;
+		wprev = w;
+		hprev = h;
+		xprev = xpos;
+		yprev = ypos;
 	}
 #endif
 
 	glfwMakeContextCurrent(_window);
 
 #ifdef __EMSCRIPTEN__
-	if (FLAGS_FULLSCREEN)
+	if (FLAGS_FULLSCREEN) {
 		fullscreen(1);
+	}
 #else
 	int gl_version = gladLoadGL(glfwGetProcAddress);
 #endif
@@ -409,8 +427,10 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 
 	if (FLAGS_TRANSPARENT) { // @transparent
 		glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE); // @todo: is decorated an attrib or a hint?
-		if (scale >= 1)
+
+		if (canvas_scale >= 1) {
 			glfwMaximizeWindow(_window);
+		}
 	}
 #endif
 
@@ -431,16 +451,17 @@ bool AppWindow::create_from_handle(void *handle, float scale, unsigned int flags
 	return true;
 }
 
-bool AppWindow::create(float scale, unsigned int flags) {
-	return create_from_handle(NULL, scale, flags);
+bool AppWindow::create(bool full_Screen, float canvas_scale, unsigned int flags, float window_scale) {
+	return create_from_handle(NULL, full_Screen, canvas_scale, flags, window_scale);
 }
 
 char *AppWindow::get_stats() {
 	static double num_frames = 0, begin = FLT_MAX, prev_frame = 0;
 
 	double now = STime::time_ss();
-	if (boot_time < 0)
+	if (boot_time < 0) {
 		boot_time = now;
+	}
 
 	if (begin > now) {
 		begin = now;
@@ -752,8 +773,9 @@ int AppWindow::has_fullscreen() {
 }
 
 void AppWindow::set_fullscreen(int enabled) {
-	if (has_fullscreen() == !!enabled)
+	if (has_fullscreen() == enabled) {
 		return;
+	}
 
 #ifdef __EMSCRIPTEN__
 
