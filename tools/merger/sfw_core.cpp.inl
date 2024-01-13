@@ -205,6 +205,18 @@
 {{FILE:sfw/core/socket.cpp}}
 
 //--STRIP
+//Win Only
+//#include <avrt.h>
+//#include <direct.h>
+//#include <knownfolders.h>
+//#include <process.h>
+//#include <regstr.h>
+//#include <shlobj.h>
+//#include <wchar.h>
+//--STRIP
+{{FILE:sfw/core/sub_process.cpp}}
+
+//--STRIP
 //#include "core/pool_vector.h"
 //#include "core/string_name.h"
 //--STRIP

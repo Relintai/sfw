@@ -415,10 +415,6 @@
 //--STRIP
 {{FILE:sfw/core/dir_access.h}}
 
-//--STRIP
-//no includes
-//--STRIP
-{{FILE:sfw/core/sfw_core.h}}
 
 //--STRIP
 //#include "int_types.h"
@@ -429,6 +425,24 @@
 //#include "inet_address.h"
 //--STRIP
 {{FILE:sfw/core/socket.h}}
+
+//--STRIP
+//#include "core/list.h"
+//#include "core/math_defs.h"
+//#include "core/memory.h"
+//#include "core/mutex.h"
+//#include "core/typedefs.h"
+//#include "core/ustring.h"
+//#include <stdio.h>
+//Win Only
+//#include "core/local_vector.h"
+//--STRIP
+{{FILE:sfw/core/sub_process.h}}
+
+//--STRIP
+//no includes
+//--STRIP
+{{FILE:sfw/core/sfw_core.h}}
 
 //===================  OBJECT SECTION  ===================
 
