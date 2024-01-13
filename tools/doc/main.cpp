@@ -143,6 +143,13 @@ List<String> process_classes_and_structs(const List<String> &list) {
 		for (int i = 0; i < lines.size(); ++i) {
 			String l = lines[i];
 
+			if (l.strip_edges(true, false).begins_with("#")) {
+				// Skip #if-s
+				// Note this will fail for multi line defines, But those currently does not appear in class definitions
+				stripped += l + "\n";
+				continue;
+			}
+
 			if (l.contains("enum ")) {
 				in_enum = true;
 				enum_scope_start = current_scope_count;
