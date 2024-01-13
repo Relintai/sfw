@@ -16,8 +16,6 @@ class Mesh : public Resource {
 	SFW_OBJECT(Mesh, Resource);
 
 public:
-	//TODO remove the float based api
-
 	void add_vertex2(float x, float y);
 	void add_vertex2(const Vector2 &v);
 
