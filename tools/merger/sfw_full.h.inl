@@ -1,6 +1,8 @@
 #ifndef SFW_H
 #define SFW_H
 
+{{FILEINLINE:sfw/core/version.h}}
+
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
 {{FILEINLINE:tools/merger/sfw_linceses.inl.h}}
 
