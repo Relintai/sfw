@@ -584,7 +584,7 @@
 //#include "render_core/application.h"
 //#include "render_core/input.h"
 //--STRIP
-{{FILE:sfw/render_core/window.cpp}}
+{{FILE:sfw/render_core/app_window.cpp}}
 //--STRIP
 //#include "keyboard.h"
 //--STRIP

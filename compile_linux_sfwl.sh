@@ -58,7 +58,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/resource.cpp -o sfw/object/
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/application.cpp -o sfw/render_core/application.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/window.cpp -o sfw/render_core/window.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/app_window.cpp -o sfw/render_core/window.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/shader.cpp -o sfw/render_core/shader.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/material.cpp -o sfw/render_core/material.o
