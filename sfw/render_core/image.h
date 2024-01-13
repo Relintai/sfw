@@ -12,9 +12,9 @@
 #include "core/color.h"
 #include "core/rect2.h"
 #include "core/rect2i.h"
-#include "object/reference.h"
 #include "core/vector.h"
 #include "core/vector2i.h"
+#include "object/reference.h"
 //--STRIP
 
 class Image : public Reference {
@@ -152,6 +152,14 @@ public:
 	void create(int p_width, int p_height, bool p_use_mipmaps, Format p_format, const Vector<uint8_t> &p_data);
 
 	void create(const char **p_xpm);
+
+	//Save
+
+	Error save_png(const String &file_name);
+	Error save_bmp(const String &file_name);
+	Error save_tga(const String &file_name);
+	Error save_jpg(const String &file_name, const int quality);
+	Error save_hdr(const String &file_name);
 
 	/**
 	 * returns true when the image is empty (0,0) in size

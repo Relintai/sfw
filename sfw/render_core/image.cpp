@@ -8,9 +8,9 @@
 
 #include "core/error_macros.h"
 #include "core/hash_map.h"
-#include "math.h"
 #include "core/memory.h"
 #include "core/vector3.h"
+#include "math.h"
 #include <memory.h>
 #include <stdio.h>
 
@@ -20,8 +20,8 @@
 #define STB_SPRINTF_NOUNALIGNED // stb_sprintf
 
 #include "3rd_stb_image.h"
+#include "3rd_stb_image_write.h"
 
-//{{FILE:3rd_stb_image_write.h}}
 //---
 #undef freelist
 //--STRIP
@@ -1643,6 +1643,113 @@ void Image::create(const char **p_xpm) {
 		line++;
 	}
 }
+
+Error Image::save_png(const String &file_name) {
+	ERR_FAIL_COND_V(format >= FORMAT_RF, ERR_UNAVAILABLE);
+
+	if (width == 0 || height == 0) {
+		return FAILED;
+	}
+
+	int pfs = get_format_pixel_size(format);
+
+	write_lock = true;
+
+	int ret = stbi_write_png(file_name.utf8().get_data(), width, height, pfs, data.ptr(), 0);
+
+	write_lock = false;
+
+	if (ret == 0) {
+		return FAILED;
+	}
+
+	return OK;
+}
+Error Image::save_bmp(const String &file_name) {
+	ERR_FAIL_COND_V(format >= FORMAT_RF, ERR_UNAVAILABLE);
+
+	if (width == 0 || height == 0) {
+		return FAILED;
+	}
+
+	int pfs = get_format_pixel_size(format);
+
+	write_lock = true;
+
+	int ret = stbi_write_bmp(file_name.utf8().get_data(), width, height, pfs, data.ptr());
+
+	write_lock = false;
+
+	if (ret == 0) {
+		return FAILED;
+	}
+
+	return OK;
+}
+Error Image::save_tga(const String &file_name) {
+	ERR_FAIL_COND_V(format >= FORMAT_RF, ERR_UNAVAILABLE);
+
+	if (width == 0 || height == 0) {
+		return FAILED;
+	}
+
+	int pfs = get_format_pixel_size(format);
+
+	write_lock = true;
+
+	int ret = stbi_write_tga(file_name.utf8().get_data(), width, height, pfs, data.ptr());
+
+	write_lock = false;
+
+	if (ret == 0) {
+		return FAILED;
+	}
+
+	return OK;
+}
+Error Image::save_jpg(const String &file_name, const int quality) {
+	ERR_FAIL_COND_V(format >= FORMAT_RF, ERR_UNAVAILABLE);
+
+	if (width == 0 || height == 0) {
+		return FAILED;
+	}
+
+	int pfs = get_format_pixel_size(format);
+
+	write_lock = true;
+
+	int ret = stbi_write_jpg(file_name.utf8().get_data(), width, height, pfs, data.ptr(), quality);
+
+	write_lock = false;
+
+	if (ret == 0) {
+		return FAILED;
+	}
+
+	return OK;
+}
+Error Image::save_hdr(const String &file_name) {
+	ERR_FAIL_COND_V(format < FORMAT_RF, ERR_UNAVAILABLE);
+
+	if (width == 0 || height == 0) {
+		return FAILED;
+	}
+
+	int pfs = get_format_pixel_size(format) / 4;
+
+	write_lock = true;
+
+	int ret = stbi_write_hdr(file_name.utf8().get_data(), width, height, pfs, ((float *)data.ptr()));
+
+	write_lock = false;
+
+	if (ret == 0) {
+		return FAILED;
+	}
+
+	return OK;
+}
+
 #define DETECT_ALPHA_MAX_THRESHOLD 254
 #define DETECT_ALPHA_MIN_THRESHOLD 2
 
@@ -2684,3 +2791,8 @@ Image::Image() {
 Image::~Image() {
 	write_lock = false;
 }
+
+#undef DETECT_ALPHA_MAX_THRESHOLD
+#undef DETECT_ALPHA_MIN_THRESHOLD
+#undef DETECT_ALPHA
+#undef DETECT_NON_ALPHA

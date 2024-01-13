@@ -43,6 +43,21 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 			}
 		}
 
+		if (k->get_physical_scancode() == KEY_K) {
+			if (pressed) {
+				image->save_png("test_image_save.png");
+				image->save_bmp("test_image_save.bmp");
+				image->save_tga("test_image_save.tga");
+				image->save_jpg("test_image_save.jpg", 70);
+
+				Ref<Image> fimage = image->duplicate();
+				fimage->convert(Image::FORMAT_RGBAF);
+				fimage->save_hdr("test_image_save.hdr");
+
+				ERR_PRINT("Test images Saved!");
+			}
+		}
+
 		return;
 	}
 

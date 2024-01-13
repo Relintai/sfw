@@ -571,6 +571,7 @@
 //#include "core/memory.h"
 //#include "core/vector3.h"
 //#include "3rd_stb_image.h"
+//#include "3rd_stb_image_write.h"
 //--STRIP
 {{FILE:sfw/render_core/image.cpp}}
 //--STRIP

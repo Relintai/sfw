@@ -21,7 +21,8 @@
 
 {{FILE:sfw/render_core/3rd_stb_image.h}}
 
-//{//{//FILE:sfw/render_core/stb_image_write.h}}
+{{FILE:sfw/render_core/3rd_stb_image_write.h}}
+
 //---
 #undef freelist
 
