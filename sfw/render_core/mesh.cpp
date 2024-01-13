@@ -130,6 +130,31 @@ void Mesh::fill_colors_random() {
 	}
 }
 
+void Mesh::fill_colors_interpolated(const Color &p_from, const Color &p_to) {
+	while (colors.size() % 4 != 0) {
+		colors.push_back(0);
+	}
+
+	int needed_color_count = get_vertex_count() * 4;
+
+	if (colors.size() > needed_color_count) {
+		colors.resize(needed_color_count);
+		return;
+	}
+
+	RandomPCG r;
+	r.randomize();
+
+	while (colors.size() < needed_color_count) {
+		Color c = p_from.linear_interpolate(p_to, colors.size() / (real_t)needed_color_count);
+
+		colors.push_back(c.r);
+		colors.push_back(c.g);
+		colors.push_back(c.b);
+		colors.push_back(c.a);
+	}
+}
+
 void Mesh::update_aabb() {
 	aabb = AABB();
 

@@ -4,10 +4,10 @@
 
 #include "core/memory.h"
 #include "render_core/3rd_glad.h"
+#include "render_core/app_window.h"
 #include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
 #include "render_immediate/renderer.h"
-#include "render_core/app_window.h"
 //#include "render_core/font.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
@@ -109,7 +109,7 @@ void GameScene::render() {
 	} else if (render_type == 3) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_capsule(_mesh_utils_test, 0.5, 0.5);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -122,7 +122,7 @@ void GameScene::render() {
 	} else if (render_type == 4) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_cube(_mesh_utils_test, Vector3(0.5, 0.5, 0.5));
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -135,7 +135,7 @@ void GameScene::render() {
 	} else if (render_type == 5) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_cylinder(_mesh_utils_test, 0.2, 0.5, 1);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -148,7 +148,7 @@ void GameScene::render() {
 	} else if (render_type == 6) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_plane(_mesh_utils_test);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -161,7 +161,7 @@ void GameScene::render() {
 	} else if (render_type == 7) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_prism(_mesh_utils_test);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -174,7 +174,7 @@ void GameScene::render() {
 	} else if (render_type == 8) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_quad(_mesh_utils_test);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -187,7 +187,7 @@ void GameScene::render() {
 	} else if (render_type == 9) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_quad_with_indices(_mesh_utils_test);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -200,7 +200,7 @@ void GameScene::render() {
 	} else if (render_type == 10) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_sphere(_mesh_utils_test, 0.5, 0.5);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();
@@ -213,7 +213,7 @@ void GameScene::render() {
 	} else if (render_type == 11) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_point(_mesh_utils_test);
-		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
 		_mesh_utils_test->upload();
 
 		camera->bind();

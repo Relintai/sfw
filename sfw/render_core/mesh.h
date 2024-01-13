@@ -37,8 +37,10 @@ public:
 	void add_triangle(uint32_t i1, uint32_t i2, uint32_t i3);
 
 	void flip_faces();
+
 	void fill_colors(const Color &p_color);
 	void fill_colors_random();
+	void fill_colors_interpolated(const Color &p_from, const Color &p_to);
 
 	void update_aabb();
 
