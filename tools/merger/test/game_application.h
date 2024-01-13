@@ -28,8 +28,8 @@ public:
 				down = pressed;
 			} else if (scancode == KEY_D) {
 				right = pressed;
-			} 
-			
+			}
+
 			if (k->get_physical_scancode() == KEY_SPACE) {
 				if (pressed) {
 					immediate = !immediate;
@@ -83,9 +83,10 @@ public:
 	virtual void render_immediate() {
 		Renderer *r = Renderer::get_singleton();
 
-		//r->camera_2d_reset();
+		//r->camera_2d_projection_set_to_window();
 
 		r->clear_screen(Color());
+		r->camera_2d_projection_set_to_window();
 
 		r->draw_point(Vector2(15, 15));
 		r->draw_point(Vector2(18, 18), Color(1, 1, 0));

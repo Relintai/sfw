@@ -24,7 +24,7 @@ class GameScene : public Scene {
 
 public:
 	enum RenderTypes {
-		RENDER_TYPE_MAX = 12
+		RENDER_TYPE_MAX = 13
 	};
 
 	virtual void input_event(const Ref<InputEvent> &event);
@@ -32,6 +32,7 @@ public:
 	virtual void render();
 	virtual void render_immediate();
 	virtual void render_obj();
+	virtual void render_immediate_3d();
 
 	GameScene();
 	~GameScene();

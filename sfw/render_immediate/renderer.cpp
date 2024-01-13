@@ -1,14 +1,17 @@
 //--STRIP
 #include "renderer.h"
 
+#include "render_core/app_window.h"
+#include "render_core/color_material.h"
 #include "render_core/color_material_2d.h"
+#include "render_core/colored_material.h"
 #include "render_core/font.h"
 #include "render_core/font_material.h"
 #include "render_core/material.h"
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
+#include "render_core/texture_material.h"
 #include "render_core/texture_material_2d.h"
-#include "render_core/app_window.h"
 
 #include "render_core/render_state.h"
 //--STRIP
@@ -270,31 +273,117 @@ void Renderer::draw_text_2d_tf_material(const String &p_text, const Ref<Font> &p
 }
 
 void Renderer::draw_mesh_3d(const Ref<Mesh> &p_mesh, const Ref<Material> &p_material, const Transform &p_transform) {
+	ERR_FAIL_COND(!p_mesh.is_valid());
+	ERR_FAIL_COND(!p_material.is_valid());
+
+	Ref<Mesh> mesh = p_mesh;
+	Ref<Material> material = p_material;
+
+	camera_3d_push_model_view_matrix(p_transform);
+
+	material->bind();
+	mesh->render();
+
+	camera_3d_pop_model_view_matrix();
+}
+void Renderer::draw_mesh_3d_colored(const Ref<Mesh> &p_mesh, const Color &p_color, const Transform &p_transform) {
+	ERR_FAIL_COND(!p_mesh.is_valid());
+
+	Ref<Mesh> mesh = p_mesh;
+	_colored_material_3d->color = p_color;
+
+	camera_3d_push_model_view_matrix(p_transform);
+
+	_colored_material_3d->bind();
+	mesh->render();
+
+	camera_3d_pop_model_view_matrix();
+}
+void Renderer::draw_mesh_3d_vertex_colored(const Ref<Mesh> &p_mesh, const Transform &p_transform) {
+	ERR_FAIL_COND(!p_mesh.is_valid());
+
+	Ref<Mesh> mesh = p_mesh;
+
+	camera_3d_push_model_view_matrix(p_transform);
+
+	_color_material_3d->bind();
+	mesh->render();
+
+	camera_3d_pop_model_view_matrix();
+}
+void Renderer::draw_mesh_3d_textured(const Ref<Mesh> &p_mesh, const Ref<Texture> &p_texture, const Transform &p_transform) {
+	ERR_FAIL_COND(!p_mesh.is_valid());
+	ERR_FAIL_COND(!p_texture.is_valid());
+
+	_texture_material_3d->texture = p_texture;
+	Ref<Mesh> mesh = p_mesh;
+
+	camera_3d_push_model_view_matrix(p_transform);
+
+	_texture_material_3d->bind();
+	mesh->render();
+
+	camera_3d_pop_model_view_matrix();
 }
 
-Transform2D Renderer::camera_2d_get_current_model_view_matrix() const {
-	return RenderState::model_view_matrix_2d;
+void Renderer::camera_2d_bind() {
+	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
+	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
 }
 
-void Renderer::camera_2d_push_model_view_matrix(const Transform2D &p_transform_2d) {
-	camera_2d_model_view_matrix_stack.push_back(RenderState::model_view_matrix_2d);
-
-	RenderState::model_view_matrix_2d *= p_transform_2d;
+Transform Renderer::camera_2d_get_current_projection_matrix() const {
+	return _camera_2d_projection_matrix;
 }
-void Renderer::camera_2d_pop_model_view_matrix() {
-	if (camera_2d_model_view_matrix_stack.empty()) {
+void Renderer::camera_2d_push_projection_matrix(const Transform &p_transform) {
+	_camera_2d_projection_matrix_stack.push_back(_camera_2d_projection_matrix);
+
+	_camera_2d_projection_matrix *= p_transform;
+
+	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
+}
+void Renderer::camera_2d_pop_projection_matrix() {
+	if (_camera_2d_projection_matrix_stack.empty()) {
 		return;
 	}
 
-	RenderState::model_view_matrix_2d = camera_2d_model_view_matrix_stack[camera_2d_model_view_matrix_stack.size() - 1];
-	camera_2d_model_view_matrix_stack.resize(camera_2d_model_view_matrix_stack.size() - 1);
+	_camera_2d_projection_matrix = _camera_2d_projection_matrix_stack[_camera_2d_projection_matrix_stack.size() - 1];
+
+	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
+
+	_camera_2d_projection_matrix_stack.resize(_camera_2d_projection_matrix_stack.size() - 1);
+}
+int Renderer::get_camera_2d_projection_matrix_stack_size() const {
+	return _camera_2d_projection_matrix_stack.size();
+}
+
+Transform2D Renderer::camera_2d_get_current_model_view_matrix() const {
+	return _camera_2d_model_view_matrix;
+}
+
+void Renderer::camera_2d_push_model_view_matrix(const Transform2D &p_transform_2d) {
+	_camera_2d_model_view_matrix_stack.push_back(_camera_2d_model_view_matrix);
+
+	_camera_2d_model_view_matrix *= p_transform_2d;
+
+	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
+}
+void Renderer::camera_2d_pop_model_view_matrix() {
+	if (_camera_2d_model_view_matrix_stack.empty()) {
+		return;
+	}
+
+	_camera_2d_model_view_matrix = _camera_2d_model_view_matrix_stack[_camera_2d_model_view_matrix_stack.size() - 1];
+
+	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
+
+	_camera_2d_model_view_matrix_stack.resize(_camera_2d_model_view_matrix_stack.size() - 1);
 }
 
 int Renderer::get_camera_2d_model_view_matrix_stack_size() const {
-	return camera_2d_model_view_matrix_stack.size();
+	return _camera_2d_model_view_matrix_stack.size();
 }
 
-void Renderer::camera_2d_reset() {
+void Renderer::camera_2d_projection_set_to_window() {
 	Vector2 size = get_window_size();
 
 	Transform canvas_transform;
@@ -305,10 +394,105 @@ void Renderer::camera_2d_reset() {
 	RenderState::model_view_matrix_2d = Transform2D();
 	RenderState::projection_matrix_2d = canvas_transform;
 
-	camera_2d_model_view_matrix_stack.clear();
+	_camera_2d_model_view_matrix_stack.clear();
 }
 
-void Renderer::camera_3d_reset() {
+void Renderer::camera_3d_bind() {
+	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
+	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
+	RenderState::projection_matrix_3d = _camera_3d_projection;
+}
+
+Transform Renderer::camera_3d_get_current_camera_transform_matrix() const {
+	return _camera_3d_camera_transform_matrix;
+}
+void Renderer::camera_3d_push_camera_transform_matrix(const Transform &p_transform) {
+	_camera_3d_camera_transform_matrix_stack.push_back(_camera_3d_camera_transform_matrix);
+
+	_camera_3d_camera_transform_matrix *= p_transform;
+
+	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
+}
+void Renderer::camera_3d_pop_camera_transform_matrix() {
+	if (_camera_3d_camera_transform_matrix_stack.empty()) {
+		return;
+	}
+
+	_camera_3d_camera_transform_matrix = _camera_3d_camera_transform_matrix_stack[_camera_3d_camera_transform_matrix_stack.size() - 1];
+
+	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
+
+	_camera_3d_camera_transform_matrix_stack.resize(_camera_3d_camera_transform_matrix_stack.size() - 1);
+}
+int Renderer::get_camera_3d_camera_transform_matrix_stack_size() const {
+	return _camera_3d_camera_transform_matrix_stack.size();
+}
+
+Transform Renderer::camera_3d_get_current_model_view_matrix() const {
+	return _camera_3d_model_view_matrix;
+}
+void Renderer::camera_3d_push_model_view_matrix(const Transform &p_transform) {
+	_camera_3d_model_view_matrix_stack.push_back(_camera_3d_model_view_matrix);
+
+	_camera_3d_model_view_matrix *= p_transform;
+
+	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
+}
+void Renderer::camera_3d_pop_model_view_matrix() {
+	if (_camera_3d_model_view_matrix_stack.empty()) {
+		return;
+	}
+
+	_camera_3d_model_view_matrix = _camera_3d_model_view_matrix_stack[_camera_3d_model_view_matrix_stack.size() - 1];
+
+	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
+
+	_camera_3d_model_view_matrix_stack.resize(_camera_3d_model_view_matrix_stack.size() - 1);
+}
+int Renderer::get_camera_3d_model_view_matrix_stack_size() const {
+	return _camera_3d_model_view_matrix_stack.size();
+}
+
+// Aspect Ratio = w / h
+void Renderer::camera_3d_projection_set_to_orthographic(float aspect_ratio, float size, float znear, float zfar, bool vaspect) {
+	_camera_3d_projection.set_orthogonal(
+			size,
+			aspect_ratio,
+			znear,
+			zfar,
+			vaspect);
+
+	RenderState::projection_matrix_3d = _camera_3d_projection;
+}
+void Renderer::camera_3d_projection_set_to_perspective(float aspect_ratio, float size, float znear, float zfar, bool vaspect, float fov) {
+	_camera_3d_projection.set_perspective(
+			fov,
+			aspect_ratio,
+			znear,
+			zfar,
+			vaspect);
+
+	RenderState::projection_matrix_3d = _camera_3d_projection;
+}
+void Renderer::camera_3d_projection_set_to_frustum(float aspect_ratio, float size, float znear, float zfar, bool vaspect, float offset) {
+	_camera_3d_projection.set_frustum(
+			size,
+			aspect_ratio,
+			offset,
+			znear,
+			zfar,
+			vaspect);
+
+	RenderState::projection_matrix_3d = _camera_3d_projection;
+}
+
+Projection Renderer::camera_3d_get_projection_matrix() const {
+	return _camera_3d_projection;
+}
+void Renderer::camera_3d_set_projection_matrix(const Projection &p_projection) {
+	_camera_3d_projection = p_projection;
+
+	RenderState::projection_matrix_3d = _camera_3d_projection;
 }
 
 void Renderer::clear_screen(const Color &p_color) {
@@ -319,9 +503,6 @@ void Renderer::clear_screen(const Color &p_color) {
 	} else {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-
-	//? Make it manual?
-	camera_2d_reset();
 }
 
 Vector2i Renderer::get_window_size() const {
@@ -357,6 +538,10 @@ Renderer::Renderer() {
 	_texture_material_2d.instance();
 	_font_material.instance();
 	_color_material_2d.instance();
+
+	_texture_material_3d.instance();
+	_color_material_3d.instance();
+	_colored_material_3d.instance();
 }
 Renderer::~Renderer() {
 	_singleton = NULL;

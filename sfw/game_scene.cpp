@@ -223,14 +223,15 @@ void GameScene::render() {
 		_mesh_utils_test_mi->render();
 
 		_mesh_utils_test_mi->render();
+	} else if (render_type == 12) {
+		render_immediate_3d();
 	}
 }
 void GameScene::render_immediate() {
 	Renderer *r = Renderer::get_singleton();
 
-	//r->camera_2d_reset();
-
 	r->clear_screen(Color());
+	r->camera_2d_projection_set_to_window();
 
 	r->draw_point(Vector2(15, 15));
 	r->draw_point(Vector2(18, 18), Color(1, 1, 0));
@@ -304,6 +305,30 @@ void GameScene::render_obj() {
 
 	//TextRenderer::get_singleton()->font_init();
 	//TextRenderer::get_singleton()->font_print("test");
+}
+
+void GameScene::render_immediate_3d() {
+	Renderer *r = Renderer::get_singleton();
+
+	r->clear_screen(Color());
+	r->camera_2d_projection_set_to_window();
+
+	r->camera_3d_bind();
+	r->camera_3d_projection_set_to_perspective(AppWindow::get_singleton()->get_aspect());
+
+	static float rotmi = 0;
+
+	_mesh_utils_test->clear();
+	MeshUtils::create_simple_test_cone(_mesh_utils_test);
+	_mesh_utils_test->upload();
+
+	Transform tf;
+	tf.basis = Basis(Vector3(1, 0, 0), rotmi);
+	tf.origin.z -= 2;
+
+	r->draw_mesh_3d_vertex_colored(_mesh_utils_test, tf);
+
+	rotmi += 0.01;
 }
 
 GameScene::GameScene() {
