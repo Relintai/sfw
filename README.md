@@ -4,10 +4,14 @@ Simple experimental c++ app framework to help with teaching programming and OOP.
 
 Inspired by the single file game engines like FWK.
 
-TODO
+## TODO
 
-//+primitivemeshes cleanup
-//+image make save
-//Add directory back
-//remove old
-// merged version
+Nice readme\
+Some improvements on docs\
+Collect all licenses and add to docs and headers\
+Usage imformation to the top of the merged headers\
+Update example codes\
+Update classes in SFWL\
+Make sure everything works on Windows and OSX\
+Release
+
