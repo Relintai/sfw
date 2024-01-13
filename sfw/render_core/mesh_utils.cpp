@@ -7,12 +7,10 @@
 #include "render_core/mesh_utils.h"
 //--STRIP
 
-void MeshUtils::create_cone(Ref<Mesh> mesh) {
-	if (!mesh.is_valid()) {
-		return;
-	}
+void MeshUtils::create_simple_test_cone(Ref<Mesh> mesh) {
+	ERR_FAIL_COND(!mesh.is_valid());
 
-	uint32_t vc = mesh->vertices.size();
+	uint32_t vc = mesh->get_vertex_count();
 
 	//eleje
 	mesh->add_color(1, 0, 0);
@@ -80,10 +78,13 @@ void MeshUtils::create_cone(Ref<Mesh> mesh) {
 	mesh->add_triangle(13 + vc, 12 + vc, 15 + vc);
 }
 
-/*
-void MeshUtils::create_capsule(Array &p_arr, const float radius, const float mid_height, const int radial_segments, const int rings) {
-	//radial_segments = p_segments > 4 ? p_segments : 4;
-	//rings = p_rings > 1 ? p_rings : 1;
+void MeshUtils::create_capsule(Ref<Mesh> mesh, const float radius, const float mid_height, const int p_radial_segments, const int p_rings) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	int radial_segments = p_radial_segments > 4 ? p_radial_segments : 4;
+	int rings = p_rings > 1 ? p_rings : 1;
 
 	int i, j, prevrow, thisrow, point;
 	float x, y, z, u, v, w;
@@ -92,18 +93,7 @@ void MeshUtils::create_capsule(Array &p_arr, const float radius, const float mid
 
 	// note, this has been aligned with our collision shape but I've left the descriptions as top/middle/bottom
 
-	PoolVector<Vector3> points;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-	PoolVector<int> indices;
 	point = 0;
-
-#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
-	tangents.push_back(m_x);            \
-	tangents.push_back(m_y);            \
-	tangents.push_back(m_z);            \
-	tangents.push_back(m_d);
 
 	// top hemisphere
 	thisrow = 0;
@@ -123,20 +113,20 @@ void MeshUtils::create_capsule(Array &p_arr, const float radius, const float mid
 			y = -cos(u * (Math_PI * 2.0));
 
 			Vector3 p = Vector3(x * radius * w, y * radius * w, z);
-			points.push_back(p + Vector3(0.0, 0.0, 0.5 * mid_height));
-			normals.push_back(p.normalized());
-			ADD_TANGENT(-y, x, 0.0, 1.0)
-			uvs.push_back(Vector2(u, v * onethird));
+			mesh->add_vertex3(p + Vector3(0.0, 0.0, 0.5 * mid_height));
+			mesh->add_normal(p.normalized());
+			mesh->add_uv(Vector2(u, v * onethird));
+
 			point++;
 
 			if (i > 0 && j > 0) {
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 		};
 
@@ -162,20 +152,19 @@ void MeshUtils::create_capsule(Array &p_arr, const float radius, const float mid
 			y = -cos(u * (Math_PI * 2.0));
 
 			Vector3 p = Vector3(x * radius, y * radius, z);
-			points.push_back(p);
-			normals.push_back(Vector3(x, y, 0.0));
-			ADD_TANGENT(-y, x, 0.0, 1.0)
-			uvs.push_back(Vector2(u, onethird + (v * onethird)));
+			mesh->add_vertex3(p);
+			mesh->add_normal(Vector3(x, y, 0.0));
+			mesh->add_uv(Vector2(u, onethird + (v * onethird)));
 			point++;
 
 			if (i > 0 && j > 0) {
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 		};
 
@@ -202,37 +191,34 @@ void MeshUtils::create_capsule(Array &p_arr, const float radius, const float mid
 			y = -cos(u2 * (Math_PI * 2.0));
 
 			Vector3 p = Vector3(x * radius * w, y * radius * w, z);
-			points.push_back(p + Vector3(0.0, 0.0, -0.5 * mid_height));
-			normals.push_back(p.normalized());
-			ADD_TANGENT(-y, x, 0.0, 1.0)
-			uvs.push_back(Vector2(u2, twothirds + ((v - 1.0) * onethird)));
+			mesh->add_vertex3(p + Vector3(0.0, 0.0, -0.5 * mid_height));
+			mesh->add_normal(p.normalized());
+			mesh->add_uv(Vector2(u2, twothirds + ((v - 1.0) * onethird)));
 			point++;
 
 			if (i > 0 && j > 0) {
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 		};
 
 		prevrow = thisrow;
 		thisrow = point;
 	};
-
-	p_arr[RS::ARRAY_VERTEX] = points;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
-	p_arr[RS::ARRAY_INDEX] = indices;
 }
 
-void MeshUtils::create_cube(Array &p_arr, const Vector3 size, const int subdivide_w, const int subdivide_h, const int subdivide_d) {
-	//subdivide_w = p_divisions > 0 ? p_divisions : 0;
-	//subdivide_d = p_divisions > 0 ? p_divisions : 0;
+void MeshUtils::create_cube(Ref<Mesh> mesh, const Vector3 size, const int p_subdivide_w, const int subdivide_h, const int p_subdivide_d) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	int subdivide_w = p_subdivide_w > 0 ? p_subdivide_w : 0;
+	int subdivide_d = p_subdivide_d > 0 ? p_subdivide_d : 0;
 
 	int i, j, prevrow, thisrow, point;
 	float x, y, z;
@@ -243,18 +229,7 @@ void MeshUtils::create_cube(Array &p_arr, const Vector3 size, const int subdivid
 
 	// set our bounding box
 
-	PoolVector<Vector3> points;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-	PoolVector<int> indices;
 	point = 0;
-
-#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
-	tangents.push_back(m_x);            \
-	tangents.push_back(m_y);            \
-	tangents.push_back(m_z);            \
-	tangents.push_back(m_d);
 
 	// front + back
 	y = start_pos.y;
@@ -269,37 +244,35 @@ void MeshUtils::create_cube(Array &p_arr, const Vector3 size, const int subdivid
 			v /= (2.0 * (subdivide_h + 1.0));
 
 			// front
-			points.push_back(Vector3(x, -y, -start_pos.z)); // double negative on the Z!
-			normals.push_back(Vector3(0.0, 0.0, 1.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(u, v));
+			mesh->add_vertex3(Vector3(x, -y, -start_pos.z)); // double negative on the Z!
+			mesh->add_normal(Vector3(0.0, 0.0, 1.0));
+			mesh->add_uv(Vector2(u, v));
 			point++;
 
 			// back
-			points.push_back(Vector3(-x, -y, start_pos.z));
-			normals.push_back(Vector3(0.0, 0.0, -1.0));
-			ADD_TANGENT(-1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + u, v));
+			mesh->add_vertex3(Vector3(-x, -y, start_pos.z));
+			mesh->add_normal(Vector3(0.0, 0.0, -1.0));
+			mesh->add_uv(Vector2(twothirds + u, v));
 			point++;
 
 			if (i > 0 && j > 0) {
 				int i2 = i * 2;
 
 				// front
-				indices.push_back(prevrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2);
-				indices.push_back(thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
 
 				// back
-				indices.push_back(prevrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
 			};
 
 			x += size.x / (subdivide_w + 1.0);
@@ -323,37 +296,35 @@ void MeshUtils::create_cube(Array &p_arr, const Vector3 size, const int subdivid
 			v /= (2.0 * (subdivide_h + 1.0));
 
 			// right
-			points.push_back(Vector3(-start_pos.x, -y, -z));
-			normals.push_back(Vector3(1.0, 0.0, 0.0));
-			ADD_TANGENT(0.0, 0.0, -1.0, 1.0);
-			uvs.push_back(Vector2(onethird + u, v));
+			mesh->add_vertex3(Vector3(-start_pos.x, -y, -z));
+			mesh->add_normal(Vector3(1.0, 0.0, 0.0));
+			mesh->add_uv(Vector2(onethird + u, v));
 			point++;
 
 			// left
-			points.push_back(Vector3(start_pos.x, -y, z));
-			normals.push_back(Vector3(-1.0, 0.0, 0.0));
-			ADD_TANGENT(0.0, 0.0, 1.0, 1.0);
-			uvs.push_back(Vector2(u, 0.5 + v));
+			mesh->add_vertex3(Vector3(start_pos.x, -y, z));
+			mesh->add_normal(Vector3(-1.0, 0.0, 0.0));
+			mesh->add_uv(Vector2(u, 0.5 + v));
 			point++;
 
 			if (i > 0 && j > 0) {
 				int i2 = i * 2;
 
 				// right
-				indices.push_back(prevrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2);
-				indices.push_back(thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
 
 				// left
-				indices.push_back(prevrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
 			};
 
 			z += size.z / (subdivide_d + 1.0);
@@ -377,37 +348,35 @@ void MeshUtils::create_cube(Array &p_arr, const Vector3 size, const int subdivid
 			v /= (2.0 * (subdivide_d + 1.0));
 
 			// top
-			points.push_back(Vector3(-x, -start_pos.y, -z));
-			normals.push_back(Vector3(0.0, 1.0, 0.0));
-			ADD_TANGENT(-1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(onethird + u, 0.5 + v));
+			mesh->add_vertex3(Vector3(-x, -start_pos.y, -z));
+			mesh->add_normal(Vector3(0.0, 1.0, 0.0));
+			mesh->add_uv(Vector2(onethird + u, 0.5 + v));
 			point++;
 
 			// bottom
-			points.push_back(Vector3(x, start_pos.y, -z));
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + u, 0.5 + v));
+			mesh->add_vertex3(Vector3(x, start_pos.y, -z));
+			mesh->add_normal(Vector3(0.0, -1.0, 0.0));
+			mesh->add_uv(Vector2(twothirds + u, 0.5 + v));
 			point++;
 
 			if (i > 0 && j > 0) {
 				int i2 = i * 2;
 
 				// top
-				indices.push_back(prevrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2);
-				indices.push_back(thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
 
 				// bottom
-				indices.push_back(prevrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
 			};
 
 			x += size.x / (subdivide_w + 1.0);
@@ -417,33 +386,20 @@ void MeshUtils::create_cube(Array &p_arr, const Vector3 size, const int subdivid
 		prevrow = thisrow;
 		thisrow = point;
 	};
-
-	p_arr[RS::ARRAY_VERTEX] = points;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
-	p_arr[RS::ARRAY_INDEX] = indices;
 }
 
-void MeshUtils::create_cylinder(Array &p_arr, float top_radius, float bottom_radius, float height, int radial_segments, int rings) {
-	//radial_segments = p_segments > 4 ? p_segments : 4;
-	//rings = p_rings > 0 ? p_rings : 0;
+void MeshUtils::create_cylinder(Ref<Mesh> mesh, float top_radius, float bottom_radius, float height, int p_radial_segments, int p_rings) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	int radial_segments = p_radial_segments > 4 ? p_radial_segments : 4;
+	int rings = p_rings > 0 ? p_rings : 0;
 
 	int i, j, prevrow, thisrow, point;
 	float x, y, z, u, v, radius;
 
-	PoolVector<Vector3> points;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-	PoolVector<int> indices;
 	point = 0;
-
-#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
-	tangents.push_back(m_x);            \
-	tangents.push_back(m_y);            \
-	tangents.push_back(m_z);            \
-	tangents.push_back(m_d);
 
 	thisrow = 0;
 	prevrow = 0;
@@ -465,20 +421,19 @@ void MeshUtils::create_cylinder(Array &p_arr, float top_radius, float bottom_rad
 			z = cos(u * (Math_PI * 2.0));
 
 			Vector3 p = Vector3(x * radius, y, z * radius);
-			points.push_back(p);
-			normals.push_back(Vector3(x, side_normal_y, z).normalized());
-			ADD_TANGENT(z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, v * 0.5));
+			mesh->add_vertex3(p);
+			mesh->add_normal(Vector3(x, side_normal_y, z).normalized());
+			mesh->add_uv(Vector2(u, v * 0.5));
 			point++;
 
 			if (i > 0 && j > 0) {
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 		};
 
@@ -491,10 +446,9 @@ void MeshUtils::create_cylinder(Array &p_arr, float top_radius, float bottom_rad
 		y = height * 0.5;
 
 		thisrow = point;
-		points.push_back(Vector3(0.0, y, 0.0));
-		normals.push_back(Vector3(0.0, 1.0, 0.0));
-		ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-		uvs.push_back(Vector2(0.25, 0.75));
+		mesh->add_vertex3(Vector3(0.0, y, 0.0));
+		mesh->add_normal(Vector3(0.0, 1.0, 0.0));
+		mesh->add_uv(Vector2(0.25, 0.75));
 		point++;
 
 		for (i = 0; i <= radial_segments; i++) {
@@ -508,16 +462,15 @@ void MeshUtils::create_cylinder(Array &p_arr, float top_radius, float bottom_rad
 			v = 0.5 + ((z + 1.0) * 0.25);
 
 			Vector3 p = Vector3(x * top_radius, y, z * top_radius);
-			points.push_back(p);
-			normals.push_back(Vector3(0.0, 1.0, 0.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-			uvs.push_back(Vector2(u, v));
+			mesh->add_vertex3(p);
+			mesh->add_normal(Vector3(0.0, 1.0, 0.0));
+			mesh->add_uv(Vector2(u, v));
 			point++;
 
 			if (i > 0) {
-				indices.push_back(thisrow);
-				indices.push_back(point - 1);
-				indices.push_back(point - 2);
+				mesh->add_index(msi + thisrow);
+				mesh->add_index(msi + point - 1);
+				mesh->add_index(msi + point - 2);
 			};
 		};
 	};
@@ -527,10 +480,9 @@ void MeshUtils::create_cylinder(Array &p_arr, float top_radius, float bottom_rad
 		y = height * -0.5;
 
 		thisrow = point;
-		points.push_back(Vector3(0.0, y, 0.0));
-		normals.push_back(Vector3(0.0, -1.0, 0.0));
-		ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-		uvs.push_back(Vector2(0.75, 0.75));
+		mesh->add_vertex3(Vector3(0.0, y, 0.0));
+		mesh->add_normal(Vector3(0.0, -1.0, 0.0));
+		mesh->add_uv(Vector2(0.75, 0.75));
 		point++;
 
 		for (i = 0; i <= radial_segments; i++) {
@@ -544,48 +496,34 @@ void MeshUtils::create_cylinder(Array &p_arr, float top_radius, float bottom_rad
 			v = 1.0 - ((z + 1.0) * 0.25);
 
 			Vector3 p = Vector3(x * bottom_radius, y, z * bottom_radius);
-			points.push_back(p);
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0)
-			uvs.push_back(Vector2(u, v));
+			mesh->add_vertex3(p);
+			mesh->add_normal(Vector3(0.0, -1.0, 0.0));
+			mesh->add_uv(Vector2(u, v));
 			point++;
 
 			if (i > 0) {
-				indices.push_back(thisrow);
-				indices.push_back(point - 2);
-				indices.push_back(point - 1);
+				mesh->add_index(msi + thisrow);
+				mesh->add_index(msi + point - 2);
+				mesh->add_index(msi + point - 1);
 			};
 		};
 	};
-
-	p_arr[RS::ARRAY_VERTEX] = points;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
-	p_arr[RS::ARRAY_INDEX] = indices;
 }
 
-void MeshUtils::create_plane(Array &p_arr, Size2 size, int subdivide_w, int subdivide_d, Vector3 center_offset) {
-	//subdivide_w = p_divisions > 0 ? p_divisions : 0;
-	//subdivide_d = p_divisions > 0 ? p_divisions : 0;
+void MeshUtils::create_plane(Ref<Mesh> mesh, Size2 size, int p_subdivide_w, int p_subdivide_d, Vector3 center_offset) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	int subdivide_w = p_subdivide_w > 0 ? p_subdivide_w : 0;
+	int subdivide_d = p_subdivide_d > 0 ? p_subdivide_d : 0;
 
 	int i, j, prevrow, thisrow, point;
 	float x, z;
 
 	Size2 start_pos = size * -0.5;
 
-	PoolVector<Vector3> points;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-	PoolVector<int> indices;
 	point = 0;
-
-#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
-	tangents.push_back(m_x);            \
-	tangents.push_back(m_y);            \
-	tangents.push_back(m_z);            \
-	tangents.push_back(m_d);
 
 	// top + bottom
 	z = start_pos.y;
@@ -599,19 +537,18 @@ void MeshUtils::create_plane(Array &p_arr, Size2 size, int subdivide_w, int subd
 			u /= (subdivide_w + 1.0);
 			v /= (subdivide_d + 1.0);
 
-			points.push_back(Vector3(-x, 0.0, -z) + center_offset);
-			normals.push_back(Vector3(0.0, 1.0, 0.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(1.0 - u, 1.0 - v)); // 1.0 - uv to match orientation with Quad
+			mesh->add_vertex3(Vector3(-x, 0.0, -z) + center_offset);
+			mesh->add_normal(Vector3(0.0, 1.0, 0.0));
+			mesh->add_uv(Vector2(1.0 - u, 1.0 - v)); // 1.0 - uv to match orientation with Quad
 			point++;
 
 			if (i > 0 && j > 0) {
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 
 			x += size.x / (subdivide_w + 1.0);
@@ -621,18 +558,16 @@ void MeshUtils::create_plane(Array &p_arr, Size2 size, int subdivide_w, int subd
 		prevrow = thisrow;
 		thisrow = point;
 	};
-
-	p_arr[RS::ARRAY_VERTEX] = points;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
-	p_arr[RS::ARRAY_INDEX] = indices;
 }
 
-void MeshUtils::create_prism(Array &p_arr, float left_to_right, Vector3 size, int subdivide_w, int subdivide_h, int subdivide_d) {
-	//subdivide_w = p_divisions > 0 ? p_divisions : 0;
-	//subdivide_h = p_divisions > 0 ? p_divisions : 0;
-	//subdivide_d = p_divisions > 0 ? p_divisions : 0;
+void MeshUtils::create_prism(Ref<Mesh> mesh, float left_to_right, Vector3 size, int p_subdivide_w, int p_subdivide_h, int p_subdivide_d) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	int subdivide_w = p_subdivide_w > 0 ? p_subdivide_w : 0;
+	int subdivide_h = p_subdivide_h > 0 ? p_subdivide_h : 0;
+	int subdivide_d = p_subdivide_d > 0 ? p_subdivide_d : 0;
 
 	int i, j, prevrow, thisrow, point;
 	float x, y, z;
@@ -643,20 +578,9 @@ void MeshUtils::create_prism(Array &p_arr, float left_to_right, Vector3 size, in
 
 	// set our bounding box
 
-	PoolVector<Vector3> points;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-	PoolVector<int> indices;
 	point = 0;
 
-#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
-	tangents.push_back(m_x);            \
-	tangents.push_back(m_y);            \
-	tangents.push_back(m_z);            \
-	tangents.push_back(m_d);
-
-	// front + back 
+	// front + back
 	y = start_pos.y;
 	thisrow = point;
 	prevrow = 0;
@@ -677,49 +601,47 @@ void MeshUtils::create_prism(Array &p_arr, float left_to_right, Vector3 size, in
 			u *= scale;
 
 			// front
-			points.push_back(Vector3(start_x + x, -y, -start_pos.z)); // double negative on the Z!
-			normals.push_back(Vector3(0.0, 0.0, 1.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(offset_front + u, v));
+			mesh->add_vertex3(Vector3(start_x + x, -y, -start_pos.z)); // double negative on the Z!
+			mesh->add_normal(Vector3(0.0, 0.0, 1.0));
+			mesh->add_uv(Vector2(offset_front + u, v));
 			point++;
 
 			// back
-			points.push_back(Vector3(start_x + scaled_size_x - x, -y, start_pos.z));
-			normals.push_back(Vector3(0.0, 0.0, -1.0));
-			ADD_TANGENT(-1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + offset_back + u, v));
+			mesh->add_vertex3(Vector3(start_x + scaled_size_x - x, -y, start_pos.z));
+			mesh->add_normal(Vector3(0.0, 0.0, -1.0));
+			mesh->add_uv(Vector2(twothirds + offset_back + u, v));
 			point++;
 
 			if (i > 0 && j == 1) {
 				int i2 = i * 2;
 
 				// front
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2);
-				indices.push_back(thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
 
 				// back
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
 			} else if (i > 0 && j > 0) {
 				int i2 = i * 2;
 
 				// front
-				indices.push_back(prevrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2);
-				indices.push_back(thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
 
 				// back
-				indices.push_back(prevrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
 			};
 
 			x += scale * size.x / (subdivide_w + 1.0);
@@ -756,37 +678,35 @@ void MeshUtils::create_prism(Array &p_arr, float left_to_right, Vector3 size, in
 			v /= (2.0 * (subdivide_h + 1.0));
 
 			// right
-			points.push_back(Vector3(right, -y, -z));
-			normals.push_back(normal_right);
-			ADD_TANGENT(0.0, 0.0, -1.0, 1.0);
-			uvs.push_back(Vector2(onethird + u, v));
+			mesh->add_vertex3(Vector3(right, -y, -z));
+			mesh->add_normal(normal_right);
+			mesh->add_uv(Vector2(onethird + u, v));
 			point++;
 
 			// left
-			points.push_back(Vector3(left, -y, z));
-			normals.push_back(normal_left);
-			ADD_TANGENT(0.0, 0.0, 1.0, 1.0);
-			uvs.push_back(Vector2(u, 0.5 + v));
+			mesh->add_vertex3(Vector3(left, -y, z));
+			mesh->add_normal(normal_left);
+			mesh->add_uv(Vector2(u, 0.5 + v));
 			point++;
 
 			if (i > 0 && j > 0) {
 				int i2 = i * 2;
 
 				// right
-				indices.push_back(prevrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2 - 2);
-				indices.push_back(prevrow + i2);
-				indices.push_back(thisrow + i2);
-				indices.push_back(thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
+				mesh->add_index(msi + prevrow + i2);
+				mesh->add_index(msi + thisrow + i2);
+				mesh->add_index(msi + thisrow + i2 - 2);
 
 				// left
-				indices.push_back(prevrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
-				indices.push_back(prevrow + i2 + 1);
-				indices.push_back(thisrow + i2 + 1);
-				indices.push_back(thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
+				mesh->add_index(msi + prevrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 + 1);
+				mesh->add_index(msi + thisrow + i2 - 1);
 			};
 
 			z += size.z / (subdivide_d + 1.0);
@@ -810,20 +730,19 @@ void MeshUtils::create_prism(Array &p_arr, float left_to_right, Vector3 size, in
 			v /= (2.0 * (subdivide_d + 1.0));
 
 			// bottom
-			points.push_back(Vector3(x, start_pos.y, -z));
-			normals.push_back(Vector3(0.0, -1.0, 0.0));
-			ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
-			uvs.push_back(Vector2(twothirds + u, 0.5 + v));
+			mesh->add_vertex3(Vector3(x, start_pos.y, -z));
+			mesh->add_normal(Vector3(0.0, -1.0, 0.0));
+			mesh->add_uv(Vector2(twothirds + u, 0.5 + v));
 			point++;
 
 			if (i > 0 && j > 0) {
 				// bottom
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 
 			x += size.x / (subdivide_w + 1.0);
@@ -833,24 +752,10 @@ void MeshUtils::create_prism(Array &p_arr, float left_to_right, Vector3 size, in
 		prevrow = thisrow;
 		thisrow = point;
 	};
-
-	p_arr[RS::ARRAY_VERTEX] = points;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
-	p_arr[RS::ARRAY_INDEX] = indices;
 }
 
-void MeshUtils::create_quad(Array &p_arr, Size2 size, Vector3 center_offset) {
-	PoolVector<Vector3> faces;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-
-	faces.resize(6);
-	normals.resize(6);
-	tangents.resize(6 * 4);
-	uvs.resize(6);
+void MeshUtils::create_quad(Ref<Mesh> mesh, Size2 size, Vector3 center_offset) {
+	ERR_FAIL_COND(!mesh.is_valid());
 
 	Vector2 _size = Vector2(size.x / 2.0f, size.y / 2.0f);
 
@@ -868,12 +773,9 @@ void MeshUtils::create_quad(Array &p_arr, Size2 size, Vector3 center_offset) {
 
 	for (int i = 0; i < 6; i++) {
 		int j = indices[i];
-		faces.set(i, quad_faces[j]);
-		normals.set(i, Vector3(0, 0, 1));
-		tangents.set(i * 4 + 0, 1.0);
-		tangents.set(i * 4 + 1, 0.0);
-		tangents.set(i * 4 + 2, 0.0);
-		tangents.set(i * 4 + 3, 1.0);
+
+		mesh->add_vertex3(quad_faces[j]);
+		mesh->add_normal(Vector3(0, 0, 1));
 
 		static const Vector2 quad_uv[4] = {
 			Vector2(0, 1),
@@ -882,18 +784,43 @@ void MeshUtils::create_quad(Array &p_arr, Size2 size, Vector3 center_offset) {
 			Vector2(1, 1),
 		};
 
-		uvs.set(i, quad_uv[j]);
+		mesh->add_uv(quad_uv[j]);
 	}
-
-	p_arr[RS::ARRAY_VERTEX] = faces;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
 }
 
-void SphereMesh::create_mesh_array(Array &p_arr, float radius, float height, int radial_segments, int rings, bool is_hemisphere) {
-	//radial_segments = p_radial_segments > 4 ? p_radial_segments : 4;
-	//rings = p_rings > 1 ? p_rings : 1;
+void MeshUtils::create_quad_with_indices(Ref<Mesh> mesh, Size2 size, Vector3 center_offset) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	Vector2 _size = Vector2(size.x / 2.0f, size.y / 2.0f);
+
+	mesh->add_vertex3(Vector3(-_size.x, -_size.y, 0) + center_offset);
+	mesh->add_vertex3(Vector3(-_size.x, _size.y, 0) + center_offset);
+	mesh->add_vertex3(Vector3(_size.x, _size.y, 0) + center_offset);
+	mesh->add_vertex3(Vector3(_size.x, -_size.y, 0) + center_offset);
+
+	mesh->add_normal(Vector3(0, 0, 1));
+	mesh->add_normal(Vector3(0, 0, 1));
+	mesh->add_normal(Vector3(0, 0, 1));
+	mesh->add_normal(Vector3(0, 0, 1));
+
+	mesh->add_uv(Vector2(0, 1));
+	mesh->add_uv(Vector2(0, 0));
+	mesh->add_uv(Vector2(1, 0));
+	mesh->add_uv(Vector2(1, 1));
+
+	mesh->add_triangle(msi, msi + 1, msi + 2);
+	mesh->add_triangle(msi, msi + 2, msi + 3);
+}
+
+void MeshUtils::create_sphere(Ref<Mesh> mesh, float radius, float height, int p_radial_segments, int p_rings, bool is_hemisphere) {
+	ERR_FAIL_COND(!mesh.is_valid());
+
+	int msi = mesh->get_vertex_count();
+
+	int radial_segments = p_radial_segments > 4 ? p_radial_segments : 4;
+	int rings = p_rings > 1 ? p_rings : 1;
 
 	int i, j, prevrow, thisrow, point;
 	float x, y, z;
@@ -902,18 +829,7 @@ void SphereMesh::create_mesh_array(Array &p_arr, float radius, float height, int
 
 	// set our bounding box
 
-	PoolVector<Vector3> points;
-	PoolVector<Vector3> normals;
-	PoolVector<float> tangents;
-	PoolVector<Vector2> uvs;
-	PoolVector<int> indices;
 	point = 0;
-
-#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
-	tangents.push_back(m_x);            \
-	tangents.push_back(m_y);            \
-	tangents.push_back(m_z);            \
-	tangents.push_back(m_d);
 
 	thisrow = 0;
 	prevrow = 0;
@@ -933,46 +849,54 @@ void SphereMesh::create_mesh_array(Array &p_arr, float radius, float height, int
 			z = cos(u * (Math_PI * 2.0));
 
 			if (is_hemisphere && y < 0.0) {
-				points.push_back(Vector3(x * radius * w, 0.0, z * radius * w));
-				normals.push_back(Vector3(0.0, -1.0, 0.0));
+				mesh->add_vertex3(Vector3(x * radius * w, 0.0, z * radius * w));
+				mesh->add_normal(Vector3(0.0, -1.0, 0.0));
 			} else {
 				Vector3 p = Vector3(x * radius * w, y, z * radius * w);
-				points.push_back(p);
+				mesh->add_vertex3(p);
 				Vector3 normal = Vector3(x * w * scale, radius * (y / scale), z * w * scale);
-				normals.push_back(normal.normalized());
+				mesh->add_normal(normal.normalized());
 			};
-			ADD_TANGENT(z, 0.0, -x, 1.0)
-			uvs.push_back(Vector2(u, v));
+
+			mesh->add_uv(Vector2(u, v));
 			point++;
 
 			if (i > 0 && j > 0) {
-				indices.push_back(prevrow + i - 1);
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 
-				indices.push_back(prevrow + i);
-				indices.push_back(thisrow + i);
-				indices.push_back(thisrow + i - 1);
+				mesh->add_index(msi + prevrow + i);
+				mesh->add_index(msi + thisrow + i);
+				mesh->add_index(msi + thisrow + i - 1);
 			};
 		};
 
 		prevrow = thisrow;
 		thisrow = point;
 	};
-
-	p_arr[RS::ARRAY_VERTEX] = points;
-	p_arr[RS::ARRAY_NORMAL] = normals;
-	p_arr[RS::ARRAY_TANGENT] = tangents;
-	p_arr[RS::ARRAY_TEX_UV] = uvs;
-	p_arr[RS::ARRAY_INDEX] = indices;
 }
 
-void MeshUtils::create_point(Array &p_arr) {
-	PoolVector<Vector3> faces;
-	faces.resize(1);
-	faces.set(0, Vector3(0.0, 0.0, 0.0));
+void MeshUtils::create_point(Ref<Mesh> mesh) {
+	ERR_FAIL_COND(!mesh.is_valid());
 
-	p_arr[RS::ARRAY_VERTEX] = faces;
+	//TODO This should set mesh type instead
+
+	int msi = mesh->get_vertex_count();
+
+	Vector2 _size = Vector2(0.01, 0.01);
+
+	mesh->add_vertex3(Vector3(0, -_size.y, 0));
+	mesh->add_vertex3(Vector3(-_size.x, _size.y, 0));
+	mesh->add_vertex3(Vector3(_size.x, _size.y, 0));
+
+	mesh->add_normal(Vector3(0, 0, 1));
+	mesh->add_normal(Vector3(0, 0, 1));
+	mesh->add_normal(Vector3(0, 0, 1));
+
+	mesh->add_uv(Vector2(0.5, 1));
+	mesh->add_uv(Vector2(0, 0));
+	mesh->add_uv(Vector2(1, 0));
+
+	mesh->add_triangle(msi, msi + 1, msi + 2);
 }
-
-*/

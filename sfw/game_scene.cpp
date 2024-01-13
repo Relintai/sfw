@@ -34,7 +34,11 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 
 		if (k->get_physical_scancode() == KEY_SPACE) {
 			if (pressed) {
-				immediate = !immediate;
+				++render_type;
+
+				if (render_type >= RENDER_TYPE_MAX) {
+					render_type = 0;
+				}
 			}
 		}
 
@@ -75,10 +79,141 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::render() {
-	if (!immediate) {
+	static float rotmi = 0;
+
+	if (render_type == 0) {
 		render_obj();
-	} else {
+	} else if (render_type == 1) {
 		render_immediate();
+	} else if (render_type == 2) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_simple_test_cone(_mesh_utils_test);
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 3) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_capsule(_mesh_utils_test, 0.5, 0.5);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 4) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_cube(_mesh_utils_test, Vector3(0.5, 0.5, 0.5));
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 5) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_cylinder(_mesh_utils_test, 0.2, 0.5, 1);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 6) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_plane(_mesh_utils_test);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 7) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_prism(_mesh_utils_test);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 8) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_quad(_mesh_utils_test);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 9) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_quad_with_indices(_mesh_utils_test);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 10) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_sphere(_mesh_utils_test, 0.5, 0.5);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 11) {
+		_mesh_utils_test->clear();
+		MeshUtils::create_point(_mesh_utils_test);
+		_mesh_utils_test->fill_colors_random();
+		_mesh_utils_test->upload();
+
+		camera->bind();
+
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
+
+		_mesh_utils_test_mi->render();
 	}
 }
 void GameScene::render_immediate() {
@@ -137,11 +272,11 @@ void GameScene::render_obj() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	static float rot = 0;
-	Transform t = camera->get_camera_transform();
-	t.basis = Basis(Vector3(0, 1, 0), rot);
-	camera->set_camera_transform(t);
-	rot += 0.01;
+	//static float rot = 0;
+	//Transform t = camera->get_camera_transform();
+	//t.basis = Basis(Vector3(0, 1, 0), rot);
+	//camera->set_camera_transform(t);
+	//rot += 0.01;
 
 	Ref<Image> d = texture->get_data();
 	texture->create_from_image(d);
@@ -166,7 +301,7 @@ void GameScene::render_obj() {
 }
 
 GameScene::GameScene() {
-	immediate = false;
+	render_type = 0;
 
 	left = false;
 	right = false;
@@ -273,7 +408,7 @@ GameScene::GameScene() {
 
 	//mesh->clear();
 
-	MeshUtils::create_cone(mesh);
+	MeshUtils::create_simple_test_cone(mesh);
 	mesh->upload();
 
 	mi = memnew(MeshInstance3D());
@@ -328,7 +463,13 @@ GameScene::GameScene() {
 	_text_2d->update();
 	_text_2d->transform.set_origin(Vector2(1200, 250));
 
+	_mesh_utils_test.instance();
+
 	Renderer::initialize();
+
+	_mesh_utils_test_mi = memnew(MeshInstance3D());
+	_mesh_utils_test_mi->material = color_material;
+	_mesh_utils_test_mi->mesh = _mesh_utils_test;
 }
 
 GameScene::~GameScene() {

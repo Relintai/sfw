@@ -23,6 +23,10 @@ class GameScene : public Scene {
 	SFW_OBJECT(GameScene, Scene);
 
 public:
+	enum RenderTypes {
+		RENDER_TYPE_MAX = 12
+	};
+
 	virtual void input_event(const Ref<InputEvent> &event);
 	virtual void update(float delta);
 	virtual void render();
@@ -32,7 +36,7 @@ public:
 	GameScene();
 	~GameScene();
 
-	bool immediate;
+	int render_type;
 
 	bool left;
 	bool right;
@@ -61,6 +65,9 @@ public:
 	Ref<ColorMaterial> color_material;
 
 	Text2D *_text_2d;
+
+	Ref<Mesh> _mesh_utils_test;
+	MeshInstance3D *_mesh_utils_test_mi;
 
 	//ColoredMaterial *cmaterial;
 };
