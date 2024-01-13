@@ -2,7 +2,7 @@
 #define SFWL_H
 
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
-{{FILEINLINE:tools/merger/sfw_linceses.inl.h}}
+{{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
 #define _REENTRANT
 

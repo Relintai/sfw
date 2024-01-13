@@ -1,7 +1,7 @@
 
 
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
-{{FILEINLINE:tools/merger/sfw_linceses.inl.h}}
+{{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
 #include <cstdio>
 #include <stdio.h>

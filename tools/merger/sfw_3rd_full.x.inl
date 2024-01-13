@@ -1,7 +1,8 @@
 
 
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
-{{FILEINLINE:tools/merger/sfw_linceses.inl.h}}
+{{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
+{{FILEINLINE:tools/merger/sfw_linceses_render_core.inl.h}}
 
 #ifdef SFW_3RD_IMPL
 #define GLAD_GL_IMPLEMENTATION // glad

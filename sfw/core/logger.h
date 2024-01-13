@@ -3,7 +3,6 @@
 #define LOGGER_H
 //--STRIP
 
-
 class String;
 
 class RLogger {
