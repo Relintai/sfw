@@ -31,7 +31,7 @@
 //--STRIP
 #include "font.h"
 
-#include "window.h"
+#include "app_window.h"
 
 #include "3rd_glad.h"
 #define STB_TRUETYPE_IMPLEMENTATION

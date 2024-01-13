@@ -469,7 +469,7 @@
 //--STRIP
 //#include "render_core/texture.h"
 //#include "core/memory.h"
-//#include "render_core/window.h"
+//#include "render_core/app_window.h"
 //--STRIP
 {{FILE:sfw/render_core/texture.cpp}}
 //--STRIP
@@ -478,7 +478,7 @@
 //#include "core/stime.h"
 //#include "render_core/input.h"
 //#include "render_core/input_map.h"
-//#include "render_core/window.h"
+//#include "render_core/app_window.h"
 //#include "core/pool_vector.h"
 //#include "core/string_name.h"
 //#include "object/core_string_names.h"
@@ -502,7 +502,7 @@
 {{FILE:sfw/render_core/mesh.cpp}}
 //--STRIP
 //#include "font.h"
-//#include "window.h"
+//#include "app_window.h"
 //#include "3rd_glad.h"
 //#include "3rd_stb_truetype.h"
 //#include "font_data_bm_mini.inc.h"
@@ -574,7 +574,7 @@
 //--STRIP
 {{FILE:sfw/render_core/image.cpp}}
 //--STRIP
-//#include "render_core/window.h"
+//#include "render_core/app_window.h"
 //#include "render_core/3rd_glad.h"
 //#include "3rd_glfw3.h"
 //#include "core/error_macros.h"
@@ -608,7 +608,7 @@
 //#include "render_core/input_map.h"
 //#include "render_core/keyboard.h"
 //#include "render_core/texture.h"
-//#include "render_core/window.h"
+//#include "render_core/app_window.h"
 //#include "render_core/3rd_glfw3.h"
 //--STRIP
 {{FILE:sfw/render_core/input.cpp}}
@@ -624,7 +624,7 @@
 //#include "render_core/mesh.h"
 //#include "render_core/texture.h"
 //#include "render_core/texture_material_2d.h"
-//#include "render_core/window.h"
+//#include "render_core/app_window.h"
 //#include "render_core/render_state.h"
 //--STRIP
 {{FILE:sfw/render_immediate/renderer.cpp}}

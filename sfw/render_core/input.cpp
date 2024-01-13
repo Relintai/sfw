@@ -12,7 +12,7 @@
 #include "render_core/input_map.h"
 #include "render_core/keyboard.h"
 #include "render_core/texture.h"
-#include "render_core/window.h"
+#include "render_core/app_window.h"
 
 #include "render_core/3rd_glfw3.h"
 //--STRIP

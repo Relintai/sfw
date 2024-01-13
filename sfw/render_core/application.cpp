@@ -11,7 +11,7 @@
 #include "core/stime.h"
 #include "render_core/input.h"
 #include "render_core/input_map.h"
-#include "render_core/window.h"
+#include "render_core/app_window.h"
 
 #include "core/sfw_core.h"
 #include "object/core_string_names.h"

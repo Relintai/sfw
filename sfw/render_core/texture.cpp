@@ -4,7 +4,7 @@
 #include "core/memory.h"
 #include <stdio.h>
 
-#include "render_core/window.h"
+#include "render_core/app_window.h"
 //--STRIP
 
 void Texture::create_from_image(const Ref<Image> &img) {

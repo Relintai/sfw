@@ -1,6 +1,6 @@
 //--STRIP
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef APP_WINDOW_H
+#define APP_WINDOW_H
 //--STRIP
 
 // -----------------------------------------------------------------------------

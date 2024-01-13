@@ -2,7 +2,7 @@
 // fps locking
 
 //--STRIP
-#include "render_core/window.h"
+#include "render_core/app_window.h"
 
 #define GLAD_GL_IMPLEMENTATION // glad
 #include "render_core/3rd_glad.h"

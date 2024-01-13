@@ -8,7 +8,7 @@
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
 #include "render_core/texture_material_2d.h"
-#include "render_core/window.h"
+#include "render_core/app_window.h"
 
 #include "render_core/render_state.h"
 //--STRIP

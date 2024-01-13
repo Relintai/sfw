@@ -708,7 +708,7 @@
 //#include "core/int_types.h"
 //#include "core/vector2.h"
 //--STRIP
-{{FILE:sfw/render_core/window.h}}
+{{FILE:sfw/render_core/app_window.h}}
 //--STRIP
 //#include "core/int_types.h"
 //#include "object/object.h"
