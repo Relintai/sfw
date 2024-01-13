@@ -113,7 +113,7 @@ public:
 		CURSOR_SW_AUTO, // software cursor, ui driven. note: this is the only icon that may be recorded or snapshotted
 	};
 
-	void set_cursor_shape(unsigned shape);
+	void set_cursor_shape(const CURSOR_SHAPES shape);
 
 	const char *get_clipboard();
 	void set_clipboard(const char *text);

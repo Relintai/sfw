@@ -775,12 +775,12 @@ void AppWindow::create_default_cursors() {
 	}
 }
 
-void AppWindow::set_cursor_shape(unsigned mode) {
-	_cursorshape = (mode &= 7);
+void AppWindow::set_cursor_shape(const CURSOR_SHAPES mode) {
+	_cursorshape = static_cast<int>(mode);
 
 	create_default_cursors();
 
-	glfwSetCursor(_window, mode < 7 ? cursors[mode] : NULL);
+	glfwSetCursor(_window, _cursorshape < 7 ? cursors[_cursorshape] : NULL);
 }
 
 void AppWindow::set_mouse_mode(MouseMode p_mode) {

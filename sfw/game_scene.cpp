@@ -88,9 +88,6 @@ void GameScene::render() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-	
-
 	static float rotmi = 0;
 
 	if (render_type == 0) {
