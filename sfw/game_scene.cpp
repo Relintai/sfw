@@ -7,6 +7,7 @@
 #include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
 #include "render_immediate/renderer.h"
+#include "render_core/window.h"
 //#include "render_core/font.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
@@ -79,6 +80,17 @@ void GameScene::update(float delta) {
 }
 
 void GameScene::render() {
+	glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
+
+	AppWindow::get_singleton()->reset_viewport();
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+	
+
 	static float rotmi = 0;
 
 	if (render_type == 0) {
@@ -269,9 +281,6 @@ void GameScene::render_immediate() {
 }
 
 void GameScene::render_obj() {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	//static float rot = 0;
 	//Transform t = camera->get_camera_transform();
 	//t.basis = Basis(Vector3(0, 1, 0), rot);

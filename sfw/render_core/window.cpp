@@ -250,31 +250,7 @@ void AppWindow::glNewFrame() {
 	AppWindow::get_singleton()->width = w;
 	AppWindow::get_singleton()->height = h;
 
-	// blending defaults
-	glEnable(GL_BLEND);
-
-	// culling defaults
-	//  glEnable(GL_CULL_FACE);
-	//  glCullFace(GL_BACK);
-	//  glFrontFace(GL_CCW);
-
-	// depth-testing defaults
-	glEnable(GL_DEPTH_TEST);
-	//  glDepthFunc(GL_LESS);
-
-	// depth-writing defaults
-	//  glDepthMask(GL_TRUE);
-
-	// seamless cubemaps
-	//  glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
-
 	glViewport(0, 0, width, height);
-
-	// GLfloat bgColor[4]; glGetFloatv(GL_COLOR_CLEAR_VALUE, bgColor);
-	glClearColor(winbgcolor.r, winbgcolor.g, winbgcolor.b, has_transparent() ? 0 : winbgcolor.a); // @transparent
-	//glClearColor(0.15,0.15,0.15,1);
-	//glClearColor( clearColor.r, clearColor.g, clearColor.b, clearColor.a );
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_scale, unsigned int flags, float window_scale) {
@@ -510,38 +486,19 @@ int AppWindow::frame_begin() {
 }
 
 void AppWindow::frame_end() {
-	// flush batching systems that need to be rendered before frame swapping. order matters.
-	{
-		/*
-		font_goto(0, 0);
-		touch_flush();
-		sprite_flush();
-
-		// flush all debugdraw calls before swap
-		dd_ontop = 0;
-		ddraw_flush();
-		glClear(GL_DEPTH_BUFFER_BIT);
-		dd_ontop = 1;
-		ddraw_flush();
-
-		ui_render();
-		*/
-	}
 }
 
 void AppWindow::frame_swap() {
-	// glFinish();
-	/*
-#ifndef __EMSCRIPTEN__
-	vsync(hz);
-#endif
-	*/
 	glfwSwapBuffers(_window);
 	// emscripten_webgl_commit_frame();
 }
 
 void AppWindow::shutdown() {
 	loop_exit(); // finish emscripten loop automatically
+}
+
+void AppWindow::reset_viewport() {
+	glViewport(0, 0, width, height);
 }
 
 int AppWindow::swap() {

@@ -107,6 +107,8 @@ public:
 
 	void shutdown();
 
+	void reset_viewport();
+
 	Vector2 dpi();
 
 	enum CURSOR_SHAPES {
