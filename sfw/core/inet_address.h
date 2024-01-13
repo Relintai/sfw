@@ -24,7 +24,9 @@
 
 //On windows link to ws2_32
 
+//--STRIP
 #include "int_types.h"
+//--STRIP
 
 #if defined(_WIN64) || defined(_WIN32)
 #include <ws2tcpip.h>
@@ -38,6 +40,7 @@ using uint16_t = unsigned short;
 #endif
 
 //--STRIP
+#include "int_types.h"
 #include "core/ustring.h"
 //--STRIP
 

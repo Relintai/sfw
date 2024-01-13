@@ -8,7 +8,9 @@
 
 // Author: Shuo Chen (chenshuo at chenshuo dot com)
 
+//--STRIP
 #include "inet_address.h"
+//--STRIP
 
 #include <cstdio>
 #include <cstring>

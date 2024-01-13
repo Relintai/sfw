@@ -369,6 +369,16 @@
 {{FILE:sfw/core/dir_access.cpp}}
 
 //--STRIP
+//System includes
+//--STRIP
+{{FILE:sfw/core/inet_address.cpp}}
+//--STRIP
+//#include "core/error_macros.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfw/core/socket.cpp}}
+
+//--STRIP
 //#include "core/pool_vector.h"
 //#include "core/string_name.h"
 //--STRIP

@@ -411,6 +411,16 @@
 {{FILE:sfw/core/dir_access.h}}
 
 //--STRIP
+//#include "int_types.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfw/core/inet_address.h}}
+//--STRIP
+//#include "inet_address.h"
+//--STRIP
+{{FILE:sfw/core/socket.h}}
+
+//--STRIP
 //no includes
 //--STRIP
 {{FILE:sfw/core/sfw_core.h}}
