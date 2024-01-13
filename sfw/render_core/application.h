@@ -38,6 +38,8 @@ public:
 	virtual void update(float delta);
 	virtual void render();
 
+	void start_main_loop();
+
 	uint64_t get_idle_frames() const {
 		return _idle_frames;
 	}

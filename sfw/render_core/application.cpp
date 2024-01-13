@@ -1,4 +1,9 @@
 //--STRIP
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif // __EMSCRIPTEN__
+
 #include "render_core/application.h"
 
 #include "core/math_defs.h"
@@ -28,6 +33,16 @@ void Application::render() {
 	ERR_FAIL_COND(scene.is_null());
 
 	scene->render();
+}
+
+void Application::start_main_loop() {
+#ifdef __EMSCRIPTEN__
+	emscripten_set_main_loop(&Application::main_loop_static, 0, 1);
+#else
+	while (running) {
+		main_loop();
+	}
+#endif // __EMSCRIPTEN__
 }
 
 void Application::main_loop() {
