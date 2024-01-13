@@ -24,9 +24,9 @@
 
 //On windows link to ws2_32
 
-#include <inttypes.h>
+#include "int_types.h"
 
-#ifdef _WIN32
+#if defined(_WIN64) || defined(_WIN32)
 #include <ws2tcpip.h>
 using sa_family_t = unsigned short;
 using in_addr_t = uint32_t;
@@ -37,7 +37,9 @@ using uint16_t = unsigned short;
 #include <sys/socket.h>
 #endif
 
+//--STRIP
 #include "core/ustring.h"
+//--STRIP
 
 class InetAddress {
 public:
@@ -68,12 +70,15 @@ public:
 	InetAddress(uint16_t port = 0, bool loopbackOnly = false, bool ipv6 = false);
 	InetAddress(const String &ip, uint16_t port, bool ipv6 = false);
 
-	explicit InetAddress(const struct sockaddr_in &addr) :
-			_addr(addr), _is_unspecified(false) {
+	explicit InetAddress(const struct sockaddr_in &addr) {
+		_addr = addr;
+		_is_unspecified = false;
 	}
 
-	explicit InetAddress(const struct sockaddr_in6 &addr) :
-			_addr6(addr), _is_ip_v6(true), _is_unspecified(false) {
+	explicit InetAddress(const struct sockaddr_in6 &addr) {
+		_addr6 = addr;
+		_is_ip_v6 = true;
+		_is_unspecified = false;
 	}
 
 private:
@@ -82,8 +87,8 @@ private:
 		struct sockaddr_in6 _addr6;
 	};
 
-	bool _is_ip_v6{ false };
-	bool _is_unspecified{ true };
+	bool _is_ip_v6;
+	bool _is_unspecified;
 };
 
 #endif

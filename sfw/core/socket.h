@@ -17,48 +17,46 @@
  *
  */
 
-#ifndef _WIN32
-#include <unistd.h>
-#endif
-#include <fcntl.h>
-
 #include "inet_address.h"
 
-class Socket
-{
+class Socket {
 public:
-    void create_net_socket();
-    void create(int family);
-    void set_non_block_and_close_on_exit();
-    int get_error();
-    int connect(const InetAddress &address);
-    bool is_self_connect();
-    void bind_address(const InetAddress &address);
-    void listen();
-    int accept(Socket *sock);
-    void close_write();
-    int read(char *buffer, uint64_t len);
-    int send(const char *buffer, uint64_t len);
+	void create_net_socket();
+	void create(int family);
+	void close_socket();
 
-    void set_tcp_nodelay(bool on);
-    void set_reuse_addr(bool on);
-    void set_reuse_port(bool on);
-    void set_keep_alive(bool on);
+	int connect(const InetAddress &address);
+	int bind_address(const InetAddress &address);
+	int listen();
+	int accept(Socket *sock);
 
-    struct sockaddr_in6 get_local_addr();
-    struct sockaddr_in6 get_peer_addr();
+	int close_write();
 
-    static int global_init();
+	int read(char *buffer, uint64_t len);
+	int send(const char *buffer, uint64_t len);
 
-    Socket();
-    Socket(int socketFD, const InetAddress &address);
-    ~Socket();
+	bool is_self_connect();
 
-    int _socket;
-    InetAddress _address;
+	void set_tcp_nodelay(bool on);
+	void set_reuse_addr(bool on);
+	int set_reuse_port(bool on);
+	void set_keep_alive(bool on);
+
+	int set_non_block_and_close_on_exit();
+
+	int get_error();
+
+	struct sockaddr_in6 get_local_addr(int *r_err = NULL);
+	struct sockaddr_in6 get_peer_addr(int *r_err = NULL);
+
+	static int global_init();
+
+	Socket();
+	Socket(int socketFD, const InetAddress &address);
+	~Socket();
+
+	int _socket;
+	InetAddress _address;
 };
 
-
 #endif // SOCKET_H
-
-

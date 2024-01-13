@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <cstring>
 
-#ifdef _WIN32
+#if defined(_WIN64) || defined(_WIN32)
 
 #ifdef __GNUC__
 #define GCCWIN
@@ -102,12 +102,16 @@ bool InetAddress::is_intranet_ip() const {
 		auto addrP = ip6_net_endian();
 		// Loopback ip
 		if (*addrP == 0 && *(addrP + 1) == 0 && *(addrP + 2) == 0 &&
-				ntohl(*(addrP + 3)) == 1)
+				ntohl(*(addrP + 3)) == 1) {
 			return true;
+		}
+
 		// Privated ip is prefixed by FEC0::/10 or FE80::/10, need testing
 		auto i32 = (ntohl(*addrP) & 0xffc00000);
-		if (i32 == 0xfec00000 || i32 == 0xfe800000)
+		if (i32 == 0xfec00000 || i32 == 0xfe800000) {
 			return true;
+		}
+
 		if (*addrP == 0 && *(addrP + 1) == 0 && ntohl(*(addrP + 2)) == 0xffff) {
 			// the IPv6 version of an IPv4 IP address
 			uint32_t ip_addr = ntohl(*(addrP + 3));
@@ -133,12 +137,14 @@ bool InetAddress::is_loopback_ip() const {
 	} else {
 		auto addrP = ip6_net_endian();
 		if (*addrP == 0 && *(addrP + 1) == 0 && *(addrP + 2) == 0 &&
-				ntohl(*(addrP + 3)) == 1)
+				ntohl(*(addrP + 3)) == 1) {
 			return true;
+		}
 		// the IPv6 version of an IPv4 loopback address
 		if (*addrP == 0 && *(addrP + 1) == 0 && ntohl(*(addrP + 2)) == 0xffff &&
-				ntohl(*(addrP + 3)) == 0x7f000001)
+				ntohl(*(addrP + 3)) == 0x7f000001) {
 			return true;
+		}
 	}
 	return false;
 }
@@ -185,7 +191,7 @@ const uint32_t *InetAddress::ip6_net_endian() const {
 // assert(family() == AF_INET6);
 #if defined __linux__ || defined __HAIKU__
 	return _addr6.sin6_addr.s6_addr32;
-#elif defined _WIN32
+#elif defined(_WIN64) || defined(_WIN32)
 	// TODO is this OK ?
 	const struct in6__addruint *_addrtemp =
 			reinterpret_cast<const struct in6__addruint *>(&_addr6.sin6_addr);
@@ -215,8 +221,9 @@ bool InetAddress::is_ip_v6() const {
 	return _is_ip_v6;
 }
 
-InetAddress::InetAddress(uint16_t port, bool loopbackOnly, bool ipv6) :
-		_is_ip_v6(ipv6) {
+InetAddress::InetAddress(uint16_t port, bool loopbackOnly, bool ipv6) {
+	_is_ip_v6 = ipv6;
+
 	if (ipv6) {
 		memset(&_addr6, 0, sizeof(_addr6));
 		_addr6.sin6_family = AF_INET6;
@@ -234,11 +241,13 @@ InetAddress::InetAddress(uint16_t port, bool loopbackOnly, bool ipv6) :
 		_addr.sin_addr.s_addr = htonl(ip);
 		_addr.sin_port = htons(port);
 	}
+
 	_is_unspecified = false;
 }
 
-InetAddress::InetAddress(const String &ip, uint16_t port, bool ipv6) :
-		_is_ip_v6(ipv6) {
+InetAddress::InetAddress(const String &ip, uint16_t port, bool ipv6) {
+	_is_ip_v6 = ipv6;
+
 	if (ipv6) {
 		memset(&_addr6, 0, sizeof(_addr6));
 		_addr6.sin6_family = AF_INET6;
@@ -256,5 +265,6 @@ InetAddress::InetAddress(const String &ip, uint16_t port, bool ipv6) :
 			return;
 		}
 	}
+
 	_is_unspecified = false;
 }
