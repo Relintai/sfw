@@ -36,7 +36,7 @@ void Application::main_loop() {
 	AppWindow *w = AppWindow::get_singleton();
 
 	if (!w->frame_begin()) { // calls Application::main_loop()
-		w->shutdown();
+		running = false;
 		return;
 	}
 

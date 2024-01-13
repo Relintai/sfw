@@ -145,7 +145,7 @@ void AppWindow::glfw_error_callback(int error, const char *description) {
 	CRASH_MSG(String(description) + " (error " + String::num(error) + ")");
 }
 
-void AppWindow::glfw_quit(void) {
+void AppWindow::glfw_quit() {
 	glfwTerminate();
 }
 
@@ -493,30 +493,8 @@ void AppWindow::frame_swap() {
 	// emscripten_webgl_commit_frame();
 }
 
-void AppWindow::shutdown() {
-	loop_exit(); // finish emscripten loop automatically
-}
-
 void AppWindow::reset_viewport() {
 	glViewport(0, 0, width, height);
-}
-
-int AppWindow::swap() {
-	// end frame
-	if (frame_count > 0) {
-		frame_end();
-		frame_swap();
-	}
-
-	++frame_count;
-
-	// begin frame
-	int ready = frame_begin();
-	if (!ready) {
-		shutdown();
-		return 0;
-	}
-	return 1;
 }
 
 void AppWindow::resize() {
@@ -534,37 +512,6 @@ void AppWindow::resize() {
 		last_canvas_size = Vector2(w, h);
 		emscripten_set_canvas_size(w, h);
 	}
-#endif /* __EMSCRIPTEN__ */
-}
-
-void AppWindow::loop_wrapper(void *loopArg) {
-	AppWindow *w = AppWindow::get_singleton();
-	if (w->frame_begin()) {
-		w->resize();
-		w->render_callback(loopArg);
-		w->frame_end();
-		w->frame_swap();
-	} else {
-		w->shutdown();
-	}
-}
-
-void AppWindow::loop(void (*user_function)(void *loopArg), void *loopArg) {
-#ifdef __EMSCRIPTEN__
-	render_callback = user_function;
-	emscripten_set_main_loop_arg(window_loop_wrapper, loopArg, 0, 1);
-#else
-	keep_running = true;
-	while (keep_running)
-		user_function(loopArg);
-#endif /* __EMSCRIPTEN__ */
-}
-
-void AppWindow::loop_exit() {
-#ifdef __EMSCRIPTEN__
-	emscripten_cancel_main_loop();
-#else
-	keep_running = false;
 #endif /* __EMSCRIPTEN__ */
 }
 
@@ -984,8 +931,6 @@ AppWindow::AppWindow() {
 	_has_icon = 0;
 
 	_cursorshape = 1;
-
-	render_callback = NULL;
 
 	width = 0;
 	height = 0;

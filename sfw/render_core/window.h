@@ -45,10 +45,6 @@ public:
 	int frame_begin();
 	void frame_end();
 	void frame_swap();
-	int swap(); // single function that combines above functions (desktop only)
-
-	void loop(void (*function)(void *loopArg), void *loopArg); // run main loop function continuously (emscripten only)
-	void loop_exit(); // exit from main loop function (emscripten only)
 
 	void set_title(const char *title);
 	void set_color(unsigned color);
@@ -61,9 +57,6 @@ public:
 	int get_height();
 	double get_time();
 	double get_delta();
-
-	// bool  hook(void (*func)(), void* userdata); // deprecated
-	// void  unhook(void (*func)()); // deprecated
 
 	void set_focus(); // window attribute using haz catz language for now
 	int has_focus();
@@ -105,8 +98,6 @@ public:
 	void fps_lock(float fps);
 	void fps_unlock();
 
-	void shutdown();
-
 	void reset_viewport();
 
 	Vector2 dpi();
@@ -140,7 +131,6 @@ protected:
 	static void window_hints(unsigned flags);
 	GLFWmonitor *find_monitor(int wx, int wy);
 	void resize();
-	static void loop_wrapper(void *loopArg);
 	void glNewFrame();
 	double get_scale();
 	void create_default_cursors();
@@ -172,7 +162,6 @@ protected:
 
 	int _cursorshape = 1;
 
-	void (*render_callback)(void *loopArg);
 	Vector2 last_canvas_size;
 
 	int width;
