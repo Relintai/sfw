@@ -158,6 +158,8 @@ int Socket::bind_address(const InetAddress &address) {
 		return errno;
 #endif
 	}
+
+	return ret;
 }
 
 int Socket::listen() {
