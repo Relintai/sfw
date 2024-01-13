@@ -3961,7 +3961,7 @@ GLFWAPI GLFWwindowcontentscalefun glfwSetWindowContentScaleCallback(GLFWwindow* 
  *
  *  @sa @ref events
  *  @sa @ref glfwWaitEvents
- *  @sa @ref glfwWaitEventsTimeout
+ *  @sa @ref glfwWaitEventSFWTimeout
  *
  *  @since Added in version 1.0.
  *
@@ -4006,7 +4006,7 @@ GLFWAPI void glfwPollEvents(void);
  *
  *  @sa @ref events
  *  @sa @ref glfwPollEvents
- *  @sa @ref glfwWaitEventsTimeout
+ *  @sa @ref glfwWaitEventSFWTimeout
  *
  *  @since Added in version 2.5.
  *
@@ -4061,12 +4061,12 @@ GLFWAPI void glfwWaitEvents(void);
  *
  *  @ingroup window
  */
-GLFWAPI void glfwWaitEventsTimeout(double timeout);
+GLFWAPI void glfwWaitEventSFWTimeout(double timeout);
 
 /*! @brief Posts an empty event to the event queue.
  *
  *  This function posts an empty event from the current thread to the event
- *  queue, causing @ref glfwWaitEvents or @ref glfwWaitEventsTimeout to return.
+ *  queue, causing @ref glfwWaitEvents or @ref glfwWaitEventSFWTimeout to return.
  *
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED and @ref
  *  GLFW_PLATFORM_ERROR.
@@ -4075,7 +4075,7 @@ GLFWAPI void glfwWaitEventsTimeout(double timeout);
  *
  *  @sa @ref events
  *  @sa @ref glfwWaitEvents
- *  @sa @ref glfwWaitEventsTimeout
+ *  @sa @ref glfwWaitEventSFWTimeout
  *
  *  @since Added in version 3.1.
  *
@@ -9438,7 +9438,7 @@ typedef struct _GLFWwindowX11
 
     // The time of the last KeyPress event per keycode, for discarding
     // duplicate key events generated for some keys by ibus
-    Time            keyPressTimes[256];
+    Time            keyPresSFWTimes[256];
 } _GLFWwindowX11;
 
 // X11-specific global data
@@ -11434,7 +11434,7 @@ void _glfwPlatformSetWindowOpacity(_GLFWwindow* window, float opacity);
 
 void _glfwPlatformPollEvents(void);
 void _glfwPlatformWaitEvents(void);
-void _glfwPlatformWaitEventsTimeout(double timeout);
+void _glfwPlatformWaitEventSFWTimeout(double timeout);
 void _glfwPlatformPostEmptyEvent(void);
 
 void _glfwPlatformGetRequiredInstanceExtensions(const char** extensions);
@@ -18236,7 +18236,7 @@ GLFWAPI void glfwWaitEvents(void)
     _glfwPlatformWaitEvents();
 }
 
-GLFWAPI void glfwWaitEventsTimeout(double timeout)
+GLFWAPI void glfwWaitEventSFWTimeout(double timeout)
 {
     _GLFW_REQUIRE_INIT();
     assert(timeout == timeout);
@@ -18249,7 +18249,7 @@ GLFWAPI void glfwWaitEventsTimeout(double timeout)
         return;
     }
 
-    _glfwPlatformWaitEventsTimeout(timeout);
+    _glfwPlatformWaitEventSFWTimeout(timeout);
 }
 
 GLFWAPI void glfwPostEmptyEvent(void)
@@ -22497,7 +22497,7 @@ void _glfwPlatformWaitEvents(void)
     _glfwPlatformPollEvents();
 }
 
-void _glfwPlatformWaitEventsTimeout(double timeout)
+void _glfwPlatformWaitEventSFWTimeout(double timeout)
 {
     MsgWaitForMultipleObjects(0, NULL, FALSE, (DWORD) (timeout * 1e3), QS_ALLEVENTS);
 
@@ -23984,7 +23984,7 @@ void _glfwPlatformWaitEvents(void)
 {
 }
 
-void _glfwPlatformWaitEventsTimeout(double timeout)
+void _glfwPlatformWaitEventSFWTimeout(double timeout)
 {
 }
 
@@ -27352,13 +27352,13 @@ static void processEvent(XEvent *event)
                 // NOTE: Always allow the first event for each key through
                 //       (the server never sends a timestamp of zero)
                 // NOTE: Timestamp difference is compared to handle wrap-around
-                Time diff = event->xkey.time - window->x11.keyPressTimes[keycode];
+                Time diff = event->xkey.time - window->x11.keyPresSFWTimes[keycode];
                 if (diff == event->xkey.time || (diff > 0 && diff < ((Time)1 << 31)))
                 {
                     if (keycode)
                         _glfwInputKey(window, key, keycode, GLFW_PRESS, mods);
 
-                    window->x11.keyPressTimes[keycode] = event->xkey.time;
+                    window->x11.keyPresSFWTimes[keycode] = event->xkey.time;
                 }
 
                 if (!filtered)
@@ -28887,7 +28887,7 @@ void _glfwPlatformWaitEvents(void)
     _glfwPlatformPollEvents();
 }
 
-void _glfwPlatformWaitEventsTimeout(double timeout)
+void _glfwPlatformWaitEventSFWTimeout(double timeout)
 {
     waitForAnyEvent(&timeout);
     _glfwPlatformPollEvents();
@@ -32923,7 +32923,7 @@ void _glfwPlatformWaitEvents(void)
     handleEvents(NULL);
 }
 
-void _glfwPlatformWaitEventsTimeout(double timeout)
+void _glfwPlatformWaitEventSFWTimeout(double timeout)
 {
     handleEvents(&timeout);
 }
@@ -37115,7 +37115,7 @@ void _glfwPlatformWaitEvents(void)
     } // autoreleasepool
 }
 
-void _glfwPlatformWaitEventsTimeout(double timeout)
+void _glfwPlatformWaitEventSFWTimeout(double timeout)
 {
     @autoreleasepool {
 

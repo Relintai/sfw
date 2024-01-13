@@ -207,9 +207,9 @@
 {{FILE:sfw/core/safe_refcount.cpp}}
 
 //--STRIP
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //--STRIP
-{{FILE:sfw/core/stime.cpp}}
+{{FILE:sfw/core/sfw_time.cpp}}
 
 //--STRIP
 //#include "core/memory.h"
@@ -234,7 +234,7 @@
 
 //--STRIP
 //#include "core/random_pcg.h"
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //#include "core/error_macros.h"
 //--STRIP
 {{FILE:sfw/core/random_pcg.cpp}}
@@ -475,7 +475,7 @@
 //--STRIP
 //#include "render_core/application.h"
 //#include "core/math_defs.h"
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //#include "render_core/input.h"
 //#include "render_core/input_map.h"
 //#include "render_core/app_window.h"
@@ -578,7 +578,7 @@
 //#include "render_core/3rd_glad.h"
 //#include "3rd_glfw3.h"
 //#include "core/error_macros.h"
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //#include "core/ustring.h"
 //#include "core/vector4.h"
 //#include "render_core/application.h"
@@ -603,7 +603,7 @@
 //--STRIP
 //#include "input.h"
 //#include "core/logger.h"
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //#include "render_core/application.h"
 //#include "render_core/input_map.h"
 //#include "render_core/keyboard.h"

@@ -2673,7 +2673,7 @@ typedef void (*GLADpostcallback)(void *ret, const char *name, GLADapiproc apipro
  *    khronos_time_ns_t           unsigned 64 bit time in nanoseconds
  *    khronos_utime_nanoseconds_t unsigned time interval or absolute time in
  *                                         nanoseconds
- *    khronos_stime_nanoseconds_t signed time interval in nanoseconds
+ *    khronos_SFWTime_nanoseconds_t signed time interval in nanoseconds
  *    khronos_boolean_enum_t      enumerated boolean type. This should
  *      only be used as a base type when a client API's boolean type is
  *      an enum. Client APIs which use an integer or other type for
@@ -2873,7 +2873,7 @@ typedef          float         khronos_float_t;
  * may be either signed or unsigned.
  */
 typedef khronos_uint64_t       khronos_utime_nanoseconds_t;
-typedef khronos_int64_t        khronos_stime_nanoseconds_t;
+typedef khronos_int64_t        khronos_SFWTime_nanoseconds_t;
 #endif
 
 /*

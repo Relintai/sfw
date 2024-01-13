@@ -7,7 +7,7 @@
 #include "input.h"
 
 #include "core/logger.h"
-#include "core/stime.h"
+#include "core/sfw_time.h"
 #include "render_core/application.h"
 #include "render_core/input_map.h"
 #include "render_core/keyboard.h"
@@ -578,7 +578,7 @@ void Input::GLFWmousebuttonfunCallback(GLFWwindow *window, int button, int actio
 	mb->set_pressed(pressed);
 
 	if (pressed) {
-		uint64_t diff = STime::time_us() / 1000 - self->last_click_ms;
+		uint64_t diff = SFWTime::time_us() / 1000 - self->last_click_ms;
 
 		if (mb->get_button_index() == self->last_click_button_index) {
 			if (diff < 400 && Point2(self->last_click_pos).distance_to(last_mouse_pos) < 5) {
@@ -798,7 +798,7 @@ String Input::_hex_str(uint8_t p_byte) {
 Input *Input::singleton = nullptr;
 
 void Input::SpeedTrack::update(const Vector2 &p_delta_p) {
-	uint64_t tick = STime::time_us();
+	uint64_t tick = SFWTime::time_us();
 	uint32_t tdiff = tick - last_tick;
 	float delta_t = tdiff / 1000000.0;
 	last_tick = tick;
@@ -825,7 +825,7 @@ void Input::SpeedTrack::update(const Vector2 &p_delta_p) {
 }
 
 void Input::SpeedTrack::reset() {
-	last_tick = STime::time_us();
+	last_tick = SFWTime::time_us();
 	speed = Vector2();
 	accum = Vector2();
 	accum_t = 0;

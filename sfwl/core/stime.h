@@ -1,5 +1,5 @@
-#ifndef STIME_H
-#define STIME_H
+#ifndef SFWTime_H
+#define SFWTime_H
 
 // -----------------------------------------------------------------------------
 // time framework utils
@@ -9,7 +9,7 @@
 #include "core/int_types.h"
 //--STRIP
 
-class STime {
+class SFWTime {
 public:
 	static uint64_t date(); // YYYYMMDDhhmmss
 	static uint64_t date_epoch(); // linux epoch

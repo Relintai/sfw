@@ -47,7 +47,7 @@
 //--STRIP
 //#include "core/int_types.h"
 //--STRIP
-{{FILE:sfw/core/stime.h}}
+{{FILE:sfw/core/sfw_time.h}}
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP

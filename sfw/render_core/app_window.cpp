@@ -25,7 +25,7 @@
 #undef Time
 
 #include "core/error_macros.h"
-#include "core/stime.h"
+#include "core/sfw_time.h"
 #include "core/ustring.h"
 #include "core/vector4.h"
 #include "render_core/application.h"
@@ -40,11 +40,11 @@ static int fps__timing_thread(void *arg) {
 	while (fps_active) {
 		if (framerate <= 0) {
 			loop_counter = timer_counter = 0;
-			STime::sleep_ms(250);
+			SFWTime::sleep_ms(250);
 		} else {
 			timer_counter++;
 			int64_t tt = (int64_t)(1e9 / (float)framerate) - ns_excess;
-			uint64_t took = -STime::time_ns();
+			uint64_t took = -SFWTime::time_ns();
 #if is(win32)
 			timeBeginPeriod(1);
 			Sleep(tt > 0 ? tt / 1e6 : 0);
@@ -84,7 +84,7 @@ static int fps_wait() {
 	// if we throttled too much, cpu idle wait
 	while (fps_active && (loop_counter > timer_counter)) {
 		//thread_yield();
-		STime::sleep_ns(100);
+		SFWTime::sleep_ns(100);
 	}
 
 	// max auto frameskip is 10: ie, even if speed is low paint at least one frame every 10
@@ -434,7 +434,7 @@ bool AppWindow::create(bool full_Screen, float canvas_scale, unsigned int flags,
 char *AppWindow::get_stats() {
 	static double num_frames = 0, begin = FLT_MAX, prev_frame = 0;
 
-	double now = STime::time_ss();
+	double now = SFWTime::time_ss();
 	if (boot_time < 0) {
 		boot_time = now;
 	}

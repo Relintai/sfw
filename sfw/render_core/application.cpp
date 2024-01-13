@@ -8,7 +8,7 @@
 
 #include "core/math_defs.h"
 
-#include "core/stime.h"
+#include "core/sfw_time.h"
 #include "render_core/input.h"
 #include "render_core/input_map.h"
 #include "render_core/app_window.h"
@@ -46,7 +46,7 @@ void Application::start_main_loop() {
 }
 
 void Application::main_loop() {
-	uint64_t start = STime::time_us();
+	uint64_t start = SFWTime::time_us();
 
 	AppWindow *w = AppWindow::get_singleton();
 
@@ -64,7 +64,7 @@ void Application::main_loop() {
 	//render
 	render();
 
-	uint64_t end = STime::time_us();
+	uint64_t end = SFWTime::time_us();
 
 	uint64_t elapsed_us = end - start;
 
@@ -78,7 +78,7 @@ void Application::main_loop() {
 	if (remaining > 0) {
 		frame_delta = tfps;
 
-		STime::sleep_us((double)SEC_TO_USEC(remaining));
+		SFWTime::sleep_us((double)SEC_TO_USEC(remaining));
 	} else {
 		frame_delta = elapsed_seconds;
 	}

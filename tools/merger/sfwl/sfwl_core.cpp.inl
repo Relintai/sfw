@@ -35,9 +35,9 @@
 {{FILE:sfwl/core/safe_refcount.cpp}}
 
 //--STRIP
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //--STRIP
-{{FILE:sfwl/core/stime.cpp}}
+{{FILE:sfwl/core/sfw_time.cpp}}
 
 //--STRIP
 //#include "core/memory.h"
@@ -62,7 +62,7 @@
 
 //--STRIP
 //#include "core/random_pcg.h"
-//#include "core/stime.h"
+//#include "core/sfw_time.h"
 //#include "core/error_macros.h"
 //--STRIP
 {{FILE:sfwl/core/random_pcg.cpp}}

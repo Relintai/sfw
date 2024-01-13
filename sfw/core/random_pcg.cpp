@@ -6,7 +6,7 @@
 //--STRIP
 #include "core/random_pcg.h"
 
-#include "core/stime.h"
+#include "core/sfw_time.h"
 #include "core/error_macros.h"
 //--STRIP
 
@@ -17,7 +17,7 @@ RandomPCG::RandomPCG(uint64_t p_seed, uint64_t p_inc) :
 }
 
 void RandomPCG::randomize() {
-	seed((STime::date() + STime::time_us()) * pcg.state + PCG_DEFAULT_INC_64);
+	seed((SFWTime::date() + SFWTime::time_us()) * pcg.state + PCG_DEFAULT_INC_64);
 }
 
 double RandomPCG::random(double p_from, double p_to) {
