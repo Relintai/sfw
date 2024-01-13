@@ -16,8 +16,8 @@
 #include "core/list.h"
 
 #include "core/file_access.h"
-#include "core/memory.h"
 #include "core/local_vector.h"
+#include "core/memory.h"
 //--STRIP
 
 #if defined(_WIN64) || defined(_WIN32)
@@ -29,9 +29,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/statvfs.h>
 
 #ifdef HAVE_MNTENT
 #include <mntent.h>
@@ -394,8 +394,9 @@ bool DirAccess::is_link(String p_file) {
 	}
 
 	struct stat flags;
-	if ((lstat(p_file.utf8().get_data(), &flags) != 0))
+	if ((lstat(p_file.utf8().get_data(), &flags) != 0)) {
 		return FAILED;
+	}
 
 	return S_ISLNK(flags.st_mode);
 }
@@ -416,8 +417,9 @@ String DirAccess::read_link(String p_file) {
 }
 
 Error DirAccess::create_link(String p_source, String p_target) {
-	if (p_target.is_rel_path())
+	if (p_target.is_rel_path()) {
 		p_target = get_current_dir().plus_file(p_target);
+	}
 
 	if (symlink(p_source.utf8().get_data(), p_target.utf8().get_data()) == 0) {
 		return OK;
