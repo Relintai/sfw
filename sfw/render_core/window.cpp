@@ -559,8 +559,9 @@ uint64_t AppWindow::frame() {
 }
 void AppWindow::set_title(const char *title_) {
 	snprintf(title, 128, "%s", title_);
-	if (!title[0])
+	if (!title[0]) {
 		glfwSetWindowTitle(_window, title);
+	}
 }
 void AppWindow::set_color(unsigned color) {
 	unsigned r = (color >> 0) & 255;
@@ -810,8 +811,9 @@ AppWindow::MouseMode AppWindow::get_mouse_mode() const {
 }
 
 void AppWindow::set_visible(int visible) {
-	if (!_window)
+	if (!_window) {
 		return;
+	}
 
 	//if(window) (visible ? glfwRestoreWindow : glfwIconifyWindow)(window);
 	(visible ? glfwShowWindow : glfwHideWindow)(_window);
@@ -829,8 +831,10 @@ double AppWindow::get_aspect() {
 	return (double)w / (h + !h);
 }
 void AppWindow::aspect_lock(unsigned numer, unsigned denom) {
-	if (!_window)
+	if (!_window) {
 		return;
+	}
+
 	if (numer * denom != 0) {
 		glfwSetWindowAspectRatio(_window, numer, denom);
 	} else {
@@ -838,8 +842,10 @@ void AppWindow::aspect_lock(unsigned numer, unsigned denom) {
 	}
 }
 void AppWindow::aspect_unlock() {
-	if (!_window)
+	if (!_window) {
 		return;
+	}
+	
 	AppWindow::aspect_lock(0, 0);
 }
 
