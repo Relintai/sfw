@@ -8,10 +8,15 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "core/typedefs.h"
 
 #if !defined(NO_THREADS)
 #include "core/safe_refcount.h"
+#endif
+//--STRIP
+
+#if !defined(NO_THREADS)
 #include <thread>
 #endif
 

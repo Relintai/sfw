@@ -1,4 +1,6 @@
+//--STRIP
 #include "socket.h"
+//--STRIP
 
 //Based on:
 

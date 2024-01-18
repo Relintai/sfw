@@ -211,6 +211,14 @@
 //#include "core/error/error_macros.h"
 //--STRIP
 {{FILE:sfw/core/safe_refcount.cpp}}
+//--STRIP
+//--STRIP
+//#include "thread.h"
+//#include "core/error_macros.h"
+//#include "core/safe_refcount.h"
+//--STRIP
+//--STRIP
+{{FILE:sfw/core/thread.cpp}}
 
 //--STRIP
 //#include "core/sfw_time.h"
