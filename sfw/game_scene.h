@@ -20,6 +20,7 @@
 #include "render_objects/tile_map.h"
 
 class Thread;
+class Socket;
 
 class GameScene : public Scene {
 	SFW_OBJECT(GameScene, Scene);
@@ -37,7 +38,10 @@ public:
 	virtual void render_immediate_3d();
 
 	void toggle_thread();
-	static void test_thread_func(void* d);
+	static void test_thread_func(void *d);
+
+	void toggle_socket();
+	static void socket_thread_func(void *d);
 
 	GameScene();
 	~GameScene();
@@ -51,6 +55,10 @@ public:
 
 	Thread *_thread;
 	bool _thread_running;
+
+	bool _socket_thread_running;
+	Thread *_server_socket_thread;
+	Socket *_server_socket;
 
 	Ref<Image> image;
 	Ref<Texture> texture;

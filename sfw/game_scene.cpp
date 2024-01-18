@@ -2,7 +2,9 @@
 
 #include "render_core/application.h"
 
+#include "core/inet_address.h"
 #include "core/memory.h"
+#include "core/socket.h"
 #include "core/thread.h"
 #include "render_core/3rd_glad.h"
 #include "render_core/app_window.h"
@@ -66,6 +68,12 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 		if (k->get_physical_scancode() == KEY_T) {
 			if (pressed) {
 				toggle_thread();
+			}
+		}
+
+		if (k->get_physical_scancode() == KEY_P) {
+			if (pressed) {
+				toggle_socket();
 			}
 		}
 
@@ -381,11 +389,117 @@ void GameScene::test_thread_func(void *data) {
 	}
 }
 
+void GameScene::toggle_socket() {
+	static bool sockets_inited = false;
+	if (!sockets_inited) {
+		// This will make the windows popup appear where it asks for permission to communicate
+		// Without this Sockets won't work on windows.
+		Socket::global_init();
+	}
+
+	if (_server_socket) {
+		_socket_thread_running = false;
+
+		_server_socket_thread->wait_to_finish();
+
+		memdelete(_server_socket_thread);
+		_server_socket_thread = NULL;
+	} else {
+		_socket_thread_running = true;
+
+		_server_socket_thread = memnew(Thread);
+		_server_socket_thread->start(socket_thread_func, this);
+	}
+}
+void GameScene::socket_thread_func(void *data) {
+	GameScene *self = (GameScene *)data;
+
+	self->_server_socket = memnew(Socket);
+
+	InetAddress addr(8080);
+
+	self->_server_socket->create_net_socket();
+	self->_server_socket->set_non_block();
+	self->_server_socket->bind_address(addr);
+	self->_server_socket->listen();
+
+	ERR_PRINT("TEST SERVER IS LISTENING on http://127.0.0.1:8080");
+
+	Vector<Socket *> client_sockets;
+
+	//https://stackoverflow.com/questions/40448937/socket-recv-buffer-size
+	char buffer[8192];
+
+	Socket *client_socket = memnew(Socket);
+
+	while (self->_socket_thread_running) {
+		int a = self->_server_socket->accept(client_socket);
+
+		if (a != -1) {
+			printf("New connection! %d\n", a);
+
+			client_sockets.push_back(client_socket);
+			client_socket = new Socket();
+		}
+
+		for (int i = 0; i < client_sockets.size(); ++i) {
+			Socket *s = client_sockets[i];
+
+			int l = s->read(buffer, 8192);
+
+			if (l > 0) {
+				String request = String::utf8(buffer, l);
+
+				ERR_PRINT("Read!\n");
+				ERR_PRINT(request);
+				ERR_PRINT("Sending answer!\n");
+
+				String content = "Your browser sent the following request:<br><br>";
+				content += request.newline_to_br();
+
+				String resp;
+				resp += "HTTP/1.1 200 OK\n";
+				resp += "Connection: Close\n";
+				resp += "Content-Type: text/html\n";
+				resp += "Content-Length: " + itos(content.utf8().size()) + "\n";
+				resp += "\n";
+				resp += content;
+
+				CharString cs = resp.utf8();
+
+				s->send(cs.get_data(), cs.size());
+
+				s->close_write();
+				memdelete(s);
+				client_sockets.remove(i);
+				--i;
+			}
+		}
+	}
+
+	for (int i = 0; i < client_sockets.size(); ++i) {
+		memdelete(client_sockets[i]);
+	}
+
+	client_sockets.clear();
+
+	memdelete(client_socket);
+
+	self->_server_socket->close_write();
+
+	memdelete(self->_server_socket);
+	self->_server_socket = NULL;
+}
+
 GameScene::GameScene() {
 	render_type = 0;
 
 	_thread_running = false;
 	_thread = NULL;
+
+	_socket_thread_running = false;
+	_server_socket_thread = NULL;
+	_server_socket = NULL;
 
 	left = false;
 	right = false;
