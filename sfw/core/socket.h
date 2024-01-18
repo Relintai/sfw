@@ -46,7 +46,8 @@ public:
 	int set_reuse_port(bool on);
 	void set_keep_alive(bool on);
 
-	int set_non_block_and_close_on_exit();
+	int set_non_block();
+	int set_close_on_exit();
 
 	int get_error();
 

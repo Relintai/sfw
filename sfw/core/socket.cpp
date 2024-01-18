@@ -64,7 +64,7 @@ void Socket::close_socket() {
 }
 
 // taken from muduo
-int Socket::set_non_block_and_close_on_exit() {
+int Socket::set_non_block() {
 	ERR_FAIL_COND_V(_socket == 0, -1);
 
 #if defined(_WIN64) || defined(_WIN32)
@@ -85,10 +85,22 @@ int Socket::set_non_block_and_close_on_exit() {
 	int ret = ::fcntl(_socket, F_SETFL, flags);
 	// TODO check
 
+	return ret;
+#endif
+}
+
+// taken from muduo
+int Socket::set_close_on_exit() {
+	ERR_FAIL_COND_V(_socket == 0, -1);
+
+#if defined(_WIN64) || defined(_WIN32)
+	// TODO how to set FD_CLOEXEC on windows? is it necessary?
+	return 0;
+#else
 	// close-on-exec
-	flags = ::fcntl(_socket, F_GETFD, 0);
+	int flags = ::fcntl(_socket, F_GETFD, 0);
 	flags |= FD_CLOEXEC;
-	ret = ::fcntl(_socket, F_SETFD, flags);
+	int ret = ::fcntl(_socket, F_SETFD, flags);
 	// TODO check
 
 	return ret;
