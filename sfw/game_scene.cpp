@@ -54,6 +54,10 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 				fimage->convert(Image::FORMAT_RGBAF);
 				fimage->save_hdr("test_image_save.hdr");
 
+				Ref<Image> timg = texture->get_data();
+
+				timg->save_png("timg.png");
+
 				ERR_PRINT("Test images Saved!");
 			}
 		}
@@ -300,8 +304,8 @@ void GameScene::render_obj() {
 	//camera->set_camera_transform(t);
 	//rot += 0.01;
 
-	Ref<Image> d = texture->get_data();
-	texture->create_from_image(d);
+	//Ref<Image> d = texture->get_data();
+	//texture->create_from_image(d);
 
 	camera->bind();
 

@@ -10,6 +10,7 @@
 #include "core/hash_map.h"
 #include "core/memory.h"
 #include "core/vector3.h"
+#include "core/file_access.h"
 #include "math.h"
 #include <memory.h>
 #include <stdio.h>
@@ -18,6 +19,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
 #define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
 #define STB_SPRINTF_NOUNALIGNED // stb_sprintf
+//#define STBI_WRITE_NO_STDIO
 //#define STBI_WINDOWS_UTF8
 //#define STBIW_WINDOWS_UTF8
 
@@ -1411,9 +1413,10 @@ void Image::load_from_file(const String &file_name, Format p_format) {
 
 	int img_n = 4;
 
-	FILE *fp = fopen(file_name.utf8().get_data(), "r");
+	Error err;
+	Vector<uint8_t> file_data = FileAccess::get_file_as_array(file_name, &err);
 
-	ERR_FAIL_COND_MSG(!fp, "Couldn't open file! " + file_name);
+	ERR_FAIL_COND(err != OK);
 
 	//case FORMAT_RF:
 	//case FORMAT_RGF:
@@ -1425,8 +1428,7 @@ void Image::load_from_file(const String &file_name, Format p_format) {
 	int y;
 	int n;
 
-	stbi_uc *pixels = stbi_load_from_file(fp, &x, &y, &n, img_n);
-	fclose(fp);
+	stbi_uc *pixels = stbi_load_from_memory(file_data.ptr(), file_data.size(), &x, &y, &n, img_n);
 
 	ERR_FAIL_COND_MSG(!pixels, "Couldn't load image! " + file_name);
 
@@ -1659,13 +1661,23 @@ Error Image::save_png(const String &file_name) {
 
 	write_lock = true;
 
-	int ret = stbi_write_png(file_name.utf8().get_data(), width, height, pfs, data.ptr(), 0);
+	int out_length = 0;
+
+	uint8_t *ret_arr = stbi_write_png_to_mem(data.ptr(), 0, width, height, pfs, &out_length);
 
 	write_lock = false;
 
-	if (ret == 0) {
+	if (!ret_arr || out_length == 0) {
 		return FAILED;
 	}
+
+	FileAccess* f = FileAccess::open(file_name, FileAccess::WRITE);
+
+	if (!f) {
+		return FAILED;
+	}
+
+	f->store_buffer(ret_arr, out_length);
 
 	return OK;
 }

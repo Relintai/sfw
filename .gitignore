@@ -4,6 +4,7 @@ bin/
 obj/
 venv/
 .cache/
+.vs/
 
 build/
 
