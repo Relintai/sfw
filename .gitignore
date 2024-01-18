@@ -11,6 +11,8 @@ build/
 *.layout
 *.depend
 
+.DS_Store
+
 tools/merger/out/
 
 tools/doc/out/
