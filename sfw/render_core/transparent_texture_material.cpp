@@ -49,8 +49,10 @@ const char **TransparentTextureMaterial::get_vertex_shader_source() {
 
 const char **TransparentTextureMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
+#ifndef __APPLE__
 		"precision mediump float;\n"
 		"\n"
+#endif
 		"uniform sampler2D u_texture;\n"
 		"\n"
 		"varying vec2 v_uv;\n"

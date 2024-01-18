@@ -4,6 +4,13 @@
 //--STRIP
 #include "render_core/app_window.h"
 
+#ifdef __APPLE__
+
+#include "3rd_glfw3.h"
+#include "render_core/3rd_glad.h"
+
+#else
+
 #define GLAD_GL_IMPLEMENTATION // glad
 #include "render_core/3rd_glad.h"
 
@@ -23,6 +30,8 @@
 #include "3rd_glfw3.h"
 #undef timeGetTime
 #undef Time
+
+#endif
 
 #include "core/error_macros.h"
 #include "core/sfw_time.h"
@@ -175,6 +184,12 @@ void AppWindow::window_hints(unsigned flags) {
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2); // osx, 2:#version150,3:330
 	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+	//glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 #elif defined(_WIN64) || defined(_WIN32)
 	// Compute shaders need 4.5 otherwise. But...
 	// According to the GLFW docs, the context version hint acts as a minimum version.
@@ -193,13 +208,13 @@ void AppWindow::window_hints(unsigned flags) {
 #endif
 
 #ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //osx
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //osx
 #endif
 
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
 	glfwWindowHint(GLFW_STENCIL_BITS, 8); //osx
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-	
+
 	//glfwWindowHint( GLFW_RED_BITS, 8 );
 	//glfwWindowHint( GLFW_GREEN_BITS, 8 );
 	//glfwWindowHint( GLFW_BLUE_BITS, 8 );
@@ -843,7 +858,7 @@ void AppWindow::aspect_unlock() {
 	if (!_window) {
 		return;
 	}
-	
+
 	AppWindow::aspect_lock(0, 0);
 }
 

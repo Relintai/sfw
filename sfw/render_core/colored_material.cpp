@@ -33,7 +33,10 @@ const char **ColoredMaterial::get_vertex_shader_source() {
 
 const char **ColoredMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
+#ifndef __APPLE__
 		"precision mediump float;\n"
+		"\n"
+#endif
 		"\n"
 		"uniform vec4 fragment_color;\n"
 		"\n"

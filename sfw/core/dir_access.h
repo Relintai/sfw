@@ -15,6 +15,11 @@
 
 #if defined(_WIN64) || defined(_WIN32)
 struct DirAccessWindowsPrivate;
+
+#elif defined(__APPLE__)
+
+#include <dirent.h>
+
 #else
 struct __dirstream;
 typedef struct __dirstream DIR;

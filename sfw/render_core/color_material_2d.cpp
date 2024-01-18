@@ -42,8 +42,10 @@ const char **ColorMaterial2D::get_vertex_shader_source() {
 
 const char **ColorMaterial2D::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
+#ifndef __APPLE__
 		"precision mediump float;\n"
 		"\n"
+#endif
 		"varying vec4 v_color;\n"
 		"\n"
 		"void main() {\n"

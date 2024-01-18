@@ -19,6 +19,14 @@
 // Mingw
 struct _iobuf;
 typedef struct _iobuf FILE;
+
+#elif defined(__APPLE__)
+
+struct __sFILE;
+typedef struct __sFILE FILE;
+
+typedef void (*FileCloseNotificationFunc)(const String &p_file, int p_flags);
+
 #else
 struct _IO_FILE;
 typedef struct _IO_FILE FILE;

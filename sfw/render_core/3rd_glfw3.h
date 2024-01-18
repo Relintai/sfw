@@ -10964,15 +10964,8 @@ typedef struct _GLFWwindowNull
     }
 
 // Swaps the provided pointers
-/*
-#define _GLFW_SWAP_POINTERS(x, y) \
-    {                             \
-        void* t;                  \
-        t = x;                    \
-        x = y;                    \
-        y = t;                    \
-    }
-    */
+
+#ifdef __cplusplus
 
 #define _GLFW_SWAP_POINTERS(m_x, m_y) __glfw_ptr_swap_tmpl((m_x), (m_y))
 template <class T>
@@ -10981,6 +10974,18 @@ inline void __glfw_ptr_swap_tmpl(T &x, T &y) {
 	x = y;
 	y = aux;
 }
+
+#else
+
+#define _GLFW_SWAP_POINTERS(x, y) \
+    {                             \
+        void* t;                  \
+        t = x;                    \
+        x = y;                    \
+        y = t;                    \
+    }
+    
+#endif
 
 // Per-thread error structure
 //

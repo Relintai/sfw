@@ -49,7 +49,10 @@ const char **TextureMaterial2D::get_vertex_shader_source() {
 
 const char **TextureMaterial2D::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
+#ifndef __APPLE__
 		"precision mediump float;\n"
+		"\n"
+#endif
 		"\n"
 		"uniform sampler2D u_texture;\n"
 		"\n"
