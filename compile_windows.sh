@@ -42,7 +42,9 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/dir_access.cpp -o sfw/core/di
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/pool_vector.cpp -o sfw/core/pool_vector.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/pool_allocator.cpp -o sfw/core/pool_allocator.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/mutex.cpp -o sfw/core/mutex.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_time.cpp -o sfw/core/SFWTime.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_time.cpp -o sfw/core/sfw_time.o
+
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/thread.cpp -o sfw/core/thread.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_core.cpp -o sfw/core/sfw_core.o
 
@@ -99,6 +101,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/text_2d.cpp -o sfw/
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/game_scene.cpp -o sfw/game_scene.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/main.cpp -o sfw/main.o
 
+# You might need to add -lpthread and/or -latomic depending on your compiler version
 
 ccache g++ -Wall \
                 -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \
@@ -108,8 +111,8 @@ ccache g++ -Wall \
                         sfw/core/ustring.o sfw/core/string_name.o \
                         sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
-                        sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/SFWTime.o \
-                        sfw/core/dir_access.o sfw/core/file_access.o \
+                        sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/sfw_time.o \
+                        sfw/core/dir_access.o sfw/core/file_access.o sfw/core/thread.o \
                         sfw/core/sfw_core.o \
                         sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
                         sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \
@@ -133,9 +136,7 @@ ccache g++ -Wall \
                         sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
                         sfw/render_objects/text_2d.o \
                         sfw/game_scene.o sfw/main.o \
-                        -lm -lpthread -lwinmm -lopengl32 -lkernel32 -lole32 -loleaut32 -luser32 \
-                        -lgdi32 -lIPHLPAPI -lShlwapi -lwsock32 -lWs2_32 -lshell32 -ladvapi32 -ldinput8 -ldxguid \
-                        -limm32 -lbcrypt -lAvrt -ldwmapi \
-                         -o game 
+                        -lgdi32 -lShlwapi \
+                        -o game 
 
 #export args="-lm -ldl -lpthread -lX11 -w -Iengine/ $args"
