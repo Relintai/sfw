@@ -20,6 +20,9 @@
 #include "sfw.h"
 #endif
 
+// On OSX sfw_3rd.m has to be compiled manually on Objective C Mode.
+#ifndef __APPLE__
+
 #ifndef SFW_3RD_IMPL
 #define SFW_3RD_IMPL
 
@@ -28,7 +31,7 @@
 #define Font The_Font_I_dont_care
 #endif
 
-#include "sfw_3rd.h"
+#include "sfw_3rd.m"
 
 #undef CursorShape
 
@@ -191,6 +194,8 @@
 #endif
 
 #endif
+
+#endif // #ifndef __APPLE__
 
 //===================  CORE SECTION  ===================
 

@@ -4,6 +4,16 @@
 {{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 {{FILEINLINE:tools/merger/sfw_linceses_render_core.inl.h}}
 
+// On OSX you need to compile this file separately with an objective c compiler
+
+#ifdef __APPLE__
+
+#ifndef SFW_3RD_IMPL
+#define SFW_3RD_IMPL
+#endif
+
+#endif //__APPLE__
+
 #ifdef SFW_3RD_IMPL
 #define GLAD_GL_IMPLEMENTATION // glad
 #endif

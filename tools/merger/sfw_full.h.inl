@@ -818,7 +818,7 @@
     #endif
     
     #ifndef GLAD_GL_H_
-    #include "sfw_3rd.h"
+    #include "sfw_3rd.m"
     #endif
 #endif
 
