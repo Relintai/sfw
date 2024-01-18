@@ -45,6 +45,8 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/mutex.cpp -o sfw/core/mutex.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_time.cpp -o sfw/core/sfw_time.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/thread.cpp -o sfw/core/thread.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/socket.cpp -o sfw/core/socket.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/inet_address.cpp -o sfw/core/inet_address.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_core.cpp -o sfw/core/sfw_core.o
 
@@ -113,6 +115,7 @@ ccache g++ -Wall \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
                         sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/sfw_time.o \
                         sfw/core/dir_access.o sfw/core/file_access.o sfw/core/thread.o \
+                        sfw/core/socket.o sfw/core/inet_address.o \
                         sfw/core/sfw_core.o \
                         sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
                         sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \

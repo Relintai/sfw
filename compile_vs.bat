@@ -43,6 +43,8 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/mutex.cpp /Fo:sfw/core/mutex.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sfw_time.cpp /Fo:sfw/core/sfw_time.obj
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/thread.cpp /Fo:sfw/core/thread.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/socket.cpp /Fo:sfw/core/socket.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/inet_address.cpp /Fo:sfw/core/inet_address.obj
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sfw_core.cpp /Fo:sfw/core/sfw_core.obj
 
@@ -123,6 +125,7 @@ cl /D_REENTRANT /Zi ^
 		sfw/core/vector3i.obj sfw/core/vector4.obj sfw/core/vector4i.obj ^
 		sfw/core/pool_vector.obj sfw/core/pool_allocator.obj sfw/core/mutex.obj sfw/core/sfw_time.obj ^
 		sfw/core/dir_access.obj sfw/core/file_access.obj sfw/core/thread.obj ^
+		sfw/core/socket.obj sfw/core/inet_address.obj ^
 		sfw/core/sfw_core.obj ^
 		sfw/object/object.obj sfw/object/reference.obj sfw/object/core_string_names.obj ^
 		sfw/object/variant.obj sfw/object/variant_op.obj sfw/object/psignal.obj ^
