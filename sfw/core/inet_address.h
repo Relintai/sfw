@@ -42,8 +42,8 @@ using uint16_t = unsigned short;
 #endif
 
 //--STRIP
-#include "int_types.h"
 #include "core/ustring.h"
+#include "int_types.h"
 //--STRIP
 
 class InetAddress {

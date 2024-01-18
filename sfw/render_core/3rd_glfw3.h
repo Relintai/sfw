@@ -18678,7 +18678,7 @@ WCHAR* _glfwCreateWideStringFromUTF8Win32(const char* source)
         return NULL;
     }
 
-    target = calloc(count, sizeof(WCHAR));
+    target = (WCHAR*)calloc(count, sizeof(WCHAR));
 
     if (!MultiByteToWideChar(CP_UTF8, 0, source, -1, target, count))
     {
@@ -18706,7 +18706,7 @@ char* _glfwCreateUTF8FromWideStringWin32(const WCHAR* source)
         return NULL;
     }
 
-    target = calloc(size, 1);
+    target = (char*)calloc(size, 1);
 
     if (!WideCharToMultiByte(CP_UTF8, 0, source, -1, target, size, NULL, NULL))
     {
@@ -19095,8 +19095,8 @@ static const char* getDeviceDescription(const XINPUT_CAPABILITIES* xic)
 //
 static int compareJoystickObjects(const void* first, const void* second)
 {
-    const _GLFWjoyobjectWin32* fo = first;
-    const _GLFWjoyobjectWin32* so = second;
+    const _GLFWjoyobjectWin32* fo = (const _GLFWjoyobjectWin32*)first;
+    const _GLFWjoyobjectWin32* so = (const _GLFWjoyobjectWin32*)second;
 
     if (fo->type != so->type)
         return fo->type - so->type;
@@ -19116,7 +19116,7 @@ static GLFWbool supportsXInput(const GUID* guid)
     if (GetRawInputDeviceList(NULL, &count, sizeof(RAWINPUTDEVICELIST)) != 0)
         return GLFW_FALSE;
 
-    ridl = calloc(count, sizeof(RAWINPUTDEVICELIST));
+    ridl = (RAWINPUTDEVICELIST*)calloc(count, sizeof(RAWINPUTDEVICELIST));
 
     if (GetRawInputDeviceList(ridl, &count, sizeof(RAWINPUTDEVICELIST)) == (UINT) -1)
     {
@@ -19191,7 +19191,7 @@ static void closeJoystick(_GLFWjoystick* js)
 static BOOL CALLBACK deviceObjectCallback(const DIDEVICEOBJECTINSTANCEW* doi,
                                           void* user)
 {
-    _GLFWobjenumWin32* data = user;
+    _GLFWobjenumWin32* data = (_GLFWobjenumWin32*)user;
     _GLFWjoyobjectWin32* object = data->objects + data->objectCount;
 
     if (DIDFT_GETTYPE(doi->dwType) & DIDFT_AXIS)
@@ -19285,7 +19285,7 @@ static BOOL CALLBACK deviceCallback(const DIDEVICEINSTANCE* di, void* user)
         return DIENUM_CONTINUE;
 
     if (FAILED(IDirectInput8_CreateDevice(_glfw.win32.dinput8.api,
-                                          &di->guidInstance,
+                                          di->guidInstance,
                                           &device,
                                           NULL)))
     {
@@ -19333,7 +19333,7 @@ static BOOL CALLBACK deviceCallback(const DIDEVICEINSTANCE* di, void* user)
 
     memset(&data, 0, sizeof(data));
     data.device = device;
-    data.objects = calloc(dc.dwAxes + (size_t) dc.dwButtons + dc.dwPOVs,
+    data.objects = (_GLFWjoyobjectWin32*)calloc(dc.dwAxes + (size_t) dc.dwButtons + dc.dwPOVs,
                           sizeof(_GLFWjoyobjectWin32));
 
     if (FAILED(IDirectInputDevice8_EnumObjects(device,
@@ -19416,7 +19416,7 @@ void _glfwInitJoysticksWin32(void)
     {
         if (FAILED(DirectInput8Create(GetModuleHandleW(NULL),
                                       DIRECTINPUT_VERSION,
-                                      &IID_IDirectInput8W,
+                                      IID_IDirectInput8W,
                                       (void**) &_glfw.win32.dinput8.api,
                                       NULL)))
         {
@@ -19827,7 +19827,7 @@ void _glfwPollMonitorsWin32(void)
     disconnectedCount = _glfw.monitorCount;
     if (disconnectedCount)
     {
-        disconnected = calloc(_glfw.monitorCount, sizeof(_GLFWmonitor*));
+        disconnected = (_GLFWmonitor**)calloc(_glfw.monitorCount, sizeof(_GLFWmonitor*));
         memcpy(disconnected,
                _glfw.monitors,
                _glfw.monitorCount * sizeof(_GLFWmonitor*));
@@ -20145,7 +20145,7 @@ GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* count)
     if (!*count)
     {
         // HACK: Report the current mode if no valid modes were found
-        result = calloc(1, sizeof(GLFWvidmode));
+        result = (GLFWvidmode*)calloc(1, sizeof(GLFWvidmode));
         _glfwPlatformGetVideoMode(monitor, result);
         *count = 1;
     }
@@ -20954,7 +20954,7 @@ static void maximizeWindowManually(_GLFWwindow* window)
 static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
                                    WPARAM wParam, LPARAM lParam)
 {
-    _GLFWwindow* window = GetPropW(hWnd, L"GLFW");
+    _GLFWwindow* window = (_GLFWwindow*)GetPropW(hWnd, L"GLFW");
     if (!window)
     {
         // This is the message handling for the hidden helper window
@@ -20967,7 +20967,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
                 if (_glfwIsWindows10AnniversaryUpdateOrGreaterWin32())
                 {
                     const CREATESTRUCTW* cs = (const CREATESTRUCTW*) lParam;
-                    const _GLFWwndconfig* wndconfig = cs->lpCreateParams;
+                    const _GLFWwndconfig* wndconfig = (const _GLFWwndconfig*)cs->lpCreateParams;
 
                     // On per-monitor DPI aware V1 systems, only enable
                     // non-client scaling for windows that scale the client area
@@ -21338,7 +21338,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             if (size > (UINT) _glfw.win32.rawInputSize)
             {
                 free(_glfw.win32.rawInput);
-                _glfw.win32.rawInput = calloc(size, 1);
+                _glfw.win32.rawInput = (RAWINPUT*)calloc(size, 1);
                 _glfw.win32.rawInputSize = size;
             }
 
@@ -21638,7 +21638,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             int i;
 
             const int count = DragQueryFileW(drop, 0xffffffff, NULL, 0);
-            char** paths = calloc(count, sizeof(char*));
+            char** paths = (char**)calloc(count, sizeof(char*));
 
             // Move the mouse to the position of the drop
             DragQueryPoint(drop, &pt);
@@ -21647,7 +21647,7 @@ static LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg,
             for (i = 0;  i < count;  i++)
             {
                 const UINT length = DragQueryFileW(drop, i, NULL, 0);
-                WCHAR* buffer = calloc((size_t) length + 1, sizeof(WCHAR));
+                WCHAR* buffer = (WCHAR*)calloc((size_t) length + 1, sizeof(WCHAR));
 
                 DragQueryFileW(drop, i, buffer, length + 1);
                 paths[i] = _glfwCreateUTF8FromWideStringWin32(buffer);
@@ -21836,13 +21836,13 @@ GLFWbool _glfwRegisterWindowClassWin32(void)
     wc.lpszClassName = _GLFW_WNDCLASSNAME;
 
     // Load user-provided icon if available
-    wc.hIcon = LoadImageW(GetModuleHandleW(NULL),
+    wc.hIcon = (HICON)LoadImageW(GetModuleHandleW(NULL),
                           L"GLFW_ICON", IMAGE_ICON,
                           0, 0, LR_DEFAULTSIZE | LR_SHARED);
     if (!wc.hIcon)
     {
         // No user-provided icon found, load default icon
-        wc.hIcon = LoadImageW(NULL,
+        wc.hIcon = (HICON)LoadImageW(NULL,
                               IDI_APPLICATION, IMAGE_ICON,
                               0, 0, LR_DEFAULTSIZE | LR_SHARED);
     }
@@ -22137,7 +22137,7 @@ void _glfwPlatformGetWindowContentScale(_GLFWwindow* window,
 {
     const HANDLE handle = MonitorFromWindow(window->win32.handle,
                                             MONITOR_DEFAULTTONEAREST);
-    _glfwGetMonitorContentScaleWin32(handle, xscale, yscale);
+    _glfwGetMonitorContentScaleWin32((HMONITOR)handle, xscale, yscale);
 }
 
 void _glfwPlatformIconifyWindow(_GLFWwindow* window)
@@ -22446,7 +22446,7 @@ void _glfwPlatformPollEvents(void)
     handle = GetActiveWindow();
     if (handle)
     {
-        window = GetPropW(handle, L"GLFW");
+        window = (_GLFWwindow*)GetPropW(handle, L"GLFW");
         if (window)
         {
             int i;
@@ -22596,7 +22596,7 @@ int _glfwPlatformCreateStandardCursor(_GLFWcursor* cursor, int shape)
     else
         return GLFW_FALSE;
 
-    cursor->win32.handle = LoadImageW(NULL,
+    cursor->win32.handle = (HCURSOR)LoadImageW(NULL,
                                       MAKEINTRESOURCEW(id), IMAGE_CURSOR, 0, 0,
                                       LR_DEFAULTSIZE | LR_SHARED);
     if (!cursor->win32.handle)
@@ -22639,7 +22639,7 @@ void _glfwPlatformSetClipboardString(const char* string)
         return;
     }
 
-    buffer = GlobalLock(object);
+    buffer = (WCHAR*)GlobalLock(object);
     if (!buffer)
     {
         _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,
@@ -22685,7 +22685,7 @@ const char* _glfwPlatformGetClipboardString(void)
         return NULL;
     }
 
-    buffer = GlobalLock(object);
+    buffer = (WCHAR*)GlobalLock(object);
     if (!buffer)
     {
         _glfwInputErrorWin32(GLFW_PLATFORM_ERROR,

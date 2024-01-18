@@ -101,6 +101,7 @@ protected:
 
 	bool _cisdir;
 	bool _cishidden;
+	bool _cisspecial;
 #else
 	String current_dir;
 	DIR *dir_stream;

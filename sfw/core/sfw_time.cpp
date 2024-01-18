@@ -10,6 +10,12 @@
 #include <ctime>
 //--STRIP
 
+#if defined(_WIN64) || defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winnt.h>
+#endif
+
 #if 0
 uint64_t SFWTime::time_gpu() {
     GLint64 t = 123456789;

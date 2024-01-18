@@ -15,6 +15,10 @@
 //--STRIP
 
 #if defined(_WIN64) || defined(_WIN32)
+
+// Mingw
+struct _iobuf;
+typedef struct _iobuf FILE;
 #else
 struct _IO_FILE;
 typedef struct _IO_FILE FILE;

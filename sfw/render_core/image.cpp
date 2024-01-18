@@ -18,6 +18,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
 #define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
 #define STB_SPRINTF_NOUNALIGNED // stb_sprintf
+//#define STBI_WINDOWS_UTF8
+//#define STBIW_WINDOWS_UTF8
 
 #include "3rd_stb_image.h"
 #include "3rd_stb_image_write.h"
@@ -1410,6 +1412,8 @@ void Image::load_from_file(const String &file_name, Format p_format) {
 	int img_n = 4;
 
 	FILE *fp = fopen(file_name.utf8().get_data(), "r");
+
+	ERR_FAIL_COND_MSG(!fp, "Couldn't open file! " + file_name);
 
 	//case FORMAT_RF:
 	//case FORMAT_RGF:
