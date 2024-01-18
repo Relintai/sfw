@@ -15,3 +15,10 @@ Update classes in SFWL\
 Make sure everything works on Windows and OSX\
 Release
 
+
+## CompileDB
+
+python -m venv venv\
+. ./venv/bin/activate\
+pip install compiledb\
+compiledb make
