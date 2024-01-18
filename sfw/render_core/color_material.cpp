@@ -37,7 +37,10 @@ const char **ColorMaterial::get_vertex_shader_source() {
 
 const char **ColorMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
-		//"precision mediump float;"
+#ifndef __APPLE__
+		"precision mediump float;\n"
+		"\n"
+#endif
 		"varying vec4 v_color;\n"
 		"\n"
 		"void main() { gl_FragColor = v_color; }\n"
