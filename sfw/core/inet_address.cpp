@@ -26,7 +26,18 @@
 
 extern "C" {
 WINSOCK_API_LINKAGE INT WSAAPI inet_pton(INT Family, PCSTR pszAddrString, PVOID pAddrBuf);
-WINSOCK_API_LINKAGE PCSTR WSAAPI inet_ntop(INT Family, PVOID pAddr, PSTR pStringBuf, size_t StringBufSize);
+
+#ifdef __MINGW64_VERSION_MAJOR
+#if __MINGW64_VERSION_MAJOR >= 7 
+WINSOCK_API_LINKAGE PCSTR WSAAPI inet_ntop(INT Family, const VOID * pAddr, PSTR pStringBuf, size_t StringBufSize);
+#else
+WINSOCK_API_LINKAGE PCSTR WSAAPI inet_ntop(INT Family, VOID * pAddr, PSTR pStringBuf, size_t StringBufSize);
+#endif
+
+#else
+WINSOCK_API_LINKAGE PCSTR WSAAPI inet_ntop(INT Family, VOID * pAddr, PSTR pStringBuf, size_t StringBufSize);
+#endif
+
 }
 #else
 // Windows...
@@ -46,6 +57,10 @@ struct in6__addruint {
 #include <netdb.h>
 #include <netinet/tcp.h>
 #include <strings.h> // memset
+#endif
+
+#ifdef _MSC_VER
+#pragma comment(lib, "ws2_32")
 #endif
 
 // INADDR_ANY use (type)value casting.

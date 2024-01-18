@@ -139,7 +139,7 @@ ccache g++ -Wall \
                         sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
                         sfw/render_objects/text_2d.o \
                         sfw/game_scene.o sfw/main.o \
-                        -lgdi32 -lShlwapi \
+                        -lgdi32 -lShlwapi -lws2_32 \
                         -o game 
 
 #export args="-lm -ldl -lpthread -lX11 -w -Iengine/ $args"

@@ -197,7 +197,8 @@ int Socket::accept(Socket *sock) {
 		sock->_socket = connfd;
 		sock->_address.set_sock_addr_inet6(addr6);
 #ifndef __linux__
-		sock->set_non_block_and_close_on_exit();
+		sock->set_non_block();
+		sock->set_close_on_exit();
 #endif
 	}
 
@@ -291,7 +292,7 @@ void Socket::set_keep_alive(bool on) {
 }
 
 struct sockaddr_in6 Socket::get_local_addr(int *r_err) {
-	struct sockaddr_in6 localaddr;
+	struct sockaddr_in6 localaddr = { 0 };
 
 	ERR_FAIL_COND_V(_socket == 0, localaddr);
 
@@ -308,7 +309,8 @@ struct sockaddr_in6 Socket::get_local_addr(int *r_err) {
 }
 
 struct sockaddr_in6 Socket::get_peer_addr(int *r_err) {
-	struct sockaddr_in6 peeraddr;
+	struct sockaddr_in6 peeraddr = { 0 };
+	
 	ERR_FAIL_COND_V(_socket == 0, peeraddr);
 
 	memset(&peeraddr, 0, sizeof(peeraddr));
