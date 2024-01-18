@@ -6,4 +6,8 @@ ccache g++ -Wall -g -c sfw.cpp -o sfw.o
 ccache g++ -Wall -g -c game_scene.cpp -o game_scene.o
 ccache g++ -Wall -g -c main.cpp -o main.o
 
-ccache g++ -Wall -lX11 -static-libgcc -static-libstdc++ -g sfw.o game_scene.o main.o -o game 
+# You might need to add -lpthread and/or -latomic depending on your compiler version
+
+ccache g++ -Wall -g sfw.o game_scene.o main.o \
+                        -lgdi32 -lShlwapi -lws2_32 \
+                        -o game 
