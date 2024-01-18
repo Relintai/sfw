@@ -6,29 +6,42 @@
 
 // On OSX you need to compile this file separately with an objective c compiler
 
+#ifndef ONLY_GLAD
+
 #ifdef __APPLE__
+
+#ifndef _APPLE_NO_IMPL_
 
 #ifndef SFW_3RD_IMPL
 #define SFW_3RD_IMPL
-#endif
+#endif //SFW_3RD_IMPL
+
+#endif //_APPLE_NO_IMPL_
 
 #endif //__APPLE__
 
 #ifdef SFW_3RD_IMPL
 #define GLAD_GL_IMPLEMENTATION // glad
-#endif
+#endif //SFW_3RD_IMPL
+
+#endif //ONLY_GLAD
 
 {{FILE:sfw/render_core/3rd_glad.h}}
 
+#ifndef ONLY_GLAD
+
 #ifdef SFW_3RD_IMPL
 #define STB_TRUETYPE_IMPLEMENTATION
+#endif //SFW_3RD_IMPL
 
 {{FILE:sfw/render_core/3rd_stb_truetype.h}}
 
+#ifdef SFW_3RD_IMPL
 #define STB_IMAGE_IMPLEMENTATION // stbi
 #define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
 #define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
 #define STB_SPRINTF_NOUNALIGNED // stb_sprintf
+#endif //SFW_3RD_IMPL
 
 {{FILE:sfw/render_core/3rd_stb_image.h}}
 
@@ -36,6 +49,8 @@
 
 //---
 #undef freelist
+
+#ifdef SFW_3RD_IMPL
 
 #define _GLFW_IMPLEMENTATION // glfw337
 #define GLFW_INCLUDE_NONE // glfw337
@@ -49,9 +64,12 @@
 
 #undef _GNU_SOURCE
 
+#endif //SFW_3RD_IMPL
+
 {{FILE:sfw/render_core/3rd_glfw3.h}}
 
 #undef timeGetTime
 #undef Time
 
 #endif
+

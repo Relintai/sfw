@@ -818,6 +818,15 @@
     #endif
     
     #ifndef GLAD_GL_H_
+
+    #ifdef __APPLE__
+    #ifndef _APPLE_NO_IMPL_
+    #define _APPLE_NO_IMPL_
+    #endif //_APPLE_NO_IMPL_
+    #endif //__APPLE__
+
+    #define ONLY_GLAD
+
     #include "sfw_3rd.m"
     #endif
 #endif

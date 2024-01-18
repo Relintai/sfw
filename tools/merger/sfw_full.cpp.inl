@@ -17,7 +17,19 @@
 #include <memory.h>
 
 #ifndef SFW_H
+
+#ifdef __APPLE__
+#ifndef _APPLE_NO_IMPL_
+#define _APPLE_NO_IMPL_
+#endif
+#endif
+
 #include "sfw.h"
+
+#undef ONLY_GLAD
+
+#include "sfw_3rd.m"
+
 #endif
 
 // On OSX sfw_3rd.m has to be compiled manually on Objective C Mode.
