@@ -3,6 +3,7 @@
 #include "render_core/application.h"
 
 #include "core/memory.h"
+#include "core/thread.h"
 #include "render_core/3rd_glad.h"
 #include "render_core/app_window.h"
 #include "render_core/keyboard.h"
@@ -59,6 +60,12 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 				timg->save_png("timg.png");
 
 				ERR_PRINT("Test images Saved!");
+			}
+		}
+
+		if (k->get_physical_scancode() == KEY_T) {
+			if (pressed) {
+				toggle_thread();
 			}
 		}
 
@@ -350,8 +357,35 @@ void GameScene::render_immediate_3d() {
 	rotmi += 0.01;
 }
 
+void GameScene::toggle_thread() {
+	if (_thread) {
+		_thread_running = false;
+
+		_thread->wait_to_finish();
+
+		memdelete(_thread);
+		_thread = NULL;
+	} else {
+		_thread_running = true;
+
+		_thread = memnew(Thread);
+		_thread->start(test_thread_func, this);
+	}
+}
+
+void GameScene::test_thread_func(void *data) {
+	GameScene *self = (GameScene *)data;
+
+	while (self->_thread_running) {
+		ERR_PRINT("Test Thread!");
+	}
+}
+
 GameScene::GameScene() {
 	render_type = 0;
+
+	_thread_running = false;
+	_thread = NULL;
 
 	left = false;
 	right = false;

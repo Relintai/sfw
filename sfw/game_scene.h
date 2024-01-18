@@ -19,6 +19,8 @@
 #include "render_objects/text_2d.h"
 #include "render_objects/tile_map.h"
 
+class Thread;
+
 class GameScene : public Scene {
 	SFW_OBJECT(GameScene, Scene);
 
@@ -34,6 +36,9 @@ public:
 	virtual void render_obj();
 	virtual void render_immediate_3d();
 
+	void toggle_thread();
+	static void test_thread_func(void* d);
+
 	GameScene();
 	~GameScene();
 
@@ -43,6 +48,9 @@ public:
 	bool right;
 	bool up;
 	bool down;
+
+	Thread *_thread;
+	bool _thread_running;
 
 	Ref<Image> image;
 	Ref<Texture> texture;
