@@ -41,7 +41,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/dir_access.cpp -o sfw/core/di
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/pool_vector.cpp -o sfw/core/pool_vector.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/pool_allocator.cpp -o sfw/core/pool_allocator.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/mutex.cpp -o sfw/core/mutex.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_time.cpp -o sfw/core/SFWTime.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_time.cpp -o sfw/core/sfw_time.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/sfw_core.cpp -o sfw/core/sfw_core.o
 
@@ -58,7 +58,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/resource.cpp -o sfw/object/
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/application.cpp -o sfw/render_core/application.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/app_window.cpp -o sfw/render_core/window.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/app_window.cpp -o sfw/render_core/app_window.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/shader.cpp -o sfw/render_core/shader.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/material.cpp -o sfw/render_core/material.o
@@ -106,7 +106,7 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/core/ustring.o sfw/core/string_name.o \
                         sfw/core/vector2.o sfw/core/vector2i.o sfw/core/vector3.o \
                         sfw/core/vector3i.o sfw/core/vector4.o sfw/core/vector4i.o \
-                        sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/SFWTime.o \
+                        sfw/core/pool_vector.o sfw/core/pool_allocator.o sfw/core/mutex.o sfw/core/sfw_time.o \
                         sfw/core/dir_access.o sfw/core/file_access.o \
                         sfw/core/sfw_core.o \
                         sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
@@ -114,7 +114,7 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/object/array.o sfw/object/dictionary.o sfw/object/ref_ptr.o \
                         sfw/object/resource.o \
                         sfw/render_core/image.o sfw/render_core/render_state.o \
-                        sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
+                        sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/app_window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
                         sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
                         sfw/render_core/input_event.o sfw/render_core/input_map.o \

@@ -4,9 +4,7 @@
 //--STRIP
 #include "core/sfw_time.h"
 
-#include <sys/time.h>
 #include <time.h>
-#include <unistd.h>
 #include <ctime>
 //--STRIP
 
@@ -14,6 +12,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <winnt.h>
+#else
+#include <sys/time.h>
+#include <unistd.h>
 #endif
 
 #if 0
@@ -120,8 +121,8 @@ static uint64_t nanotimer(uint64_t *out_freq) {
 }
 
 uint64_t SFWTime::time_ns() {
-	static __thread uint64_t epoch = 0;
-	static __thread uint64_t freq = 0;
+	static thread_local uint64_t epoch = 0;
+	static thread_local uint64_t freq = 0;
 	if (!freq) {
 		epoch = nanotimer(&freq);
 	}

@@ -45,6 +45,10 @@
 
 #endif
 
+#ifdef _MSC_VER
+#pragma comment(lib, "Shlwapi")
+#endif
+
 #if defined(_WIN64) || defined(_WIN32)
 
 bool DirAccess::is_link(String p_file) {

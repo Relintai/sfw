@@ -27,7 +27,10 @@ libs/
 compile_commands.json
 
 *.o
+*.obj
 
 game
 game.exe
+game-vc.*
+vc140.pdb
 

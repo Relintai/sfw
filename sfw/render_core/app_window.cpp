@@ -169,39 +169,37 @@ void AppWindow::window_hints(unsigned flags) {
 //glfwWindowHint( GLFW_COCOA_MENUBAR, GLFW_FALSE );
 #endif
 
-#ifdef __APPLE__
+#if defined(__APPLE__)
 	/* We need to explicitly ask for a 3.2 context on OS X */
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // osx
 	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2); // osx, 2:#version150,3:330
-#else
+	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+#elif defined(_WIN64) || defined(_WIN32)
 	// Compute shaders need 4.5 otherwise. But...
 	// According to the GLFW docs, the context version hint acts as a minimum version.
 	// i.e, the context you actually get may be a higher or highest version (which is usually the case)
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+#else
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 #endif
+
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //osx
 #endif
+
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
 	glfwWindowHint(GLFW_STENCIL_BITS, 8); //osx
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-
-	/*
-	#if defined(_WIN64) || defined(_WIN32)
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	#else
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-	#endif
-	*/
-
+	
 	//glfwWindowHint( GLFW_RED_BITS, 8 );
 	//glfwWindowHint( GLFW_GREEN_BITS, 8 );
 	//glfwWindowHint( GLFW_BLUE_BITS, 8 );
