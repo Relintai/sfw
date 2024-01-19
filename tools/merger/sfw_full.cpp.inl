@@ -508,7 +508,14 @@
 //#include "core/memory.h"
 //#include "render_core/app_window.h"
 //--STRIP
+{{FILE:sfw/render_core/frame_buffer.cpp}}
+//--STRIP
+//#include "render_core/texture.h"
+//#include "core/memory.h"
+//#include "render_core/app_window.h"
+//--STRIP
 {{FILE:sfw/render_core/texture.cpp}}
+
 //--STRIP
 //#include "render_core/application.h"
 //#include "core/math_defs.h"

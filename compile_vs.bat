@@ -72,6 +72,7 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/material.cpp /Fo:sfw/render_c
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/mesh.cpp /Fo:sfw/render_core/mesh.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/mesh_utils.cpp /Fo:sfw/render_core/mesh_utils.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/texture.cpp /Fo:sfw/render_core/texture.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/frame_buffer.cpp /Fo:sfw/render_core/frame_buffer.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/image.cpp /Fo:sfw/render_core/image.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/render_state.cpp /Fo:sfw/render_core/render_state.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/keyboard.cpp /Fo:sfw/render_core/keyboard.obj
@@ -138,6 +139,7 @@ cl /D_REENTRANT /Zi ^
 		sfw/render_core/application.obj sfw/render_core/scene.obj sfw/render_core/app_window.obj ^
 		sfw/render_core/shader.obj sfw/render_core/material.obj sfw/render_core/mesh.obj ^
 		sfw/render_core/mesh_utils.obj sfw/render_core/texture.obj ^
+		sfw/render_core/frame_buffer.obj ^
 		sfw/render_core/input_event.obj sfw/render_core/input_map.obj ^
 		sfw/render_core/input.obj sfw/render_core/shortcut.obj ^
 		sfw/render_core/keyboard.obj sfw/render_core/font.obj ^

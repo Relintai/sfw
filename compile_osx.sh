@@ -75,6 +75,7 @@ clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/material.cpp -o sfw/rende
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/mesh.cpp -o sfw/render_core/mesh.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/mesh_utils.cpp -o sfw/render_core/mesh_utils.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/texture.cpp -o sfw/render_core/texture.o
+clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/frame_buffer.cpp -o sfw/render_core/frame_buffer.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/image.cpp -o sfw/render_core/image.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/render_state.cpp -o sfw/render_core/render_state.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/keyboard.cpp -o sfw/render_core/keyboard.o
@@ -132,6 +133,7 @@ clang++ $args -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o 
                         sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/app_window.o \
                         sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
                         sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
+                        sfw/render_core/frame_buffer.o \
                         sfw/render_core/input_event.o sfw/render_core/input_map.o \
                         sfw/render_core/input.o sfw/render_core/shortcut.o \
                         sfw/render_core/keyboard.o sfw/render_core/font.o \
