@@ -6,8 +6,8 @@
 
 #ifdef __APPLE__
 
-#include "3rd_glfw3.h"
 #include "render_core/3rd_glad.h"
+#include "3rd_glfw3.h"
 
 #else
 
