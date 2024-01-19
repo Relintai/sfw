@@ -12,6 +12,7 @@
 #include "render_core/mesh_utils.h"
 #include "render_immediate/renderer.h"
 //#include "render_core/font.h"
+#include "core/sub_process.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
 	//ERR_PRINT(event->as_text());
@@ -74,6 +75,14 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 		if (k->get_physical_scancode() == KEY_P) {
 			if (pressed) {
 				toggle_socket();
+			}
+		}
+
+		if (k->get_physical_scancode() == KEY_H) {
+			if (pressed) {
+				ERR_PRINT("Running Game");
+				SubProcess s;
+				ERR_PRINT(itos(s.run("game")));
 			}
 		}
 

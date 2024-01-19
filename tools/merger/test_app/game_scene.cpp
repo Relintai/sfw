@@ -66,6 +66,14 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 			}
 		}
 
+		if (k->get_physical_scancode() == KEY_H) {
+			if (pressed) {
+				ERR_PRINT("Running Game");
+				SubProcess s;
+				ERR_PRINT(itos(s.run("game")));
+			}
+		}
+
 		return;
 	}
 

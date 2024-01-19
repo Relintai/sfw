@@ -46,6 +46,8 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/thread.cpp /Fo:sfw/core/thread.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/socket.cpp /Fo:sfw/core/socket.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/inet_address.cpp /Fo:sfw/core/inet_address.obj
 
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sub_process.cpp /Fo:sfw/core/sub_process.obj
+
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sfw_core.cpp /Fo:sfw/core/sfw_core.obj
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/object/object.cpp /Fo:sfw/object/object.obj
@@ -126,6 +128,7 @@ cl /D_REENTRANT /Zi ^
 		sfw/core/pool_vector.obj sfw/core/pool_allocator.obj sfw/core/mutex.obj sfw/core/sfw_time.obj ^
 		sfw/core/dir_access.obj sfw/core/file_access.obj sfw/core/thread.obj ^
 		sfw/core/socket.obj sfw/core/inet_address.obj ^
+		sfw/core/sub_process.obj ^
 		sfw/core/sfw_core.obj ^
 		sfw/object/object.obj sfw/object/reference.obj sfw/object/core_string_names.obj ^
 		sfw/object/variant.obj sfw/object/variant_op.obj sfw/object/psignal.obj ^

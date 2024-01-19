@@ -423,7 +423,7 @@
 //#include <shlobj.h>
 //#include <wchar.h>
 //--STRIP
-//{//{FILE:sfw/core/sub_process.cpp}}
+{{FILE:sfw/core/sub_process.cpp}}
 
 //--STRIP
 //#include "core/pool_vector.h"

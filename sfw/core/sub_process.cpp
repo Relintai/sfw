@@ -9,6 +9,48 @@
 
 #if defined(_WIN64) || defined(_WIN32)
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+typedef struct tagLOGCONTEXTW {
+	WCHAR lcName[40];
+	UINT lcOptions;
+	UINT lcStatus;
+	UINT lcLocks;
+	UINT lcMsgBase;
+	UINT lcDevice;
+	UINT lcPktRate;
+	DWORD lcPktData;
+	DWORD lcPktMode;
+	DWORD lcMoveMask;
+	DWORD lcBtnDnMask;
+	DWORD lcBtnUpMask;
+	LONG lcInOrgX;
+	LONG lcInOrgY;
+	LONG lcInOrgZ;
+	LONG lcInExtX;
+	LONG lcInExtY;
+	LONG lcInExtZ;
+	LONG lcOutOrgX;
+	LONG lcOutOrgY;
+	LONG lcOutOrgZ;
+	LONG lcOutExtX;
+	LONG lcOutExtY;
+	LONG lcOutExtZ;
+	DWORD lcSensX;
+	DWORD lcSensY;
+	DWORD lcSensZ;
+	BOOL lcSysMode;
+	int lcSysOrgX;
+	int lcSysOrgY;
+	int lcSysExtX;
+	int lcSysExtY;
+	DWORD lcSysSensX;
+	DWORD lcSysSensY;
+} LOGCONTEXTW;
+
+typedef HANDLE(WINAPI *WTOpenPtr)(HWND p_window, LOGCONTEXTW *p_ctx, BOOL p_enable);
+
 // TODO clean these up
 #include <avrt.h>
 #include <direct.h>
@@ -17,6 +59,16 @@
 #include <regstr.h>
 #include <shlobj.h>
 #include <wchar.h>
+
+struct SubProcess::SubProcessWindowsData {
+	struct ProcessInfo {
+		STARTUPINFO si;
+		PROCESS_INFORMATION pi;
+	};
+
+	HANDLE _pipe_handles[2];
+	ProcessInfo _process_info;
+};
 
 Error SubProcess::start() {
 	if (_executable_path.empty()) {
@@ -34,10 +86,10 @@ Error SubProcess::start() {
 		cmdline += " " + _quote_command_line_argument(_arguments[i]);
 	}
 
-	ZeroMemory(&_process_info.si, sizeof(_process_info.si));
-	_process_info.si.cb = sizeof(_process_info.si);
-	ZeroMemory(&_process_info.pi, sizeof(_process_info.pi));
-	LPSTARTUPINFOW si_w = (LPSTARTUPINFOW)&_process_info.si;
+	ZeroMemory(&_data->_process_info.si, sizeof(_data->_process_info.si));
+	_data->_process_info.si.cb = sizeof(_data->_process_info.si);
+	ZeroMemory(&_data->_process_info.pi, sizeof(_data->_process_info.pi));
+	LPSTARTUPINFOW si_w = (LPSTARTUPINFOW)&_data->_process_info.si;
 
 	Char16String modstr = cmdline.utf16(); // Windows wants to change this no idea why.
 
@@ -50,13 +102,13 @@ Error SubProcess::start() {
 		sa.bInheritHandle = true;
 		sa.lpSecurityDescriptor = NULL;
 
-		ERR_FAIL_COND_V(!CreatePipe(&_pipe_handles[0], &_pipe_handles[1], &sa, 0), ERR_CANT_FORK);
-		ERR_FAIL_COND_V(!SetHandleInformation(_pipe_handles[0], HANDLE_FLAG_INHERIT, 0), ERR_CANT_FORK); // Read handle is for host process only and should not be inherited.
+		ERR_FAIL_COND_V(!CreatePipe(&_data->_pipe_handles[0], &_data->_pipe_handles[1], &sa, 0), ERR_CANT_FORK);
+		ERR_FAIL_COND_V(!SetHandleInformation(_data->_pipe_handles[0], HANDLE_FLAG_INHERIT, 0), ERR_CANT_FORK); // Read handle is for host process only and should not be inherited.
 
-		_process_info.si.dwFlags |= STARTF_USESTDHANDLES;
-		_process_info.si.hStdOutput = _pipe_handles[1];
+		_data->_process_info.si.dwFlags |= STARTF_USESTDHANDLES;
+		_data->_process_info.si.hStdOutput = _data->_pipe_handles[1];
 		if (_read_std_err) {
-			_process_info.si.hStdError = _pipe_handles[1];
+			_data->_process_info.si.hStdError = _data->_pipe_handles[1];
 		}
 		inherit_handles = true;
 	}
@@ -68,20 +120,20 @@ Error SubProcess::start() {
 		creaton_flags |= CREATE_NO_WINDOW;
 	}
 
-	int ret = CreateProcessW(nullptr, (LPWSTR)(modstr.ptrw()), nullptr, nullptr, inherit_handles, creaton_flags, nullptr, nullptr, si_w, &_process_info.pi);
+	int ret = CreateProcessW(nullptr, (LPWSTR)(modstr.ptrw()), nullptr, nullptr, inherit_handles, creaton_flags, nullptr, nullptr, si_w, &_data->_process_info.pi);
 	if (!ret && _read_output) {
-		CloseHandle(_pipe_handles[0]); // Cleanup pipe handles.
-		CloseHandle(_pipe_handles[1]);
+		CloseHandle(_data->_pipe_handles[0]); // Cleanup pipe handles.
+		CloseHandle(_data->_pipe_handles[1]);
 
-		_pipe_handles[0] = NULL;
-		_pipe_handles[1] = NULL;
+		_data->_pipe_handles[0] = NULL;
+		_data->_pipe_handles[1] = NULL;
 	}
 
 	ERR_FAIL_COND_V(ret == 0, ERR_CANT_FORK);
 
 	if (_blocking) {
 		if (_read_output) {
-			CloseHandle(_pipe_handles[1]); // Close pipe write handle (only child process is writing).
+			CloseHandle(_data->_pipe_handles[1]); // Close pipe write handle (only child process is writing).
 
 			int bytes_in_buffer = 0;
 
@@ -89,7 +141,7 @@ Error SubProcess::start() {
 			DWORD read = 0;
 			for (;;) { // Read StdOut and StdErr from pipe.
 				_bytes.resize(bytes_in_buffer + CHUNK_SIZE);
-				const bool success = ReadFile(_pipe_handles[0], _bytes.ptr() + bytes_in_buffer, CHUNK_SIZE, &read, NULL);
+				const bool success = ReadFile(_data->_pipe_handles[0], _bytes.ptr() + bytes_in_buffer, CHUNK_SIZE, &read, NULL);
 				if (!success || read == 0) {
 					break;
 				}
@@ -119,27 +171,27 @@ Error SubProcess::start() {
 				_append_to_pipe(_bytes.ptr(), bytes_in_buffer);
 			}
 
-			CloseHandle(_pipe_handles[0]); // Close pipe read handle.
+			CloseHandle(_data->_pipe_handles[0]); // Close pipe read handle.
 		}
 
-		WaitForSingleObject(_process_info.pi.hProcess, INFINITE);
+		WaitForSingleObject(_data->_process_info.pi.hProcess, INFINITE);
 
 		DWORD ret2;
-		GetExitCodeProcess(_process_info.pi.hProcess, &ret2);
+		GetExitCodeProcess(_data->_process_info.pi.hProcess, &ret2);
 		_exitcode = ret2;
 
-		CloseHandle(_process_info.pi.hProcess);
-		CloseHandle(_process_info.pi.hThread);
+		CloseHandle(_data->_process_info.pi.hProcess);
+		CloseHandle(_data->_process_info.pi.hThread);
 	} else {
 		if (_read_output) {
 			//eventually we will need to keep this
-			CloseHandle(_pipe_handles[1]); // Close pipe write handle (only child process is writing).
-			_pipe_handles[1] = NULL;
+			CloseHandle(_data->_pipe_handles[1]); // Close pipe write handle (only child process is writing).
+			_data->_pipe_handles[1] = NULL;
 		}
 
 		_process_started = true;
 
-		ProcessID pid = _process_info.pi.dwProcessId;
+		ProcessID pid = _data->_process_info.pi.dwProcessId;
 		_process_id = pid;
 	}
 
@@ -151,24 +203,24 @@ Error SubProcess::stop() {
 		return OK;
 	}
 
-	if (_pipe_handles[0]) {
-		CloseHandle(_pipe_handles[0]); // Cleanup pipe handles.
-		_pipe_handles[0] = NULL;
+	if (_data->_pipe_handles[0]) {
+		CloseHandle(_data->_pipe_handles[0]); // Cleanup pipe handles.
+		_data->_pipe_handles[0] = NULL;
 	}
 
-	if (_pipe_handles[1]) {
-		CloseHandle(_pipe_handles[1]);
-		_pipe_handles[1] = NULL;
+	if (_data->_pipe_handles[1]) {
+		CloseHandle(_data->_pipe_handles[1]);
+		_data->_pipe_handles[1] = NULL;
 	}
 
-	const int ret = TerminateProcess(_process_info.pi.hProcess, 0);
+	const int ret = TerminateProcess(_data->_process_info.pi.hProcess, 0);
 
-	CloseHandle(_process_info.pi.hProcess);
-	CloseHandle(_process_info.pi.hThread);
+	CloseHandle(_data->_process_info.pi.hProcess);
+	CloseHandle(_data->_process_info.pi.hThread);
 
-	ZeroMemory(&_process_info.si, sizeof(_process_info.si));
-	_process_info.si.cb = sizeof(_process_info.si);
-	ZeroMemory(&_process_info.pi, sizeof(_process_info.pi));
+	ZeroMemory(&_data->_process_info.si, sizeof(_data->_process_info.si));
+	_data->_process_info.si.cb = sizeof(_data->_process_info.si);
+	ZeroMemory(&_data->_process_info.pi, sizeof(_data->_process_info.pi));
 
 	_process_started = false;
 
@@ -180,7 +232,7 @@ Error SubProcess::poll() {
 		return FAILED;
 	}
 
-	if (!_pipe_handles[0]) {
+	if (!_data->_pipe_handles[0]) {
 		return FAILED;
 	}
 
@@ -192,7 +244,7 @@ Error SubProcess::poll() {
 	DWORD read = 0;
 
 	_bytes.resize(bytes_in_buffer + CHUNK_SIZE);
-	const bool success = ReadFile(_pipe_handles[0], _bytes.ptr() + bytes_in_buffer, CHUNK_SIZE, &read, NULL);
+	const bool success = ReadFile(_data->_pipe_handles[0], _bytes.ptr() + bytes_in_buffer, CHUNK_SIZE, &read, NULL);
 
 	if (!success) {
 		stop();
@@ -251,7 +303,7 @@ bool SubProcess::is_process_running() const {
 	}
 
 	DWORD dw_exit_code = 0;
-	if (!GetExitCodeProcess(_process_info.pi.hProcess, &dw_exit_code)) {
+	if (!GetExitCodeProcess(_data->_process_info.pi.hProcess, &dw_exit_code)) {
 		return false;
 	}
 
@@ -298,6 +350,8 @@ void SubProcess::_append_to_pipe(char *p_bytes, int p_size) {
 }
 
 SubProcess::SubProcess() {
+	_data = memnew(SubProcessWindowsData);
+	
 	_blocking = false;
 
 	_read_output = true;
@@ -314,17 +368,19 @@ SubProcess::SubProcess() {
 	_process_id = ProcessID();
 	_exitcode = 0;
 
-	_pipe_handles[0] = NULL;
-	_pipe_handles[1] = NULL;
+	_data->_pipe_handles[0] = NULL;
+	_data->_pipe_handles[1] = NULL;
 
 	_process_started = false;
 
-	ZeroMemory(&_process_info.si, sizeof(_process_info.si));
-	_process_info.si.cb = sizeof(_process_info.si);
-	ZeroMemory(&_process_info.pi, sizeof(_process_info.pi));
+	ZeroMemory(&_data->_process_info.si, sizeof(_data->_process_info.si));
+	_data->_process_info.si.cb = sizeof(_data->_process_info.si);
+	ZeroMemory(&_data->_process_info.pi, sizeof(_data->_process_info.pi));
 }
 SubProcess::~SubProcess() {
 	stop();
+
+	memdelete(_data);
 }
 
 #else
@@ -652,8 +708,8 @@ Error SubProcess::run(const String &p_executable_path, const Vector<String> &p_a
 		return ERR_ALREADY_IN_USE;
 	}
 
-	String _executable_path = p_executable_path;
-	Vector<String> _arguments = p_arguments;
+	_executable_path = p_executable_path;
+	_arguments = p_arguments;
 
 	_blocking = p_blocking;
 

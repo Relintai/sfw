@@ -15,6 +15,7 @@
 #include "core/mutex.h"
 #include "core/typedefs.h"
 #include "core/ustring.h"
+#include "core/error_list.h"
 
 #include <stdio.h>
 //--STRIP
@@ -25,49 +26,6 @@
 #include "core/local_vector.h"
 //--STRIP
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-typedef struct tagLOGCONTEXTW {
-	WCHAR lcName[40];
-	UINT lcOptions;
-	UINT lcStatus;
-	UINT lcLocks;
-	UINT lcMsgBase;
-	UINT lcDevice;
-	UINT lcPktRate;
-	DWORD lcPktData;
-	DWORD lcPktMode;
-	DWORD lcMoveMask;
-	DWORD lcBtnDnMask;
-	DWORD lcBtnUpMask;
-	LONG lcInOrgX;
-	LONG lcInOrgY;
-	LONG lcInOrgZ;
-	LONG lcInExtX;
-	LONG lcInExtY;
-	LONG lcInExtZ;
-	LONG lcOutOrgX;
-	LONG lcOutOrgY;
-	LONG lcOutOrgZ;
-	LONG lcOutExtX;
-	LONG lcOutExtY;
-	LONG lcOutExtZ;
-	DWORD lcSensX;
-	DWORD lcSensY;
-	DWORD lcSensZ;
-	BOOL lcSysMode;
-	int lcSysOrgX;
-	int lcSysOrgY;
-	int lcSysExtX;
-	int lcSysExtY;
-	DWORD lcSysSensX;
-	DWORD lcSysSensY;
-} LOGCONTEXTW;
-
-typedef HANDLE(WINAPI *WTOpenPtr)(HWND p_window, LOGCONTEXTW *p_ctx, BOOL p_enable);
-
-#else
 #endif
 
 /**
@@ -77,6 +35,10 @@ typedef HANDLE(WINAPI *WTOpenPtr)(HWND p_window, LOGCONTEXTW *p_ctx, BOOL p_enab
 class SubProcess {
 public:
 	typedef int64_t ProcessID;
+
+	#if defined(_WIN64) || defined(_WIN32)
+	struct SubProcessWindowsData;
+	#endif
 
 	static SubProcess *create();
 
@@ -123,7 +85,7 @@ public:
 	virtual Error send_data(const String &p_data);
 	virtual bool is_process_running() const;
 
-	Error run(const String &p_executable_path, const Vector<String> &p_arguments, bool p_output = true, bool p_blocking = true, bool p_read_std_err = false, bool p_use_pipe_mutex = false, bool p_open_console = false);
+	Error run(const String &p_executable_path, const Vector<String> &p_arguments = Vector<String>(), bool p_output = true, bool p_blocking = true, bool p_read_std_err = false, bool p_use_pipe_mutex = false, bool p_open_console = false);
 
 	SubProcess();
 	virtual ~SubProcess();
@@ -157,15 +119,10 @@ protected:
 	String _quote_command_line_argument(const String &p_text) const;
 	void _append_to_pipe(char *p_bytes, int p_size);
 
-	struct ProcessInfo {
-		STARTUPINFO si;
-		PROCESS_INFORMATION pi;
-	};
-
 	bool _process_started;
-	HANDLE _pipe_handles[2];
-	ProcessInfo _process_info;
 	LocalVector<char> _bytes;
+
+	SubProcessWindowsData *_data;
 
 #else
 	FILE *_process_fp;
