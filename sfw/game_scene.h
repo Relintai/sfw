@@ -18,6 +18,7 @@
 #include "render_objects/sprite.h"
 #include "render_objects/text_2d.h"
 #include "render_objects/tile_map.h"
+#include "render_core/frame_buffer.h"
 
 class Thread;
 class Socket;
@@ -27,15 +28,15 @@ class GameScene : public Scene {
 
 public:
 	enum RenderTypes {
-		RENDER_TYPE_MAX = 13
+		RENDER_TYPE_MAX = 14
 	};
 
 	virtual void input_event(const Ref<InputEvent> &event);
 	virtual void update(float delta);
 	virtual void render();
-	virtual void render_immediate();
+	virtual void render_immediate(bool clear_screen = true);
 	virtual void render_obj();
-	virtual void render_immediate_3d();
+	virtual void render_immediate_3d(bool clear_screen = true);
 
 	void toggle_thread();
 	static void test_thread_func(void *d);
@@ -85,6 +86,9 @@ public:
 
 	Ref<Mesh> _mesh_utils_test;
 	MeshInstance3D *_mesh_utils_test_mi;
+
+	Ref<FrameBuffer> _frame_buffer;
+	Ref<RenderTexture> _render_tex;
 
 	//ColoredMaterial *cmaterial;
 };

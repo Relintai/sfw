@@ -268,13 +268,42 @@ void GameScene::render() {
 		_mesh_utils_test_mi->render();
 	} else if (render_type == 12) {
 		render_immediate_3d();
+	} else if (render_type == 13) {
+		Renderer *r = Renderer::get_singleton();
+		r->set_face_culling(Renderer::FACE_CULLING_BACK);
+		
+		Vector2i render_tex_size = _render_tex->get_size();
+
+		_frame_buffer->bind();
+		_frame_buffer->set_as_viewport();
+
+		r->camera_2d_projection_set_to_size(render_tex_size);
+		r->clear_screen(Color());
+
+		r->camera_3d_bind();
+		r->camera_3d_projection_set_to_perspective(_frame_buffer->get_aspect());
+
+		render_immediate_3d(false);
+
+		render_immediate(false);
+
+		_render_tex->update();
+		_frame_buffer->unbind();
+
+		_frame_buffer->reset_as_viewport();
+
+		r->camera_2d_projection_set_to_window();
+		r->clear_screen(Color(1, 0, 0));
+		r->draw_texture(_render_tex, Rect2(100, 100, render_tex_size.x, render_tex_size.y));
 	}
 }
-void GameScene::render_immediate() {
+void GameScene::render_immediate(bool clear_screen) {
 	Renderer *r = Renderer::get_singleton();
 
-	r->clear_screen(Color());
-	r->camera_2d_projection_set_to_window();
+	if (clear_screen) {
+		r->clear_screen(Color());
+		r->camera_2d_projection_set_to_window();
+	}
 
 	r->draw_point(Vector2(15, 15));
 	r->draw_point(Vector2(18, 18), Color(1, 1, 0));
@@ -350,14 +379,16 @@ void GameScene::render_obj() {
 	//TextRenderer::get_singleton()->font_print("test");
 }
 
-void GameScene::render_immediate_3d() {
+void GameScene::render_immediate_3d(bool clear_screen) {
 	Renderer *r = Renderer::get_singleton();
 
-	r->clear_screen(Color());
-	r->camera_2d_projection_set_to_window();
+	if (clear_screen) {
+		r->clear_screen(Color());
+		r->camera_2d_projection_set_to_window();
 
-	r->camera_3d_bind();
-	r->camera_3d_projection_set_to_perspective(AppWindow::get_singleton()->get_aspect());
+		r->camera_3d_bind();
+		r->camera_3d_projection_set_to_perspective(AppWindow::get_singleton()->get_aspect());
+	}
 
 	static float rotmi = 0;
 
@@ -501,7 +532,7 @@ void GameScene::socket_thread_func(void *data) {
 }
 
 GameScene::GameScene() {
-	render_type = 0;
+	render_type = RENDER_TYPE_MAX - 1;
 
 	_thread_running = false;
 	_thread = NULL;
@@ -677,6 +708,12 @@ GameScene::GameScene() {
 	_mesh_utils_test_mi = memnew(MeshInstance3D());
 	_mesh_utils_test_mi->material = color_material;
 	_mesh_utils_test_mi->mesh = _mesh_utils_test;
+
+	_frame_buffer.instance();
+	_frame_buffer->create(960, 540);
+
+	_render_tex.instance();
+	_render_tex->set_frame_buffer(_frame_buffer);
 }
 
 GameScene::~GameScene() {
