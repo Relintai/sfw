@@ -31,7 +31,6 @@
 //--STRIP
 
 #if defined(_WIN64) || defined(_WIN32)
-#include <ws2tcpip.h>
 using sa_family_t = unsigned short;
 using in_addr_t = uint32_t;
 using uint16_t = unsigned short;
@@ -46,8 +45,13 @@ using uint16_t = unsigned short;
 #include "int_types.h"
 //--STRIP
 
+struct sockaddr_in;
+struct sockaddr_in6;
+
 class InetAddress {
 public:
+	struct InetAddressData;
+
 	sa_family_t family() const;
 
 	String to_ip() const;
@@ -75,22 +79,13 @@ public:
 	InetAddress(uint16_t port = 0, bool loopbackOnly = false, bool ipv6 = false);
 	InetAddress(const String &ip, uint16_t port, bool ipv6 = false);
 
-	explicit InetAddress(const struct sockaddr_in &addr) {
-		_addr = addr;
-		_is_unspecified = false;
-	}
+	explicit InetAddress(const struct sockaddr_in &addr);
+	explicit InetAddress(const struct sockaddr_in6 &addr);
 
-	explicit InetAddress(const struct sockaddr_in6 &addr) {
-		_addr6 = addr;
-		_is_ip_v6 = true;
-		_is_unspecified = false;
-	}
+	~InetAddress();
 
 private:
-	union {
-		struct sockaddr_in _addr;
-		struct sockaddr_in6 _addr6;
-	};
+	InetAddressData *_data;
 
 	bool _is_ip_v6;
 	bool _is_unspecified;
