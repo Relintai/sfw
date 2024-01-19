@@ -271,7 +271,7 @@ void GameScene::render() {
 	} else if (render_type == 13) {
 		Renderer *r = Renderer::get_singleton();
 		r->set_face_culling(Renderer::FACE_CULLING_BACK);
-		
+
 		Vector2i render_tex_size = _render_tex->get_size();
 
 		_frame_buffer->bind();
@@ -532,7 +532,7 @@ void GameScene::socket_thread_func(void *data) {
 }
 
 GameScene::GameScene() {
-	render_type = RENDER_TYPE_MAX - 1;
+	render_type = 0;
 
 	_thread_running = false;
 	_thread = NULL;
