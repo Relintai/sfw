@@ -8,13 +8,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
-#include <sys/time.h>
 #include <time.h>
-#include <unistd.h>
 #include <ctime>
 #include <wchar.h>
 #include <cstdint>
 #include <memory.h>
+
+#if !defined(_WIN64) && !defined(_WIN32)
+#include <sys/time.h>
+#include <unistd.h>
+#endif
 
 #ifndef SFW_H
 
@@ -44,8 +47,21 @@
 #define Font The_Font_I_dont_care
 #endif
 
+// Note: On Windows we need to make sure that 
+// GLFW includes it's needed windows headers first, as it has quite a bit of setup.
+// Also windows headers can define quite a bit of stuff like far and near macros
+// Wee need to make sure it's safe to undo those as soon as possible
+// This means that <windows.h> cannot be included in sfw.h if rendering is enabled.
+// Also since it pull in lots of defines it probably shouldn't anyway.
 #undef ONLY_GLAD
 #include "sfw_3rd.m"
+
+#if defined(_WIN64) || defined(_WIN32)
+#undef far
+#undef near
+#undef FAR
+#undef NEAR
+#endif
 
 #undef CursorShape
 
@@ -414,7 +430,7 @@
 //#include <shlobj.h>
 //#include <wchar.h>
 //--STRIP
-{{FILE:sfw/core/sub_process.cpp}}
+//{//{FILE:sfw/core/sub_process.cpp}}
 
 //--STRIP
 //#include "core/pool_vector.h"

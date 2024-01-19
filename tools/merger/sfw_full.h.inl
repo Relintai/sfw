@@ -443,7 +443,7 @@
 //Win Only
 //#include "core/local_vector.h"
 //--STRIP
-{{FILE:sfw/core/sub_process.h}}
+//{//{FILE:sfw/core/sub_process.h}}
 
 //--STRIP
 //no includes

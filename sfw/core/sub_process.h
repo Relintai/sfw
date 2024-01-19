@@ -25,6 +25,9 @@
 #include "core/local_vector.h"
 //--STRIP
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 typedef struct tagLOGCONTEXTW {
 	WCHAR lcName[40];
 	UINT lcOptions;

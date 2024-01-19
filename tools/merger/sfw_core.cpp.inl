@@ -7,13 +7,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
-#include <sys/time.h>
 #include <time.h>
-#include <unistd.h>
 #include <ctime>
 #include <wchar.h>
 #include <cstdint>
 #include <memory.h>
+
+#if !defined(_WIN64) && !defined(_WIN32)
+#include <sys/time.h>
+#include <unistd.h>
+#endif
 
 #ifndef SFW_H
 #include "sfw.h"
