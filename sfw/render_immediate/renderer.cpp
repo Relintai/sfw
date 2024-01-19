@@ -23,6 +23,49 @@ void Renderer::set_depth_buffer_enable(const bool p_depth_buffer) {
 	_depth_buffer = p_depth_buffer;
 }
 
+Renderer::FaceCulling Renderer::get_face_culling() const {
+	return _face_culling;
+}
+void Renderer::set_face_culling(const FaceCulling p_face_culling) {
+	if (_face_culling == p_face_culling) {
+		return;
+	}
+
+	bool were_disabled = _face_culling == FACE_CULLING_OFF;
+
+	_face_culling = p_face_culling;
+
+	switch (p_face_culling) {
+		case FACE_CULLING_OFF:
+			if (!were_disabled) {
+				glDisable(GL_CULL_FACE);
+			}
+
+			break;
+		case FACE_CULLING_FRONT:
+			if (were_disabled) {
+				glEnable(GL_CULL_FACE);
+			}
+
+			glCullFace(GL_FRONT);
+			break;
+		case FACE_CULLING_BACK:
+			if (were_disabled) {
+				glEnable(GL_CULL_FACE);
+			}
+
+			glCullFace(GL_BACK);
+			break;
+		case FACE_CULLING_FRONT_AND_BACK:
+			if (were_disabled) {
+				glEnable(GL_CULL_FACE);
+			}
+
+			glCullFace(GL_FRONT_AND_BACK);
+			break;
+	}
+}
+
 void Renderer::draw_point(const Vector2 &p_position, const Color &p_color) {
 	//Ugly but oh well
 	draw_rect(Rect2(p_position, Vector2(1, 1)), p_color);
@@ -397,6 +440,18 @@ void Renderer::camera_2d_projection_set_to_window() {
 	_camera_2d_model_view_matrix_stack.clear();
 }
 
+void Renderer::camera_2d_projection_set_to_size(const Size2i &p_size) {
+	Transform canvas_transform;
+	canvas_transform.translate_local(-(p_size.x / 2.0f), -(p_size.y / 2.0f), 0.0f);
+	//canvas_transform.scale(Vector3(2.0f / size.x, 2.0f / size.y, 1.0f));
+	canvas_transform.scale(Vector3(2.0f / p_size.x, -2.0f / p_size.y, 1.0f));
+
+	RenderState::model_view_matrix_2d = Transform2D();
+	RenderState::projection_matrix_2d = canvas_transform;
+
+	_camera_2d_model_view_matrix_stack.clear();
+}
+
 void Renderer::camera_3d_bind() {
 	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
 	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
@@ -528,6 +583,7 @@ Renderer::Renderer() {
 	_singleton = this;
 
 	_depth_buffer = false;
+	_face_culling = FACE_CULLING_OFF;
 
 	_2d_mesh.instance();
 	_2d_mesh->vertex_dimesions = 2;

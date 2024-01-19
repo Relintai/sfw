@@ -32,6 +32,16 @@ public:
 	bool get_depth_buffer_enable() const;
 	void set_depth_buffer_enable(const bool p_depth_buffer);
 
+	enum FaceCulling {
+		FACE_CULLING_OFF = 0,
+		FACE_CULLING_FRONT,
+		FACE_CULLING_BACK,
+		FACE_CULLING_FRONT_AND_BACK,
+	};
+
+	FaceCulling get_face_culling() const;
+	void set_face_culling(const FaceCulling p_face_culling);
+
 	void draw_point(const Vector2 &p_position, const Color &p_color = Color(1, 1, 1));
 	void draw_line(const Vector2 &p_from, const Vector2 &p_to, const Color &p_color = Color(1, 1, 1), const real_t p_width = 1);
 	void draw_line_rect(const Rect2 &p_rect, const Color &p_color = Color(1, 1, 1), const real_t p_width = 1);
@@ -71,6 +81,7 @@ public:
 	int get_camera_2d_model_view_matrix_stack_size() const;
 
 	void camera_2d_projection_set_to_window();
+	void camera_2d_projection_set_to_size(const Size2i &p_size);
 
 	//3D Camera API
 
@@ -113,6 +124,7 @@ private:
 	static Renderer *_singleton;
 
 	bool _depth_buffer;
+	FaceCulling _face_culling;
 
 	Ref<Mesh> _2d_mesh;
 	Ref<Mesh> _3d_mesh;
