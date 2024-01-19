@@ -3,12 +3,16 @@
 /*  From https://github.com/Relintai/pandemonium_engine (MIT)            */
 /*************************************************************************/
 
+//--STRIP
 #include "thread.h"
+//--STRIP
 
 #if !defined(NO_THREADS)
 
+//--STRIP
 #include "core/error_macros.h"
 #include "core/safe_refcount.h"
+//--STRIP
 
 Error (*Thread::set_name_func)(const String &) = nullptr;
 void (*Thread::set_priority_func)(Thread::Priority) = nullptr;
@@ -107,4 +111,7 @@ Thread::ID Thread::get_caller_id() {
 		return caller_id;
 	}
 }
-#endif
+
+//--STRIP
+#endif // THREAD_H
+//--STRIP
