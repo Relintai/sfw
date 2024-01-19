@@ -126,8 +126,10 @@ public:
 
 	virtual Error reopen(const String &p_path, int p_mode_flags); ///< does not change the AccessType
 
+	Error open(const String &p_path, int p_mode_flags);
+
 	static FileAccess *create(); /// Helper that Creates a file access
-	static FileAccess *create_and_open(const String &p_path, int p_mode_flags, Error *r_error = nullptr); /// Create a file access (for the current platform) this is the only portable way of accessing files.
+	static FileAccess *create_and_open(const String &p_path, int p_mode_flags, Error *r_error = nullptr);
 	static bool exists(const String &p_name); ///< return true if a file exists
 	static uint64_t get_modified_time(const String &p_file);
 	static uint32_t get_unix_permissions(const String &p_file);

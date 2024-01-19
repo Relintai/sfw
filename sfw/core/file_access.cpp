@@ -691,6 +691,10 @@ Error FileAccess::reopen(const String &p_path, int p_mode_flags) {
 	return _open(p_path, p_mode_flags);
 };
 
+Error FileAccess::open(const String &p_path, int p_mode_flags) {
+	return _open(p_path, p_mode_flags);
+}
+
 FileAccess *FileAccess::create_and_open(const String &p_path, int p_mode_flags, Error *r_error) {
 	//try packed data first
 
