@@ -41,9 +41,22 @@ WINSOCK_API_LINKAGE PCSTR WSAAPI inet_ntop(INT Family, VOID * pAddr, PSTR pStrin
 }
 #else
 // Windows...
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #include <in6addr.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
+extern "C" {
+
+PCSTR WSAAPI inet_ntop( _In_ INT Family,_In_ const VOID * pAddr,_Out_writes_(StringBufSize) PSTR pStringBuf, _In_  size_t  StringBufSize);
+
+WINSOCK_API_LINKAGE INT WSAAPI inet_pton(_In_ INT Family,_In_ PCSTR pszAddrString, _When_(Family == AF_INET, _Out_writes_bytes_(sizeof(IN_ADDR)))_When_(Family == AF_INET6, _Out_writes_bytes_(sizeof(IN6_ADDR)))PVOID pAddrBuf);
+
+}
+
 #endif
 
 struct in6__addruint {

@@ -816,7 +816,9 @@
     #ifdef GLAD_API_CALL
     #undef GLAD_API_CALL
     #endif
-    #define GLAD_API_CALL extern API ///-
+    #define GLAD_API_CALL extern 
+    //TODO Figure out why did this build, and why it now doesn't want to work in the amalgamated build
+    // API ///-
     #endif
     
     #ifndef GLAD_GL_H_

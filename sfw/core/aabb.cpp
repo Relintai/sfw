@@ -114,6 +114,10 @@ AABB AABB::intersection(const AABB &p_aabb) const {
 	return AABB(min, max - min);
 }
 
+// MSVC
+#undef near
+#undef far
+
 bool AABB::intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *r_clip, Vector3 *r_normal) const {
 	Vector3 c1, c2;
 	Vector3 end = position + size;
