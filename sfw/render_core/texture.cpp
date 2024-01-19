@@ -5,6 +5,8 @@
 #include <stdio.h>
 
 #include "render_core/app_window.h"
+
+#include "render_core/frame_buffer.h"
 //--STRIP
 
 void Texture::create_from_image(const Ref<Image> &img) {
@@ -108,44 +110,44 @@ void Texture::upload() {
 
 	glActiveTexture(GL_TEXTURE0 + _texture_index);
 
-	if ((_flags | TEXTURE_FLAG_MIP_MAPS)) {
-		if ((_flags | TEXTURE_FLAG_FILTER)) {
-			glTexParameteri(_texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		} else {
-			glTexParameteri(_texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		}
-	} else {
-		if ((_flags | TEXTURE_FLAG_FILTER)) {
-			glTexParameteri(_texture, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		} else {
-			glTexParameteri(_texture, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		}
-	}
-
-	if ((_flags | TEXTURE_FLAG_FILTER)) {
-		glTexParameteri(_texture, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Linear Filtering
-	} else {
-		glTexParameteri(_texture, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // raw Filtering
-	}
-
-	if ((_flags & TEXTURE_FLAG_REPEAT) || (_flags & TEXTURE_FLAG_MIRRORED_REPEAT)) {
-		if (_flags & TEXTURE_FLAG_MIRRORED_REPEAT) {
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-		} else {
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		}
-	} else {
-		glTexParameterf(_texture, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameterf(_texture, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	}
-
 	uint32_t texture_type = GL_TEXTURE_2D;
 
 	glBindTexture(texture_type, _texture);
 
-	int mipmaps = ((_flags | TEXTURE_FLAG_MIP_MAPS) && _image->has_mipmaps()) ? _image->get_mipmap_count() + 1 : 1;
+	int mipmaps = ((_flags & TEXTURE_FLAG_MIP_MAPS) && _image->has_mipmaps()) ? _image->get_mipmap_count() + 1 : 1;
+
+	if (mipmaps > 1) {
+		if ((_flags & TEXTURE_FLAG_FILTER)) {
+			glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		} else {
+			glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		}
+	} else {
+		if ((_flags & TEXTURE_FLAG_FILTER)) {
+			glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		} else {
+			glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		}
+	}
+
+	if ((_flags & TEXTURE_FLAG_FILTER)) {
+		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Linear Filtering
+	} else {
+		glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // raw Filtering
+	}
+
+	if ((_flags & TEXTURE_FLAG_REPEAT) || (_flags & TEXTURE_FLAG_MIRRORED_REPEAT)) {
+		if (_flags & TEXTURE_FLAG_MIRRORED_REPEAT) {
+			glTexParameterf(texture_type, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+			glTexParameterf(texture_type, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		} else {
+			glTexParameterf(texture_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameterf(texture_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+	} else {
+		glTexParameterf(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	}
 
 	_texture_width = _image->get_width();
 	_texture_height = _image->get_height();
@@ -169,7 +171,7 @@ void Texture::upload() {
 		h = MAX(1, h >> 1);
 	}
 
-	if ((_flags | TEXTURE_FLAG_MIP_MAPS) && mipmaps == 1) {
+	if (mipmaps > 1) {
 		//generate mipmaps if they were requested and the image does not contain them
 		glGenerateMipmap(texture_type);
 	}
@@ -275,22 +277,67 @@ Texture::~Texture() {
 
 //RenderTexture
 
-void RenderTexture::set_as_render_target() {
-	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
-	glViewport(0, 0, _fbo_width, _fbo_height);
+bool RenderTexture::get_v_flip() const {
+	return _v_flip;
+}
+void RenderTexture::set_v_flip(const bool p_v_flip) {
+	_v_flip = p_v_flip;
 }
 
-void RenderTexture::unset_render_target() {
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
+RenderTexture::RenderTextureType RenderTexture::get_type() const {
+	return _type;
+}
+void RenderTexture::set_type(const RenderTextureType p_type) {
+	_type = p_type;
 }
 
-RenderTexture::RenderTexture() :
-		Texture() {
-	_fbo_width = 0;
-	_fbo_height = 0;
-	_fbo = 0;
+Ref<FrameBuffer> RenderTexture::get_frame_buffer() const {
+	return _frame_buffer;
+}
+void RenderTexture::set_frame_buffer(const Ref<FrameBuffer> &p_frame_buffer) {
+	_frame_buffer = p_frame_buffer;
+}
+
+void RenderTexture::update() {
+	if (!_frame_buffer.is_valid()) {
+		return;
+	}
+
+	_frame_buffer->update();
+
+	Ref<Image> img;
+
+	switch (_type) {
+		case RENDER_TEXTURE_TYPE_COLOR:
+			img = _frame_buffer->get_image_color();
+
+			if (_v_flip) {
+				img->flip_y();
+			}
+
+			create_from_image(img);
+
+			break;
+		case RENDER_TEXTURE_TYPE_DEPTH:
+			img = _frame_buffer->get_image_depth();
+
+			if (_v_flip) {
+				img->flip_y();
+			}
+
+			create_from_image(img);
+
+			break;
+		default:
+			break;
+	}
+}
+
+RenderTexture::RenderTexture() {
+	_type = RENDER_TEXTURE_TYPE_COLOR;
+	_v_flip = true;
 }
 
 RenderTexture::~RenderTexture() {
+	_frame_buffer.unref();
 }

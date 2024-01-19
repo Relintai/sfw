@@ -11,6 +11,8 @@
 #include "render_core/image.h"
 //--STRIP
 
+class FrameBuffer;
+
 class Texture : public Resource {
 	SFW_OBJECT(Texture, Resource);
 
@@ -54,19 +56,31 @@ protected:
 	uint32_t _texture;
 };
 
-//TODO
 class RenderTexture : public Texture {
 public:
-	void set_as_render_target();
-	void unset_render_target();
+	enum RenderTextureType {
+		RENDER_TEXTURE_TYPE_COLOR = 0,
+		RENDER_TEXTURE_TYPE_DEPTH,
+	};
+
+	bool get_v_flip() const;
+	void set_v_flip(const bool p_v_flip);
+
+	RenderTextureType get_type() const;
+	void set_type(const RenderTextureType p_type);
+
+	Ref<FrameBuffer> get_frame_buffer() const;
+	void set_frame_buffer(const Ref<FrameBuffer> &p_frame_buffer);
+
+	void update();
 
 	RenderTexture();
 	virtual ~RenderTexture();
 
 protected:
-	int _fbo_width;
-	int _fbo_height;
-	uint32_t _fbo;
+	bool _v_flip;
+	Ref<FrameBuffer> _frame_buffer;
+	RenderTextureType _type;
 };
 
 //--STRIP
