@@ -117,8 +117,9 @@ AABB AABB::intersection(const AABB &p_aabb) const {
 bool AABB::intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *r_clip, Vector3 *r_normal) const {
 	Vector3 c1, c2;
 	Vector3 end = position + size;
-	real_t near = -1e20;
-	real_t far = 1e20;
+	//<windows.h> has a far and near macro defined, and we can't undo it here in the amalgamation
+	real_t aabb_near = -1e20;
+	real_t aabb_far = 1e20;
 	int axis = 0;
 
 	for (int i = 0; i < 3; i++) {
@@ -133,14 +134,14 @@ bool AABB::intersects_ray(const Vector3 &p_from, const Vector3 &p_dir, Vector3 *
 			if (c1[i] > c2[i]) {
 				SWAP(c1, c2);
 			}
-			if (c1[i] > near) {
-				near = c1[i];
+			if (c1[i] > aabb_near) {
+				aabb_near = c1[i];
 				axis = i;
 			}
-			if (c2[i] < far) {
-				far = c2[i];
+			if (c2[i] < aabb_far) {
+				aabb_far = c2[i];
 			}
-			if ((near > far) || (far < 0)) {
+			if ((aabb_near > aabb_far) || (aabb_far < 0)) {
 				return false;
 			}
 		}

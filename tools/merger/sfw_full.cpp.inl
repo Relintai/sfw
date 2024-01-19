@@ -56,13 +56,6 @@
 #undef ONLY_GLAD
 #include "sfw_3rd.m"
 
-#if defined(_WIN64) || defined(_WIN32)
-#undef far
-#undef near
-#undef FAR
-#undef NEAR
-#endif
-
 #undef CursorShape
 
 #if defined(__linux__)
