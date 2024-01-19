@@ -6,7 +6,9 @@
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
 {{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
+#ifndef _REENTRANT
 #define _REENTRANT
+#endif
 
 #include <float.h>
 #include <math.h>

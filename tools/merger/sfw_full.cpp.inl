@@ -21,16 +21,17 @@
 #ifdef __APPLE__
 #ifndef _APPLE_NO_IMPL_
 #define _APPLE_NO_IMPL_
-#endif
-#endif
+#endif //_APPLE_NO_IMPL_
+#endif //__APPLE__
 
 #include "sfw.h"
 
+#ifdef __APPLE__
 #undef ONLY_GLAD
-
 #include "sfw_3rd.m"
+#endif //__APPLE__
 
-#endif
+#endif //SFW_H
 
 // On OSX sfw_3rd.m has to be compiled manually on Objective C Mode.
 #ifndef __APPLE__
@@ -43,6 +44,7 @@
 #define Font The_Font_I_dont_care
 #endif
 
+#undef ONLY_GLAD
 #include "sfw_3rd.m"
 
 #undef CursorShape
@@ -205,7 +207,7 @@
 #undef GAMEPAD_NAME
 #endif
 
-#endif
+#endif //SFW_3RD_IMPL
 
 #endif // #ifndef __APPLE__
 

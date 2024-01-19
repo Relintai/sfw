@@ -29,7 +29,9 @@
 #define S_ISREG(m) ((m)&_S_IFREG)
 #endif
 
+//--STRIP
 #include "core/sfw_time.h"
+//--STRIP
 
 #else
 

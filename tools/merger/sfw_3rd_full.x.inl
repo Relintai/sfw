@@ -9,7 +9,6 @@
 #ifndef ONLY_GLAD
 
 #ifdef __APPLE__
-
 #ifndef _APPLE_NO_IMPL_
 
 #ifndef SFW_3RD_IMPL
@@ -17,7 +16,6 @@
 #endif //SFW_3RD_IMPL
 
 #endif //_APPLE_NO_IMPL_
-
 #endif //__APPLE__
 
 #ifdef SFW_3RD_IMPL
@@ -71,5 +69,5 @@
 #undef timeGetTime
 #undef Time
 
-#endif
+#endif //ONLY_GLAD
 
