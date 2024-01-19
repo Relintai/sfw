@@ -1015,14 +1015,14 @@ String DirAccess::get_full_path(const String &p_path) {
 Error DirAccess::copy(String p_from, String p_to, int p_chmod_flags) {
 	//printf("copy %s -> %s\n",p_from.ascii().get_data(),p_to.ascii().get_data());
 	Error err;
-	FileAccess *fsrc = FileAccess::open(p_from, FileAccess::READ, &err);
+	FileAccess *fsrc = FileAccess::create_and_open(p_from, FileAccess::READ, &err);
 
 	if (err) {
 		ERR_PRINT("Failed to open " + p_from);
 		return err;
 	}
 
-	FileAccess *fdst = FileAccess::open(p_to, FileAccess::WRITE, &err);
+	FileAccess *fdst = FileAccess::create_and_open(p_to, FileAccess::WRITE, &err);
 	if (err) {
 		fsrc->close();
 		memdelete(fsrc);

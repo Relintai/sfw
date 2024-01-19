@@ -679,7 +679,7 @@ FileAccess *FileAccess::create() {
 }
 
 bool FileAccess::exists(const String &p_name) {
-	FileAccess *f = open(p_name, READ);
+	FileAccess *f = create_and_open(p_name, READ);
 	if (!f) {
 		return false;
 	}
@@ -691,7 +691,7 @@ Error FileAccess::reopen(const String &p_path, int p_mode_flags) {
 	return _open(p_path, p_mode_flags);
 };
 
-FileAccess *FileAccess::open(const String &p_path, int p_mode_flags, Error *r_error) {
+FileAccess *FileAccess::create_and_open(const String &p_path, int p_mode_flags, Error *r_error) {
 	//try packed data first
 
 	FileAccess *ret = nullptr;
@@ -1116,7 +1116,7 @@ void FileAccess::store_buffer(const uint8_t *p_src, uint64_t p_length) {
 */
 
 Vector<uint8_t> FileAccess::get_file_as_array(const String &p_path, Error *r_error) {
-	FileAccess *f = FileAccess::open(p_path, READ, r_error);
+	FileAccess *f = FileAccess::create_and_open(p_path, READ, r_error);
 	if (!f) {
 		if (r_error) { // if error requested, do not throw error
 			return Vector<uint8_t>();

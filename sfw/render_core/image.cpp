@@ -1671,7 +1671,7 @@ Error Image::save_png(const String &file_name) {
 		return FAILED;
 	}
 
-	FileAccess* f = FileAccess::open(file_name, FileAccess::WRITE);
+	FileAccess* f = FileAccess::create_and_open(file_name, FileAccess::WRITE);
 
 	if (!f) {
 		return FAILED;
