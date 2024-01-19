@@ -476,7 +476,7 @@ void GameScene::socket_thread_func(void *data) {
 		int a = self->_server_socket->accept(client_socket);
 
 		if (a != -1) {
-			printf("New connection! %d\n", a);
+			ERR_PRINT("New connection! " + itos(a));
 
 			client_sockets.push_back(client_socket);
 			client_socket = new Socket();
