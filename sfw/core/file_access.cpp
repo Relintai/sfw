@@ -1152,6 +1152,35 @@ String FileAccess::get_file_as_string(const String &p_path, Error *r_error) {
 	return ret;
 }
 
+void FileAccess::write_file(const String &p_path, const String &data, Error *r_error) {
+	FileAccess *f = FileAccess::create_and_open(p_path, WRITE, r_error);
+	if (!f) {
+		if (r_error) { // if error requested, do not throw error
+			return;
+		}
+
+		ERR_FAIL_MSG("Can't open file from path '" + String(p_path) + "'.");
+	}
+
+	f->store_string(data);
+	f->close();
+	memdelete(f);
+}
+void FileAccess::write_file_buffer(const String &p_path, const Vector<uint8_t> &data, Error *r_error) {
+	FileAccess *f = FileAccess::create_and_open(p_path, WRITE, r_error);
+	if (!f) {
+		if (r_error) { // if error requested, do not throw error
+			return;
+		}
+
+		ERR_FAIL_MSG("Can't open file from path '" + String(p_path) + "'.");
+	}
+
+	f->store_buffer_vec(data);
+	f->close();
+	memdelete(f);
+}
+
 /*
 FileAccess::FileAccess() {
 	endian_swap = false;

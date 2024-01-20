@@ -141,6 +141,9 @@ public:
 	static Vector<uint8_t> get_file_as_array(const String &p_path, Error *r_error = nullptr);
 	static String get_file_as_string(const String &p_path, Error *r_error = nullptr);
 
+	static void write_file(const String &p_path, const String &data, Error *r_error = nullptr);
+	static void write_file_buffer(const String &p_path, const Vector<uint8_t> &data, Error *r_error = nullptr);
+
 	FileAccess();
 	virtual ~FileAccess();
 
