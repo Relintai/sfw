@@ -1,14 +1,6 @@
 
 
-#clang++ main.cpp -Wall -o3 -o ./bin/game -Ilibs/SDL2-linux/include -Llibs/SDL2-linux/lib -lSDL2 -lSDL2main
-
-#g++ main.cpp -Wall -o3 -o ./bin/game -Ilibs/SDL2-linux/include -Llibs/SDL2-linux/lib -lSDL2 -lSDL2main
-
-#g++ main.cpp shader.cpp material.cpp mesh.cpp mesh_instance.cpp mesh_utils.cpp texture.cpp camera.cpp render_core.cpp scene.cpp game_scene.cpp object_2d.cpp tile_map.cpp sprite.cpp \
-#    -g -Wall -o3 -o ./bin/game $(pkg-config --cflags --libs sdl2 glew)
-
-#g++ -Wall -fexceptions -I/usr/include/SDL2 -D_REENTRANT -g -Isfw -c sfw/core/aabb.cpp -o sfw/core/aabb.o
-
+# You might need to add -std=c++14 depending on your compiler version
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/aabb.cpp -o sfw/core/aabb.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/basis.cpp -o sfw/core/basis.o
@@ -106,7 +98,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/text_2d.cpp -o sfw/
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/game_scene.cpp -o sfw/game_scene.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/main.cpp -o sfw/main.o
 
-# You might need to add -lpthread and/or -latomic depending on your compiler version
+# You might need to add -lpthread and/or -latomic depending on your compiler version (add them near the other -l flags)
 
 ccache g++ -Wall \
                 -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \

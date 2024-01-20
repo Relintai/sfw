@@ -1,13 +1,6 @@
 
 
-#clang++ main.cpp -Wall -o3 -o ./bin/game -Ilibs/SDL2-linux/include -Llibs/SDL2-linux/lib -lSDL2 -lSDL2main
-
-#g++ main.cpp -Wall -o3 -o ./bin/game -Ilibs/SDL2-linux/include -Llibs/SDL2-linux/lib -lSDL2 -lSDL2main
-
-#g++ main.cpp shader.cpp material.cpp mesh.cpp mesh_instance.cpp mesh_utils.cpp texture.cpp camera.cpp render_core.cpp scene.cpp game_scene.cpp object_2d.cpp tile_map.cpp sprite.cpp \
-#    -g -Wall -o3 -o ./bin/game $(pkg-config --cflags --libs sdl2 glew)
-
-#g++ -Wall -fexceptions -I/usr/include/SDL2 -D_REENTRANT -g -Isfw -c sfw/core/aabb.cpp -o sfw/core/aabb.o
+# You might need to add -std=c++14 depending on your compiler version
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/aabb.cpp -o sfw/core/aabb.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/core/basis.cpp -o sfw/core/basis.o
@@ -62,50 +55,11 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/dictionary.cpp -o sfw/objec
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/ref_ptr.cpp -o sfw/object/ref_ptr.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/object/resource.cpp -o sfw/object/resource.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/application.cpp -o sfw/render_core/application.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/scene.cpp -o sfw/render_core/scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/app_window.cpp -o sfw/render_core/window.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/main.cpp -o sfw/main.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/shader.cpp -o sfw/render_core/shader.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/material.cpp -o sfw/render_core/material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/mesh.cpp -o sfw/render_core/mesh.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/mesh_utils.cpp -o sfw/render_core/mesh_utils.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/texture.cpp -o sfw/render_core/texture.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/image.cpp -o sfw/render_core/image.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/render_state.cpp -o sfw/render_core/render_state.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/keyboard.cpp -o sfw/render_core/keyboard.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input_event.cpp -o sfw/render_core/input_event.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input_map.cpp -o sfw/render_core/input_map.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/input.cpp -o sfw/render_core/input.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/shortcut.cpp -o sfw/render_core/shortcut.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/font.cpp -o sfw/render_core/font.o
+# You might need to add -lpthread and/or -latomic depending on your compiler version  (add it near -lX11)
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/color_material_2d.cpp -o sfw/render_core/color_material_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/color_material.cpp -o sfw/render_core/color_material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/colored_material.cpp -o sfw/render_core/colored_material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/font_material.cpp -o sfw/render_core/font_material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/texture_material_2d.cpp -o sfw/render_core/texture_material_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/texture_material.cpp -o sfw/render_core/texture_material.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/transparent_texture_material.cpp -o sfw/render_core/transparent_texture_material.o
-
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_immediate/renderer.cpp -o sfw/render_immediate/renderer.o
-
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/mesh_instance_3d.cpp -o sfw/render_objects/mesh_instance_3d.o
-
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/camera_2d.cpp -o sfw/render_objects/camera_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/mesh_instance_2d.cpp -o sfw/render_objects/mesh_instance_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/object_2d.cpp -o sfw/render_objects/object_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/sprite.cpp -o sfw/render_objects/sprite.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/text_2d.cpp -o sfw/render_objects/text_2d.o
-
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c game_scene.cpp -o game_scene.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c main.cpp -o main.o
-
-
-ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \
+ccache g++ -Wall -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o \
                         sfw/core/face3.o sfw/core/logger.o sfw/core/math_funcs.o \
                         sfw/core/memory.o sfw/core/pcg.o sfw/core/plane.o sfw/core/projection.o sfw/core/quaternion.o sfw/core/random_pcg.o \
                         sfw/core/rect2.o sfw/core/rect2i.o sfw/core/safe_refcount.o sfw/core/transform_2d.o sfw/core/transform.o \
@@ -121,24 +75,5 @@ ccache g++ -Wall -lm -ldl -lpthread -lX11  -D_REENTRANT -g sfw/core/aabb.o sfw/c
                         sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \
                         sfw/object/array.o sfw/object/dictionary.o sfw/object/ref_ptr.o \
                         sfw/object/resource.o \
-                        sfw/render_core/image.o sfw/render_core/render_state.o \
-                        sfw/render_core/application.o sfw/render_core/scene.o sfw/render_core/window.o \
-                        sfw/render_core/shader.o sfw/render_core/material.o sfw/render_core/mesh.o \
-                        sfw/render_core/mesh_utils.o sfw/render_core/texture.o \
-                        sfw/render_core/input_event.o sfw/render_core/input_map.o \
-                        sfw/render_core/input.o sfw/render_core/shortcut.o \
-                        sfw/render_core/keyboard.o sfw/render_core/font.o \
-                        sfw/render_core/color_material_2d.o sfw/render_core/color_material.o \
-                        sfw/render_core/colored_material.o sfw/render_core/font_material.o \
-                        sfw/render_core/texture_material_2d.o sfw/render_core/texture_material.o \
-                        sfw/render_core/transparent_texture_material.o \
-                        sfw/render_immediate/renderer.o \
-                        sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
-                        sfw/render_objects/object_2d.o \
-                        sfw/render_objects/sprite.o sfw/render_objects/tile_map.o \
-                        sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
-                        sfw/render_objects/text_2d.o \
-                        game_scene.o main.o \
-                         -o game 
-
-#export args="-lm -ldl -lpthread -lX11 -w -Iengine/ $args"
+                        sfw/main.o \
+                        -o sfwl_app 

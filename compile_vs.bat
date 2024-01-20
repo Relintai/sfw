@@ -6,7 +6,7 @@ if not defined DevEnvDir (
 
 rem debug: /Zi (== -g)
 
-rem TODO reentrant is probably not needed
+rem you might need to add /std:c++14 depending on your compiler version.
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/aabb.cpp /Fo:sfw/core/aabb.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/basis.cpp /Fo:sfw/core/basis.obj
@@ -105,15 +105,6 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/text_2d.cpp /Fo:sfw/render
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/game_scene.cpp /Fo:sfw/game_scene.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/main.cpp /Fo:sfw/main.obj
-
-
-rem cl main.cpp shader.cpp material.cpp mesh.cpp mesh_instance.cpp mesh_utils.cpp texture.cpp camera.cpp application.cpp scene.cpp game_scene.cpp object_2d.cpp tile_map.cpp sprite.cpp ^
-rem	libs\glad\src\glad.c /Febin/game-vc.exe ^
-rem	/EHsc ^
-rem	/Ilibs\SDL2-VC\include ^
-rem	/Ilibs\glad\include ^
-rem	/link /LIBPATH:libs\SDL2-VC\lib SDL2.lib SDL2main.lib opengl32.lib ^
-rem	/SUBSYSTEM:CONSOLE
 
 
 cl /D_REENTRANT /Zi ^
