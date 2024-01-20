@@ -50,8 +50,7 @@ bool is_structure_template_specialization_or_parent_is_template(const String &da
 }
 
 String generate_section_class_list(const List<String> &list, const String &cls_prefix, const HashSet<String> &used_keywords) {
-	FileAccess f;
-	String code_template = f.read_file("code_remaining_template.md.html");
+	String code_template = FileAccess::get_file_as_string("code_remaining_template.md.html");
 	String d;
 
 	for (const List<String>::Element *E = list.front(); E; E = E->next()) {
@@ -242,9 +241,7 @@ List<String> process_classes_and_structs(const List<String> &list) {
 }
 
 void process_file(const String &path) {
-	FileAccess f;
-
-	String file_data = f.read_file(path);
+	String file_data = FileAccess::get_file_as_string(path);
 
 	LOG_MSG("Processing file: " + path);
 
@@ -518,8 +515,8 @@ void process_file(const String &path) {
 
 	//print_class_index_keys(class_index);
 
-	String index_template = f.read_file("index_template.md.html");
-	String code_template = f.read_file("code_template.md.html");
+	String index_template = FileAccess::get_file_as_string("index_template.md.html");
+	String code_template = FileAccess::get_file_as_string("code_template.md.html");
 	List<String> index_template_keywords = get_template_keywords(index_template);
 	HashSet<String> used_keywords;
 
@@ -541,23 +538,30 @@ void process_file(const String &path) {
 		used_keywords.insert(c);
 	}
 
-	f.write_file("out/index.md.html", index_str);
+	FileAccess::write_file("out/index.md.html", index_str);
 
 	//Generate a list from the unused classes.
-	String index_remaining_template = f.read_file("index_remaining_template.md.html");
+	String index_remaining_template = FileAccess::get_file_as_string("index_remaining_template.md.html");
 	String d = index_remaining_template;
 
 	d = d.replace("$ENUMS$", generate_section_class_list(enums, "ENUM_", used_keywords));
 	d = d.replace("$STRUCTS$", generate_section_class_list(structs, "STRUCT_", used_keywords));
 	d = d.replace("$CLASSES$", generate_section_class_list(classes, "CLASS_", used_keywords));
 
-	f.write_file("out/index_remaining.gen.md.html", d);
+	FileAccess::write_file("out/index_remaining.gen.md.html", d);
 }
 
 int main(int argc, char **argv) {
 	SFWCore::setup();
 
-	//todo create folder
+	DirAccess dir;
+
+	if (!dir.dir_exists("out")) {
+		dir.make_dir("out");
+
+		dir.copy("markdeep.min.js", "out/markdeep.min.js");
+		dir.copy("slate.css", "out/slate.css");
+	}
 
 	List<String> args;
 
