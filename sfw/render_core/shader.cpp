@@ -25,6 +25,9 @@ void Shader::unbind() {
 }
 
 void Shader::compile() {
+	ERR_FAIL_COND(_vertex_shader_source.empty());
+	ERR_FAIL_COND(_fragment_shader_source.empty());
+
 	if (!program) {
 		program = glCreateProgram();
 	}
@@ -37,9 +40,10 @@ void Shader::compile() {
 		fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	}
 
-	const char **vertex_shader_source = get_vertex_shader_source();
+	CharString vertex_shader_source = _vertex_shader_source.utf8();
+	const char *vss = vertex_shader_source.get_data();
 
-	glShaderSource(vertex_shader, 1, vertex_shader_source, NULL);
+	glShaderSource(vertex_shader, 1, &vss, NULL);
 	glCompileShader(vertex_shader);
 
 	int32_t shader_compiled = GL_FALSE;
@@ -51,9 +55,10 @@ void Shader::compile() {
 
 	glAttachShader(program, vertex_shader);
 
-	const char **fragment_shader_source = get_fragment_shader_source();
+	CharString fragment_shader_source = _fragment_shader_source.utf8();
+	const char *fss = fragment_shader_source.get_data();
 
-	glShaderSource(fragment_shader, 1, fragment_shader_source, NULL);
+	glShaderSource(fragment_shader, 1, &fss, NULL);
 	glCompileShader(fragment_shader);
 
 	shader_compiled = GL_FALSE;
@@ -85,49 +90,44 @@ void Shader::destroy() {
 	glDeleteProgram(program);
 }
 
-const char **Shader::get_vertex_shader_source() {
-	return vertex_shader_source;
+String Shader::get_vertex_shader_source() {
+	return _vertex_shader_source;
 }
-void Shader::set_vertex_shader_source(const char **source) {
-	vertex_shader_source = source;
-}
-
-const char **Shader::get_fragment_shader_source() {
-	return fragment_shader_source;
-}
-void Shader::set_fragment_shader_source(const char **source) {
-	fragment_shader_source = source;
+void Shader::set_vertex_shader_source(const String &source) {
+	_vertex_shader_source = source;
 }
 
-void Shader::print_shader_errors(const uint32_t p_program, const char *name) {
+String Shader::get_fragment_shader_source() {
+	return _fragment_shader_source;
+}
+void Shader::set_fragment_shader_source(const String &source) {
+	_fragment_shader_source = source;
+}
+
+void Shader::print_shader_errors(const uint32_t p_program, const String &name) {
 	int max_length = 5000;
-	Vector<char> error_log;
-	error_log.resize(max_length);
+	char error_log[5000];
 
-	glGetShaderInfoLog(p_program, max_length, &max_length, error_log.ptrw());
+	glGetShaderInfoLog(p_program, max_length, &max_length, error_log);
 
-	printf("Error %s!\n", name);
-	printf("%s!\n", error_log.ptr());
+	ERR_PRINT("Error " + name + "\n" + String::utf8(error_log, max_length));
 }
 
 void Shader::print_program_errors(const uint32_t p_program) {
 	if (glIsProgram(program)) {
 		int info_length = 0;
 		int max_length = 5000;
+		char info_log[5000];
 
 		glGetProgramiv(p_program, GL_INFO_LOG_LENGTH, &info_length);
-
-		char *info_log = new char[max_length];
 
 		glGetProgramInfoLog(p_program, max_length, &info_length, info_log);
 
 		if (info_length > 0) {
-			printf("%s\n", info_log);
+			ERR_PRINT(String::utf8(info_log, max_length));
 		}
-
-		delete[] info_log;
 	} else {
-		printf("print_program_errors: Not a program!\n");
+		ERR_PRINT("print_program_errors: Not a program!\n");
 	}
 }
 
@@ -135,9 +135,6 @@ Shader::Shader() {
 	vertex_shader = 0;
 	fragment_shader = 0;
 	program = 0;
-
-	vertex_shader_source = NULL;
-	fragment_shader_source = NULL;
 }
 Shader::~Shader() {
 	destroy();

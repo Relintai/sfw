@@ -28,7 +28,7 @@ void TransparentTextureMaterial::setup_state() {
 	glEnable(GL_TEXTURE_2D);
 }
 
-const char **TransparentTextureMaterial::get_vertex_shader_source() {
+String TransparentTextureMaterial::get_vertex_shader_source() {
 	static const char *vertex_shader_source[] = {
 		"uniform mat4 u_proj_matrix;\n"
 		"uniform mat4 u_model_view_matrix;\n"
@@ -44,10 +44,10 @@ const char **TransparentTextureMaterial::get_vertex_shader_source() {
 		"}"
 	};
 
-	return vertex_shader_source;
+	return String(*vertex_shader_source);
 }
 
-const char **TransparentTextureMaterial::get_fragment_shader_source() {
+String TransparentTextureMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
 #ifndef __APPLE__
 		"precision mediump float;\n"
@@ -68,7 +68,7 @@ const char **TransparentTextureMaterial::get_fragment_shader_source() {
 		"}"
 	};
 
-	return fragment_shader_source;
+	return String(*fragment_shader_source);
 }
 
 TransparentTextureMaterial::TransparentTextureMaterial() {

@@ -23,8 +23,8 @@ public:
 	void unbind();
 	void setup_state();
 
-	const char **get_vertex_shader_source();
-	const char **get_fragment_shader_source();
+	String get_vertex_shader_source();
+	String get_fragment_shader_source();
 
 	FontMaterial();
 

@@ -16,7 +16,7 @@ void ColoredMaterial::setup_uniforms() {
 	tri_color_uniform_location = get_uniform("fragment_color");
 }
 
-const char **ColoredMaterial::get_vertex_shader_source() {
+String ColoredMaterial::get_vertex_shader_source() {
 	static const char *vertex_shader_source[] = {
 		"uniform mat4 u_proj_matrix;\n"
 		"uniform mat4 u_model_view_matrix;\n"
@@ -28,10 +28,10 @@ const char **ColoredMaterial::get_vertex_shader_source() {
 		"}"
 	};
 
-	return vertex_shader_source;
+	return String(*vertex_shader_source);
 }
 
-const char **ColoredMaterial::get_fragment_shader_source() {
+String ColoredMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
 #ifndef __APPLE__
 		"precision mediump float;\n"
@@ -45,7 +45,7 @@ const char **ColoredMaterial::get_fragment_shader_source() {
 		"}"
 	};
 
-	return fragment_shader_source;
+	return String(*fragment_shader_source);
 }
 
 ColoredMaterial::ColoredMaterial() {

@@ -20,8 +20,8 @@ public:
 	void bind_uniforms();
 	void setup_uniforms();
 
-	const char **get_vertex_shader_source();
-	const char **get_fragment_shader_source();
+	String get_vertex_shader_source();
+	String get_fragment_shader_source();
 
 	ColorMaterial();
 

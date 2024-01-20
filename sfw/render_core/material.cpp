@@ -5,8 +5,6 @@
 //--STRIP
 
 void Material::bind() {
-	//csak main thread!
-
 	if (!shader) {
 		shader = ShaderCache::get_singleton()->get_shader(get_material_id());
 
@@ -46,11 +44,11 @@ void Material::setup_uniforms() {
 void Material::setup_state() {
 }
 
-int32_t Material::get_uniform(const char *name) {
-	int32_t uniform = glGetUniformLocation(shader->program, name);
+int32_t Material::get_uniform(const String &name) {
+	int32_t uniform = glGetUniformLocation(shader->program, name.utf8().get_data());
 
 	if (uniform == -1) {
-		printf("%s is not a valid glsl program variable!\n", name);
+		ERR_PRINT(name + " is not a valid glsl program variable!\n");
 	}
 
 	return uniform;

@@ -15,7 +15,7 @@ void ColorMaterial::setup_uniforms() {
 	model_view_matrix_location = get_uniform("u_model_view_matrix");
 }
 
-const char **ColorMaterial::get_vertex_shader_source() {
+String ColorMaterial::get_vertex_shader_source() {
 	static const char *vertex_shader_source[] = {
 		"uniform mat4 u_proj_matrix;\n"
 		"uniform mat4 u_camera_matrix;\n"
@@ -32,10 +32,10 @@ const char **ColorMaterial::get_vertex_shader_source() {
 		"}\n"
 	};
 
-	return vertex_shader_source;
+	return String(*vertex_shader_source);
 }
 
-const char **ColorMaterial::get_fragment_shader_source() {
+String ColorMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
 #ifndef __APPLE__
 		"precision mediump float;\n"
@@ -46,7 +46,7 @@ const char **ColorMaterial::get_fragment_shader_source() {
 		"void main() { gl_FragColor = v_color; }\n"
 	};
 
-	return fragment_shader_source;
+	return String(*fragment_shader_source);
 }
 
 ColorMaterial::ColorMaterial() {

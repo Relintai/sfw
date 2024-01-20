@@ -4,8 +4,8 @@
 //--STRIP
 
 //--STRIP
-#include "render_core/3rd_glad.h"
 #include "core/hash_map.h"
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 class Shader {
@@ -23,13 +23,13 @@ public:
 	void compile();
 	void destroy();
 
-	const char **get_vertex_shader_source();
-	void set_vertex_shader_source(const char **source);
+	String get_vertex_shader_source();
+	void set_vertex_shader_source(const String &source);
 
-	const char **get_fragment_shader_source();
-	void set_fragment_shader_source(const char **source);
+	String get_fragment_shader_source();
+	void set_fragment_shader_source(const String &source);
 
-	void print_shader_errors(const uint32_t p_program, const char *name);
+	void print_shader_errors(const uint32_t p_program, const String &name);
 	void print_program_errors(const uint32_t p_program);
 
 	Shader();
@@ -42,8 +42,8 @@ public:
 	static Shader *current_shader;
 
 protected:
-	const char **vertex_shader_source;
-	const char **fragment_shader_source;
+	String _vertex_shader_source;
+	String _fragment_shader_source;
 };
 
 class ShaderCache {

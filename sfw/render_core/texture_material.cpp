@@ -31,7 +31,7 @@ void TextureMaterial::setup_state() {
 	glEnable(GL_TEXTURE_2D);
 }
 
-const char **TextureMaterial::get_vertex_shader_source() {
+String TextureMaterial::get_vertex_shader_source() {
 	static const char *vertex_shader_source[] = {
 		"uniform mat4 u_proj_matrix;\n"
 		"uniform mat4 u_camera_matrix;\n"
@@ -48,10 +48,10 @@ const char **TextureMaterial::get_vertex_shader_source() {
 		"}"
 	};
 
-	return vertex_shader_source;
+	return String(*vertex_shader_source);
 }
 
-const char **TextureMaterial::get_fragment_shader_source() {
+String TextureMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
 #ifndef __APPLE__
 		"precision mediump float;\n"
@@ -66,7 +66,7 @@ const char **TextureMaterial::get_fragment_shader_source() {
 		"}"
 	};
 
-	return fragment_shader_source;
+	return String(*fragment_shader_source);
 }
 
 TextureMaterial::TextureMaterial() {
