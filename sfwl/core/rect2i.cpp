@@ -4,7 +4,8 @@
 /*************************************************************************/
 
 //--STRIP
-#include "core/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
+#include "core/rect2i.h"
+#include "core/ustring.h"
 //--STRIP
 
 Rect2i::operator String() const {

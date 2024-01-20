@@ -12,8 +12,8 @@ ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/safe_refcount.cpp -o sfwl/c
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/ustring.cpp -o sfwl/core/ustring.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/string_name.cpp -o sfwl/core/string_name.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfwl/core/rect2i.cpp -o sfwl/core/rect2i.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfwl/core/vector2i.cpp -o sfwl/core/vector2i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/rect2i.cpp -o sfwl/core/rect2i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/vector2i.cpp -o sfwl/core/vector2i.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/file_access.cpp -o sfwl/core/file_access.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/dir_access.cpp -o sfwl/core/dir_access.o

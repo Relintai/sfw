@@ -10,7 +10,6 @@
 
 //--STRIP
 #include "core/vector2i.h" // also includes math_funcs and ustring
-#include "core/rect2.h"
 //--STRIP
 
 struct _NO_DISCARD_CLASS_ Rect2i {
@@ -64,8 +63,8 @@ struct _NO_DISCARD_CLASS_ Rect2i {
 		new_rect.position.x = MAX(p_rect.position.x, position.x);
 		new_rect.position.y = MAX(p_rect.position.y, position.y);
 
-		Point2 p_rect_end = p_rect.position + p_rect.size;
-		Point2 end = position + size;
+		Point2i p_rect_end = p_rect.position + p_rect.size;
+		Point2i end = position + size;
 
 		new_rect.size.x = (int)(MIN(p_rect_end.x, end.x) - new_rect.position.x);
 		new_rect.size.y = (int)(MIN(p_rect_end.y, end.y) - new_rect.position.y);
@@ -213,21 +212,14 @@ struct _NO_DISCARD_CLASS_ Rect2i {
 		return position + size;
 	}
 
-	Rect2 to_rect2() const { return Rect2(position, size); }
-
 	operator String() const;
-	operator Rect2() const { return Rect2(position, size); }
 
-	Rect2i(const Rect2 &p_r2) :
-			position(p_r2.position),
-			size(p_r2.size) {
-	}
 	Rect2i() {}
 	Rect2i(int p_x, int p_y, int p_width, int p_height) :
-			position(Point2(p_x, p_y)),
-			size(Size2(p_width, p_height)) {
+			position(Point2i(p_x, p_y)),
+			size(Size2i(p_width, p_height)) {
 	}
-	Rect2i(const Point2 &p_pos, const Size2 &p_size) :
+	Rect2i(const Point2i &p_pos, const Size2i &p_size) :
 			position(p_pos),
 			size(p_size) {
 	}

@@ -11,8 +11,6 @@
 //--STRIP
 #include "core/error_macros.h"
 #include "core/math_funcs.h"
-
-#include "core/vector2.h"
 //--STRIP
 
 class String;
@@ -88,8 +86,8 @@ struct _NO_DISCARD_CLASS_ Vector2i {
 	Vector2i operator-() const;
 	bool operator<(const Vector2i &p_vec2) const { return (x == p_vec2.x) ? (y < p_vec2.y) : (x < p_vec2.x); }
 	bool operator>(const Vector2i &p_vec2) const { return (x == p_vec2.x) ? (y > p_vec2.y) : (x > p_vec2.x); }
-	bool operator<=(const Vector2 &p_vec2) const { return x == p_vec2.x ? (y <= p_vec2.y) : (x < p_vec2.x); }
-	bool operator>=(const Vector2 &p_vec2) const { return x == p_vec2.x ? (y >= p_vec2.y) : (x > p_vec2.x); }
+	bool operator<=(const Vector2i &p_vec2) const { return x == p_vec2.x ? (y <= p_vec2.y) : (x < p_vec2.x); }
+	bool operator>=(const Vector2i &p_vec2) const { return x == p_vec2.x ? (y >= p_vec2.y) : (x > p_vec2.x); }
 
 	bool operator==(const Vector2i &p_vec2) const;
 	bool operator!=(const Vector2i &p_vec2) const;
@@ -102,14 +100,11 @@ struct _NO_DISCARD_CLASS_ Vector2i {
 	Vector2i abs() const { return Vector2i(ABS(x), ABS(y)); }
 	Vector2i clamp(const Vector2i &p_min, const Vector2i &p_max) const;
 
-	Vector2 to_vector2() const { return Vector2(x, y); }
-
 	operator String() const;
-	operator Vector2() const { return Vector2(x, y); }
 
-	inline Vector2i(const Vector2 &p_vec2) {
-		x = (int)p_vec2.x;
-		y = (int)p_vec2.y;
+	inline Vector2i(const Vector2i &p_vec2) {
+		x = p_vec2.x;
+		y = p_vec2.y;
 	}
 	inline Vector2i(int p_x, int p_y) {
 		x = p_x;
@@ -131,12 +126,13 @@ Vector2i Vector2i::linear_interpolate(const Vector2i &p_a, const Vector2i &p_b, 
 }
 
 Vector2i Vector2i::linear_interpolate(const Vector2i &p_to, real_t p_weight) const {
-	Vector2 res = *this;
+	real_t res_x = x;
+	real_t res_y = y;
 
-	res.x += (p_weight * (p_to.x - x));
-	res.y += (p_weight * (p_to.y - y));
+	res_x += (p_weight * (p_to.x - x));
+	res_y += (p_weight * (p_to.y - y));
 
-	return res;
+	return Vector2i(res_x, res_y);
 }
 
 typedef Vector2i Size2i;

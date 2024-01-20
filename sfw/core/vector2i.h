@@ -139,6 +139,10 @@ Vector2i Vector2i::linear_interpolate(const Vector2i &p_to, real_t p_weight) con
 	return res;
 }
 
+_FORCE_INLINE_ Vector2i operator*(int p_scalar, const Vector2i &p_vec) {
+	return p_vec * p_scalar;
+}
+
 typedef Vector2i Size2i;
 typedef Vector2i Point2i;
 
