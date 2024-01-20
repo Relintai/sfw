@@ -1,6 +1,6 @@
 # SFW - Simple Framework
 
-Simple experimental c++ app / game framework inspired by the single file c game engines 
+Simple c++ app / game framework inspired by the single file c game engines 
 and libraries, especially [FWK](https://github.com/r-lyeh/FWK).
 
 It was designed to help with teaching programming, but it turns out it's pretty useful for other projects aswell.
@@ -105,7 +105,7 @@ First grab a version that does not have the renderer.
 
 Now you have 2 files: `sfw.h` and `sfw.cpp` or `sfwl.h` and `sfwl.cpp` depending on your choice.
 
-If you use an ide, just add these files to your project (so the .cpp file gtes compiled), and you are done.
+If you use an ide, just add these files to your project (so the .cpp file gets compiled), and you are done.
 
 If you are using a compiler directly, then just add `sfw.cpp` or `sfwl.cpp` to the list of files that you are compiling:
 
@@ -153,7 +153,7 @@ without any special setting, but if your compiler is older (or set differently) 
 ## Compilation with the renderer
 
 If you also want the renderer, first set everything up exactly as in the "Compilation without the renderer" section, 
-except you will have 3 files: `sfw.h` and `sfw.cpp`, and `sfw_3rd.m` (this is actually a c file, it has 
+except you will have 3 files: `sfw.h` and `sfw.cpp`, and `sfw_3rd.m` (this is actually a c header file, it has 
 the extencion `.m` to make OSX builds easier).
 
 As a second step we need to tell the linker to link to some of the libraries in the system dynamically in order to
@@ -196,7 +196,7 @@ Arch based systems should have these by default. For other distros consult the m
 to see which packages are the equivalent of the ones listed above.
 
 
-If you are using g++, this is how your last (linking) command changes:
+This is how your last (linking) command changes:
 
 ```
 g++ -g sfwl.cpp main.cpp -lX11 -o prog 
