@@ -211,6 +211,17 @@
 //#include "core/ustring.h"
 //--STRIP
 {{FILE:sfwl/core/color.h}}
+//--STRIP
+//#include "core/error_macros.h"
+//#include "core/math_funcs.h"
+//#include "core/vector2.h"
+//--STRIP
+{{FILE:sfwl/core/vector2i.h}}
+//--STRIP
+//#include "core/vector2i.h" // also includes math_funcs and ustring
+//#include "core/rect2.h"
+//--STRIP
+{{FILE:sfwl/core/rect2i.h}}
 
 //--STRIP
 //Needs ustring.h

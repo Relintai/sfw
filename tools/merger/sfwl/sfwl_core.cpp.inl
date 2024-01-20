@@ -95,6 +95,15 @@
 //#include "core/math_funcs.h"
 //--STRIP
 {{FILE:sfwl/core/color.cpp}}
+//--STRIP
+//#include "core/vector2i.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfwl/core/vector2i.cpp}}
+//--STRIP
+//#include "core/transform_2d.h" // Includes rect2.h but Rect2 needs Transform2D
+//--STRIP
+{{FILE:sfwl/core/rect2i.cpp}}
 
 //--STRIP
 //#include "core/pcg.h"

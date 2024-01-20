@@ -12,6 +12,9 @@ ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/safe_refcount.cpp -o sfwl/c
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/ustring.cpp -o sfwl/core/ustring.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/string_name.cpp -o sfwl/core/string_name.o
 
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfwl/core/rect2i.cpp -o sfwl/core/rect2i.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfwl/core/vector2i.cpp -o sfwl/core/vector2i.o
+
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/file_access.cpp -o sfwl/core/file_access.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/dir_access.cpp -o sfwl/core/dir_access.o
 
@@ -43,7 +46,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/main.cpp -o sfwl/main.o
 
 # You might need to add -lpthread and/or -latomic depending on your compiler version  (add it near -lX11)
 
-ccache g++ -Wall -D_REENTRANT -g  sfwl/core/color.o \
+ccache g++ -Wall -D_REENTRANT -g  sfwl/core/color.o sfwl/core/rect2i.o sfwl/core/vector2i.o \
                         sfwl/core/logger.o sfwl/core/math_funcs.o \
                         sfwl/core/memory.o sfwl/core/pcg.o sfwl/core/random_pcg.o \
                         sfwl/core/safe_refcount.o \
@@ -59,3 +62,4 @@ ccache g++ -Wall -D_REENTRANT -g  sfwl/core/color.o \
                         sfwl/object/resource.o \
                         sfwl/main.o \
                         -o sfwl_app 
+
