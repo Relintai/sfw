@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef OBJECTRC_H
 #define OBJECTRC_H
+//--STRIP
 
 /*************************************************************************/
 /*  object_rc.h                                                          */
@@ -51,4 +53,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

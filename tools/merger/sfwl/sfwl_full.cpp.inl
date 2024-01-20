@@ -92,6 +92,11 @@
 {{FILE:sfwl/core/string_name.cpp}}
 
 //--STRIP
+//#include "core/math_funcs.h"
+//--STRIP
+{{FILE:sfwl/core/color.cpp}}
+
+//--STRIP
 //#include "core/pcg.h"
 //--STRIP
 {{FILE:sfwl/core/pcg.cpp}}
@@ -101,13 +106,33 @@
 //--STRIP
 {{FILE:sfwl/core/file_access.cpp}}
 
-{{FILE:sfwl/core/3rd_tinydir.h}}
-
 //--STRIP
 //#include "dir_access.h"
 //#include "3rd_tinydir.h"
 //--STRIP
 {{FILE:sfwl/core/dir_access.cpp}}
+
+//--STRIP
+//System includes
+//--STRIP
+{{FILE:sfwl/core/inet_address.cpp}}
+//--STRIP
+//#include "core/error_macros.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfwl/core/socket.cpp}}
+
+//--STRIP
+//Win Only
+//#include <avrt.h>
+//#include <direct.h>
+//#include <knownfolders.h>
+//#include <process.h>
+//#include <regstr.h>
+//#include <shlobj.h>
+//#include <wchar.h>
+//--STRIP
+{{FILE:sfwl/core/sub_process.cpp}}
 
 //--STRIP
 //#include "core/pool_vector.h"

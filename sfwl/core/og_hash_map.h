@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef GHASH_MAP_H
 #define GHASH_MAP_H
+//--STRIP
 
 /*************************************************************************/
 /*  og_hash_map.h                                                        */
@@ -578,4 +580,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef DICTIONARY_H
 #define DICTIONARY_H
+//--STRIP
 
 /*************************************************************************/
 /*  dictionary.h                                                         */
@@ -69,4 +71,6 @@ public:
 	~Dictionary();
 };
 
+//--STRIP
 #endif // DICTIONARY_H
+//--STRIP

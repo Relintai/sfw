@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MATH_DEFS_H
 #define MATH_DEFS_H
+//--STRIP
 
 /*************************************************************************/
 /*  math_defs.h                                                          */
@@ -95,4 +97,6 @@ typedef double real_t;
 typedef float real_t;
 #endif
 
+//--STRIP
 #endif // MATH_DEFS_H
+//--STRIP

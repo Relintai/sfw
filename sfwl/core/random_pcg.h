@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RANDOM_PCG_H
 #define RANDOM_PCG_H
+//--STRIP
 
 /*************************************************************************/
 /*  random_pcg.h                                                         */
@@ -115,4 +117,6 @@ public:
 	int random(int p_from, int p_to);
 };
 
+//--STRIP
 #endif // RANDOM_PCG_H
+//--STRIP

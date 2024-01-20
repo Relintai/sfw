@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef VMAP_H
 #define VMAP_H
+//--STRIP
 
 /*************************************************************************/
 /*  vmap.h                                                               */
@@ -176,4 +178,7 @@ public:
 		return *this;
 	}
 };
+
+//--STRIP
 #endif // VMAP_H
+//--STRIP

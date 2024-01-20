@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef OBJECT_H
 #define OBJECT_H
+//--STRIP
 
 //--STRIP
 #include "core/hash_map.h"
@@ -25,7 +27,7 @@ private:                                                                        
 	void operator=(const m_class &p_rval) {}                                                               \
                                                                                                            \
 public:                                                                                                    \
-	virtual String get_class() const {                                                            \
+	virtual String get_class() const {                                                                     \
 		return String(#m_class);                                                                           \
 	}                                                                                                      \
 	virtual const StringName *_get_class_namev() const {                                                   \
@@ -50,10 +52,10 @@ public:                                                                         
 	static String inherits_static() {                                                                      \
 		return String(#m_inherits);                                                                        \
 	}                                                                                                      \
-	virtual bool is_class(const String &p_class) const {                                          \
+	virtual bool is_class(const String &p_class) const {                                                   \
 		return (p_class == (#m_class)) ? true : m_inherits::is_class(p_class);                             \
 	}                                                                                                      \
-	virtual bool is_class_ptr(void *p_ptr) const {                                                \
+	virtual bool is_class_ptr(void *p_ptr) const {                                                         \
 		return (p_ptr == get_class_ptr_static()) ? true : m_inherits::is_class_ptr(p_ptr);                 \
 	}                                                                                                      \
 	static void get_valid_parents_static(Vector<String> *p_parents) {                                      \
@@ -280,4 +282,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif
+//--STRIP

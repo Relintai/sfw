@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef CORE_STRING_NAMES_H
 #define CORE_STRING_NAMES_H
+//--STRIP
 
 /*************************************************************************/
 /*  core_string_names.h                                                  */
@@ -65,4 +67,6 @@ public:
 	StringName a8;
 };
 
+//--STRIP
 #endif // SCENE_STRING_NAMES_H
+//--STRIP

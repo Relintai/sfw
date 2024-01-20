@@ -111,7 +111,4 @@ Thread::ID Thread::get_caller_id() {
 		return caller_id;
 	}
 }
-
-//--STRIP
-#endif // THREAD_H
-//--STRIP
+#endif

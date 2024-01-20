@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef VECTOR_H
 #define VECTOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  vector.h                                                             */
@@ -171,4 +173,6 @@ bool Vector<T>::push_back(T p_elem) {
 	return false;
 }
 
+//--STRIP
 #endif
+//--STRIP

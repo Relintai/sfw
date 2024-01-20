@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef MATH_FUNCS_H
 #define MATH_FUNCS_H
+//--STRIP
 
 /*************************************************************************/
 /*  math_funcs.h                                                         */
@@ -641,4 +643,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif // MATH_FUNCS_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
+//--STRIP
 
 /*************************************************************************/
 /*  ring_buffer.h                                                        */
@@ -196,4 +198,6 @@ public:
 	~RingBuffer<T>(){};
 };
 
+//--STRIP
 #endif
+//--STRIP

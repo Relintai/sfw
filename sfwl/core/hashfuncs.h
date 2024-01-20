@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef HASHFUNCS_H
 #define HASHFUNCS_H
+//--STRIP
 
 /*************************************************************************/
 /*  hashfuncs.h                                                          */
@@ -7,8 +9,17 @@
 /*************************************************************************/
 
 //--STRIP
+#include "core/aabb.h"
 #include "core/math_defs.h"
 #include "core/math_funcs.h"
+#include "core/rect2.h"
+#include "core/rect2i.h"
+#include "core/vector2.h"
+#include "core/vector2i.h"
+#include "core/vector3.h"
+#include "core/vector3i.h"
+#include "core/vector4.h"
+#include "core/vector4i.h"
 #include "core/string_name.h"
 #include "core/ustring.h"
 #include "core/typedefs.h"
@@ -297,6 +308,66 @@ struct HashMapHasherDefault {
 	static _FORCE_INLINE_ uint32_t hash(const int16_t p_int) { return hash_fmix32(p_int); }
 	static _FORCE_INLINE_ uint32_t hash(const uint8_t p_int) { return hash_fmix32(p_int); }
 	static _FORCE_INLINE_ uint32_t hash(const int8_t p_int) { return hash_fmix32(p_int); }
+
+	static _FORCE_INLINE_ uint32_t hash(const Vector2i &p_vec) {
+		uint32_t h = hash_murmur3_one_32(p_vec.x);
+		h = hash_murmur3_one_32(p_vec.y, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Vector3i &p_vec) {
+		uint32_t h = hash_murmur3_one_32(p_vec.x);
+		h = hash_murmur3_one_32(p_vec.y, h);
+		h = hash_murmur3_one_32(p_vec.z, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Vector4i &p_vec) {
+		uint32_t h = hash_murmur3_one_32(p_vec.x);
+		h = hash_murmur3_one_32(p_vec.y, h);
+		h = hash_murmur3_one_32(p_vec.z, h);
+		h = hash_murmur3_one_32(p_vec.w, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Vector2 &p_vec) {
+		uint32_t h = hash_murmur3_one_real(p_vec.x);
+		h = hash_murmur3_one_real(p_vec.y, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Vector3 &p_vec) {
+		uint32_t h = hash_murmur3_one_real(p_vec.x);
+		h = hash_murmur3_one_real(p_vec.y, h);
+		h = hash_murmur3_one_real(p_vec.z, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Vector4 &p_vec) {
+		uint32_t h = hash_murmur3_one_real(p_vec.x);
+		h = hash_murmur3_one_real(p_vec.y, h);
+		h = hash_murmur3_one_real(p_vec.z, h);
+		h = hash_murmur3_one_real(p_vec.w, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Rect2i &p_rect) {
+		uint32_t h = hash_murmur3_one_32(p_rect.position.x);
+		h = hash_murmur3_one_32(p_rect.position.y, h);
+		h = hash_murmur3_one_32(p_rect.size.x, h);
+		h = hash_murmur3_one_32(p_rect.size.y, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const Rect2 &p_rect) {
+		uint32_t h = hash_murmur3_one_real(p_rect.position.x);
+		h = hash_murmur3_one_real(p_rect.position.y, h);
+		h = hash_murmur3_one_real(p_rect.size.x, h);
+		h = hash_murmur3_one_real(p_rect.size.y, h);
+		return hash_fmix32(h);
+	}
+	static _FORCE_INLINE_ uint32_t hash(const AABB &p_aabb) {
+		uint32_t h = hash_murmur3_one_real(p_aabb.position.x);
+		h = hash_murmur3_one_real(p_aabb.position.y, h);
+		h = hash_murmur3_one_real(p_aabb.position.z, h);
+		h = hash_murmur3_one_real(p_aabb.size.x, h);
+		h = hash_murmur3_one_real(p_aabb.size.y, h);
+		h = hash_murmur3_one_real(p_aabb.size.z, h);
+		return hash_fmix32(h);
+	}
 };
 
 template <typename T>
@@ -317,6 +388,20 @@ template <>
 struct HashMapComparatorDefault<double> {
 	static bool compare(const double &p_lhs, const double &p_rhs) {
 		return (p_lhs == p_rhs) || (Math::is_nan(p_lhs) && Math::is_nan(p_rhs));
+	}
+};
+
+template <>
+struct HashMapComparatorDefault<Vector2> {
+	static bool compare(const Vector2 &p_lhs, const Vector2 &p_rhs) {
+		return ((p_lhs.x == p_rhs.x) || (Math::is_nan(p_lhs.x) && Math::is_nan(p_rhs.x))) && ((p_lhs.y == p_rhs.y) || (Math::is_nan(p_lhs.y) && Math::is_nan(p_rhs.y)));
+	}
+};
+
+template <>
+struct HashMapComparatorDefault<Vector3> {
+	static bool compare(const Vector3 &p_lhs, const Vector3 &p_rhs) {
+		return ((p_lhs.x == p_rhs.x) || (Math::is_nan(p_lhs.x) && Math::is_nan(p_rhs.x))) && ((p_lhs.y == p_rhs.y) || (Math::is_nan(p_lhs.y) && Math::is_nan(p_rhs.y))) && ((p_lhs.z == p_rhs.z) || (Math::is_nan(p_lhs.z) && Math::is_nan(p_rhs.z)));
 	}
 };
 
@@ -416,4 +501,6 @@ static _FORCE_INLINE_ uint32_t fastmod(const uint32_t n, const uint64_t c, const
 #endif // _MSC_VER
 }
 
+//--STRIP
 #endif // HASHFUNCS_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef ARRAY_H
 #define ARRAY_H
+//--STRIP
 
 /*************************************************************************/
 /*  array.h                                                              */
@@ -89,4 +91,6 @@ public:
 	~Array();
 };
 
+//--STRIP
 #endif // ARRAY_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef SIGNAL_H
 #define SIGNAL_H
+//--STRIP
 
 //--STRIP
 #include "core/vector.h"
@@ -171,4 +173,6 @@ bool Signal::is_connected(T *obj, void (*func)(T*, Signal *)) {
 	return false;
 }
 
+//--STRIP
 #endif
+//--STRIP

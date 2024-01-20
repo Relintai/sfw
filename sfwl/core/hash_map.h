@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef HASH_MAP_H
 #define HASH_MAP_H
+//--STRIP
 
 /*************************************************************************/
 /*  hash_map.h                                                           */
@@ -640,4 +642,6 @@ private:
 	}
 };
 
+//--STRIP
 #endif // HASH_MAP_H
+//--STRIP

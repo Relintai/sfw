@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef USTRING_H
 #define USTRING_H
+//--STRIP
 
 /*************************************************************************/
 /*  ustring.h                                                            */
@@ -480,6 +482,7 @@ public:
 	bool is_valid_integer() const;
 	bool is_valid_float() const;
 	bool is_valid_hex_number(bool p_with_prefix) const;
+	bool is_valid_html_color() const;
 	bool is_valid_ip_address() const;
 	bool is_valid_filename() const;
 	bool is_valid_bool() const;
@@ -603,4 +606,6 @@ String RTR(const String &);
 
 bool select_word(const String &p_s, int p_col, int &r_beg, int &r_end);
 
+//--STRIP
 #endif // USTRING_H
+//--STRIP

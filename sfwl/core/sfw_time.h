@@ -1,5 +1,7 @@
-#ifndef SFWTime_H
-#define SFWTime_H
+//--STRIP
+#ifndef SFW_TIME_H
+#define SFW_TIME_H
+//--STRIP
 
 // -----------------------------------------------------------------------------
 // time framework utils
@@ -26,4 +28,6 @@ public:
 	static void sleep_ns(double us);
 };
 
+//--STRIP
 #endif
+//--STRIP

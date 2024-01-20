@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef COWDATA_H_
 #define COWDATA_H_
+//--STRIP
 
 /*************************************************************************/
 /*  cowdata.h                                                            */
@@ -368,4 +370,6 @@ CowData<T>::~CowData() {
 	_unref(_ptr);
 }
 
+//--STRIP
 #endif /* COW_H_ */
+//--STRIP

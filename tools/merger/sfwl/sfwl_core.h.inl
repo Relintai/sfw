@@ -1,6 +1,8 @@
 #ifndef SFWL_H
 #define SFWL_H
 
+{{FILEINLINE:sfwl/core/version.h}}
+
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
 {{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
@@ -38,6 +40,11 @@
 //--STRIP
 {{FILE:sfwl/core/typedefs.h}}
 
+//--STRIP
+//#include "core/int_types.h"
+//#include "core/math_defs.h"
+//--STRIP
+{{FILE:sfwl/core/marshalls.h}}
 
 //--STRIP
 //#include "core/int_types.h"
@@ -200,6 +207,12 @@
 {{FILE:sfwl/core/string_name.h}}
 
 //--STRIP
+//#include "core/math_funcs.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfwl/core/color.h}}
+
+//--STRIP
 //Needs ustring.h
 //--STRIP
 
@@ -308,6 +321,29 @@
 //#include "core/ustring.h"
 //--STRIP
 {{FILE:sfwl/core/dir_access.h}}
+
+//--STRIP
+//#include "int_types.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfwl/core/inet_address.h}}
+//--STRIP
+//#include "inet_address.h"
+//--STRIP
+{{FILE:sfwl/core/socket.h}}
+
+//--STRIP
+//#include "core/list.h"
+//#include "core/math_defs.h"
+//#include "core/memory.h"
+//#include "core/mutex.h"
+//#include "core/typedefs.h"
+//#include "core/ustring.h"
+//#include <stdio.h>
+//Win Only
+//#include "core/local_vector.h"
+//--STRIP
+{{FILE:sfwl/core/sub_process.h}}
 
 //--STRIP
 //no includes

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
+//--STRIP
 
 /*************************************************************************/
 /*  typedefs.h                                                           */
@@ -403,4 +405,6 @@ struct _GlobalLock {
 #define HAS_TRIVIAL_COPY(T) __has_trivial_copy(T)
 #endif
 
+//--STRIP
 #endif // TYPEDEFS_H
+//--STRIP

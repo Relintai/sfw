@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef HASH_SET_H
 #define HASH_SET_H
+//--STRIP
 
 /*************************************************************************/
 /*  hash_set.h                                                           */
@@ -479,4 +481,6 @@ public:
 	}
 };
 
+//--STRIP
 #endif // HASH_SET_H
+//--STRIP

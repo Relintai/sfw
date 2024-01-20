@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef TIGHT_LOCAL_VECTOR_H
 #define TIGHT_LOCAL_VECTOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  tight_local_vector.h                                                 */
@@ -292,4 +294,6 @@ template <class T, class I = int32_t, bool force_trivial = false>
 class TightLocalVectori : public TightLocalVector<T, I, force_trivial> {
 };
 
+//--STRIP
 #endif // TIGHT_LOCAL_VECTOR_H
+//--STRIP

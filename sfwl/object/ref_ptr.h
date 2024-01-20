@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef REF_PTR_H
 #define REF_PTR_H
+//--STRIP
 
 /*************************************************************************/
 /*  ref_ptr.h                                                            */
@@ -35,4 +37,6 @@ public:
 	~RefPtr();
 };
 
+//--STRIP
 #endif // REF_PTR_H
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef LOCAL_VECTOR_H
 #define LOCAL_VECTOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  local_vector.h                                                       */
@@ -296,4 +298,6 @@ template <class T, class I = int32_t, bool force_trivial = false>
 class LocalVectori : public LocalVector<T, I, force_trivial> {
 };
 
+//--STRIP
 #endif // LOCAL_VECTOR_H
+//--STRIP

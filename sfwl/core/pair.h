@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef PAIR_H
 #define PAIR_H
+//--STRIP
 
 /*************************************************************************/
 /*  pair.h                                                               */
@@ -89,4 +91,6 @@ struct KeyValueSort {
 	}
 };
 
+//--STRIP
 #endif // PAIR_H
+//--STRIP

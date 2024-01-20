@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef UCAPS_H
 #define UCAPS_H
+//--STRIP
 
 /*************************************************************************/
 /*  ucaps.h                                                              */
@@ -1386,4 +1388,7 @@ static int _find_lower(int ch) {
 
 	return ch;
 }
+
+//--STRIP
 #endif
+//--STRIP

@@ -1,5 +1,7 @@
+//--STRIP
 #ifndef POOL_VECTOR_H
 #define POOL_VECTOR_H
+//--STRIP
 
 /*************************************************************************/
 /*  pool_vector.h                                                        */
@@ -709,4 +711,6 @@ void PoolVector<T>::sort() {
 	sorter.sort(w.ptr(), len);
 }
 
+//--STRIP
 #endif // POOL_VECTOR_H
+//--STRIP
