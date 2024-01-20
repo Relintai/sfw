@@ -21,4 +21,4 @@ clang-format --Wno-error=unknown -i tools/merger/out/core/sfw.cpp
 
 clang-format --Wno-error=unknown -i tools/merger/out/full/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/full/sfw.cpp
-#clang-format --Wno-error=unknown -i tools/merger/out/full/sfw_3rd.h
+#clang-format --Wno-error=unknown -i tools/merger/out/full/sfw_3rd.m
