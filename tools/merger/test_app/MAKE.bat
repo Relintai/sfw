@@ -1,5 +1,7 @@
 #!/bin/bash 2>nul || goto :windows
 
+executable_name=game
+
 # linux + osx -----------------------------------------------------------------
 cd `dirname $0`
 
@@ -12,43 +14,7 @@ cd `dirname $0`
 
 # tidy environment
 if [ "$1" = "tidy" ]; then
-    rm 0?-* 2> /dev/null
-    rm fwk.o 2> /dev/null
-    rm .art*.zip 2> /dev/null
-    rm demos/lua/.art*.zip 2> /dev/null
-    rm demos/lua/libfwk* 2> /dev/null
-    rm demos/html5/.art*.zip 2> /dev/null
-    rm fwk_*.* 2> /dev/null
-    rm 3rd_*.* 2> /dev/null
-    rm libfwk* 2> /dev/null
-    rm -rf *.dSYM 2> /dev/null
-    rm *.png 2> /dev/null
-    rm *.mp4 2> /dev/null
-    rm *.log 2> /dev/null
-    rm editor 2> /dev/null
-    rm temp_* 2> /dev/null
-    rm hello 2> /dev/null
-    exit
-fi
-# shortcuts for split & join scripts
-if [ "$1" = "split" ]; then
-    sh tools/split.bat
-    exit
-fi
-if [ "$1" = "join" ]; then
-    sh tools/join.bat
-    exit
-fi
-# cook
-if [ "$1" = "cook" ]; then
-    cc -o cook tools/cook.c -Iengine
-    ./cook
-    exit
-fi
-# sync
-if [ "$1" = "sync" ]; then
-    git reset --hard HEAD^1 && git pull
-    sh MAKE.bat tidy
+    rm *.o 2> /dev/null
     exit
 fi
 
@@ -60,11 +26,10 @@ export cc=cc
 while [ $# -ge 1 ]; do
     if [ "$1" = "help" ]; then
         echo sh MAKE.bat
-        echo sh MAKE.bat [gcc,clang,tcc] [dbg,dev,rel] [dll,static]
+        echo sh MAKE.bat [gcc,clang] [dbg,dev,rel] [dll,static]
         echo sh MAKE.bat [tidy]
-        echo sh MAKE.bat [split,join]
-        echo sh MAKE.bat [cook]
-        echo sh MAKE.bat [proj]
+        echo Package setup for linux:
+        echo sh MAKE.bat [smin,sfull]
         exit
     fi
     if [ "$1" = "dll" ]; then
@@ -95,22 +60,8 @@ while [ $# -ge 1 ]; do
     if [ "$1" = "clang" ]; then
         export cc=clang
     fi
-    if [ "$1" = "tcc" ]; then
-        export cc="tcc -D__STDC_NO_VLA__"
-    fi
-    if [ "$1" = "proj" ]; then
-        if [ "$(uname)" != "Darwin" ]; then
-            chmod +x tools/premake5.linux
-            tools/premake5.linux gmake
-            tools/premake5.linux ninja
-            exit
-        fi
-        if [ "$(uname)" = "Darwin" ]; then
-            chmod +x tools/premake5.osx
-            tools/premake5.osx xcode4
-            tools/premake5.osx ninja
-            exit
-        fi
+    if [ "$1" = "setup" ]; then
+        sudo apt-get install libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
     fi
     if [ "$1" = "--" ]; then
         shift
@@ -124,38 +75,15 @@ done
 
 if [ "$(uname)" != "Darwin" ]; then
 
-    # setup (ArchLinux)
-    [ ! -f ".setup" ] && sudo pacman -S --noconfirm tcc && echo>.setup
     # setup (Debian, Ubuntu, etc)
-    [ ! -f ".setup" ] && sudo apt-get -y update
-    [ ! -f ".setup" ] && sudo apt-get -y install tcc libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev && echo>.setup       # absolute minimum
+    #[ ! -f ".setup" ] && sudo apt-get -y update
+    #[ ! -f ".setup" ] && sudo apt-get -y install libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev && echo>.setup       # absolute minimum
     #                      sudo apt-get -y install clang xorg-dev                                                                             # memorable, around 100 mib
-    #                      sudo apt-get -y install clang xorg-dev libglfw3-dev libassimp-dev gcc                                              # initial revision
-    #                      sudo apt-get -y install ffmpeg || (sudo apt-get install snapd && sudo snap install ffmpeg)                         # variant
 
     # pipeline
     #cc tools/ass2iqe.c   -o tools/ass2iqe.linux  -lm -ldl -lpthread -w -g -lassimp
     #cc tools/iqe2iqm.cpp -o tools/iqe2iqm.linux  -lm -ldl -lpthread -w -g -lstdc++
     #cc tools/mid2wav.c   -o tools/mid2wav.linux  -lm -ldl -lpthread -w -g
-
-    # change permissions of precompiled tools binaries because of 'Permission denied' runtime error (@procedural)
-    chmod +x tools/ass2iqe.linux
-    chmod +x tools/ase2ini.linux
-    chmod +x tools/cook.linux
-    chmod +x tools/cuttlefish.linux
-    chmod +x tools/ffmpeg.linux
-    chmod +x tools/furnace.linux
-    chmod +x tools/iqe2iqm.linux
-    chmod +x tools/mid2wav.linux
-    chmod +x tools/mod2wav.linux
-    chmod +x tools/PVRTexToolCLI.linux
-    chmod +x tools/sfxr2wav.linux
-    chmod +x tools/xlsx2ini.linux
-    chmod +x tools/premake5.linux
-    chmod +x tools/ninja.linux
-    chmod +x tools/ase2ini.linux
-    chmod +x tools/ark.linux
-    chmod +x demos/lua/luajit.linux
 
     export args="-lm -ldl -lpthread -lX11 -w -Iengine/ $args"
     echo build=$build, type=$dll, cc=$cc, args=$args
