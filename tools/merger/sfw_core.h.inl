@@ -4,6 +4,12 @@
 {{FILEINLINE:sfw/core/version.h}}
 
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
+
+// MODULES:
+// CORE
+
+// LICENSES:
+
 {{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
 #ifndef _REENTRANT

@@ -3,7 +3,13 @@
 
 {{FILEINLINE:sfwl/core/version.h}}
 
-{{FILEINLINE:tools/merger/sfw_readme.inl.h}}
+{{FILEINLINE:tools/merger/sfwl/sfwl_readme.inl.h}}
+
+// MODULES:
+// CORE + OBJECT
+
+// LICENSES:
+
 {{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
 #ifndef _REENTRANT
