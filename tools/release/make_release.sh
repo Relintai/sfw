@@ -120,6 +120,59 @@ cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
 cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
 cp "$doc_folder/sfw_full.html" "$current_out_fol/sfw.html"
 
+# SFW Demos
+
+# Minimal APP
+current_out_fol=$sfw_out_folder/demos/minimal_app
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp -R "$project_root_folder/demos/build_scripts/full_minimal/" "$current_out_fol"
+
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+
+current_in_fol=$project_root_folder/demos/minimal_app
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+
+# Single Header APP
+current_out_fol=$sfw_out_folder/demos/single_header_app
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp -R "$project_root_folder/demos/build_scripts/full_minimal/" "$current_out_fol"
+
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+
+current_in_fol=$project_root_folder/demos/single_header_app
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
+cp "$project_root_folder/icon.png" "$current_out_fol/icon.png"
+
+# Render Test APP
+current_out_fol=$sfw_out_folder/demos/render_test_app
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp -R "$project_root_folder/demos/build_scripts/full/" "$current_out_fol"
+
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+
+current_in_fol=$project_root_folder/demos/render_test_app
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
+cp "$current_in_fol/game_scene.h" "$current_out_fol/game_scene.h"
+cp "$current_in_fol/game_scene.cpp" "$current_out_fol/game_scene.cpp"
+cp "$project_root_folder/icon.png" "$current_out_fol/icon.png"
+
 # SFWL Split
 cp -R "$project_root_folder/sfwl" "$sfwl_out_folder/split/sfwl"
 cp "$project_root_folder/compile_linux_sfwl.sh" "$sfwl_out_folder/split/compile_linux.sh"
@@ -156,3 +209,29 @@ mkdir -p "$current_out_fol"
 cp "$current_in_fol/sfwl.h" "$current_out_fol/sfwl.h"
 cp "$current_in_fol/sfwl.cpp" "$current_out_fol/sfwl.cpp"
 cp "$doc_folder/sfwl_full.html" "$current_out_fol/sfwl.html"
+
+# SFW Demos
+
+# Minimal APP
+current_out_fol=$sfwl_out_folder/demos/sfwl_doc_merger
+
+current_in_fol=$project_root_folder/tools/merger/out/sfwl_full
+
+cp -R "$project_root_folder/demos/build_scripts/sfwl/" "$current_out_fol"
+
+cp "$current_in_fol/sfwl.h" "$current_out_fol/sfwl.h"
+cp "$current_in_fol/sfwl.cpp" "$current_out_fol/sfwl.cpp"
+
+current_in_fol=$project_root_folder/demos/sfwl_doc_merger
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+
+cp "$current_in_fol/code_remaining_template.md.html" "$current_out_fol/code_remaining_template.md.html"
+cp "$current_in_fol/code_template.md.html" "$current_out_fol/code_template.md.html"
+cp "$current_in_fol/compilation_no_renderer.md.html" "$current_out_fol/compilation_no_renderer.md.html"
+cp "$current_in_fol/index_remaining_template.md.html" "$current_out_fol/index_remaining_template.md.html"
+cp "$current_in_fol/licenses_renderer.md.html" "$current_out_fol/licenses_renderer.md.html"
+cp "$current_in_fol/markdeep.min.js" "$current_out_fol/markdeep.min.js"
+cp "$current_in_fol/run.sh" "$current_out_fol/run.sh"
+cp "$current_in_fol/sfwl_full_template.html" "$current_out_fol/sfwl_full_template.html"
+cp "$current_in_fol/slate.css" "$current_out_fol/slate.css"
