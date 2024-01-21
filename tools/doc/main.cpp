@@ -540,9 +540,11 @@ void process_file(const String &path) {
 
 	String compilation_no_renderer = FileAccess::get_file_as_string("compilation_no_renderer.md.html");
 	String compilation_renderer = FileAccess::get_file_as_string("compilation_renderer.md.html");
+	String licenses_renderer = FileAccess::get_file_as_string("licenses_renderer.md.html");
 
 	index_str = index_str.replace("$FILE_Compilation_No_Renderer$", compilation_no_renderer);
 	index_str = index_str.replace("$FILE_Compilation_Renderer$", compilation_renderer);
+	index_str = index_str.replace("$LICENSES_Renderer$", licenses_renderer);
 
 	FileAccess::write_file("out/index.md.html", index_str);
 
