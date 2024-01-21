@@ -257,3 +257,10 @@ cp "$current_in_fol/markdeep.min.js" "$current_out_fol/markdeep.min.js"
 cp "$current_in_fol/run.sh" "$current_out_fol/run.sh"
 cp "$current_in_fol/sfwl_full_template.html" "$current_out_fol/sfwl_full_template.html"
 cp "$current_in_fol/slate.css" "$current_out_fol/slate.css"
+
+# ==== Zip everything ====
+
+cd $(pwd)/tools/release/out
+
+zip -q -r sfw_v${version}.zip  ./sfw/*
+zip -q -r sfwl_v${version}.zip  ./sfwl/*
