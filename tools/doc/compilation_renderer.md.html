@@ -1,0 +1,175 @@
+
+You have 3 files: `sfw.h` and `sfw.cpp`, and `sfw_3rd.m` (this is actually a c header file, it has 
+the extencion `.m` to make OSX builds easier).
+
+Note: You might need to set c++14 level compatibility depending on your compiler. While the codebase is somwhere between 
+c++89 and c++11, threads use classes from the std namespace that were added in c++14. Nowadays these are usually available 
+without any special setting, but if your compiler is older (or set differently) you might need to add something like: 
+`-std=c++14` to your compile commands. (Or find a setting similar in your IDE.)
+
+## IDE Setup
+
+If you use an ide, first add these files to your project (so the .cpp file gets compiled).
+If it doesn't like the `.m` file (it's actually a c header), you can skip adding it to your project,
+but you will need it sitting there.
+
+If you are using MSVC as your compiler (you are using Visual Studio) then you are done.
+You should be able to compile your project.
+
+If you are using MingW (If you use the g++ command on windows, that is MingW!), then
+find a section in your ide that says something similar to `link to libraries`. Usually
+is't under a linker settings section, and add the following entries: `gdi32`, `Shlwapi`, `ws2_32`.
+
+If you use linux (g++ or clang) then find a section in your ide that says something similar to 
+`link to libraries`. Usually is't under a linker settings section, and add the following entry: `X11`.
+
+If you are on OSX, then you need set your ide to use clang++, you ned to set it to use the c++14 standard,
+also you need to add the following osx sdk frameworks to be able to build: `cocoa`, `iokit`, `CoreFoundation`, 
+`CoreAudio`, `AudioToolbox`.
+
+## Manual setup
+
+### MSVC (Windows)
+
+If you want to use this compiler from your terminal, you need to install Visual Studio, and also install 
+the c++ tools with it.
+
+After this is done, to be able to use it from a terminal you need to run a `vcvarsall.bat` that comes 
+with the install localed in 
+`C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build`. This script set up environment
+variables in your terminal to be able to build.
+
+If you want to build 64 bit programs, you run:
+
+`"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64`
+
+You can put it like this in a batch file:
+
+```
+if not defined DevEnvDir (
+	call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+)
+```
+
+If you are using the compiler directly, then just add `sfw.cpp` to the list of files that you are compiling:
+
+```
+cl /Zi /EHsc /Feprog-vc.exe sfw.cpp main.cpp
+```
+
+Note: /Zi means add debug information to the executable.
+
+If you are creating object files:
+
+```
+cl /EHsc /Zi /c sfw.cpp /Fo:sfw.obj
+cl /EHsc /Zi /c main.cpp /Fo:main.obj
+
+cl /Zi /EHsc /Feprog-vc.exe sfw.obj main.obj
+```
+
+If you are using MSVC you don't need to link to anything, as MSVC has a nice feature where 
+this can be done automatically. Search the codebase for `#pragma comment` to see the libraries that get linked.
+
+### MingW
+
+Note If you use the g++ command on windows, that is MingW!
+
+If you are using a compiler directly, then just add `sfw.cpp` to the list of files that you are compiling, and 
+also link to `gdi32`, `Shlwapi`, `ws2_32`.
+
+```
+g++ -g sfw.cpp main.cpp -lgdi32 -lShlwapi -lws2_32 -o prog 
+```
+
+If you are creating object files:
+
+```
+g++ -g -c sfw.cpp -o sfw.o
+g++ -g -c main.cpp -o main.o
+
+g++ -g sfw.o main.o -lgdi32 -lShlwapi -lws2_32 -o prog
+```
+
+Note: -g means add debug information to the executable.
+
+Note the position of the `-l` commands, add those after your object (or .cpp) files.
+
+Also, you don't need to add these to the other steps that does not create the final executable.
+
+Note if you use clang, just replacing `g++` to `clang++` or `clang` should work.
+
+### Linux (G++ / clang)
+
+On debian based distributions run the following command to make sure that dependencies are installed:
+
+```
+sudo apt-get install libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+```
+
+Arch based systems should have these by default. For other distros consult the manual and / or the internet
+to see which packages are the equivalent of the ones listed above.
+
+
+This is how your last (linking) command changes:
+
+```
+g++ -g sfw.cpp main.cpp -lX11 -o prog 
+```
+
+Or
+
+```
+g++ -g -c sfw.cpp -o sfw.o
+g++ -g -c main.cpp -o main.o
+
+g++ -g sfw.o main.o -lX11 -o prog
+```
+
+Note the position of the `-l` command, add those after your object (or .cpp) files.
+
+Some g++ versions seem a lot more leanient, for example on Manjaro as of this writing 
+`g++ -g -lX11 sfw.o main.o -o prog` works, but on the Raspberry pi (Raspian) it doesn't.
+
+Also, you don't need to add these to the other steps that does not create the final executable.
+
+Note if you use clang, just replacing `g++` to `clang++` or `clang` should work.
+
+### OSX (clang)
+
+If you need the renderer you will need to use clang on OSX.
+
+First we need to setup SDK paths:
+
+```
+export SDKROOT=$(xcrun --show-sdk-path)
+```
+
+Set up some helper variables: 
+
+```
+export cpp_args="-std=c++14 -w -framework cocoa -framework iokit -framework CoreFoundation -framework CoreAudio -framework AudioToolbox "
+export m_args="-w -framework cocoa -framework iokit -framework CoreFoundation -framework CoreAudio -framework AudioToolbox "
+```
+
+On OSX sfw_3rd.m need to be compiled manually, separately:
+
+(This is a workaround, because Objective-C and C++ code doesn't mix in a single file, but Objective-C and C does.)
+
+```
+clang++ -w $m_args -g -c sfw_3rd.m -o sfw_3rd.o
+```
+
+Now just compile everything else to objects:
+
+```
+clang++ $cpp_args -g -c sfw.cpp -o sfw.o
+clang++ $cpp_args -g -c game_scene.cpp -o game_scene.o
+clang++ $cpp_args -g -c main.cpp -o main.o
+```
+
+Then just link them together:
+
+```
+clang++ $cpp_args -g sfw.o sfw_3rd.o game_scene.o main.o -o game 
+```
