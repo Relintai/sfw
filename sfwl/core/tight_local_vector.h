@@ -44,7 +44,7 @@ public:
 			CRASH_COND_MSG(!data, "Out of memory");
 		}
 
-		if constexpr (!HAS_TRIVIAL_CONSTRUCTOR(T) && !force_trivial) {
+		if (!HAS_TRIVIAL_CONSTRUCTOR(T) && !force_trivial) {
 			memnew_placement(&data[count++], T(p_elem));
 		} else {
 			data[count++] = p_elem;
@@ -57,7 +57,7 @@ public:
 		for (U i = p_index; i < count; i++) {
 			data[i] = data[i + 1];
 		}
-		if constexpr (!HAS_TRIVIAL_DESTRUCTOR(T) && !force_trivial) {
+		if (!HAS_TRIVIAL_DESTRUCTOR(T) && !force_trivial) {
 			data[count].~T();
 		}
 	}
@@ -70,7 +70,7 @@ public:
 		if (count > p_index) {
 			data[p_index] = data[count];
 		}
-		if constexpr (!HAS_TRIVIAL_DESTRUCTOR(T) && !force_trivial) {
+		if (!HAS_TRIVIAL_DESTRUCTOR(T) && !force_trivial) {
 			data[count].~T();
 		}
 	}
