@@ -12,7 +12,7 @@ python tools/merger/join.py --template tools/merger/sfw_core.cpp.inl --path . --
 
 python tools/merger/join.py --template tools/merger/sfw_full.h.inl --path . --output tools/merger/out/full/sfw.h
 python tools/merger/join.py --template tools/merger/sfw_full.cpp.inl --path . --output tools/merger/out/full/sfw.cpp
-python tools/merger/join.py --template tools/merger/sfw_3rd_full.x.inl --path . --output tools/merger/out/full/sfw_3rd.m
+python tools/merger/join.py --template tools/merger/sfw_3rd.x.inl --path . --output tools/merger/out/full/sfw_3rd.m
 
 echo "Running clang format!"
 

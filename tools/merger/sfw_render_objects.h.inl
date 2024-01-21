@@ -6,7 +6,7 @@
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
 
 // MODULES:
-// CORE + OBJECT + RENDER CORE + RENDER IMMEDIATE + RENDER OBJECTS
+// CORE + OBJECT + RENDER CORE + RENDER OBJECTS
 
 // LICENSES:
 
@@ -733,20 +733,6 @@
 //--STRIP
 {{FILE:sfw/render_core/application.h}}
 
-
-//===================  RENDER IMMEDIATE SECTION  ===================
-
-//--STRIP
-//#include "core/color.h"
-//#include "core/rect2.h"
-//#include "core/transform.h"
-//#include "core/transform_2d.h"
-//#include "core/vector2i.h"
-//#include "object/object.h"
-//#include "object/reference.h"
-//--STRIP
-{{FILE:sfw/render_immediate/renderer.h}}
-
 //===================  RENDER OBJECTS SECTION  ===================
 
 //--STRIP
@@ -759,8 +745,6 @@
 //#include "core/transform.h"
 //--STRIP
 {{FILE:sfw/render_objects/object_3d.h}}
-
-
 
 //--STRIP
 //#include "render_core/3rd_glad.h"

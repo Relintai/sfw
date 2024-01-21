@@ -658,22 +658,6 @@
 //--STRIP
 {{FILE:sfw/render_core/input.cpp}}
 
-//===================  RENDER IMMEDIATE SECTION  ===================
-
-//--STRIP
-//#include "renderer.h"
-//#include "render_core/color_material_2d.h"
-//#include "render_core/font.h"
-//#include "render_core/font_material.h"
-//#include "render_core/material.h"
-//#include "render_core/mesh.h"
-//#include "render_core/texture.h"
-//#include "render_core/texture_material_2d.h"
-//#include "render_core/app_window.h"
-//#include "render_core/render_state.h"
-//--STRIP
-{{FILE:sfw/render_immediate/renderer.cpp}}
-
 //===================  RENDER OBJECTS SECTION  ===================
 
 //--STRIP
