@@ -1,3 +1,3 @@
 
-./game sfwl.h -tsfw_full_template.html --remaining
+./game sfwl.h -tsfwl_full_template.html --remaining
 

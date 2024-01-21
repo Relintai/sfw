@@ -273,7 +273,7 @@ public:
 
 		//mesh->clear();
 
-		MeshUtils::create_cone(mesh);
+		MeshUtils::create_simple_test_cone(mesh);
 		mesh->upload();
 
 		mi = memnew(MeshInstance3D());
