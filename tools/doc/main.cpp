@@ -541,10 +541,15 @@ void process_file(const String &path, bool write_remaining) {
 	String compilation_no_renderer = FileAccess::get_file_as_string("compilation_no_renderer.md.html");
 	String compilation_renderer = FileAccess::get_file_as_string("compilation_renderer.md.html");
 	String licenses_renderer = FileAccess::get_file_as_string("licenses_renderer.md.html");
+	String markdeep_min_js = FileAccess::get_file_as_string("markdeep.min.js");
+	String markdeep_theme = FileAccess::get_file_as_string("slate.css");
 
 	index_str = index_str.replace("$FILE_Compilation_No_Renderer$", compilation_no_renderer);
 	index_str = index_str.replace("$FILE_Compilation_Renderer$", compilation_renderer);
 	index_str = index_str.replace("$LICENSES_Renderer$", licenses_renderer);
+
+	index_str = index_str.replace("$MARKDEEP_MIN_JS$", markdeep_min_js);
+	index_str = index_str.replace("$MARKDEEP_THEME$", markdeep_theme);
 
 	FileAccess::write_file("out/index.md.html", index_str);
 
