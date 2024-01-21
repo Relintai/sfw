@@ -1,5 +1,3 @@
 
-./game ../merger/out/full/sfw.h --remaining
+./game ../merger/out/full/sfw.h -tsfw_full_template.html --remaining
 
-
-./game ../merger/out/full/sfw.h -osfw_full.md.html

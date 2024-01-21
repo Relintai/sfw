@@ -1,0 +1,1057 @@
+<meta charset="utf-8">
+**SFW Docs**
+
+SFW - Simple Framework - https://github.com/Relintai/sfw
+
+Simple c++ app / game framework inspired by the single file c game engines 
+and libraries, especially [FWK](https://github.com/r-lyeh/FWK).
+
+**Modules**: Core
+
+COMPILE
+====================================================================================
+
+$FILE_Compilation_No_Renderer$
+
+CORE
+====================================================================================
+
+Use <code lang=C++>SFWCore::setup();</code> to initialize the library.
+This is necessary as some components (Like PoolVector, and StringNames.) need additional setup.
+
+Use <code lang=C++>SFWCore::cleanup();</code> to de-initialize the library.
+
+Also note that if you don't use classes that doens't rely on this you can get away by not calling it.
+
+
+Initialization
+------------------------------------------------------------------
+
+<a name="CLASS_SFWCore"></a>
+<details><summary>SFWCore</summary>
+
+   |||CLASS_SFWCore|||
+
+</details>
+
+Enums
+------------------------------------------------------------------
+
+Errors
+
+<a name="ENUM_Error"></a>
+<details><summary>Error</summary>
+
+|||ENUM_Error|||
+
+</details>
+
+Other
+
+<a name="ENUM_ClockDirection"></a>
+<details><summary>ClockDirection</summary>
+
+|||ENUM_ClockDirection|||
+
+</details>
+
+<a name="ENUM_Orientation"></a>
+<details><summary>Orientation</summary>
+
+|||ENUM_Orientation|||
+
+</details>
+
+<a name="ENUM_HAlign"></a>
+<details><summary>HAlign</summary>
+
+|||ENUM_HAlign|||
+
+</details>
+
+<a name="ENUM_VAlign"></a>
+<details><summary>VAlign</summary>
+
+|||ENUM_VAlign|||
+
+</details>
+
+<a name="ENUM_Margin"></a>
+<details><summary>Margin</summary>
+
+|||ENUM_Margin|||
+
+</details>
+
+<a name="ENUM_Side"></a>
+<details><summary>Side</summary>
+
+|||ENUM_Side|||
+
+</details>
+
+<a name="ENUM_Corner"></a>
+<details><summary>Corner</summary>
+
+|||ENUM_Corner|||
+
+</details>
+
+Errors and Logging
+------------------------------------------------------------------
+
+<a name="LOGGING_MACROS"></a>
+<details><summary>Logging</summary>
+
+Use the provided macros:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ C
+#define PRINT_TRACE(str)
+#define LOG_TRACE(...)
+
+#define PRINT_MSG(str)
+#define LOG_MSG(...)
+
+#define PRINT_WARN(str)
+#define LOG_WARN(...)
+
+#define PRINT_ERR(str)
+#define ERR_PRINT(str)
+#define LOG_ERR(...)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+</details>
+
+<a name="ERROR_MACROS"></a>
+<details><summary>Error</summary>
+
+Uses these macros:
+
+Note that the library itself does not use exceptions, it uses these macros exclusively.
+
+Also note that you are not prevented you from using exceptions if you want to in your own code.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ C
+#define ERR_FAIL_MSG(msg)
+
+#define ERR_FAIL_V(val)
+
+#define ERR_FAIL_V_MSG(val, msg)
+
+#define ERR_FAIL_INDEX(index, size)
+#define ERR_FAIL_INDEX_MSG(index, size, msg)
+
+#define ERR_FAIL_INDEX_V(index, size, val)
+#define ERR_FAIL_INDEX_V_MSG(index, size, val, msg)
+
+#define ERR_FAIL_COND(cond)
+#define ERR_FAIL_COND_MSG(cond, msg)
+
+#define ERR_FAIL_COND_V(cond, val)
+#define ERR_FAIL_COND_V_MSG(cond, val, msg)
+
+#define ERR_CONTINUE(cond)
+#define ERR_CONTINUE_MSG(cond, msg)
+
+#define ERR_CONTINUE_ACTION(cond, action)
+#define ERR_CONTINUE_ACTION_MSG(cond, action, msg)
+
+#define CRASH_INDEX(index, size)
+#define CRASH_BAD_INDEX(index, size)
+#define CRASH_BAD_UNSIGNED_INDEX(index, size)
+
+#define CRASH_COND(cond)
+#define CRASH_COND_MSG(cond, msg)
+
+#define CRASH_MSG(msg)
+#define CRASH_NOW(msg)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+</details>
+
+<a name="ASSERTION_MACROS"></a>
+<details><summary>Asserts</summary>
+
+Use the provided macros:
+
+These should be 'free' checks for program flow and should not be needed in any releases, only used when the DEV_ENABLED define is set.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ C
+#define DEV_CHECK(m_cond)
+#define DEV_CHECK_ONCE(m_cond)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+</details>
+
+Math
+------------------------------------------------------------------
+
+<a name="CLASS_Math"></a>
+<details><summary>Math</summary>
+
+|||CLASS_Math|||
+
+</details>
+
+<a name="STRUCT_Vector2"></a>
+<details><summary>Vector2</summary>
+
+   |||STRUCT_Vector2|||
+
+</details>
+
+<a name="STRUCT_Vector2i"></a>
+<details><summary>Vector2i</summary>
+
+   |||STRUCT_Vector2i|||
+
+</details>
+
+<a name="STRUCT_Vector3"></a>
+<details><summary>Vector3</summary>
+
+   |||STRUCT_Vector3|||
+
+</details>
+
+<a name="STRUCT_Vector3i"></a>
+<details><summary>Vector3i</summary>
+
+   |||STRUCT_Vector3i|||
+
+</details>
+
+<a name="STRUCT_Vector4"></a>
+<details><summary>Vector4</summary>
+
+   |||STRUCT_Vector4|||
+
+</details>
+
+<a name="STRUCT_Vector4i"></a>
+<details><summary>Vector4i</summary>
+
+   |||STRUCT_Vector4i|||
+
+</details>
+
+<a name="STRUCT_Color"></a>
+<details><summary>Color</summary>
+
+   |||STRUCT_Color|||
+
+</details>
+
+<a name="STRUCT_Rect2"></a>
+<details><summary>Rect2</summary>
+
+   |||STRUCT_Rect2|||
+
+</details>
+
+<a name="STRUCT_Rect2i"></a>
+<details><summary>Rect2i</summary>
+
+   |||STRUCT_Rect2i|||
+
+</details>
+
+<a name="STRUCT_Plane"></a>
+<details><summary>Plane</summary>
+
+   |||STRUCT_Plane|||
+
+</details>
+
+<a name="STRUCT_AABB"></a>
+<details><summary>AABB</summary>
+
+   |||STRUCT_AABB|||
+
+</details>
+
+<a name="STRUCT_Face3"></a>
+<details><summary>Face3</summary>
+
+   |||STRUCT_Face3|||
+
+</details>
+
+<a name="STRUCT_Transform2D"></a>
+<details><summary>Transform2D</summary>
+
+   |||STRUCT_Transform2D|||
+
+</details>
+
+<a name="STRUCT_Quaternion"></a>
+<details><summary>Quaternion</summary>
+
+   |||STRUCT_Quaternion|||
+
+</details>
+
+<a name="STRUCT_Basis"></a>
+<details><summary>Basis</summary>
+
+   |||STRUCT_Basis|||
+
+</details>
+
+<a name="STRUCT_Transform"></a>
+<details><summary>Transform</summary>
+
+   |||STRUCT_Transform|||
+
+</details>
+
+<a name="STRUCT_Projection"></a>
+<details><summary>Projection</summary>
+
+   |||STRUCT_Projection|||
+
+</details>
+
+<a name="CLASS_RandomPCG"></a>
+<details><summary>RandomPCG</summary>
+
+   |||CLASS_RandomPCG|||
+
+</details>
+
+String
+------------------------------------------------------------------
+
+Helper Structs
+
+<a name="STRUCT_CharRange"></a>
+<details><summary>CharRange</summary>
+
+   |||STRUCT_CharRange|||
+
+</details>
+
+<a name="STRUCT_StrRange"></a>
+<details><summary>StrRange</summary>
+
+   |||STRUCT_StrRange|||
+
+</details>
+
+<a name="STRUCT_NoCaseComparator"></a>
+<details><summary>NoCaseComparator</summary>
+
+   |||STRUCT_NoCaseComparator|||
+
+</details>
+
+<a name="STRUCT_NaturalNoCaseComparator"></a>
+<details><summary>NaturalNoCaseComparator</summary>
+
+   |||STRUCT_NaturalNoCaseComparator|||
+
+</details>
+
+Character Strings
+
+<a name="STRUCT_StaticCString"></a>
+<details><summary>StaticCString</summary>
+
+   You can statically store a C string with this.
+
+   |||STRUCT_StaticCString|||
+
+</details>
+
+<a name="CLASS_Char16String"></a>
+<details><summary>Char16String</summary>
+
+   16 bit (wide char) char string.
+
+   |||CLASS_Char16String|||
+
+</details>
+
+<a name="CLASS_CharString"></a>
+<details><summary>CharString</summary>
+
+   8 bit char string.
+
+   |||CLASS_CharString|||
+
+</details>
+
+<a name="CLASS_CharProxy"></a>
+<details><summary>CharProxy</summary>
+
+   Properly stores a reference to an element in a String.
+
+   |||CLASS_CharProxy|||
+
+</details>
+
+Main
+
+<a name="CLASS_String"></a>
+<details><summary>String</summary>
+
+   Main String class. This is what you normally use. Stores characters as 32 bit variables. It's COW (Copy on Write).
+
+   If you want to convert this to a char* use it's utf8() method.
+
+   |||CLASS_String|||
+
+</details>
+
+<a name="CLASS_StringName"></a>
+<details><summary>StringName</summary>
+
+   A String that is optimized for comparisons using ==.
+
+   |||CLASS_StringName|||
+
+</details>
+
+Containers
+------------------------------------------------------------------
+
+Helper Structs
+
+<a name="STRUCT_Pair"></a>
+<details><summary>Pair</summary>
+
+   |||STRUCT_Pair|||
+
+</details>
+
+<a name="STRUCT_KeyValue"></a>
+<details><summary>KeyValue</summary>
+
+   |||STRUCT_KeyValue|||
+
+</details>
+
+<a name="STRUCT_Comparator"></a>
+<details><summary>Comparator</summary>
+
+   |||STRUCT_Comparator|||
+
+</details>
+
+Helper Classes
+
+<a name="CLASS_CowData"></a>
+<details><summary>CowData</summary>
+
+   A helper class that implements COW (Copy-on-Write) functionality.
+
+   |||CLASS_CowData|||
+
+</details>
+
+<a name="CLASS_VectorWriteProxy"></a>
+<details><summary>VectorWriteProxy</summary>
+
+   |||CLASS_VectorWriteProxy|||
+
+</details>
+
+Lists
+
+<a name="CLASS_List"></a>
+<details><summary>List</summary>
+
+   |||CLASS_List|||
+
+</details>
+
+Vectors
+
+<a name="CLASS_Vector"></a>
+<details><summary>Vector</summary>
+
+   Vector with COW support.
+
+   |||CLASS_Vector|||
+
+</details>
+
+<a name="CLASS_PoolVector"></a>
+<details><summary>PoolVector</summary>
+
+   Vector that does not fragment memory.
+
+   |||CLASS_PoolVector|||
+
+</details>
+
+<a name="CLASS_LocalVector"></a>
+<details><summary>LocalVector</summary>
+
+   Simple vector. Uses unsigned ints as indexes.
+   
+   Saves on allocation calls by overallocating memory.
+   
+   This is the most similar to std::vector.
+
+   |||CLASS_LocalVector|||
+
+</details>
+
+<a name="CLASS_LocalVectori"></a>
+<details><summary>LocalVectori</summary>
+
+   Simple vector. Uses signed ints as indexes.
+   
+   Saves on allocation calls by overallocating memory.
+
+   |||CLASS_LocalVectori|||
+
+</details>
+
+<a name="CLASS_TightLocalVector"></a>
+<details><summary>TightLocalVector</summary>
+
+   Simple vector. Uses unsigned ints as indexes.
+
+   Unlike LocalVector it always only allocates the space it needs.
+
+   |||CLASS_TightLocalVector|||
+
+</details>
+
+<a name="CLASS_TightLocalVectori"></a>
+<details><summary>TightLocalVectori</summary>
+
+   Simple vector. Uses signed ints as indexes.
+
+   Unlike LocalVector it always only allocates the space it needs.
+
+   |||CLASS_TightLocalVectori|||
+
+</details>
+
+Sets
+
+<a name="CLASS_RBSet"></a>
+<details><summary>RBSet</summary>
+
+   |||CLASS_RBSet|||
+
+</details>
+
+<a name="CLASS_VSet"></a>
+<details><summary>VSet</summary>
+
+   |||CLASS_VSet|||
+
+</details>
+
+<a name="CLASS_HashSet"></a>
+<details><summary>HashSet</summary>
+
+   |||CLASS_HashSet|||
+
+</details>
+
+Maps
+
+<a name="CLASS_RBMap"></a>
+<details><summary>RBMap</summary>
+
+   |||CLASS_RBMap|||
+
+</details>
+
+<a name="CLASS_VMap"></a>
+<details><summary>VMap</summary>
+
+   |||CLASS_VMap|||
+
+</details>
+
+HashMaps
+
+<a name="CLASS_OGHashMap"></a>
+<details><summary>OGHashMap</summary>
+
+   Simple HashMap implementation.
+
+   |||CLASS_OGHashMap|||
+
+</details>
+
+<a name="CLASS_HashMap"></a>
+<details><summary>HashMap</summary>
+
+   HashMap implementation that uses open addressing with Robin Hood hashing.
+
+   Use this by default.
+
+   |||CLASS_HashMap|||
+
+</details>
+
+<a name="CLASS_OrderedHashMap"></a>
+<details><summary>OrderedHashMap</summary>
+
+   HashMap implementation that keeps the order of it's elements.
+
+   |||CLASS_OrderedHashMap|||
+
+</details>
+
+Special
+
+<a name="CLASS_SortArray"></a>
+<details><summary>SortArray</summary>
+
+   |||CLASS_SortArray|||
+
+</details>
+
+<a name="CLASS_RingBuffer"></a>
+<details><summary>RingBuffer</summary>
+
+   |||CLASS_RingBuffer|||
+
+</details>
+
+
+Files
+------------------------------------------------------------------
+
+<a name="CLASS_FileAccess"></a>
+<details><summary>FileAccess</summary>
+
+   |||CLASS_FileAccess|||
+
+</details>
+
+<a name="STRUCT_FileAccessRef"></a>
+<details><summary>FileAccessRef</summary>
+
+   |||STRUCT_FileAccessRef|||
+
+</details>
+
+<a name="CLASS_DirAccess"></a>
+<details><summary>DirAccess</summary>
+
+   |||CLASS_DirAccess|||
+
+</details>
+
+<a name="STRUCT_DirAccessRef"></a>
+<details><summary>DirAccessRef</summary>
+
+   |||STRUCT_DirAccessRef|||
+
+</details>
+
+Time
+------------------------------------------------------------------
+
+<a name="CLASS_SFWTime"></a>
+<details><summary>SFWTime</summary>
+
+   |||CLASS_SFWTime|||
+
+</details>
+
+Threading
+------------------------------------------------------------------
+
+Thread
+
+<a name="CLASS_Thread"></a>
+<details><summary>Thread</summary>
+
+   |||CLASS_Thread|||
+
+</details>
+
+Atomics
+
+<a name="CLASS_SafeNumeric"></a>
+<details><summary>SafeNumeric</summary>
+
+   |||CLASS_SafeNumeric|||
+
+</details>
+
+<a name="CLASS_SafeFlag"></a>
+<details><summary>SafeFlag</summary>
+
+   |||CLASS_SafeFlag|||
+
+</details>
+
+<a name="CLASS_SafeRefCount"></a>
+<details><summary>SafeRefCount</summary>
+
+   |||CLASS_SafeRefCount|||
+
+</details>
+
+Mutex
+
+<a name="CLASS_MutexImpl"></a>
+<details><summary>Mutex</summary>
+
+   Typedefined to Mutex.
+
+   |||CLASS_MutexImpl|||
+
+</details>
+
+<a name="CLASS_MutexLock"></a>
+<details><summary>MutexLock</summary>
+
+   Helper class to lock and automatically release it on leaving scope.
+
+   |||CLASS_MutexLock|||
+
+</details>
+
+RWLock
+
+<a name="CLASS_RWLock"></a>
+<details><summary>RWLock</summary>
+
+   |||CLASS_RWLock|||
+
+</details>
+
+<a name="CLASS_RWLockRead"></a>
+<details><summary>RWLockRead</summary>
+
+   |||CLASS_RWLockRead|||
+
+</details>
+
+<a name="CLASS_RWLockWrite"></a>
+<details><summary>RWLockWrite</summary>
+
+   |||CLASS_RWLockWrite|||
+
+</details>
+
+SpinLock
+
+<a name="CLASS_SpinLock"></a>
+<details><summary>SpinLock</summary>
+
+   |||CLASS_SpinLock|||
+
+</details>
+
+Networking
+------------------------------------------------------------------
+
+Socket
+
+<a name="CLASS_InetAddress"></a>
+<details><summary>InetAddress</summary>
+
+   |||CLASS_InetAddress|||
+
+</details>
+
+<a name="CLASS_Socket"></a>
+<details><summary>Socket</summary>
+
+   |||CLASS_Socket|||
+
+</details>
+
+Processes
+------------------------------------------------------------------
+
+<a name="CLASS_SubProcess"></a>
+<details><summary>SubProcess</summary>
+
+   |||CLASS_SubProcess|||
+
+</details>
+
+<a name="STRUCT_SubProcessRef"></a>
+<details><summary>SubProcessRef</summary>
+
+   |||STRUCT_SubProcessRef|||
+
+</details>
+
+Memory
+------------------------------------------------------------------
+
+<a name="STRUCT_MemoryPool"></a>
+<details><summary>MemoryPool</summary>
+
+   |||STRUCT_MemoryPool|||
+
+</details>
+
+<a name="CLASS_PagedAllocator"></a>
+<details><summary>PagedAllocator</summary>
+
+   |||CLASS_PagedAllocator|||
+
+</details>
+
+<a name="CLASS_PoolAllocator"></a>
+<details><summary>PoolAllocator</summary>
+
+   |||CLASS_PoolAllocator|||
+
+</details>
+
+ADVANCED
+====================================================================================
+
+There are a few remaining classes that were omitted from this document (Like allocators, hashers etc.), 
+as you will normally won't need them. (If you do, you will likely just need to rread the source anyway.)
+
+LICENSES
+====================================================================================
+
+SFW
+
+<a name="LICENSE_SFW"></a>
+<details><summary>SFW</summary>
+
+   MIT
+
+   Copyright (c) 2023-present Péter Magyar.
+
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
+   
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+   
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+
+</details>
+
+GENERAL
+
+<a name="LICENSE_Pandemonium_Engine"></a>
+<details><summary>Pandemonium Engine</summary>
+
+   MIT
+
+   https://github.com/Relintai/pandemonium_engine
+
+
+   Copyright (c) 2022-present Péter Magyar.
+
+   Copyright (c) 2014-2022 Godot Engine contributors (cf. AUTHORS.md).
+
+   Copyright (c) 2007-2022 Juan Linietsky, Ariel Manzur.
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the 
+   "Software"), to deal in the Software without restriction, including 
+   without limitation the rights to use, copy, modify, merge, publish, 
+   distribute, sublicense, and/or sell copies of the Software, and to 
+   permit persons to whom the Software is furnished to do so, subject to 
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be 
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+</details>
+
+<a name="LICENSE_FWK"></a>
+<details><summary>FWK</summary>
+
+   https://github.com/r-lyeh/FWK
+   
+   Unlicense
+   
+   This software is released into the [public domain](https://unlicense.org/).
+
+   Also dual-licensed as [0-BSD](https://opensource.org/licenses/0BSD) or [MIT (No Attribution)](https://github.com/aws/mit-0) 
+   for those countries where public domain is a concern (sigh).
+
+   Any contribution to this repository is implicitly subjected to the same release conditions aforementioned.
+
+</details>
+
+CORE
+
+<a name="LICENSE_Trantor"></a>
+<details><summary>Trantor</summary>
+
+   Trantor
+
+   inet_address.h, .cpp, socket.h and .cpp originates from trantor (they were heavily modified):
+   
+   Trantor - A non-blocking I/O based TCP network library, using C++14/17, 
+   Copyright (c) 2016-2021, Tao An.  All rights reserved.
+
+   https://github.com/an-tao/trantor
+   
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   
+   *  Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+   *  Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+   *  Neither the name of Tao An nor the names of other contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   
+   Muduo - A reactor-based C++ network library for Linux
+   Copyright (c) 2010, Shuo Chen.  All rights reserved.
+
+   http://code.google.com/p/muduo/
+   
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+   
+   *  Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+   *  Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+   *  Neither the name of Shuo Chen nor the names of other contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+   
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+</details>
+
+<a name="LICENSE_PCG"></a>
+<details><summary>PCG</summary>
+
+   pcg.h License:
+
+   *Really* minimal PCG32 code / (c) 2014 M.E. O'Neill / pcg-random.org
+
+   Licensed under Apache License 2.0 (NO WARRANTY, etc. see website)
+
+</details>
+
+DOCUMENTATION
+
+<a name="LICENSE_MARKDEEP"></a>
+<details><summary>Markdeep</summary>
+
+   This documentation was generated using markdeep:
+
+   https://casual-effects.com/markdeep
+
+   **Markdeep is open source. You may use, extend, and redistribute Markdeep without charge under the terms of the BSD license:**
+
+      Copyright 2015-2019, Morgan McGuire
+      All rights reserved.
+
+      Redistribution and use in source and binary forms, with or without modification, 
+      are permitted provided that the following conditions are met:
+
+      1. Redistributions of source code must retain the above copyright notice, this
+         list of conditions and the following disclaimer.
+
+      2. Redistributions in binary form must reproduce the above copyright notice, this
+         list of conditions and the following disclaimer in the documentation and/or other
+         materials provided with the distribution.
+
+      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+      ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+      WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+      IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+      INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+      BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+      DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+      LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+      OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+      THE POSSIBILITY OF SUCH DAMAGE.
+    
+
+   **Markdeep includes highlight.js, so you are also bound by its BSD license:**
+
+      Copyright (c) 2006, Ivan Sagalaev
+      All rights reserved.
+
+      Redistribution and use in source and binary forms, with or without modification, are 
+      permitted provided that the following conditions are met:
+      
+      * Redistributions of source code must retain the above copyright notice, this list of
+        conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above copyright notice, this list 
+        of conditions and the following disclaimer in the documentation and/or other materials
+        provided with the distribution.
+      * Neither the name of highlight.js nor the names of its contributors may be used to 
+        endorse or promote products derived from this software without specific prior written 
+        permission.
+      
+      THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR 
+      IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+      MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+      THE REGENTS AND CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+      EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+      SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+      HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
+      TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+      SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    
+
+</details>
+
+<script>markdeepOptions = {tocStyle:'long', definitionStyle:'long', linkAPIDefinitions: true};</script>
+<style>$MARKDEEP_THEME$</style>
+<!-- Markdeep: --><style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style>
+<script src="markdeep.min.js"></script>
+<script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
+
