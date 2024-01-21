@@ -148,7 +148,7 @@ cp "$current_in_fol/sfwl.h" "$current_out_fol/sfwl.h"
 cp "$current_in_fol/sfwl.cpp" "$current_out_fol/sfwl.cpp"
 cp "$doc_folder/sfwl_core.html" "$current_out_fol/sfwl.html"
 
-# Core
+# Full
 current_in_fol=$project_root_folder/tools/merger/out/sfwl_full
 current_out_fol=$sfwl_out_folder/merged/full
 
