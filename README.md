@@ -130,10 +130,10 @@ If you are creating object files:
 g++ / mingw:
 
 ```
-g++ -g -c sfwl.cpp -o sfwl.o
+g++ -g -c sfw.cpp -o sfw.o
 g++ -g -c main.cpp -o main.o
 
-g++ -g sfwl.o main.o -o prog
+g++ -g sfw.o main.o -o prog
 ```
 
 MSVC:
@@ -169,13 +169,13 @@ this can be done automatically. Search the codebase for `#pragma comment` to see
 If you are using mingw (If you use the g++ command on windows, that is MingW!), this is how your last (linking) command changes:
 
 ```
-g++ -g sfwl.cpp main.cpp -lgdi32 -lShlwapi -lws2_32 -o prog 
+g++ -g sfw.cpp main.cpp -lgdi32 -lShlwapi -lws2_32 -o prog 
 ```
 
 Or
 
 ```
-g++ -g sfwl.o main.o -lgdi32 -lShlwapi -lws2_32 -o prog
+g++ -g sfw.o main.o -lgdi32 -lShlwapi -lws2_32 -o prog
 ```
 
 Note the position of the `-l` commands, add those after your object (or .cpp) files.
@@ -199,19 +199,19 @@ to see which packages are the equivalent of the ones listed above.
 This is how your last (linking) command changes:
 
 ```
-g++ -g sfwl.cpp main.cpp -lX11 -o prog 
+g++ -g sfw.cpp main.cpp -lX11 -o prog 
 ```
 
 Or
 
 ```
-g++ -g sfwl.o main.o -lX11 -o prog
+g++ -g sfw.o main.o -lX11 -o prog
 ```
 
 Note the position of the `-l` command, add those after your object (or .cpp) files.
 
 Some g++ versions seem a lot more leanient, for example on Manjaro as of this writing 
-`g++ -g -lX11 sfwl.o main.o -o prog` works, but on the Raspberry pi (Raspian) it doesn't.
+`g++ -g -lX11 sfw.o main.o -o prog` works, but on the Raspberry pi (Raspian) it doesn't.
 
 Also, you don't need to add these to the other steps that does not create the final executable.
 
