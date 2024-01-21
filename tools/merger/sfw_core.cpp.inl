@@ -1,6 +1,12 @@
 
 
 {{FILEINLINE:tools/merger/sfw_readme.inl.h}}
+
+// MODULES:
+// CORE
+
+// LICENSES:
+
 {{FILEINLINE:tools/merger/sfw_linceses_core.inl.h}}
 
 #include <cstdio>
