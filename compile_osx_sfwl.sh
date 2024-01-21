@@ -4,7 +4,6 @@ clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/logger.cpp -o sfwl/core/l
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/math_funcs.cpp -o sfwl/core/math_funcs.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/memory.cpp -o sfwl/core/memory.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/pcg.cpp -o sfwl/core/pcg.o
-clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/plane.cpp -o sfwl/core/plane.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/random_pcg.cpp -o sfwl/core/random_pcg.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/rect2i.cpp -o sfwl/core/rect2i.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/safe_refcount.cpp -o sfwl/core/safe_refcount.o
