@@ -56,6 +56,7 @@ cp "$project_root_folder/.editorconfig" "$sfw_out_folder/split/.editorconfig"
 cp "$project_root_folder/.gitignore" "$sfw_out_folder/split/.gitignore"
 cp "$project_root_folder/LICENSE.txt" "$sfw_out_folder/split/LICENSE.txt"
 cp "$project_root_folder/README.md" "$sfw_out_folder/split/README.md"
+cp "$project_root_folder/icon.png" "$sfw_out_folder/split/icon.png"
 
 cp "$project_root_folder/tools/doc/out/processed/sfw_full.html" "$sfw_out_folder/split/sfw.html"
 
