@@ -55,6 +55,8 @@ cp "$project_root_folder/.gitignore" "$sfw_out_folder/split/.gitignore"
 cp "$project_root_folder/LICENSE.txt" "$sfw_out_folder/split/LICENSE.txt"
 cp "$project_root_folder/README.md" "$sfw_out_folder/split/README.md"
 
+cp "$project_root_folder/tools/doc/out/processed/sfw_full.html" "$sfw_out_folder/split/sfw.html"
+
 # SFWL Split
 cp -R "$project_root_folder/sfwl" "$sfwl_out_folder/split/sfwl"
 cp "$project_root_folder/compile_linux_sfwl.sh" "$sfwl_out_folder/split/compile_linux.sh"
@@ -69,4 +71,6 @@ cp "$project_root_folder/.editorconfig" "$sfwl_out_folder/split/.editorconfig"
 cp "$project_root_folder/.gitignore" "$sfwl_out_folder/split/.gitignore"
 cp "$project_root_folder/LICENSE.txt" "$sfwl_out_folder/split/LICENSE.txt"
 cp "$project_root_folder/README.md" "$sfwl_out_folder/split/README.md"
+
+cp "$project_root_folder/tools/doc/out/processed/sfwl_full.html" "$sfwl_out_folder/split/sfwl.html"
 
