@@ -61,5 +61,6 @@ ccache g++ -Wall \
                         sfwl/object/array.o sfwl/object/dictionary.o sfwl/object/ref_ptr.o \
                         sfwl/object/resource.o \
                         sfwl/main.o \
+                        -lShlwapi -lws2_32 \
                         -o game 
 

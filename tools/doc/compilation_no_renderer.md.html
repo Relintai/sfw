@@ -8,14 +8,19 @@ without any special setting, but if your compiler is older (or set differently) 
 
 ## IDE Setup
 
-If you use an ide, just add these files to your project (so the .cpp file gets compiled), and you are done.
+If you use an ide, add these files to your project (so the .cpp file gets compiled).
+
+If you are using MingW (If you use the g++ command on windows, that is MingW!), then
+find a section in your ide that says something similar to `link to libraries`. Usually
+is't under a linker settings section, and add the following entries: `Shlwapi`, `ws2_32`.
+
+If you use anything else, you are done.
 
 ## Manual setup
 
-### g++ / mingw
+### g++ - Linux / OSX
 
 If you are using a compiler directly, then just add `sfw.cpp` or `sfwl.cpp` to the list of files that you are compiling:
-
 
 ```
 g++ -g sfw.cpp main.cpp -o prog 
@@ -30,6 +35,27 @@ g++ -g -c sfw.cpp -o sfw.o
 g++ -g -c main.cpp -o main.o
 
 g++ -g sfw.o main.o -o prog
+```
+
+### g++ / mingw - Windows
+
+If you are using a compiler directly, then add `sfw.cpp` or `sfwl.cpp` to the list of files that you are compiling,
+and link to `lShlwapi` and `ws2_32`:
+
+
+```
+g++ -g sfw.cpp main.cpp -lShlwapi -lws2_32 -o prog 
+```
+
+Note: -g means add debug information to the executable.
+
+If you are creating object files:
+
+```
+g++ -g -c sfw.cpp -o sfw.o
+g++ -g -c main.cpp -o main.o
+
+g++ -g sfw.o main.o -lShlwapi -lws2_32 -o prog
 ```
 
 ### MSVC

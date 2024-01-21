@@ -411,6 +411,12 @@ Variant Array::pop_at(int p_pos) {
 	return ret;
 }
 
+#if defined(_WIN64) || defined(_WIN32)
+// Windows...
+#undef min
+#undef max
+#endif
+
 Variant Array::min() const {
 	Variant minval;
 	for (int i = 0; i < size(); i++) {
