@@ -42,6 +42,16 @@ doc_folder=$(pwd)/tools/doc/out/processed
 
 echo "Building SFW release v: $version"
 
+# SFW Common files
+
+cp "$project_root_folder/.clang-format" "$sfw_out_folder/.clang-format"
+cp "$project_root_folder/.clang-tidy" "$sfw_out_folder/.clang-tidy"
+cp "$project_root_folder/.editorconfig" "$sfw_out_folder/.editorconfig"
+cp "$project_root_folder/.gitignore" "$sfw_out_folder/.gitignore"
+cp "$project_root_folder/LICENSE.txt" "$sfw_out_folder/LICENSE.txt"
+cp "$project_root_folder/README.md" "$sfw_out_folder/README.md"
+cp "$project_root_folder/icon.png" "$sfw_out_folder/icon.png"
+
 # SFW Split
 cp -R "$project_root_folder/sfw" "$sfw_out_folder/split/sfw"
 cp "$project_root_folder/compile_linux.sh" "$sfw_out_folder/split/compile_linux.sh"
@@ -172,6 +182,18 @@ cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
 cp "$current_in_fol/game_scene.h" "$current_out_fol/game_scene.h"
 cp "$current_in_fol/game_scene.cpp" "$current_out_fol/game_scene.cpp"
 cp "$project_root_folder/icon.png" "$current_out_fol/icon.png"
+
+# SFWL
+
+# SFWL Common files
+
+cp "$project_root_folder/.clang-format" "$sfwl_out_folder/.clang-format"
+cp "$project_root_folder/.clang-tidy" "$sfwl_out_folder/.clang-tidy"
+cp "$project_root_folder/.editorconfig" "$sfwl_out_folder/.editorconfig"
+cp "$project_root_folder/.gitignore" "$sfwl_out_folder/.gitignore"
+cp "$project_root_folder/LICENSE.txt" "$sfwl_out_folder/LICENSE.txt"
+cp "$project_root_folder/README.md" "$sfwl_out_folder/README.md"
+cp "$project_root_folder/icon.png" "$sfwl_out_folder/icon.png"
 
 # SFWL Split
 cp -R "$project_root_folder/sfwl" "$sfwl_out_folder/split/sfwl"
