@@ -34,9 +34,11 @@ fi
 cd ..
 cd ..
 
-project_root_folder=$(pwd)/
-sfw_out_folder=$(pwd)/tools/release/out/sfw/
-sfwl_out_folder=$(pwd)/tools/release/out/sfwl/
+project_root_folder=$(pwd)
+sfw_out_folder=$(pwd)/tools/release/out/sfw
+sfwl_out_folder=$(pwd)/tools/release/out/sfwl
+
+doc_folder=$(pwd)/tools/doc/out/processed
 
 echo "Building SFW release v: $version"
 
@@ -57,6 +59,66 @@ cp "$project_root_folder/README.md" "$sfw_out_folder/split/README.md"
 
 cp "$project_root_folder/tools/doc/out/processed/sfw_full.html" "$sfw_out_folder/split/sfw.html"
 
+# SFW Merged
+
+# Core
+current_in_fol=$project_root_folder/tools/merger/out/core
+current_out_fol=$sfw_out_folder/merged/core
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$doc_folder/sfw_core.html" "$current_out_fol/sfw.html"
+
+# Object
+current_in_fol=$project_root_folder/tools/merger/out/object
+current_out_fol=$sfw_out_folder/merged/object
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$doc_folder/sfw_object.html" "$current_out_fol/sfw.html"
+
+# Render Core
+current_in_fol=$project_root_folder/tools/merger/out/render_core
+current_out_fol=$sfw_out_folder/merged/render_core
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+cp "$doc_folder/sfw_render_core.html" "$current_out_fol/sfw.html"
+
+# Render Immediate
+current_in_fol=$project_root_folder/tools/merger/out/render_immediate
+current_out_fol=$sfw_out_folder/merged/render_immediate
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+cp "$doc_folder/sfw_render_immediate.html" "$current_out_fol/sfw.html"
+
+# Render Objects
+current_in_fol=$project_root_folder/tools/merger/out/render_objects
+current_out_fol=$sfw_out_folder/merged/render_objects
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+cp "$doc_folder/sfw_render_objects.html" "$current_out_fol/sfw.html"
+
+# Full
+current_in_fol=$project_root_folder/tools/merger/out/full
+current_out_fol=$sfw_out_folder/merged/full
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+cp "$doc_folder/sfw_full.html" "$current_out_fol/sfw.html"
+
 # SFWL Split
 cp -R "$project_root_folder/sfwl" "$sfwl_out_folder/split/sfwl"
 cp "$project_root_folder/compile_linux_sfwl.sh" "$sfwl_out_folder/split/compile_linux.sh"
@@ -74,3 +136,22 @@ cp "$project_root_folder/README.md" "$sfwl_out_folder/split/README.md"
 
 cp "$project_root_folder/tools/doc/out/processed/sfwl_full.html" "$sfwl_out_folder/split/sfwl.html"
 
+# SFWL Merged
+
+# Core
+current_in_fol=$project_root_folder/tools/merger/out/sfwl_core
+current_out_fol=$sfwl_out_folder/merged/core
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfwl.h" "$current_out_fol/sfwl.h"
+cp "$current_in_fol/sfwl.cpp" "$current_out_fol/sfwl.cpp"
+cp "$doc_folder/sfwl_core.html" "$current_out_fol/sfwl.html"
+
+# Core
+current_in_fol=$project_root_folder/tools/merger/out/sfwl_full
+current_out_fol=$sfwl_out_folder/merged/full
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfwl.h" "$current_out_fol/sfwl.h"
+cp "$current_in_fol/sfwl.cpp" "$current_out_fol/sfwl.cpp"
+cp "$doc_folder/sfwl_full.html" "$current_out_fol/sfwl.html"
