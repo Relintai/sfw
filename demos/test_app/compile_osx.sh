@@ -2,9 +2,9 @@ rm sfw.h
 rm sfw.cpp
 rm sfw_3rd.m
 
-cp ../out/full/sfw.h sfw.h
-cp ../out/full/sfw.cpp sfw.cpp
-cp ../out/full/sfw_3rd.m sfw_3rd.m
+cp ../tools/merger/out/full/sfw.h sfw.h
+cp ../tools/merger/out/full/sfw.cpp sfw.cpp
+cp ../tools/merger/out/full/sfw_3rd.m sfw_3rd.m
 
 export SDKROOT=$(xcrun --show-sdk-path)
 
