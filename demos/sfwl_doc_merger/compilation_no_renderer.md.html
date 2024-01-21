@@ -1,0 +1,53 @@
+
+You have 2 files: `sfw.h` and `sfw.cpp` or `sfwl.h` and `sfwl.cpp` depending on your choice.
+
+Note: You might need to set c++14 level compatibility depending on your compiler. While the codebase is somwhere between 
+c++89 and c++11, threads use classes from the std namespace that were added in c++14. Nowadays these are usually available 
+without any special setting, but if your compiler is older (or set differently) you might need to add something like: 
+`-std=c++14` to your compile commands.
+
+## IDE Setup
+
+If you use an ide, just add these files to your project (so the .cpp file gets compiled), and you are done.
+
+## Manual setup
+
+### g++ / mingw
+
+If you are using a compiler directly, then just add `sfw.cpp` or `sfwl.cpp` to the list of files that you are compiling:
+
+
+```
+g++ -g sfw.cpp main.cpp -o prog 
+```
+
+Note: -g means add debug information to the executable.
+
+If you are creating object files:
+
+```
+g++ -g -c sfw.cpp -o sfw.o
+g++ -g -c main.cpp -o main.o
+
+g++ -g sfw.o main.o -o prog
+```
+
+### MSVC
+
+If you are using a compiler directly, then just add `sfw.cpp` or `sfwl.cpp` to the list of files that you are compiling:
+
+```
+cl /Zi /EHsc /Feprog-vc.exe sfw.cpp main.cpp
+```
+
+Note: /Zi means add debug information to the executable.
+
+If you are creating object files:
+
+
+```
+cl /EHsc /Zi /c sfw.cpp /Fo:sfw.obj
+cl /EHsc /Zi /c main.cpp /Fo:main.obj
+
+cl /Zi /EHsc /Feprog-vc.exe sfw.obj main.obj
+```
