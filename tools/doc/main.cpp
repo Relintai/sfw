@@ -240,7 +240,7 @@ List<String> process_classes_and_structs(const List<String> &list) {
 	return ret;
 }
 
-void process_file(const String &path, bool write_remaining) {
+void process_file(const String &path, const String &out_file, const String &template_file, bool write_remaining) {
 	String file_data = FileAccess::get_file_as_string(path);
 
 	LOG_MSG("Processing file: " + path);
@@ -515,7 +515,7 @@ void process_file(const String &path, bool write_remaining) {
 
 	//print_class_index_keys(class_index);
 
-	String index_template = FileAccess::get_file_as_string("index_template.md.html");
+	String index_template = FileAccess::get_file_as_string(template_file);
 	String code_template = FileAccess::get_file_as_string("code_template.md.html");
 	List<String> index_template_keywords = get_template_keywords(index_template);
 	HashSet<String> used_keywords;
@@ -551,7 +551,7 @@ void process_file(const String &path, bool write_remaining) {
 	index_str = index_str.replace("$MARKDEEP_MIN_JS$", markdeep_min_js);
 	index_str = index_str.replace("$MARKDEEP_THEME$", markdeep_theme);
 
-	FileAccess::write_file("out/index.md.html", index_str);
+	FileAccess::write_file("out/" + out_file, index_str);
 
 	if (write_remaining) {
 		//Generate a list from the unused classes.
@@ -581,11 +581,20 @@ int main(int argc, char **argv) {
 	bool write_remaining = false;
 	List<String> args;
 
+	String out_file = "index.md.html";
+	String template_file = "index_template.md.html";
+
 	for (int i = 1; i < argc; ++i) {
 		String arg = String::utf8(argv[i]);
 
 		if (arg == "--remaining") {
 			write_remaining = true;
+			continue;
+		} else if (arg.begins_with("-o")) {
+			out_file = arg.trim_prefix("-o").strip_edges();
+			continue;
+		} else if (arg.begins_with("-t")) {
+			template_file = arg.trim_prefix("-t").strip_edges();
 			continue;
 		}
 
@@ -593,7 +602,7 @@ int main(int argc, char **argv) {
 	}
 
 	for (List<String>::Element *E = args.front(); E; E = E->next()) {
-		process_file(E->get(), write_remaining);
+		process_file(E->get(), out_file, template_file, write_remaining);
 	}
 
 	SFWCore::cleanup();
