@@ -1,2 +1,2 @@
 
-./game ../merger/out/full/sfw.h
+./game ../merger/out/full/sfw.h --remaining

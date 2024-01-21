@@ -240,7 +240,7 @@ List<String> process_classes_and_structs(const List<String> &list) {
 	return ret;
 }
 
-void process_file(const String &path) {
+void process_file(const String &path, bool write_remaining) {
 	String file_data = FileAccess::get_file_as_string(path);
 
 	LOG_MSG("Processing file: " + path);
@@ -548,15 +548,17 @@ void process_file(const String &path) {
 
 	FileAccess::write_file("out/index.md.html", index_str);
 
-	//Generate a list from the unused classes.
-	String index_remaining_template = FileAccess::get_file_as_string("index_remaining_template.md.html");
-	String d = index_remaining_template;
+	if (write_remaining) {
+		//Generate a list from the unused classes.
+		String index_remaining_template = FileAccess::get_file_as_string("index_remaining_template.md.html");
+		String d = index_remaining_template;
 
-	d = d.replace("$ENUMS$", generate_section_class_list(enums, "ENUM_", used_keywords));
-	d = d.replace("$STRUCTS$", generate_section_class_list(structs, "STRUCT_", used_keywords));
-	d = d.replace("$CLASSES$", generate_section_class_list(classes, "CLASS_", used_keywords));
+		d = d.replace("$ENUMS$", generate_section_class_list(enums, "ENUM_", used_keywords));
+		d = d.replace("$STRUCTS$", generate_section_class_list(structs, "STRUCT_", used_keywords));
+		d = d.replace("$CLASSES$", generate_section_class_list(classes, "CLASS_", used_keywords));
 
-	FileAccess::write_file("out/index_remaining.gen.md.html", d);
+		FileAccess::write_file("out/index_remaining.gen.md.html", d);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -571,14 +573,22 @@ int main(int argc, char **argv) {
 		dir.copy("slate.css", "out/slate.css");
 	}
 
+	bool write_remaining = false;
 	List<String> args;
 
 	for (int i = 1; i < argc; ++i) {
-		args.push_back(String::utf8(argv[i]));
+		String arg = String::utf8(argv[i]);
+
+		if (arg == "--remaining") {
+			write_remaining = true;
+			continue;
+		}
+
+		args.push_back(arg);
 	}
 
 	for (List<String>::Element *E = args.front(); E; E = E->next()) {
-		process_file(E->get());
+		process_file(E->get(), write_remaining);
 	}
 
 	SFWCore::cleanup();
