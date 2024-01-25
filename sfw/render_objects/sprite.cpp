@@ -73,5 +73,5 @@ Sprite::Sprite() {
 }
 
 Sprite::~Sprite() {
-	delete mesh_instance;
+	memdelete(mesh_instance);
 }

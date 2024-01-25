@@ -119,7 +119,7 @@ protected:
 
 template <typename T>
 void Signal::connect(T *obj, void (*func)(T*, Signal *)) {
-	ClassSignalEntrySpec<T> *ce = new ClassSignalEntrySpec<T>();
+	ClassSignalEntrySpec<T> *ce = memnew(ClassSignalEntrySpec<T>());
 	ce->obj = obj;
 	ce->func = func;
 

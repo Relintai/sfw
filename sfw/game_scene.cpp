@@ -479,7 +479,7 @@ void GameScene::socket_thread_func(void *data) {
 			ERR_PRINT("New connection! " + itos(a));
 
 			client_sockets.push_back(client_socket);
-			client_socket = new Socket();
+			client_socket = memnew(Socket());
 		}
 
 		for (int i = 0; i < client_sockets.size(); ++i) {
@@ -591,7 +591,7 @@ GameScene::GameScene() {
 	material.instance();
 	material->texture = texture;
 
-	sprite = new Sprite();
+	sprite = memnew(Sprite());
 	sprite->mesh_instance->material = material;
 	sprite->width = 500;
 	sprite->height = 500;
@@ -602,7 +602,7 @@ GameScene::GameScene() {
 	//sprite->region_height = 1.0 / 16.0;
 	sprite->update_mesh();
 
-	tile_map = new TileMap();
+	tile_map = memnew(TileMap());
 	tile_map->material = material;
 	tile_map->atlas_size_x = 2;
 	tile_map->atlas_size_y = 2;
@@ -624,7 +624,7 @@ GameScene::GameScene() {
 	tile_map->transform.scale(Vector2(32, 32));
 	tile_map->transform.set_origin(Vector2(500, 500));
 
-	camera = new PerspectiveCamera();
+	camera = memnew(PerspectiveCamera());
 	Transform t = camera->get_camera_transform();
 	//camera->width = 2;
 	//camera->height = 2;

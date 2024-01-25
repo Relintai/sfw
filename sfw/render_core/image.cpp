@@ -1967,7 +1967,7 @@ Rect2 Image::get_used_rect() const {
 }
 
 Ref<Image> Image::get_rect(const Rect2 &p_area) const {
-	Ref<Image> img = new Image(p_area.position.x, p_area.position.y, mipmaps, format);
+	Ref<Image> img = memnew(Image(p_area.position.x, p_area.position.y, mipmaps, format));
 	img->blit_rect(Ref<Image>((Image *)this), p_area, Vector2(0, 0));
 	return img;
 }

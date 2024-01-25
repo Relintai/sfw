@@ -4,7 +4,7 @@
 //--STRIP
 
 void Signal::connect_static(void (*func)(Signal *)) {
-	StaticSignalEntry *se = new StaticSignalEntry();
+	StaticSignalEntry *se = memnew(StaticSignalEntry());
 	se->func = func;
 
 	entries.push_back(se);

@@ -218,7 +218,7 @@ public:
 		material.instance();
 		material->texture = texture;
 
-		sprite = new Sprite();
+		sprite = memnew(Sprite());
 		sprite->mesh_instance->material = material;
 		sprite->width = 500;
 		sprite->height = 500;
@@ -229,7 +229,7 @@ public:
 		//sprite->region_height = 1.0 / 16.0;
 		sprite->update_mesh();
 
-		tile_map = new TileMap();
+		tile_map = memnew(TileMap());
 		tile_map->material = material;
 		tile_map->atlas_size_x = 2;
 		tile_map->atlas_size_y = 2;
@@ -251,7 +251,7 @@ public:
 		tile_map->transform.scale(Vector2(32, 32));
 		tile_map->transform.set_origin(Vector2(500, 500));
 
-		camera = new PerspectiveCamera();
+		camera = memnew(PerspectiveCamera());
 		Transform t = camera->get_camera_transform();
 		//camera->width = 2;
 		//camera->height = 2;
