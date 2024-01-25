@@ -60,7 +60,7 @@ void Thread::callback(Thread *p_self, const Settings &p_settings, Callback p_cal
 void Thread::start(Thread::Callback p_callback, void *p_user, const Settings &p_settings) {
 	if (id != _thread_id_hash(std::thread::id())) {
 #ifdef DEBUG_ENABLED
-		WARN_PRINT("A Thread object has been re-started without wait_to_finish() having been called on it. Please do so to ensure correct cleanup of the thread.");
+		LOG_WARN("A Thread object has been re-started without wait_to_finish() having been called on it. Please do so to ensure correct cleanup of the thread.");
 #endif
 		thread.detach();
 		std::thread empty_thread;

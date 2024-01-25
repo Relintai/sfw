@@ -116,7 +116,7 @@ Error FileAccess::_open(const String &p_path, int p_mode_flags) {
 			if (fname != String()) {
 				String base_file = path.get_file();
 				if (base_file != fname && base_file.findn(fname) == 0) {
-					WARN_PRINT("Case mismatch opening requested file '" + base_file + "', stored as '" + fname + "' in the filesystem. This file will not open when exported to other case-sensitive platforms.");
+					LOG_WARN("Case mismatch opening requested file '" + base_file + "', stored as '" + fname + "' in the filesystem. This file will not open when exported to other case-sensitive platforms.");
 				}
 			}
 

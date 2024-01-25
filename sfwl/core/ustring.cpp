@@ -5026,7 +5026,7 @@ static double built_in_strtod(
 
 	if (exp > maxExponent) {
 		exp = maxExponent;
-		//WARN_PRINT("Exponent too high");
+		//LOG_WARN("Exponent too high");
 	}
 	dblExp = 1.0;
 	for (d = powersOf10; exp != 0; exp >>= 1, ++d) {
