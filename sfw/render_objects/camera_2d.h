@@ -26,6 +26,8 @@ public:
 	virtual void bind();
 
 	void make_current();
+	
+	
 
 	//void push_transform(const Transform2D &transform);
 	//void pop_transform();

@@ -47,6 +47,8 @@ void Camera2D::make_current() {
 	current_camera = this;
 }
 
+
+
 Camera2D::Camera2D() {
 }
 Camera2D::~Camera2D() {

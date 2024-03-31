@@ -29,6 +29,16 @@ public:
 	virtual void bind();
 
 	void make_current();
+	
+	// From Pandemonium
+	virtual Vector3 project_ray_normal(const Point2 &p_pos) const;
+	virtual Vector3 project_ray_origin(const Point2 &p_pos) const;
+	virtual Vector3 project_local_ray_normal(const Point2 &p_pos) const;
+	virtual Point2 unproject_position(const Vector3 &p_pos) const;
+	bool is_position_behind(const Vector3 &p_pos) const;
+	virtual Vector3 project_position(const Point2 &p_point, float p_z_depth) const;
+
+	virtual Vector<Vector3> get_near_plane_points() const;
 
 	Camera3D();
 	virtual ~Camera3D();
@@ -50,6 +60,12 @@ protected:
 class OrthographicCamera : public Camera3D {
 public:
 	void bind();
+	
+	virtual Vector3 project_local_ray_normal(const Point2 &p_pos) const;
+	virtual Point2 unproject_position(const Vector3 &p_pos) const;
+	virtual Vector3 project_position(const Point2 &p_point, float p_z_depth) const;
+	
+	virtual Vector<Vector3> get_near_plane_points() const;
 
 	OrthographicCamera();
 	~OrthographicCamera();
@@ -60,6 +76,13 @@ public:
 	float fov;
 
 	void bind();
+	
+	virtual Vector3 project_local_ray_normal(const Point2 &p_pos) const;
+	virtual Vector3 project_ray_origin(const Point2 &p_pos) const;
+	virtual Point2 unproject_position(const Vector3 &p_pos) const;
+	virtual Vector3 project_position(const Point2 &p_point, float p_z_depth) const;
+	
+	virtual Vector<Vector3> get_near_plane_points() const;
 
 	PerspectiveCamera();
 	~PerspectiveCamera();
