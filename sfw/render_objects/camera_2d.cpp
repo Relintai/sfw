@@ -47,7 +47,9 @@ void Camera2D::make_current() {
 	current_camera = this;
 }
 
-
+void Camera2D::set_size_to_render_target() {
+	size = RenderState::render_rect.size;
+}
 
 Camera2D::Camera2D() {
 }

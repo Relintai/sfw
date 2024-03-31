@@ -27,7 +27,7 @@ public:
 
 	void make_current();
 	
-	
+	void set_size_to_render_target();
 
 	//void push_transform(const Transform2D &transform);
 	//void pop_transform();
