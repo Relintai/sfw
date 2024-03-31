@@ -82,6 +82,7 @@ public:
 
 	void camera_2d_projection_set_to_window();
 	void camera_2d_projection_set_to_size(const Size2i &p_size);
+	void camera_2d_projection_set_to_render_target();
 
 	//3D Camera API
 
@@ -104,6 +105,16 @@ public:
 
 	Projection camera_3d_get_projection_matrix() const;
 	void camera_3d_set_projection_matrix(const Projection &p_projection);
+	
+	// 3d Camera Helpers
+	Vector3 camera_3d_project_ray_normal(const Point2 &p_pos) const;
+	Vector3 camera_3d_project_ray_origin(const Point2 &p_pos) const;
+	Vector3 camera_3d_project_local_ray_normal(const Point2 &p_pos) const;
+	Point2 camera_3d_unproject_position(const Vector3 &p_pos) const;
+	bool camera_3d_is_position_behind(const Vector3 &p_pos) const;
+	Vector3 camera_3d_project_position(const Point2 &p_point, float p_z_depth) const;
+
+	Vector<Vector3> camera_3d_get_near_plane_points() const;
 
 	// Other Helpers
 
@@ -150,6 +161,39 @@ private:
 	Ref<TextureMaterial> _texture_material_3d;
 	Ref<ColorMaterial> _color_material_3d;
 	Ref<ColoredMaterial> _colored_material_3d;
+
+	struct LastCamera3DData {
+		enum Type {
+			TYPE_ORTOGRAPHIC,
+			TYPE_PERSPECTIVE,
+			TYPE_FRUSTUM,
+		};
+
+		Type type;
+		//all
+		float size;
+		float aspect_ratio;
+		float znear;
+		float zfar;
+		bool vaspect;
+		//persp
+		float fov;
+		//frustum
+		float offset;
+
+		LastCamera3DData() {
+			type = TYPE_ORTOGRAPHIC;
+			size = 0;
+			aspect_ratio = 0;
+			znear = 0;
+			zfar = 0;
+			vaspect = false;
+			//persp
+			fov = 0;
+			//frustum
+			offset = 0;
+		}
+	} _last_camera_3d_data;
 };
 
 //--STRIP

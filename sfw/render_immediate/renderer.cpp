@@ -452,6 +452,20 @@ void Renderer::camera_2d_projection_set_to_size(const Size2i &p_size) {
 	_camera_2d_model_view_matrix_stack.clear();
 }
 
+void Renderer::camera_2d_projection_set_to_render_target() {
+	Vector2 size = RenderState::render_rect.size;
+
+	Transform canvas_transform;
+	canvas_transform.translate_local(-(size.x / 2.0f), -(size.y / 2.0f), 0.0f);
+	//canvas_transform.scale(Vector3(2.0f / size.x, 2.0f / size.y, 1.0f));
+	canvas_transform.scale(Vector3(2.0f / size.x, -2.0f / size.y, 1.0f));
+
+	RenderState::model_view_matrix_2d = Transform2D();
+	RenderState::projection_matrix_2d = canvas_transform;
+
+	_camera_2d_model_view_matrix_stack.clear();
+}
+
 void Renderer::camera_3d_bind() {
 	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
 	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
@@ -518,6 +532,15 @@ void Renderer::camera_3d_projection_set_to_orthographic(float aspect_ratio, floa
 			vaspect);
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
+	
+	_last_camera_3d_data.type = LastCamera3DData::TYPE_ORTOGRAPHIC;
+	_last_camera_3d_data.size = size;
+	_last_camera_3d_data.aspect_ratio = aspect_ratio;
+	_last_camera_3d_data.znear = znear;
+	_last_camera_3d_data.zfar = zfar;
+	_last_camera_3d_data.vaspect = vaspect;
+	_last_camera_3d_data.fov = 70;
+	_last_camera_3d_data.offset = 0;
 }
 void Renderer::camera_3d_projection_set_to_perspective(float aspect_ratio, float size, float znear, float zfar, bool vaspect, float fov) {
 	_camera_3d_projection.set_perspective(
@@ -528,6 +551,15 @@ void Renderer::camera_3d_projection_set_to_perspective(float aspect_ratio, float
 			vaspect);
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
+	
+		_last_camera_3d_data.type = LastCamera3DData::TYPE_PERSPECTIVE;
+	_last_camera_3d_data.size = size;
+	_last_camera_3d_data.aspect_ratio = aspect_ratio;
+	_last_camera_3d_data.znear = znear;
+	_last_camera_3d_data.zfar = zfar;
+	_last_camera_3d_data.vaspect = vaspect;
+	_last_camera_3d_data.fov = fov;
+	_last_camera_3d_data.offset = 0;
 }
 void Renderer::camera_3d_projection_set_to_frustum(float aspect_ratio, float size, float znear, float zfar, bool vaspect, float offset) {
 	_camera_3d_projection.set_frustum(
@@ -539,6 +571,15 @@ void Renderer::camera_3d_projection_set_to_frustum(float aspect_ratio, float siz
 			vaspect);
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
+	
+	_last_camera_3d_data.type = LastCamera3DData::TYPE_FRUSTUM;
+	_last_camera_3d_data.size = size;
+	_last_camera_3d_data.aspect_ratio = aspect_ratio;
+	_last_camera_3d_data.znear = znear;
+	_last_camera_3d_data.zfar = zfar;
+	_last_camera_3d_data.vaspect = vaspect;
+	_last_camera_3d_data.fov = 70;
+	_last_camera_3d_data.offset = offset;
 }
 
 Projection Renderer::camera_3d_get_projection_matrix() const {
@@ -549,6 +590,127 @@ void Renderer::camera_3d_set_projection_matrix(const Projection &p_projection) {
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
 }
+
+Vector3 Renderer::camera_3d_project_ray_normal(const Point2 &p_pos) const {
+	Vector3 ray = camera_3d_project_local_ray_normal(p_pos);
+	return _camera_3d_camera_transform_matrix.basis.xform(ray).normalized();
+};
+
+Vector3 Renderer::camera_3d_project_local_ray_normal(const Point2 &p_pos) const {
+	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
+		return Vector3(0, 0, -1);
+	}
+
+	Size2 viewport_size = RenderState::render_rect.size;
+	Vector2 cpos = p_pos;
+	Vector3 ray;
+
+	Projection cm;
+	cm.set_perspective(70, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
+	Vector2 screen_he = cm.get_viewport_half_extents();
+	ray = Vector3(((cpos.x / viewport_size.width) * 2.0 - 1.0) * screen_he.x, ((1.0 - (cpos.y / viewport_size.height)) * 2.0 - 1.0) * screen_he.y, -_last_camera_3d_data.znear).normalized();
+
+	return ray;
+};
+
+Vector3 Renderer::camera_3d_project_ray_origin(const Point2 &p_pos) const {
+	Size2 viewport_size = RenderState::render_rect.size;
+	Vector2 cpos = p_pos;
+	ERR_FAIL_COND_V(viewport_size.y == 0, Vector3());
+
+	Vector2 pos = cpos / viewport_size;
+	float vsize, hsize;
+
+	vsize = _last_camera_3d_data.size / viewport_size.aspect();
+	hsize = _last_camera_3d_data.size;
+
+	Vector3 ray;
+	ray.x = pos.x * (hsize)-hsize / 2;
+	ray.y = (1.0 - pos.y) * (vsize)-vsize / 2;
+	ray.z = -_last_camera_3d_data.znear;
+	ray = _camera_3d_camera_transform_matrix.xform(ray);
+	return ray;
+};
+
+bool Renderer::camera_3d_is_position_behind(const Vector3 &p_pos) const {
+	Transform t = _camera_3d_camera_transform_matrix;
+	Vector3 eyedir = -t.basis.get_axis(2).normalized();
+	return eyedir.dot(p_pos - t.origin) < _last_camera_3d_data.znear;
+}
+
+Vector<Vector3> Renderer::camera_3d_get_near_plane_points() const {
+	Size2 viewport_size = RenderState::render_rect.size;
+
+	Projection cm;
+	
+	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
+		cm.set_orthogonal(_last_camera_3d_data.size, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
+	} else {
+		cm.set_perspective(_last_camera_3d_data.fov, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
+	}
+
+	Vector3 endpoints[8];
+	cm.get_endpoints(Transform(), endpoints);
+
+	Vector<Vector3> points;
+	points.push_back(Vector3());
+	for (int i = 0; i < 4; i++) {
+		points.push_back(endpoints[i + 4]);
+	}
+	return points;
+}
+
+Point2 Renderer::camera_3d_unproject_position(const Vector3 &p_pos) const {
+	Size2 viewport_size = RenderState::render_rect.size;
+
+	Projection cm;
+	
+	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
+		cm.set_orthogonal(_last_camera_3d_data.size, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
+	} else {
+		cm.set_perspective(_last_camera_3d_data.fov, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
+	}
+
+	Plane p(_camera_3d_camera_transform_matrix.xform_inv(p_pos), 1.0);
+
+	p = cm.xform(p);
+	p.normal /= p.d;
+
+	Point2 res;
+	res.x = (p.normal.x * 0.5 + 0.5) * viewport_size.x;
+	res.y = (-p.normal.y * 0.5 + 0.5) * viewport_size.y;
+
+	return res;
+}
+
+
+Vector3 Renderer::camera_3d_project_position(const Point2 &p_point, float p_z_depth) const {
+	if (p_z_depth == 0) {
+		return _camera_3d_camera_transform_matrix.origin;
+	}
+	
+	Size2 viewport_size = RenderState::render_rect.size;
+
+	Projection cm;
+	
+	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
+		cm.set_orthogonal(_last_camera_3d_data.size, viewport_size.aspect(), p_z_depth, _last_camera_3d_data.zfar, true);
+	} else {
+		cm.set_perspective(_last_camera_3d_data.fov, viewport_size.aspect(), p_z_depth, _last_camera_3d_data.zfar, true);
+	}
+
+	Vector2 vp_he = cm.get_viewport_half_extents();
+
+	Vector2 point;
+	point.x = (p_point.x / viewport_size.x) * 2.0 - 1.0;
+	point.y = (1.0 - (p_point.y / viewport_size.y)) * 2.0 - 1.0;
+	point *= vp_he;
+
+	Vector3 p(point.x, point.y, -p_z_depth);
+
+	return _camera_3d_camera_transform_matrix.xform(p);
+}
+
 
 void Renderer::clear_screen(const Color &p_color) {
 	glClearColor(p_color.r, p_color.g, p_color.b, p_color.a);
