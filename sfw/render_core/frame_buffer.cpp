@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "render_core/app_window.h"
+#include "render_core/render_state.h"
 //--STRIP
 
 int FrameBuffer::get_texture_flags() const {
@@ -285,11 +286,15 @@ void FrameBuffer::blit_depth_to(const uint32_t p_destination_framebuffer, const 
 }
 
 void FrameBuffer::set_as_viewport() {
-	glViewport(0, 0, _fbo_width, _fbo_height);
+	RenderState::current_framebuffer = Ref<FrameBuffer>(this);
+	RenderState::render_rect = Rect2i(0, 0, _fbo_width, _fbo_height);
+	RenderState::apply_render_rect();
 }
 
 void FrameBuffer::reset_as_viewport() {
-	glViewport(0, 0, AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
+	RenderState::current_framebuffer.unref();
+	RenderState::render_rect = Rect2i(0, 0, AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
+	RenderState::apply_render_rect();
 }
 
 float FrameBuffer::get_aspect() const {

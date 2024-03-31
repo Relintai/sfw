@@ -39,6 +39,7 @@
 #include "core/vector4.h"
 #include "render_core/application.h"
 #include "render_core/input.h"
+#include "render_core/render_state.h"
 //--STRIP
 
 /*
@@ -425,7 +426,9 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	width = get_width();
 	height = get_height();
-
+	
+	RenderState::window_update_render_rect_size(width, height);
+	
 	// cursor(flags & WINDOW_NO_MOUSE ? false : true);
 	glfwSetDropCallback(_window, drop_callback);
 
