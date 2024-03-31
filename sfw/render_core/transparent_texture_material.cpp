@@ -1,5 +1,6 @@
 //--STRIP
 #include "transparent_texture_material.h"
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 void TransparentTextureMaterial::bind_uniforms() {

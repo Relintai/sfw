@@ -2,6 +2,8 @@
 #include "render_core/material.h"
 
 #include <stdio.h>
+
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 void Material::bind() {
@@ -58,6 +60,10 @@ Material::Material() {
 	shader = NULL;
 }
 Material::~Material() {
+	if (current_material == this) {
+		unbind();
+		current_material = NULL;
+	}
 }
 
 void Material::set_uniform(int32_t p_uniform, const Transform &p_transform) {

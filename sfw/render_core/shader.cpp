@@ -2,6 +2,8 @@
 #include "render_core/shader.h"
 
 #include <stdio.h>
+
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 bool Shader::bind() {
@@ -124,7 +126,7 @@ void Shader::print_program_errors(const uint32_t p_program) {
 		glGetProgramInfoLog(p_program, max_length, &info_length, info_log);
 
 		if (info_length > 0) {
-			ERR_PRINT(String::utf8(info_log, max_length));
+			ERR_PRINT(String::utf8(info_log, info_length));
 		}
 	} else {
 		ERR_PRINT("print_program_errors: Not a program!\n");

@@ -224,7 +224,7 @@ void Mesh::upload() {
 	normals_vbo_size = sizeof(float) * normals.size();
 	colors_vbo_size = sizeof(float) * colors.size();
 	uvs_vbo_size = sizeof(float) * uvs.size();
-	indices_vbo_size = sizeof(float) * indices.size();
+	indices_vbo_size = sizeof(uint32_t) * indices.size();
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices_vbo_size + normals_vbo_size + colors_vbo_size + uvs_vbo_size, NULL, GL_STATIC_DRAW);
@@ -268,7 +268,7 @@ void Mesh::destroy() {
 	}
 }
 void Mesh::render() {
-	if (vertices.size() == 0) {
+	if (!vertices_vbo_size) {
 		return;
 	}
 

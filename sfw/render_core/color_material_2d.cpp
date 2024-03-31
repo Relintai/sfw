@@ -1,6 +1,7 @@
 
 //--STRIP
 #include "color_material_2d.h"
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 void ColorMaterial2D::bind_uniforms() {

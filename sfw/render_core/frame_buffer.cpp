@@ -29,12 +29,12 @@ int FrameBuffer::create(const int p_width, const int p_height, const int p_msaa_
 	if (msaa % 2 == 0) {
 		--msaa;
 	}
+	
+	destroy();
 
 	_fbo_width = p_width;
 	_fbo_height = p_height;
 	_fbo_msaa_count = msaa;
-
-	destroy();
 
 	glGenFramebuffers(1, &_fbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
@@ -262,8 +262,8 @@ Vector2i FrameBuffer::get_size() const {
 void FrameBuffer::blit_color_to(const uint32_t p_destination_framebuffer, const Rect2i &p_rect) {
 	ERR_FAIL_COND(!p_destination_framebuffer);
 
-	int width = p_rect.size.width == 0 ? p_rect.size.width : _fbo_width;
-	int height = p_rect.size.height == 0 ? p_rect.size.height : _fbo_height;
+	int width = p_rect.size.width == 0 ?_fbo_width : p_rect.size.width;
+	int height = p_rect.size.height == 0 ? _fbo_height : p_rect.size.height;
 
 	uint32_t fbo = get_gl_fbo();
 
@@ -275,8 +275,8 @@ void FrameBuffer::blit_color_to(const uint32_t p_destination_framebuffer, const 
 void FrameBuffer::blit_depth_to(const uint32_t p_destination_framebuffer, const Rect2i &p_rect) {
 	ERR_FAIL_COND(!p_destination_framebuffer);
 
-	int width = p_rect.size.width == 0 ? p_rect.size.width : _fbo_width;
-	int height = p_rect.size.height == 0 ? p_rect.size.height : _fbo_height;
+	int width = p_rect.size.width == 0 ?_fbo_width : p_rect.size.width;
+	int height = p_rect.size.height == 0 ? _fbo_height : p_rect.size.height;
 
 	uint32_t fbo = get_gl_fbo();
 

@@ -1,6 +1,7 @@
 
 //--STRIP
 #include "texture_material.h"
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 void TextureMaterial::bind_uniforms() {

@@ -7,7 +7,6 @@
 #include "core/vector2i.h"
 
 #include "object/resource.h"
-#include "render_core/3rd_glad.h"
 #include "render_core/image.h"
 //--STRIP
 

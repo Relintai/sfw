@@ -7,6 +7,7 @@
 #include "render_core/app_window.h"
 
 #include "render_core/frame_buffer.h"
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 void Texture::create_from_image(const Ref<Image> &img) {

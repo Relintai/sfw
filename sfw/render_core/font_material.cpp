@@ -1,5 +1,6 @@
 //--STRIP
 #include "font_material.h"
+#include "render_core/3rd_glad.h"
 //--STRIP
 
 void FontMaterial::bind_uniforms() {

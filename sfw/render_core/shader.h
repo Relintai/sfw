@@ -5,7 +5,6 @@
 
 //--STRIP
 #include "core/hash_map.h"
-#include "render_core/3rd_glad.h"
 //--STRIP
 
 class Shader {
