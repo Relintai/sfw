@@ -414,6 +414,17 @@
 {{FILE:sfw/core/hash_set.h}}
 
 //--STRIP
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfw/core/string_buffer.h}}
+
+//--STRIP
+//#include "core/ustring.h"
+//#include "core/vector.h"
+//--STRIP
+{{FILE:sfw/core/string_builder.h}}
+
+//--STRIP
 //#include "core/error_list.h"
 //#include "core/ustring.h"
 //also needs vector

@@ -22,6 +22,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/pool_vector.cpp -o sfwl/cor
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/pool_allocator.cpp -o sfwl/core/pool_allocator.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/mutex.cpp -o sfwl/core/mutex.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/sfw_time.cpp -o sfwl/core/sfw_time.o
+ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/string_builder.cpp -o sfwl/core/string_builder.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/thread.cpp -o sfwl/core/thread.o
 ccache g++ -Wall -D_REENTRANT -g -Isfwl -c sfwl/core/socket.cpp -o sfwl/core/socket.o
@@ -52,6 +53,7 @@ ccache g++ -Wall -D_REENTRANT -g  sfwl/core/color.o sfwl/core/rect2i.o sfwl/core
                         sfwl/core/safe_refcount.o \
                         sfwl/core/ustring.o sfwl/core/string_name.o \
                         sfwl/core/pool_vector.o sfwl/core/pool_allocator.o sfwl/core/mutex.o sfwl/core/sfw_time.o \
+												sfwl/core/string_builder.o \
                         sfwl/core/dir_access.o sfwl/core/file_access.o sfwl/core/thread.o \
                         sfwl/core/socket.o sfwl/core/inet_address.o \
                         sfwl/core/sub_process.o \

@@ -120,6 +120,12 @@
 {{FILE:sfwl/core/pcg.cpp}}
 
 //--STRIP
+//#include "string_builder.h"
+//#include <string.h>
+//--STRIP
+{{FILE:sfw/core/string_builder.cpp}}
+
+//--STRIP
 //#include "file_access.h"
 //--STRIP
 {{FILE:sfwl/core/file_access.cpp}}
