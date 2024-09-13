@@ -1,3 +1,11 @@
+
+//--STRIP
+#include "3rd_nuklear.h"
+#include "3rd_nuklear_filebrowser.h"
+#include "3rd_nuklear_glfw_gl3.h"
+//--STRIP
+
+
 // ----------------------------------------------------------------------------------------
 // ui extensions first
 
@@ -430,7 +438,7 @@ void ui_separator_line() {
     nk_stroke_line(canvas, space.x+0,space.y+0,space.x+space.w,space.y+0, 3.0, nk_rgb(128,128,128));
 }
 
-NK_API nk_bool
+NK_nk_bool
 nk_menu_begin_text_styled(struct nk_context *ctx, const char *title, int len,
     nk_flags align, struct nk_vec2 size, struct nk_style_button *style_button) //< @r-lyeh: added style_button param
 {
