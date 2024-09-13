@@ -1,8 +1,23 @@
 
+#define NK_GLFW_GL3_IMPLEMENTATION            // nuklear
+#define NK_IMPLEMENTATION                     // nuklear
+#define NK_INCLUDE_DEFAULT_ALLOCATOR          // nuklear
+#define NK_INCLUDE_DEFAULT_FONT               // nuklear
+#define NK_INCLUDE_FIXED_TYPES                // nuklear
+#define NK_INCLUDE_FONT_BAKING                // nuklear
+#define NK_INCLUDE_STANDARD_IO                // nuklear
+#define NK_INCLUDE_STANDARD_VARARGS           // nuklear
+#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT       // nuklear
+#define NK_MAX_LAYOUT_ROW_TEMPLATE_COLUMNS 64 // nuklear
+#define NK_KEYSTATE_BASED_INPUT               // nuklear
+
 //--STRIP
+#include "render_core/3rd_glad.h"
+#include "render_core/3rd_glfw3.h"
 #include "3rd_nuklear.h"
-#include "3rd_nuklear_filebrowser.h"
+//#include "3rd_nuklear_filebrowser.h"
 #include "3rd_nuklear_glfw_gl3.h"
+#include <cstring>
 //--STRIP
 
 
@@ -337,7 +352,7 @@ table[NK_COLOR_CHART_COLOR_HIGHLIGHT] = hover_hue; // nk_rgba(255, 0, 0, 255);
 table[NK_COLOR_SELECT_ACTIVE] = main_hue;
 
     // @transparent
-    #if !is(ems)
+    #if !defined(__EMSCRIPTEN__)
     if( glfwGetWindowAttrib(window_handle(), GLFW_TRANSPARENT_FRAMEBUFFER) == GLFW_TRUE ) {
         table[NK_COLOR_WINDOW].a =
         table[NK_COLOR_HEADER].a = 255;
@@ -1064,7 +1079,7 @@ void ui_render() {
         nk_clear(&nk_glfw.ctx);
     }
 
-#if is(ems)
+#if defined(__EMSCRIPTEN__)
     glFinish();
 #endif
 
@@ -1514,7 +1529,7 @@ int ui_window_end() {
     }
 
     // @transparent
-    #if !is(ems)
+    #if !defined(__EMSCRIPTEN__)
     static bool has_transparent_attrib = 0; do_once has_transparent_attrib = glfwGetWindowAttrib(window_handle(), GLFW_TRANSPARENT_FRAMEBUFFER) == GLFW_TRUE;
     if( closed && has_transparent_attrib && !ui_has_menubar() ) {
         bool any_open = 0;

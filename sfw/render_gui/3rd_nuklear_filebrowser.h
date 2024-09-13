@@ -11,7 +11,9 @@
 // - simplified file<->media_group concept
 // - minor cosmetics
 
-#ifdef _WIN32
+#include <cstring>
+
+#if defined(_WIN64) || defined(_WIN32)
 #include <direct.h> // _getcwd()
 #else
 #include <unistd.h> // getcwd()
@@ -20,9 +22,15 @@
 #define _pclose pclose
 #endif
 
-const char** old_file_list(const char *cwd, const char *masks) {
-    ASSERT(strend(cwd, "/"), "Error: dirs like '%s' must end with slash", cwd);
+bool strend(const char *cwd, const char *masks) {
+	//TODO REMOVE
+	return true;
+}
 
+const char** old_file_list(const char *cwd, const char *masks) {
+    //ASSERT(strend(cwd, "/"), "Error: dirs like '%s' must end with slash", cwd);
+
+		/*
     static __thread array(char*) list = 0;
     const char *arg0 = cwd; // app_path();
     int larg0 = strlen(arg0);
@@ -34,7 +42,7 @@ const char** old_file_list(const char *cwd, const char *masks) {
 
     for each_substring(masks,";",it) {
         int recurse = !!strstr(it, "**");
-        #if is(win32)
+        #if defined(_WIN64) || defined(_WIN32)
         char *glob = va("dir %s/b/o:n \"%s\\%s\" 2> NUL", recurse ? "/s":"", cwd, it);
         #else // linux, osx
         char *glob = va("find %s %s -name \"%s\" | sort", cwd, !recurse ? "-maxdepth 1":"-type f", it);
@@ -52,7 +60,7 @@ const char** old_file_list(const char *cwd, const char *masks) {
                 if( line[0] == '.' ) if( !strcmp(line,".git") || !strcmp(line,".vs") || !strcmp(line,".") || !strcmp(line,"..") ) continue;
                 if( strstr(line, "/.") ) continue;
                 // insert copy
-                #if is(win32)
+                #if defined(_WIN64) || defined(_WIN32)
                 char *copy = STRDUP(line); // full path already provided
                 #else
                 // while(line[0] == '/') ++line;
@@ -64,6 +72,8 @@ const char** old_file_list(const char *cwd, const char *masks) {
     }
     array_push(list, 0); // terminator
     return (const char**)list;
+		*/
+	return NULL;
 }
 
 #if 1

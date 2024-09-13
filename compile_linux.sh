@@ -96,6 +96,8 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/sprite.cpp -o sfw/r
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/text_2d.cpp -o sfw/render_objects/text_2d.o
 
+#ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/gui.cpp -o sfw/render_gui/gui.o
+
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/game_scene.cpp -o sfw/game_scene.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/main.cpp -o sfw/main.o
 
@@ -139,3 +141,5 @@ ccache g++ -Wall -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color
                         sfw/game_scene.o sfw/main.o \
                         -lX11 \
                         -o game 
+
+                        #sfw/render_gui/gui.o \
