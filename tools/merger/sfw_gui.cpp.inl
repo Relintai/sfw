@@ -673,7 +673,81 @@
 
 //===================  GUI SECTION  ===================
 
-#define IMGUI_DEFINE_MATH_OPERATORS
+// [SECTION] Forward declarations
+
+struct ImBitVector;                 // Store 1-bit per value
+struct ImRect;                      // An axis-aligned rectangle (2 points)
+struct ImDrawDataBuilder;           // Helper to build a ImDrawData instance
+struct ImDrawListSharedData;        // Data shared between all ImDrawList instances
+struct ImGuiBoxSelectState;         // Box-selection state (currently used by multi-selection, could potentially be used by others)
+struct ImGuiColorMod;               // Stacked color modifier, backup of modified data so we can restore it
+struct ImGuiContext;                // Main Dear ImGui context
+struct ImGuiContextHook;            // Hook for extensions like ImGuiTestEngine
+struct ImGuiDataVarInfo;            // Variable information (e.g. to access style variables from an enum)
+struct ImGuiDataTypeInfo;           // Type information associated to a ImGuiDataType enum
+struct ImGuiGroupData;              // Stacked storage data for BeginGroup()/EndGroup()
+struct ImGuiInputTextState;         // Internal state of the currently focused/edited text input box
+struct ImGuiInputTextDeactivateData;// Short term storage to backup text of a deactivating InputText() while another is stealing active id
+struct ImGuiLastItemData;           // Status storage for last submitted items
+struct ImGuiLocEntry;               // A localization entry.
+struct ImGuiMenuColumns;            // Simple column measurement, currently used for MenuItem() only
+struct ImGuiMultiSelectState;       // Multi-selection persistent state (for focused selection).
+struct ImGuiMultiSelectTempData;    // Multi-selection temporary state (while traversing).
+struct ImGuiNavItemData;            // Result of a gamepad/keyboard directional navigation move query result
+struct ImGuiMetricsConfig;          // Storage for ShowMetricsWindow() and DebugNodeXXX() functions
+struct ImGuiNextWindowData;         // Storage for SetNextWindow** functions
+struct ImGuiNextItemData;           // Storage for SetNextItem** functions
+struct ImGuiOldColumnData;          // Storage data for a single column for legacy Columns() api
+struct ImGuiOldColumns;             // Storage data for a columns set for legacy Columns() api
+struct ImGuiPopupData;              // Storage for current popup stack
+struct ImGuiSettingsHandler;        // Storage for one type registered in the .ini file
+struct ImGuiStackSizes;             // Storage of stack sizes for debugging/asserting
+struct ImGuiStyleMod;               // Stacked style modifier, backup of modified data so we can restore it
+struct ImGuiTabBar;                 // Storage for a tab bar
+struct ImGuiTabItem;                // Storage for a tab item (within a tab bar)
+struct ImGuiTable;                  // Storage for a table
+struct ImGuiTableHeaderData;        // Storage for TableAngledHeadersRow()
+struct ImGuiTableColumn;            // Storage for one column of a table
+struct ImGuiTableInstanceData;      // Storage for one instance of a same table
+struct ImGuiTableTempData;          // Temporary storage for one table (one per table in the stack), shared between tables.
+struct ImGuiTableSettings;          // Storage for a table .ini settings
+struct ImGuiTableColumnsSettings;   // Storage for a column .ini settings
+struct ImGuiTreeNodeStackData;      // Temporary storage for TreeNode().
+struct ImGuiTypingSelectState;      // Storage for GetTypingSelectRequest()
+struct ImGuiTypingSelectRequest;    // Storage for GetTypingSelectRequest() (aimed to be public)
+struct ImGuiWindow;                 // Storage for one window
+struct ImGuiWindowTempData;         // Temporary storage for one window (that's the data which in theory we could ditch at the end of the frame, in practice we currently keep it for each window)
+struct ImGuiWindowSettings;         // Storage for a window .ini settings (we keep one of those even if the actual window wasn't instanced during this session)
+
+// Enumerations
+// Use your programming IDE "Go to definition" facility on the names of the center columns to find the actual flags/enum lists.
+enum ImGuiLocKey : int;                 // -> enum ImGuiLocKey              // Enum: a localization entry for translation.
+typedef int ImGuiLayoutType;            // -> enum ImGuiLayoutType_         // Enum: Horizontal or vertical
+
+// Flags
+typedef int ImGuiActivateFlags;         // -> enum ImGuiActivateFlags_      // Flags: for navigation/focus function (will be for ActivateItem() later)
+typedef int ImGuiDebugLogFlags;         // -> enum ImGuiDebugLogFlags_      // Flags: for ShowDebugLogWindow(), g.DebugLogFlags
+typedef int ImGuiFocusRequestFlags;     // -> enum ImGuiFocusRequestFlags_  // Flags: for FocusWindow();
+typedef int ImGuiItemStatusFlags;       // -> enum ImGuiItemStatusFlags_    // Flags: for g.LastItemData.StatusFlags
+typedef int ImGuiOldColumnFlags;        // -> enum ImGuiOldColumnFlags_     // Flags: for BeginColumns()
+typedef int ImGuiNavHighlightFlags;     // -> enum ImGuiNavHighlightFlags_  // Flags: for RenderNavHighlight()
+typedef int ImGuiNavMoveFlags;          // -> enum ImGuiNavMoveFlags_       // Flags: for navigation requests
+typedef int ImGuiNextItemDataFlags;     // -> enum ImGuiNextItemDataFlags_  // Flags: for SetNextItemXXX() functions
+typedef int ImGuiNextWindowDataFlags;   // -> enum ImGuiNextWindowDataFlags_// Flags: for SetNextWindowXXX() functions
+typedef int ImGuiScrollFlags;           // -> enum ImGuiScrollFlags_        // Flags: for ScrollToItem() and navigation requests
+typedef int ImGuiSeparatorFlags;        // -> enum ImGuiSeparatorFlags_     // Flags: for SeparatorEx()
+typedef int ImGuiTextFlags;             // -> enum ImGuiTextFlags_          // Flags: for TextEx()
+typedef int ImGuiTooltipFlags;          // -> enum ImGuiTooltipFlags_       // Flags: for BeginTooltipEx()
+typedef int ImGuiTypingSelectFlags;     // -> enum ImGuiTypingSelectFlags_  // Flags: for GetTypingSelectRequest()
+typedef int ImGuiWindowRefreshFlags;    // -> enum ImGuiWindowRefreshFlags_ // Flags: for SetNextWindowRefreshPolicy()
+
+typedef void (*ImGuiErrorLogCallback)(void* user_data, const char* fmt, ...);
+
+
+static bool     InputTextFilterCharacter(ImGuiContext* ctx, unsigned int* p_char, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data, bool input_source_is_clipboard = false);
+static int      InputTextCalcTextLenAndLineCount(const char* text_begin, const char** out_text_end);
+static ImVec2   InputTextCalcTextSizeW(ImGuiContext* ctx, const ImWchar* text_begin, const ImWchar* text_end, const ImWchar** remaining = NULL, ImVec2* out_offset = NULL, bool stop_on_new_line = false);
+
 
 namespace ImStb
 {
@@ -685,7 +759,6 @@ namespace ImStb
 #define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
 #define IMSTB_TEXTEDIT_UNDOSTATECOUNT     99
 #define IMSTB_TEXTEDIT_UNDOCHARCOUNT      999
-
 {{FILE:sfw/render_gui/imstb_textedit.h}}
 
 } // namespace ImStb
@@ -696,64 +769,110 @@ namespace ImStb
 //--STRIP
 {{FILE:sfw/render_gui/imgui_internal.h}}
 
-//--STRIP
-//#include "imgui.h"      // IMGUI_IMPL_API
-//--STRIP
-{{FILE:sfw/render_gui/imgui_impl_glfw.h}}
+// Wrapper for stb_textedit.h to edit text (our wrapper is for: statically sized buffer, single-line, wchar characters. InputText converts between UTF-8 and wchar)
+namespace ImStb
+{
 
-//--STRIP
-//#include "imgui.h"
-//#ifndef IMGUI_DISABLE
-//#include "imgui_internal.h"
-//#endif
-//--STRIP
-{{FILE:sfw/render_gui/imgui.cpp}}
+static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj)                             { return obj->CurLenW; }
+static ImWchar STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx)                      { IM_ASSERT(idx <= obj->CurLenW); return obj->TextW[idx]; }
+static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx)  { ImWchar c = obj->TextW[line_start_idx + char_idx]; if (c == '\n') return IMSTB_TEXTEDIT_GETWIDTH_NEWLINE; ImGuiContext& g = *obj->Ctx; return g.Font->GetCharAdvance(c) * g.FontScale; }
+static int     STB_TEXTEDIT_KEYTOTEXT(int key)                                                    { return key >= 0x200000 ? 0 : key; }
+static ImWchar STB_TEXTEDIT_NEWLINE = '\n';
+static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, int line_start_idx)
+{
+    const ImWchar* text = obj->TextW.Data;
+    const ImWchar* text_remaining = NULL;
+    const ImVec2 size = InputTextCalcTextSizeW(obj->Ctx, text + line_start_idx, text + obj->CurLenW, &text_remaining, NULL, true);
+    r->x0 = 0.0f;
+    r->x1 = size.x;
+    r->baseline_y_delta = size.y;
+    r->ymin = 0.0f;
+    r->ymax = size.y;
+    r->num_chars = (int)(text_remaining - (text + line_start_idx));
+}
 
-//--STRIP
-//#include "imgui.h"
-//#include "imgui_impl_glfw.h"
-//#if defined(_WIN64) || defined(_WIN32)
-//#define WIN32_LEAN_AND_MEAN
-//#include <windows.h>
-//#endif
-//#include "render_core/3rd_glfw3.h"
-//--STRIP
-{{FILE:sfw/render_gui/imgui_impl_glfw.cpp}}
+static bool is_separator(unsigned int c)
+{
+    return c==',' || c==';' || c=='(' || c==')' || c=='{' || c=='}' || c=='[' || c==']' || c=='|' || c=='\n' || c=='\r' || c=='.' || c=='!' || c=='\\' || c=='/';
+}
 
-//--STRIP
-//#include "imgui.h"      // IMGUI_IMPL_API
-//--STRIP
-{{FILE:sfw/render_gui/imgui_impl_opengl3.h}}
+static int is_word_boundary_from_right(ImGuiInputTextState* obj, int idx)
+{
+    // When ImGuiInputTextFlags_Password is set, we don't want actions such as CTRL+Arrow to leak the fact that underlying data are blanks or separators.
+    if ((obj->Flags & ImGuiInputTextFlags_Password) || idx <= 0)
+        return 0;
 
-//--STRIP
-//#include "imgui_impl_opengl3_loader.h"
-//--STRIP
-#define IMGL3W_IMPL
-{{FILE:sfw/render_gui/imgui_impl_opengl3_loader.h}}
+    bool prev_white = ImCharIsBlankW(obj->TextW[idx - 1]);
+    bool prev_separ = is_separator(obj->TextW[idx - 1]);
+    bool curr_white = ImCharIsBlankW(obj->TextW[idx]);
+    bool curr_separ = is_separator(obj->TextW[idx]);
+    return ((prev_white || prev_separ) && !(curr_separ || curr_white)) || (curr_separ && !prev_separ);
+}
+static int is_word_boundary_from_left(ImGuiInputTextState* obj, int idx)
+{
+    if ((obj->Flags & ImGuiInputTextFlags_Password) || idx <= 0)
+        return 0;
 
-//--STRIP
-//#include "imgui.h"
-//#include "imgui_impl_opengl3.h"
-//#include <stdio.h>
-//#include <stdint.h>     // intptr_t
-//#include "imgui_impl_opengl3_loader.h"
-//--STRIP
-{{FILE:sfw/render_gui/imgui_impl_opengl3.cpp}}
+    bool prev_white = ImCharIsBlankW(obj->TextW[idx]);
+    bool prev_separ = is_separator(obj->TextW[idx]);
+    bool curr_white = ImCharIsBlankW(obj->TextW[idx - 1]);
+    bool curr_separ = is_separator(obj->TextW[idx - 1]);
+    return ((prev_white) && !(curr_separ || curr_white)) || (curr_separ && !prev_separ);
+}
+static int  STB_TEXTEDIT_MOVEWORDLEFT_IMPL(ImGuiInputTextState* obj, int idx)   { idx--; while (idx >= 0 && !is_word_boundary_from_right(obj, idx)) idx--; return idx < 0 ? 0 : idx; }
+static int  STB_TEXTEDIT_MOVEWORDRIGHT_MAC(ImGuiInputTextState* obj, int idx)   { idx++; int len = obj->CurLenW; while (idx < len && !is_word_boundary_from_left(obj, idx)) idx++; return idx > len ? len : idx; }
+static int  STB_TEXTEDIT_MOVEWORDRIGHT_WIN(ImGuiInputTextState* obj, int idx)   { idx++; int len = obj->CurLenW; while (idx < len && !is_word_boundary_from_right(obj, idx)) idx++; return idx > len ? len : idx; }
+static int  STB_TEXTEDIT_MOVEWORDRIGHT_IMPL(ImGuiInputTextState* obj, int idx)  { ImGuiContext& g = *obj->Ctx; if (g.IO.ConfigMacOSXBehaviors) return STB_TEXTEDIT_MOVEWORDRIGHT_MAC(obj, idx); else return STB_TEXTEDIT_MOVEWORDRIGHT_WIN(obj, idx); }
+#define STB_TEXTEDIT_MOVEWORDLEFT   STB_TEXTEDIT_MOVEWORDLEFT_IMPL  // They need to be #define for stb_textedit.h
+#define STB_TEXTEDIT_MOVEWORDRIGHT  STB_TEXTEDIT_MOVEWORDRIGHT_IMPL
 
-//--STRIP
-//#include "imgui.h"
-//#include "imgui_internal.h"
-//--STRIP
-{{FILE:sfw/render_gui/imgui_tables.cpp}}
+static void STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n)
+{
+    ImWchar* dst = obj->TextW.Data + pos;
 
-//--STRIP
-//#include "imgui.h"
-//#include "imgui_internal.h"
-//#include <stdio.h>      // vsnprintf, sscanf, printf
-//#include "imstb_rectpack.h"
-//#include "imstb_truetype.h"
-//--STRIP
-{{FILE:sfw/render_gui/imgui_draw.cpp}}
+    // We maintain our buffer length in both UTF-8 and wchar formats
+    obj->Edited = true;
+    obj->CurLenA -= ImTextCountUtf8BytesFromStr(dst, dst + n);
+    obj->CurLenW -= n;
+
+    // Offset remaining text (FIXME-OPT: Use memmove)
+    const ImWchar* src = obj->TextW.Data + pos + n;
+    while (ImWchar c = *src++)
+        *dst++ = c;
+    *dst = '\0';
+}
+
+static bool STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const ImWchar* new_text, int new_text_len)
+{
+    const bool is_resizable = (obj->Flags & ImGuiInputTextFlags_CallbackResize) != 0;
+    const int text_len = obj->CurLenW;
+    IM_ASSERT(pos <= text_len);
+
+    const int new_text_len_utf8 = ImTextCountUtf8BytesFromStr(new_text, new_text + new_text_len);
+    if (!is_resizable && (new_text_len_utf8 + obj->CurLenA + 1 > obj->BufCapacityA))
+        return false;
+
+    // Grow internal buffer if needed
+    if (new_text_len + text_len + 1 > obj->TextW.Size)
+    {
+        if (!is_resizable)
+            return false;
+        IM_ASSERT(text_len < obj->TextW.Size);
+        obj->TextW.resize(text_len + ImClamp(new_text_len * 4, 32, ImMax(256, new_text_len)) + 1);
+    }
+
+    ImWchar* text = obj->TextW.Data;
+    if (pos != text_len)
+        memmove(text + pos + new_text_len, text + pos, (size_t)(text_len - pos) * sizeof(ImWchar));
+    memcpy(text + pos, new_text, (size_t)new_text_len * sizeof(ImWchar));
+
+    obj->Edited = true;
+    obj->CurLenW += new_text_len;
+    obj->CurLenA += new_text_len_utf8;
+    obj->TextW[obj->CurLenW] = '\0';
+
+    return true;
+}
 
 // We don't use an enum so we can build even with conflicting symbols (if another user of stb_textedit.h leak their STB_TEXTEDIT_K_* symbols)
 #define STB_TEXTEDIT_K_LEFT         0x200000 // keyboard input to move cursor left
@@ -774,9 +893,38 @@ namespace ImStb
 #define STB_TEXTEDIT_K_PGDOWN       0x20000F // keyboard input to move cursor down a page
 #define STB_TEXTEDIT_K_SHIFT        0x400000
 
+#undef IMSTB_TEXTEDIT_STRING
+#undef IMSTB_TEXTEDIT_CHARTYPE
+#define IMSTB_TEXTEDIT_STRING             ImGuiInputTextState
+#define IMSTB_TEXTEDIT_CHARTYPE           ImWchar
+#define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
+#define IMSTB_TEXTEDIT_UNDOSTATECOUNT     99
+#define IMSTB_TEXTEDIT_UNDOCHARCOUNT      999
+
 #define IMSTB_TEXTEDIT_IMPLEMENTATION
 #define IMSTB_TEXTEDIT_memmove memmove
+
 {{FILE:sfw/render_gui/imstb_textedit.h}}
+
+// stb_textedit internally allows for a single undo record to do addition and deletion, but somehow, calling
+// the stb_textedit_paste() function creates two separate records, so we perform it manually. (FIXME: Report to nothings/stb?)
+static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* state, const IMSTB_TEXTEDIT_CHARTYPE* text, int text_len)
+{
+    stb_text_makeundo_replace(str, state, 0, str->CurLenW, text_len);
+    ImStb::STB_TEXTEDIT_DELETECHARS(str, 0, str->CurLenW);
+    state->cursor = state->select_start = state->select_end = 0;
+    if (text_len <= 0)
+        return;
+    if (ImStb::STB_TEXTEDIT_INSERTCHARS(str, 0, text, text_len))
+    {
+        state->cursor = state->select_start = state->select_end = text_len;
+        state->has_preferred_x = 0;
+        return;
+    }
+    IM_ASSERT(0); // Failed to insert character, normally shouldn't happen because of how we currently use stb_textedit_replace()
+}
+
+} // namespace ImStb
 
 //--STRIP
 //#include "imgui.h"
@@ -785,6 +933,44 @@ namespace ImStb
 //#include "imstb_textedit.h"
 //--STRIP
 {{FILE:sfw/render_gui/imgui_widgets.cpp}}
+
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_internal.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_tables.cpp}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_internal.h"
+//#include <stdio.h>      // vsnprintf, sscanf, printf
+//#include "imstb_rectpack.h"
+//#include "imstb_truetype.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_draw.cpp}}
+
+//--STRIP
+//#include "imgui.h"      // IMGUI_IMPL_API
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_glfw.h}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_impl_glfw.h"
+//#if defined(_WIN64) || defined(_WIN32)
+//#define WIN32_LEAN_AND_MEAN
+//#include <windows.h>
+//#endif
+//#include "render_core/3rd_glfw3.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_glfw.cpp}}
+
+//--STRIP
+//#include "imgui.h"      // IMGUI_IMPL_API
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_opengl3.h}}
+
 
 //--STRIP
 //#include "imgui.h"
@@ -799,6 +985,30 @@ namespace ImStb
 //#include <emscripten/version.h>     // __EMSCRIPTEN_major__ etc.
 //--STRIP
 {{FILE:sfw/render_gui/imgui_demo.cpp}}
+
+//--STRIP
+//#include "imgui.h"
+//#ifndef IMGUI_DISABLE
+//#include "imgui_internal.h"
+//#endif
+//--STRIP
+{{FILE:sfw/render_gui/imgui.cpp}}
+
+//--STRIP
+//#include "imgui_impl_opengl3_loader.h"
+//--STRIP
+#define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+//#define IMGL3W_IMPL
+//{{F I LE:sfw/render_gui/imgui_impl_opengl3_loader.h}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_impl_opengl3.h"
+//#include <stdio.h>
+//#include <stdint.h>     // intptr_t
+//#include "imgui_impl_opengl3_loader.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_opengl3.cpp}}
 
 //--STRIP
 //#include "gui.h"
