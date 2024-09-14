@@ -62,6 +62,7 @@ files = [
     "sfw_full.html",
     "sfw_object.html",
     "sfw_render_core.html",
+    "sfw_render_gui.html",
     "sfw_render_immediate.html",
     "sfw_render_objects.html",
     "sfwl_core.html",
