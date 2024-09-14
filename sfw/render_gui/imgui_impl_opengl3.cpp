@@ -209,9 +209,9 @@
 #endif
 
 // Desktop GL 3.3+ and GL ES 3.0+ have glBindSampler()
-#if !defined(IMGUI_IMPL_OPENGL_ES2) && (defined(IMGUI_IMPL_OPENGL_ES3) || defined(GL_VERSION_3_3))
-#define IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
-#endif
+//#if !defined(IMGUI_IMPL_OPENGL_ES2) && (defined(IMGUI_IMPL_OPENGL_ES3) || defined(GL_VERSION_3_3))
+//#define IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
+//#endif
 
 // [Debugging]
 //#define IMGUI_IMPL_OPENGL_DEBUG
