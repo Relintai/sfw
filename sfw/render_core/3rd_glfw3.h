@@ -5752,6 +5752,30 @@ GLFWAPI int glfwVulkanSupported(void);
  */
 GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count);
 
+/*! @brief Returns the `HWND` of the specified window as a void*, only works on windows
+ *
+ *  @return The `HWND` of the specified window, or `NULL` if an
+ *  [error](@ref error_handling) occurred.
+ *
+ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+ *
+ *  @remark The `HDC` associated with the window can be queried with the
+ *  [GetDC](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
+ *  function.
+ *  @code
+ *  HDC dc = GetDC(glfwGetWin32WindowAsVPTR(window));
+ *  @endcode
+ *  This DC is private and does not need to be released.
+ *
+ *  @thread_safety This function may be called from any thread.  Access is not
+ *  synchronized.
+ *
+ *  @since Added in version 3.0.
+ *
+ *  @ingroup native
+ */
+GLFWAPI void *glfwGetWin32WindowAsVPTR(GLFWwindow* window);
+
 #if defined(VK_VERSION_1_0)
 
 /*! @brief Returns the address of the specified Vulkan instance function.
@@ -10984,7 +11008,7 @@ inline void __glfw_ptr_swap_tmpl(T &x, T &y) {
         x = y;                    \
         y = t;                    \
     }
-    
+
 #endif
 
 // Per-thread error structure
@@ -17044,6 +17068,18 @@ const char* _glfwGetVulkanResultString(VkResult result)
 //////////////////////////////////////////////////////////////////////////
 //////                        GLFW public API                       //////
 //////////////////////////////////////////////////////////////////////////
+
+
+GLFWAPI void *glfwGetWin32WindowAsVPTR(GLFWwindow* handle)
+{
+#if defined(_WIN64) || defined(_WIN32)
+    _GLFWwindow* window = (_GLFWwindow*) handle;
+    _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
+    return window->win32.handle;
+#else
+	return NULL;
+#endif
+}
 
 GLFWAPI int glfwVulkanSupported(void)
 {

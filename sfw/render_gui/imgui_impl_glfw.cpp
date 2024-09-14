@@ -90,13 +90,11 @@
 
 // GLFW
 
-#ifdef _WIN32
-#undef APIENTRY
-#ifndef GLFW_EXPOSE_NATIVE_WIN32
-#define GLFW_EXPOSE_NATIVE_WIN32
+#if defined(_WIN64) || defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
-//#include <GLFW/glfw3native.h>   // for glfwGetWin32Window()
-#endif
+
 #ifdef __APPLE__
 #ifndef GLFW_EXPOSE_NATIVE_COCOA
 #define GLFW_EXPOSE_NATIVE_COCOA
@@ -627,7 +625,7 @@ static bool ImGui_ImplGlfw_Init(GLFWwindow* window, bool install_callbacks, Glfw
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     main_viewport->PlatformHandle = (void*)bd->Window;
 #ifdef _WIN32
-    main_viewport->PlatformHandleRaw = glfwGetWin32Window(bd->Window);
+    main_viewport->PlatformHandleRaw = glfwGetWin32WindowAsVPTR(bd->Window);
 #elif defined(__APPLE__)
     main_viewport->PlatformHandleRaw = (void*)glfwGetCocoaWindow(bd->Window);
 #else
