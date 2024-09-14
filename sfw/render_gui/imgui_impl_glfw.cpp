@@ -95,19 +95,13 @@
 #include <windows.h>
 #endif
 
-#ifdef __APPLE__
-#ifndef GLFW_EXPOSE_NATIVE_COCOA
-#define GLFW_EXPOSE_NATIVE_COCOA
-#endif
-//#include <GLFW/glfw3native.h>   // for glfwGetCocoaWindow()
-#endif
-
 #include "render_core/3rd_glfw3.h"
 
 #ifndef _WIN32
 #include <unistd.h>             // for usleep()
 #endif
 
+/*
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -117,6 +111,7 @@
 #define EMSCRIPTEN_USE_EMBEDDED_GLFW3
 #endif
 #endif
+*/
 
 // We gather version tests as define in order to easily see which features are version-dependent.
 #define GLFW_VERSION_COMBINED           (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 + GLFW_VERSION_REVISION)
@@ -625,9 +620,11 @@ static bool ImGui_ImplGlfw_Init(GLFWwindow* window, bool install_callbacks, Glfw
     ImGuiViewport* main_viewport = ImGui::GetMainViewport();
     main_viewport->PlatformHandle = (void*)bd->Window;
 #ifdef _WIN32
-    main_viewport->PlatformHandleRaw = glfwGetWin32WindowAsVPTR(bd->Window);
+    //main_viewport->PlatformHandleRaw = glfwGetWin32Window(bd->Window);
+    main_viewport->PlatformHandleRaw = glfwGetNativeWindowHandleAsVPTR(bd->Window);
 #elif defined(__APPLE__)
-    main_viewport->PlatformHandleRaw = (void*)glfwGetCocoaWindow(bd->Window);
+    //main_viewport->PlatformHandleRaw = (void*)glfwGetCocoaWindow(bd->Window);
+    main_viewport->PlatformHandleRaw = glfwGetNativeWindowHandleAsVPTR(bd->Window);
 #else
     IM_UNUSED(main_viewport);
 #endif

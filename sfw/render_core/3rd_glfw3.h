@@ -5752,7 +5752,7 @@ GLFWAPI int glfwVulkanSupported(void);
  */
 GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count);
 
-/*! @brief Returns the `HWND` of the specified window as a void*, only works on windows
+/*! @brief Returns the `HWND` of the specified window as a void*, only works on windows, and osx
  *
  *  @return The `HWND` of the specified window, or `NULL` if an
  *  [error](@ref error_handling) occurred.
@@ -5774,7 +5774,7 @@ GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count);
  *
  *  @ingroup native
  */
-GLFWAPI void *glfwGetWin32WindowAsVPTR(GLFWwindow* window);
+GLFWAPI void *glfwGetNativeWindowHandleAsVPTR(GLFWwindow* window);
 
 #if defined(VK_VERSION_1_0)
 
@@ -17070,12 +17070,16 @@ const char* _glfwGetVulkanResultString(VkResult result)
 //////////////////////////////////////////////////////////////////////////
 
 
-GLFWAPI void *glfwGetWin32WindowAsVPTR(GLFWwindow* handle)
+GLFWAPI void *glfwGetNativeWindowHandleAsVPTR(GLFWwindow* handle)
 {
 #if defined(_WIN64) || defined(_WIN32)
     _GLFWwindow* window = (_GLFWwindow*) handle;
     _GLFW_REQUIRE_INIT_OR_RETURN(NULL);
     return window->win32.handle;
+#elif defined(__APPLE__)
+    _GLFWwindow* window = (_GLFWwindow*) handle;
+    _GLFW_REQUIRE_INIT_OR_RETURN(nil);
+    return window->ns.object;
 #else
 	return NULL;
 #endif
