@@ -802,8 +802,8 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-	Renderer::destroy();
 	GUI::destroy();
+	Renderer::destroy();
 
 	memdelete(tile_map);
 	memdelete(camera);

@@ -11,7 +11,7 @@ class GameScene : public Scene {
 
 public:
 	enum RenderTypes {
-		RENDER_TYPE_MAX = 14
+		RENDER_TYPE_MAX = 16
 	};
 
 	virtual void input_event(const Ref<InputEvent> &event);
@@ -20,6 +20,8 @@ public:
 	virtual void render_immediate(bool clear_screen = true);
 	virtual void render_obj();
 	virtual void render_immediate_3d(bool clear_screen = true);
+	virtual void render_gui(bool clear_screen = true);
+	virtual void render_gui_manual(bool clear_screen = true);
 
 	void toggle_thread();
 	static void test_thread_func(void *d);
