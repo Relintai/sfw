@@ -40,16 +40,20 @@ Index of this file:
 
 */
 
+//--STRIP
 #pragma once
+//--STRIP
 #ifndef IMGUI_DISABLE
 
 //-----------------------------------------------------------------------------
 // [SECTION] Header mess
 //-----------------------------------------------------------------------------
 
+//--STRIP
 #ifndef IMGUI_VERSION
 #include "imgui.h"
 #endif
+//--STRIP
 
 #include <stdio.h>      // FILE*, sscanf
 #include <stdlib.h>     // NULL, malloc, free, qsort, atoi, atof
@@ -202,6 +206,7 @@ extern IMGUI_API ImGuiContext* GImGui;  // Current implicit context pointer
 // [SECTION] STB libraries includes
 //-------------------------------------------------------------------------
 
+//--STRIP
 namespace ImStb
 {
 
@@ -215,6 +220,7 @@ namespace ImStb
 #include "imstb_textedit.h"
 
 } // namespace ImStb
+//--STRIP
 
 //-----------------------------------------------------------------------------
 // [SECTION] Macros

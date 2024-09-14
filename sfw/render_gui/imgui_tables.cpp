@@ -195,9 +195,13 @@ Index of this file:
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_internal.h"
+//--STRIP
 
 // System includes
 #include <stdint.h>     // intptr_t

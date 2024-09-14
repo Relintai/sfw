@@ -31,9 +31,13 @@ Index of this file:
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_internal.h"
+//--STRIP
 #ifdef IMGUI_ENABLE_FREETYPE
 #include "misc/freetype/imgui_freetype.h"
 #endif
@@ -122,8 +126,10 @@ namespace IMGUI_STB_NAMESPACE
 #endif
 #ifdef IMGUI_STB_RECT_PACK_FILENAME
 #include IMGUI_STB_RECT_PACK_FILENAME
+//--STRIP
 #else
 #include "imstb_rectpack.h"
+//--STRIP
 #endif
 #endif
 
@@ -146,8 +152,10 @@ namespace IMGUI_STB_NAMESPACE
 #endif
 #ifdef IMGUI_STB_TRUETYPE_FILENAME
 #include IMGUI_STB_TRUETYPE_FILENAME
+//--STRIP
 #else
 #include "imstb_truetype.h"
+//--STRIP
 #endif
 #endif
 #endif // IMGUI_ENABLE_STB_TRUETYPE

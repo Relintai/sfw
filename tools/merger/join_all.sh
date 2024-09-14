@@ -3,6 +3,7 @@ mkdir -p out
 mkdir -p out/core
 mkdir -p out/object
 mkdir -p out/render_core
+mkdir -p out/gui
 mkdir -p out/render_immediate
 mkdir -p out/render_objects
 mkdir -p out/full
@@ -24,6 +25,10 @@ python tools/merger/join.py --template tools/merger/sfw_object.cpp.inl --path . 
 python tools/merger/join.py --template tools/merger/sfw_render_core.h.inl --path . --output tools/merger/out/render_core/sfw.h
 python tools/merger/join.py --template tools/merger/sfw_render_core.cpp.inl --path . --output tools/merger/out/render_core/sfw.cpp
 python tools/merger/join.py --template tools/merger/sfw_3rd.x.inl --path . --output tools/merger/out/render_core/sfw_3rd.m
+
+python tools/merger/join.py --template tools/merger/sfw_gui.h.inl --path . --output tools/merger/out/gui/sfw.h
+python tools/merger/join.py --template tools/merger/sfw_gui.cpp.inl --path . --output tools/merger/out/gui/sfw.cpp
+python tools/merger/join.py --template tools/merger/sfw_3rd.x.inl --path . --output tools/merger/out/gui/sfw_3rd.m
 
 python tools/merger/join.py --template tools/merger/sfw_render_immediate.h.inl --path . --output tools/merger/out/render_immediate/sfw.h
 python tools/merger/join.py --template tools/merger/sfw_render_immediate.cpp.inl --path . --output tools/merger/out/render_immediate/sfw.cpp
@@ -57,6 +62,10 @@ clang-format --Wno-error=unknown -i tools/merger/out/object/sfw.cpp
 clang-format --Wno-error=unknown -i tools/merger/out/render_core/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/render_core/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/render_core/sfw_3rd.m
+
+clang-format --Wno-error=unknown -i tools/merger/out/gui/sfw.h
+clang-format --Wno-error=unknown -i tools/merger/out/gui/sfw.cpp
+#clang-format --Wno-error=unknown -i tools/merger/out/gui/sfw_3rd.m
 
 clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw.cpp

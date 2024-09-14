@@ -1035,9 +1035,14 @@ CODE
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
+
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_internal.h"
+//--STRIP
 
 // System includes
 #include <stdio.h>      // vsnprintf, sscanf, printf

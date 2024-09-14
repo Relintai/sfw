@@ -112,9 +112,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_impl_opengl3.h"
+//--STRIP
 #include <stdio.h>
 #include <stdint.h>     // intptr_t
 #if defined(__APPLE__)
@@ -165,8 +169,10 @@
 // - You may need to regenerate imgui_impl_opengl3_loader.h to add new symbols. See https://github.com/dearimgui/gl3w_stripped
 // - You can temporarily use an unstripped version. See https://github.com/dearimgui/gl3w_stripped/releases
 // Changes to this backend using new APIs should be accompanied by a regenerated stripped loader version.
+//--STRIP
 #define IMGL3W_IMPL
 #include "imgui_impl_opengl3_loader.h"
+//--STRIP
 #endif
 
 // Vertex arrays are not supported on ES2/WebGL1 unless Emscripten which uses an extension
