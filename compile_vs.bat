@@ -105,14 +105,14 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/tile_map.cpp /Fo:sfw/rende
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/text_2d.cpp /Fo:sfw/render_objects/text_2d.obj
 
 
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui.cpp /Fo:sfw/render_gui/imgui.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_draw.cpp /Fo:sfw/render_gui/imgui_draw.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_glfw.cpp /Fo:sfw/render_gui/imgui_impl_glfw.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_opengl3.cpp /Fo:sfw/render_gui/imgui_impl_opengl3.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_tables.cpp /Fo:sfw/render_gui/imgui_tables.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_widgets.cpp /Fo:sfw/render_gui/imgui_widgets.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_demo.cpp /Fo:sfw/render_gui/imgui_demo.o
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/gui.cpp /Fo:sfw/render_gui/gui.o
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui.cpp /Fo:sfw/render_gui/imgui.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_draw.cpp /Fo:sfw/render_gui/imgui_draw.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_glfw.cpp /Fo:sfw/render_gui/imgui_impl_glfw.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_opengl3.cpp /Fo:sfw/render_gui/imgui_impl_opengl3.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_tables.cpp /Fo:sfw/render_gui/imgui_tables.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_widgets.cpp /Fo:sfw/render_gui/imgui_widgets.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_demo.cpp /Fo:sfw/render_gui/imgui_demo.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/gui.cpp /Fo:sfw/render_gui/gui.obj
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/game_scene.cpp /Fo:sfw/game_scene.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/main.cpp /Fo:sfw/main.obj
