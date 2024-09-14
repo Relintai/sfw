@@ -121,6 +121,9 @@ Index of this file:
 #define IMGUI_ENABLE_STB_TRUETYPE
 #endif
 
+
+//--STRIP
+
 //-----------------------------------------------------------------------------
 // [SECTION] Forward declarations
 //-----------------------------------------------------------------------------
@@ -192,6 +195,8 @@ typedef int ImGuiTypingSelectFlags;     // -> enum ImGuiTypingSelectFlags_  // F
 typedef int ImGuiWindowRefreshFlags;    // -> enum ImGuiWindowRefreshFlags_ // Flags: for SetNextWindowRefreshPolicy()
 
 typedef void (*ImGuiErrorLogCallback)(void* user_data, const char* fmt, ...);
+
+//--STRIP
 
 //-----------------------------------------------------------------------------
 // [SECTION] Context pointer
