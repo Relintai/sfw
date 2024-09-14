@@ -100,6 +100,16 @@ cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
 cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
 cp "$doc_folder/sfw_render_core.html" "$current_out_fol/sfw.html"
 
+# Render GUI
+current_in_fol=$project_root_folder/tools/merger/out/render_gui
+current_out_fol=$sfw_out_folder/merged/render_gui
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+cp "$doc_folder/sfw_render_gui.html" "$current_out_fol/sfw.html"
+
 # Render Immediate
 current_in_fol=$project_root_folder/tools/merger/out/render_immediate
 current_out_fol=$sfw_out_folder/merged/render_immediate
