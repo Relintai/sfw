@@ -96,6 +96,12 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/sprite.cpp -o sfw/r
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/text_2d.cpp -o sfw/render_objects/text_2d.o
 
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui.cpp -o sfw/render_gui/imgui.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_draw.cpp -o sfw/render_gui/imgui_draw.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_impl_glfw.cpp -o sfw/render_gui/imgui_impl_glfw.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_impl_opengl3.cpp -o sfw/render_gui/imgui_impl_opengl3.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_tables.cpp -o sfw/render_gui/imgui_tables.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_widgets.cpp -o sfw/render_gui/imgui_widgets.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/gui.cpp -o sfw/render_gui/gui.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/game_scene.cpp -o sfw/game_scene.o
@@ -138,6 +144,12 @@ ccache g++ -Wall -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color
                         sfw/render_objects/sprite.o sfw/render_objects/tile_map.o \
                         sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
                         sfw/render_objects/text_2d.o \
+                        sfw/render_gui/imgui.o \
+                        sfw/render_gui/imgui_draw.o \
+                        sfw/render_gui/imgui_impl_glfw.o \
+                        sfw/render_gui/imgui_impl_opengl3.o \
+                        sfw/render_gui/imgui_tables.o \
+                        sfw/render_gui/imgui_widgets.o \
                         sfw/render_gui/gui.o \
                         sfw/game_scene.o sfw/main.o \
                         -lX11 \

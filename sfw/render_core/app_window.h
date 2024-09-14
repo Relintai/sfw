@@ -120,6 +120,8 @@ public:
 	const char *get_clipboard();
 	void set_clipboard(const char *text);
 
+	void *get_window_handle();
+
 	static AppWindow *get_singleton();
 
 	AppWindow();

@@ -426,9 +426,9 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	width = get_width();
 	height = get_height();
-	
+
 	RenderState::window_update_render_rect_size(width, height);
-	
+
 	// cursor(flags & WINDOW_NO_MOUSE ? false : true);
 	glfwSetDropCallback(_window, drop_callback);
 
@@ -919,6 +919,10 @@ double AppWindow::get_scale() { // ok? @testme
 	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 	glfwGetMonitorContentScale(monitor, &xscale, &yscale);
 	return MAX(xscale, yscale);
+}
+
+void *AppWindow::get_window_handle() {
+	return _window;
 }
 
 AppWindow *AppWindow::get_singleton() {

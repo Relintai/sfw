@@ -11,6 +11,7 @@
 #include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
 #include "render_immediate/renderer.h"
+#include "render_gui/gui.h"
 //#include "render_core/font.h"
 #include "core/sub_process.h"
 
@@ -295,6 +296,8 @@ void GameScene::render() {
 		r->camera_2d_projection_set_to_window();
 		r->clear_screen(Color(1, 0, 0));
 		r->draw_texture(_render_tex, Rect2(100, 100, render_tex_size.x, render_tex_size.y));
+	} else if (render_type == 14) {
+		render_gui();
 	}
 }
 void GameScene::render_immediate(bool clear_screen) {
@@ -403,6 +406,22 @@ void GameScene::render_immediate_3d(bool clear_screen) {
 	r->draw_mesh_3d_vertex_colored(_mesh_utils_test, tf);
 
 	rotmi += 0.01;
+}
+
+void GameScene::render_gui(bool clear_screen) {
+	Renderer *r = Renderer::get_singleton();
+
+	if (clear_screen) {
+		r->clear_screen(Color());
+		r->camera_2d_projection_set_to_window();
+
+		r->camera_3d_bind();
+		r->camera_3d_projection_set_to_perspective(AppWindow::get_singleton()->get_aspect());
+	}
+
+	GUI::new_frame();
+	GUI::test();
+	GUI::render();
 }
 
 void GameScene::toggle_thread() {
@@ -704,6 +723,7 @@ GameScene::GameScene() {
 	_mesh_utils_test.instance();
 
 	Renderer::initialize();
+	GUI::initialize();
 
 	_mesh_utils_test_mi = memnew(MeshInstance3D());
 	_mesh_utils_test_mi->material = color_material;
@@ -718,6 +738,7 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
 	Renderer::destroy();
+	GUI::destroy();
 
 	memdelete(tile_map);
 	memdelete(camera);
