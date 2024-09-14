@@ -673,6 +673,7 @@
 
 //===================  GUI SECTION  ===================
 
+#define IMGUI_DEFINE_MATH_OPERATORS
 
 namespace ImStb
 {
@@ -775,7 +776,7 @@ namespace ImStb
 
 #define IMSTB_TEXTEDIT_IMPLEMENTATION
 #define IMSTB_TEXTEDIT_memmove memmove
-{{FILE:sfw/render_gui/imstb_textedit.cpp}}
+{{FILE:sfw/render_gui/imstb_textedit.h}}
 
 //--STRIP
 //#include "imgui.h"

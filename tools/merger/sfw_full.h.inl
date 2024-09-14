@@ -828,6 +828,15 @@
 //--STRIP
 {{FILE:sfw/render_objects/mesh_instance_3d.h}}
 
+//=================== GUI SECTION  ===================
+
+//--STRIP
+//#include "core/int_types.h"
+//#include "object/object.h"
+//--STRIP
+{{FILE:sfw/render_gui/gui.h}}
+{{FILE:sfw/render_gui/imgui.h}}
+
 // expose glfw/glad apis
 #if __EMSCRIPTEN__
     #include <GL/glew.h>

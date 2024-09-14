@@ -736,3 +736,143 @@
 //--STRIP
 {{FILE:sfw/render_objects/mesh_instance_2d.cpp}}
 
+
+//===================  GUI SECTION  ===================
+
+#define IMGUI_DEFINE_MATH_OPERATORS
+
+namespace ImStb
+{
+
+#undef IMSTB_TEXTEDIT_STRING
+#undef IMSTB_TEXTEDIT_CHARTYPE
+#define IMSTB_TEXTEDIT_STRING             ImGuiInputTextState
+#define IMSTB_TEXTEDIT_CHARTYPE           ImWchar
+#define IMSTB_TEXTEDIT_GETWIDTH_NEWLINE   (-1.0f)
+#define IMSTB_TEXTEDIT_UNDOSTATECOUNT     99
+#define IMSTB_TEXTEDIT_UNDOCHARCOUNT      999
+
+{{FILE:sfw/render_gui/imstb_textedit.h}}
+
+} // namespace ImStb
+
+//--STRIP
+//#include "imgui.h"
+//#include "imstb_textedit.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_internal.h}}
+
+//--STRIP
+//#include "imgui.h"      // IMGUI_IMPL_API
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_glfw.h}}
+
+//--STRIP
+//#include "imgui.h"
+//#ifndef IMGUI_DISABLE
+//#include "imgui_internal.h"
+//#endif
+//--STRIP
+{{FILE:sfw/render_gui/imgui.cpp}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_impl_glfw.h"
+//#if defined(_WIN64) || defined(_WIN32)
+//#define WIN32_LEAN_AND_MEAN
+//#include <windows.h>
+//#endif
+//#include "render_core/3rd_glfw3.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_glfw.cpp}}
+
+//--STRIP
+//#include "imgui.h"      // IMGUI_IMPL_API
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_opengl3.h}}
+
+//--STRIP
+//#include "imgui_impl_opengl3_loader.h"
+//--STRIP
+#define IMGL3W_IMPL
+{{FILE:sfw/render_gui/imgui_impl_opengl3_loader.h}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_impl_opengl3.h"
+//#include <stdio.h>
+//#include <stdint.h>     // intptr_t
+//#include "imgui_impl_opengl3_loader.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_impl_opengl3.cpp}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_internal.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_tables.cpp}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_internal.h"
+//#include <stdio.h>      // vsnprintf, sscanf, printf
+//#include "imstb_rectpack.h"
+//#include "imstb_truetype.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_draw.cpp}}
+
+// We don't use an enum so we can build even with conflicting symbols (if another user of stb_textedit.h leak their STB_TEXTEDIT_K_* symbols)
+#define STB_TEXTEDIT_K_LEFT         0x200000 // keyboard input to move cursor left
+#define STB_TEXTEDIT_K_RIGHT        0x200001 // keyboard input to move cursor right
+#define STB_TEXTEDIT_K_UP           0x200002 // keyboard input to move cursor up
+#define STB_TEXTEDIT_K_DOWN         0x200003 // keyboard input to move cursor down
+#define STB_TEXTEDIT_K_LINESTART    0x200004 // keyboard input to move cursor to start of line
+#define STB_TEXTEDIT_K_LINEEND      0x200005 // keyboard input to move cursor to end of line
+#define STB_TEXTEDIT_K_TEXTSTART    0x200006 // keyboard input to move cursor to start of text
+#define STB_TEXTEDIT_K_TEXTEND      0x200007 // keyboard input to move cursor to end of text
+#define STB_TEXTEDIT_K_DELETE       0x200008 // keyboard input to delete selection or character under cursor
+#define STB_TEXTEDIT_K_BACKSPACE    0x200009 // keyboard input to delete selection or character left of cursor
+#define STB_TEXTEDIT_K_UNDO         0x20000A // keyboard input to perform undo
+#define STB_TEXTEDIT_K_REDO         0x20000B // keyboard input to perform redo
+#define STB_TEXTEDIT_K_WORDLEFT     0x20000C // keyboard input to move cursor left one word
+#define STB_TEXTEDIT_K_WORDRIGHT    0x20000D // keyboard input to move cursor right one word
+#define STB_TEXTEDIT_K_PGUP         0x20000E // keyboard input to move cursor up a page
+#define STB_TEXTEDIT_K_PGDOWN       0x20000F // keyboard input to move cursor down a page
+#define STB_TEXTEDIT_K_SHIFT        0x400000
+
+#define IMSTB_TEXTEDIT_IMPLEMENTATION
+#define IMSTB_TEXTEDIT_memmove memmove
+{{FILE:sfw/render_gui/imstb_textedit.h}}
+
+//--STRIP
+//#include "imgui.h"
+//#include "imgui_internal.h"
+//#include <stdint.h>     // intptr_t
+//#include "imstb_textedit.h"
+//--STRIP
+{{FILE:sfw/render_gui/imgui_widgets.cpp}}
+
+//--STRIP
+//#include "imgui.h"
+// System includes
+//#include <ctype.h>          // toupper
+//#include <limits.h>         // INT_MIN, INT_MAX
+//#include <math.h>           // sqrtf, powf, cosf, sinf, floorf, ceilf
+//#include <stdio.h>          // vsnprintf, sscanf, printf
+//#include <stdlib.h>         // NULL, malloc, free, atoi
+//#include <stdint.h>         // intptr_t
+//#include <inttypes.h>       // PRId64/PRIu64, not avail in some MinGW headers.
+//#include <emscripten/version.h>     // __EMSCRIPTEN_major__ etc.
+//--STRIP
+{{FILE:sfw/render_gui/imgui_demo.cpp}}
+
+//--STRIP
+//#include "gui.h"
+//#include "render_core/app_window.h"
+//#include "imgui.h"
+//#include "imgui_impl_glfw.h"
+//#include "imgui_impl_opengl3.h"
+//#include <stdio.h>
+//--STRIP
+{{FILE:sfw/render_gui/gui.cpp}}
+

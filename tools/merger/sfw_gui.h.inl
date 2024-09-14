@@ -748,8 +748,8 @@
 //=================== GUI SECTION  ===================
 
 //--STRIP
-#include "core/int_types.h"
-#include "object/object.h"
+//#include "core/int_types.h"
+//#include "object/object.h"
 //--STRIP
 {{FILE:sfw/render_gui/gui.h}}
 {{FILE:sfw/render_gui/imgui.h}}
