@@ -15,13 +15,13 @@ class GUI : public Object {
 	SFW_OBJECT(GUI, Object);
 
 public:
+	static void test();
+
 	static void initialize();
 	static void destroy();
 
 	static void new_frame();
 	static void render();
-
-	static void test();
 
 	static GUI *get_singleton();
 
