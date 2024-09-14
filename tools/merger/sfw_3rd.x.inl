@@ -30,7 +30,11 @@
 
 #ifdef SFW_3RD_IMPL
 #define STB_TRUETYPE_IMPLEMENTATION
+#define STB_RECT_PACK_IMPLEMENTATION
+#define IMGUI_DISABLE_STB_RECT_PACK_IMPLEMENTATION
 #endif //SFW_3RD_IMPL
+
+{{FILE:sfw/render_gui/imstb_rectpack.h}}
 
 {{FILE:sfw/render_core/3rd_stb_truetype.h}}
 

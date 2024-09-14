@@ -1007,6 +1007,12 @@ static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* st
 //--STRIP
 {{FILE:sfw/render_gui/imgui_tables.cpp}}
 
+//#define STBRP_STATIC
+//#define STBRP_ASSERT(x)     do { IM_ASSERT(x); } while (0)
+//#define STBRP_SORT          ImQsort
+//#define STB_RECT_PACK_IMPLEMENTATION
+//{{F I L E:sfw/render_gui/imstb_rectpack.h}}
+
 //--STRIP
 //#include "imgui.h"
 //#include "imgui_internal.h"

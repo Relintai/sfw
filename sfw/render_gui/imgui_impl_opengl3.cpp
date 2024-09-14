@@ -177,7 +177,11 @@
 
 // Vertex arrays are not supported on ES2/WebGL1 unless Emscripten which uses an extension
 #ifndef IMGUI_IMPL_OPENGL_ES2
+
+#idndef __APPLE__
 #define IMGUI_IMPL_OPENGL_USE_VERTEX_ARRAY
+#endif
+
 #elif defined(__EMSCRIPTEN__)
 #define IMGUI_IMPL_OPENGL_USE_VERTEX_ARRAY
 #define glBindVertexArray       glBindVertexArrayOES
