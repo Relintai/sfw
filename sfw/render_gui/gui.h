@@ -5,10 +5,7 @@
 
 //--STRIP
 #include "core/int_types.h"
-#include <stdio.h>
-
 #include "object/object.h"
-#include "object/reference.h"
 //--STRIP
 
 class GUI : public Object {

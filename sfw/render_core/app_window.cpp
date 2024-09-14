@@ -36,7 +36,6 @@
 #include "core/error_macros.h"
 #include "core/sfw_time.h"
 #include "core/ustring.h"
-#include "core/vector4.h"
 #include "render_core/application.h"
 #include "render_core/input.h"
 #include "render_core/render_state.h"

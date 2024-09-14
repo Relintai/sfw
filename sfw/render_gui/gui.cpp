@@ -6,15 +6,7 @@
 
 #include "gui.h"
 
-#include "core/math_defs.h"
-
-#include "core/sfw_time.h"
 #include "render_core/app_window.h"
-#include "render_core/input.h"
-#include "render_core/input_map.h"
-
-#include "core/sfw_core.h"
-#include "object/core_string_names.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
