@@ -10,6 +10,8 @@
 # 4. Run tools/doc/inline_docs.py using python:
 #    cd tools/doc/
 #    python inline_docs.py
+# 5. Run this script: ./make_release.sh <version number>
+#    ./make_release.sh 5
 
 rm -Rf out
 
