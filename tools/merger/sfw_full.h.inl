@@ -835,6 +835,9 @@
 //#include "object/object.h"
 //--STRIP
 {{FILE:sfw/render_gui/gui.h}}
+
+#define IMGUI_DEFINE_MATH_OPERATORS
+
 {{FILE:sfw/render_gui/imgui.h}}
 
 // expose glfw/glad apis

@@ -739,8 +739,6 @@
 
 //===================  GUI SECTION  ===================
 
-#define IMGUI_DEFINE_MATH_OPERATORS
-
 namespace ImStb
 {
 
