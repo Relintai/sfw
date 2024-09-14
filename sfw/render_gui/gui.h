@@ -30,7 +30,6 @@ public:
 
 protected:
 	static GUI *_singleton;
-
 };
 
 //--STRIP
