@@ -3,7 +3,7 @@
 #define SFW_VERSION_H
 //--STRIP
 
-#define SFW_VERSION 1
+#define SFW_VERSION 4
 
 //--STRIP
 #endif
