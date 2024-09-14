@@ -6,6 +6,8 @@ venv/
 .cache/
 .vs/
 
+imgui.ini
+
 build/
 
 *.layout
