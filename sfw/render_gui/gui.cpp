@@ -77,8 +77,7 @@ void GUI::initialize() {
 
 	// Decide GL+GLSL versions
 #if defined(__APPLE__)
-	// GL 3.2 + GLSL 150
-	const char *glsl_version = "#version 150";
+	const char *glsl_version = "#version 120";
 #else
 	// GL ES 2.0 + GLSL 100
 	const char *glsl_version = "#version 100";
