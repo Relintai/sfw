@@ -792,8 +792,9 @@ namespace ImStb
 //--STRIP
 //#include "imgui_impl_opengl3_loader.h"
 //--STRIP
-#define IMGL3W_IMPL
-{{FILE:sfw/render_gui/imgui_impl_opengl3_loader.h}}
+#define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+//#define IMGL3W_IMPL
+//{{F I LE:sfw/render_gui/imgui_impl_opengl3_loader.h}}
 
 //--STRIP
 //#include "imgui.h"
