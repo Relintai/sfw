@@ -111,7 +111,6 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_glfw.cpp /Fo:sfw/re
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_opengl3.cpp /Fo:sfw/render_gui/imgui_impl_opengl3.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_tables.cpp /Fo:sfw/render_gui/imgui_tables.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_widgets.cpp /Fo:sfw/render_gui/imgui_widgets.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_demo.cpp /Fo:sfw/render_gui/imgui_demo.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/gui.cpp /Fo:sfw/render_gui/gui.obj
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/game_scene.cpp /Fo:sfw/game_scene.obj
@@ -162,7 +161,6 @@ cl /D_REENTRANT /Zi ^
 		sfw/render_gui/imgui_impl_opengl3.obj ^
 		sfw/render_gui/imgui_tables.obj ^
 		sfw/render_gui/imgui_widgets.obj ^
-		sfw/render_gui/imgui_demo.obj ^
 		sfw/render_gui/gui.obj ^
 		sfw/game_scene.obj sfw/main.obj ^
 		/SUBSYSTEM:CONSOLE

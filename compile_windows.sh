@@ -102,7 +102,6 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_impl_glfw.cpp -o 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_impl_opengl3.cpp -o sfw/render_gui/imgui_impl_opengl3.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_tables.cpp -o sfw/render_gui/imgui_tables.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_widgets.cpp -o sfw/render_gui/imgui_widgets.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_demo.cpp -o sfw/render_gui/imgui_demo.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/gui.cpp -o sfw/render_gui/gui.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/game_scene.cpp -o sfw/game_scene.o
@@ -152,7 +151,6 @@ ccache g++ -Wall \
                         sfw/render_gui/imgui_impl_opengl3.o \
                         sfw/render_gui/imgui_tables.o \
                         sfw/render_gui/imgui_widgets.o \
-                        sfw/render_gui/imgui_demo.o \
                         sfw/render_gui/gui.o \
                         sfw/game_scene.o sfw/main.o \
                         -lgdi32 -lShlwapi -lws2_32 \

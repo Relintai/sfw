@@ -1043,21 +1043,6 @@ static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* st
 //--STRIP
 {{FILE:sfw/render_gui/imgui_impl_opengl3.h}}
 
-
-//--STRIP
-//#include "imgui.h"
-// System includes
-//#include <ctype.h>          // toupper
-//#include <limits.h>         // INT_MIN, INT_MAX
-//#include <math.h>           // sqrtf, powf, cosf, sinf, floorf, ceilf
-//#include <stdio.h>          // vsnprintf, sscanf, printf
-//#include <stdlib.h>         // NULL, malloc, free, atoi
-//#include <stdint.h>         // intptr_t
-//#include <inttypes.h>       // PRId64/PRIu64, not avail in some MinGW headers.
-//#include <emscripten/version.h>     // __EMSCRIPTEN_major__ etc.
-//--STRIP
-{{FILE:sfw/render_gui/imgui_demo.cpp}}
-
 //--STRIP
 //#include "imgui.h"
 //#ifndef IMGUI_DISABLE
