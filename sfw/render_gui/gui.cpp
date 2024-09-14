@@ -12,12 +12,27 @@
 #define NK_KEYSTATE_BASED_INPUT               // nuklear
 
 //--STRIP
+#include "gui.h"
+
 #include "render_core/3rd_glad.h"
 #include "render_core/3rd_glfw3.h"
+#include "render_core/texture.h"
+#include "render_core/app_window.h"
+
+// for nuklear.h
+int window_width() {
+	return AppWindow::get_singleton()->get_width();
+}
+
+int window_height() {
+	return AppWindow::get_singleton()->get_height();
+}
+
 #include "3rd_nuklear.h"
 //#include "3rd_nuklear_filebrowser.h"
 #include "3rd_nuklear_glfw_gl3.h"
 #include <cstring>
+
 //--STRIP
 
 
@@ -103,9 +118,9 @@ static int ui_using_v2_menubar = 0;
 #define UI_MENU(N, ...) do { \
     enum { MENUROW_HEIGHT = 25 }; \
     int embedded = !!ui_ctx->current; \
-    struct nk_rect total_space = {0,0,window_width(),window_height()}; \
+    struct nk_rect total_space = {0,0,AppWindow::get_singleton()->get_width(),AppWindow::get_singleton()->get_height()}; \
     if( embedded ) total_space = nk_window_get_bounds(ui_ctx), total_space.w -= 10; \
-    int created = !embedded && nk_begin(ui_ctx, "MENU_" STRINGIZE(__COUNTER__), nk_rect(0, 0, window_width(), UI_MENUROW_HEIGHT), NK_WINDOW_NO_SCROLLBAR); \
+    int created = !embedded && nk_begin(ui_ctx, "MENU_" STRINGIZE(__COUNTER__), nk_rect(0, 0, AppWindow::get_singleton()->get_width(), UI_MENUROW_HEIGHT), NK_WINDOW_NO_SCROLLBAR); \
     if ( embedded || created ) { \
         ui_using_v2_menubar = 1; \
         int align = NK_TEXT_LEFT, Nth = (N), ITEM_WIDTH = 30, span = 0; \
@@ -427,7 +442,7 @@ typedef struct ui_item_t {
 } ui_item_t;
 
 static array(ui_item_t) ui_items; // queued menu names. to be evaluated during next frame
-static vec2 ui_results = {0}; // clicked menu items from last frame
+static Vector2 ui_results = {0}; // clicked menu items from last frame
 
 int ui_item() {
     return ui_items ? (ui_results.x == array_count(ui_items) ? ui_results.y : 0) : 0;
@@ -480,7 +495,7 @@ nk_menu_begin_text_styled(struct nk_context *ctx, const char *title, int len,
 }
 
 static
-vec2 ui_toolbar_(array(ui_item_t) ui_items, vec2 ui_results) {
+Vector2 ui_toolbar_(array(ui_item_t) ui_items, Vector2 ui_results) {
     // adjust size for all the upcoming UI elements
     // old method: nk_layout_row_dynamic(ui_ctx, UI_MENUBAR_ICON_HEIGHT/*h*/, array_count(ui_items));
     {
@@ -579,7 +594,7 @@ vec2 ui_toolbar_(array(ui_item_t) ui_items, vec2 ui_results) {
 }
 
 int ui_toolbar(const char *icons) { // usage: int clicked_icon = ui_toolbar( ICON_1 ";" ICON_2 ";" ICON_3 ";" ICON_4 );
-    vec2 results = {0};
+    Vector2 results = {0};
     array(char*) items = strsplit(icons, ",;|");
         static array(ui_item_t) temp = 0;
         array_resize(temp, array_count(items));
@@ -637,8 +652,8 @@ int ui_dims(const char *panel_or_window_title, float width, float height) {
     nk_window_set_size(ui_ctx, panel_or_window_title, (struct nk_vec2){width, height});
     return 0;
 }
-vec2 ui_get_dims() {
-    return (vec2){nk_window_get_width(ui_ctx), nk_window_get_height(ui_ctx)};
+Vector2 ui_get_dims() {
+    return (Vector2){nk_window_get_width(ui_ctx), nk_window_get_height(ui_ctx)};
 }
 static char *ui_build_window_list() {
     char *build_windows_menu = 0;
@@ -668,7 +683,7 @@ if( show_window_menu ) {
 }
 
     // process menus
-    if( nk_begin(ui_ctx, "Menu", nk_rect(0, 0, window_width(), UI_MENUROW_HEIGHT), NK_WINDOW_NO_SCROLLBAR/*|NK_WINDOW_BACKGROUND*/)) {
+    if( nk_begin(ui_ctx, "Menu", nk_rect(0, 0, AppWindow::get_singleton()->get_width(), UI_MENUROW_HEIGHT), NK_WINDOW_NO_SCROLLBAR/*|NK_WINDOW_BACKGROUND*/)) {
         if( ui_ctx->current ) {
             nk_menubar_begin(ui_ctx);
 
@@ -1107,8 +1122,8 @@ typedef struct ui_layout {
 
     bool is_panel;
 
-    vec2   desktop;
-    vec2     p0,p1;
+    Vector2 desktop;
+    Vector2     p0,p1;
     float    l0,l1;
 
     float alpha;
@@ -1133,7 +1148,7 @@ int ui_layout_find(const char *title, bool is_panel) {
 }
 
 static
-void ui_layout_save_mem(int idx, vec2 desktop, float workarea_h, struct nk_rect *xywh_, bool is_panel) {
+void ui_layout_save_mem(int idx, Vector2 desktop, float workarea_h, struct nk_rect *xywh_, bool is_panel) {
     struct nk_rect xywh = *xywh_; //< workaround for a (tcc-0.9.27+lubuntu16) bug, where xywh_ is never populated (ie, empty always) when passed by-copy
 
     ui_layout *s = &ui_layouts[is_panel][idx];
@@ -1171,12 +1186,12 @@ if( win && (win->flags & NK_WINDOW_MINIMIZED)) {
 }
 
 static
-struct nk_rect ui_layout_load_mem(int idx, vec2 desktop, bool is_panel) {
+struct nk_rect ui_layout_load_mem(int idx, Vector2 desktop, bool is_panel) {
     ui_layout *s = &ui_layouts[is_panel][idx];
 
     // extract reconstruction coords from bottom-right corner
-    vec2 p0 = mul2(add2(vec2(1,1), scale2(norm2(s->p0), s->l0)), desktop);
-    vec2 p1 = mul2(add2(vec2(1,1), scale2(norm2(s->p1), s->l1)), desktop);
+    Vector2 p0 = mul2(add2(vec2(1,1), scale2(norm2(s->p0), s->l0)), desktop);
+    Vector2 p1 = mul2(add2(vec2(1,1), scale2(norm2(s->p1), s->l1)), desktop);
 
     return nk_rect( p0.x, p0.y, p1.x, p1.y );
 }
@@ -1185,7 +1200,7 @@ static
 int ui_layout_all_reset(const char *mask) {
     ui_layout z = {0};
 
-    vec2 desktop = vec2(window_width(), window_height());
+    Vector2 desktop = vec2(AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
     float workarea_h = ui_has_menubar()*UI_MENUROW_HEIGHT; // @fixme workarea -> reserved_area
 
     for( int is_panel = 0; is_panel < 2; ++is_panel ) {
@@ -1222,7 +1237,7 @@ int ui_layout_all_reset(const char *mask) {
 
 static
 int ui_layout_all_save_disk(const char *mask) {
-    float w = window_width(), h = window_height();
+    float w = AppWindow::get_singleton()->get_width(), h = AppWindow::get_singleton()->get_height();
     for each_map_ptr_sorted(ui_windows, char*, k, unsigned, v) {
         struct nk_window *win = nk_window_find(ui_ctx, *k);
         if( win && strmatchi(*k, mask) ) {
@@ -1249,7 +1264,7 @@ const char *ui_layout_load_disk(const char *title, const char *mask, ini_t i, st
     char **w = map_find(i, va("%s.w", title));
     char **h = map_find(i, va("%s.h", title));
     if( x && y && w && h ) {
-        float ww = window_width(), wh = window_height();
+        float ww = AppWindow::get_singleton()->get_width(), wh = AppWindow::get_singleton()->get_height();
         r->x = atof(*x) * ww;
         r->y = atof(*y) * wh;
         r->w = atof(*w) * ww;
@@ -1315,11 +1330,11 @@ if( is_pinned ) {
     int idx = ui_layout_find(title, is_panel);
     ui_layout *s = &ui_layouts[is_panel][idx];
 
-vec2 desktop = vec2(window_width(), window_height());
+Vector2 desktop = vec2(AppWindow::get_singleton()->get_width(), AppWindow::get_singleton()->get_height());
 float workarea_h = ui_has_menubar()*UI_MENUROW_HEIGHT;
 
     int row = idx + !!ui_has_menubar(); // add 1 to skip menu
-    vec2 offset = vec2(0, UI_ROW_HEIGHT*row);
+    Vector2 offset = vec2(0, UI_ROW_HEIGHT*row);
     float w = desktop.w / 3.33, h = (flags & UI_NOTIFICATION_2 ? UI_MENUROW_HEIGHT*2 : (flags & UI_NOTIFICATION_1 ? UI_MENUROW_HEIGHT : desktop.h - offset.y * 2 - 1)); // h = desktop.h * 0.66; //
     struct nk_rect start_coords = {offset.x, offset.y, offset.x+w, offset.y+h};
 
@@ -1332,7 +1347,7 @@ if(is_window) {
     start_coords.h = h;
 }
 
-    static vec2 edge = {0}; static int edge_type = 0; // [off],L,R,U,D
+    static Vector2 edge = {0}; static int edge_type = 0; // [off],L,R,U,D
     do_once edge = vec2(desktop.w * 0.33, desktop.h * 0.66);
 
 // do not snap windows and/or save windows when using may be interacting with UI
@@ -1500,8 +1515,8 @@ static int *ui_last_enabled = 0;
 static int ui_has_window = 0;
 static int ui_window_has_menubar = 0;
 int ui_window(const char *title, int *enabled) {
-    if( window_width() <= 0 ) return 0;
-    if( window_height() <= 0 ) return 0;
+    if( AppWindow::get_singleton()->get_width() <= 0 ) return 0;
+    if( AppWindow::get_singleton()->get_height() <= 0 ) return 0;
     if( !ui_ctx || !ui_ctx->style.font ) return 0;
 
     bool forced_creation = enabled && *enabled; // ( enabled ? *enabled : !ui_has_menubar() );
@@ -1543,8 +1558,8 @@ int ui_window_end() {
 }
 
 int ui_panel(const char *title, int flags) {
-    if( window_width() <= 0 ) return 0;
-    if( window_height() <= 0 ) return 0;
+    if( AppWindow::get_singleton()->get_width() <= 0 ) return 0;
+    if( AppWindow::get_singleton()->get_height() <= 0 ) return 0;
     if( !ui_ctx || !ui_ctx->style.font ) return 0;
 
     if( ui_has_window ) {
@@ -1649,8 +1664,8 @@ int nk_button_transparent(struct nk_context *ctx, const char *text) {
 
 // internal vars for our editor. @todo: maybe expose these to the end-user as well?
 bool ui_label_icon_highlight;
-vec2 ui_label_icon_clicked_L; // left
-vec2 ui_label_icon_clicked_R; // right
+Vector2 ui_label_icon_clicked_L; // left
+Vector2 ui_label_icon_clicked_R; // right
 
 static
 int ui_label_(const char *label, int alignment) {
@@ -2505,14 +2520,15 @@ int ui_image(const char *label, handle id, unsigned w, unsigned h) {
     return ui_subimage(label, id, w,h, 0,0,w,h);
 }
 
-int ui_texture(const char *label, texture_t t) {
+int ui_texture(const char *label, Ref<Texture> t) {
     return ui_subimage(label, t.id, t.w,t.h, 0,0,t.w,t.h);
 }
 
-int ui_subtexture(const char *label, texture_t t, unsigned x, unsigned y, unsigned w, unsigned h) {
+int ui_subtexture(const char *label, Ref<Texture> t, unsigned x, unsigned y, unsigned w, unsigned h) {
     return ui_subimage(label, t.id, t.w,t.h, x,y,w,h);
 }
 
+/*
 int ui_colormap( const char *label, colormap_t *cm ) {
     if( label && ui_filter && ui_filter[0] ) if( !strstri(label, ui_filter) ) return 0;
 
@@ -2538,6 +2554,7 @@ int ui_colormap( const char *label, colormap_t *cm ) {
     }
     return ret;
 }
+*/
 
 int ui_radio(const char *label, const char **items, int num_items, int *selector) {
     if( label && ui_filter && ui_filter[0] ) if( !strstri(label, ui_filter) ) return 0;
@@ -2676,7 +2693,7 @@ int ui_browse(const char **output, bool *inlined) {
     static char *results[2] = {0}; // 2 instances max: 0=inlined, 1=windowed
     do_once {
         const int W = 96, H = 96; // 2048x481 px, 21x5 cells
-        texture_t i = texture("icons/suru.png", TEXTURE_RGBA|TEXTURE_MIPMAPS);
+        Ref<Texture> i = texture("icons/suru.png", TEXTURE_RGBA|TEXTURE_MIPMAPS);
         browser_config_dir(icon_load_rect(i.id, i.w, i.h, W, H, 16, 3), BROWSER_FOLDER); // default group
         browser_config_dir(icon_load_rect(i.id, i.w, i.h, W, H,  2, 4), BROWSER_HOME);
         browser_config_dir(icon_load_rect(i.id, i.w, i.h, W, H, 17, 3), BROWSER_COMPUTER);
@@ -2939,7 +2956,7 @@ int ui_demo(int do_windows) {
             ddraw_flush();
 
             // @fixme: this is breaking rendering when post-fxs are in use. edit: cannot reproduce
-            static texture_t tx = {0};
+            static Ref<Texture> tx = {0};
             if( texture_rec_begin(&tx, bounds.w, bounds.h )) {
                 glClearColor(0.15,0.15,0.15,1);
                 glClear(GL_COLOR_BUFFER_BIT);
@@ -2953,7 +2970,7 @@ int ui_demo(int do_windows) {
             static video_t *v = NULL;
             do_once v = video( "bjork-all-is-full-of-love.mp4", VIDEO_RGB );
 
-            texture_t *textures = video_decode( v );
+            Ref<Texture> *textures = video_decode( v );
 
             struct nk_image image = nk_image_id((int)textures[0].id);
             nk_draw_image(nk_window_get_canvas(ui_ctx), bounds, &image, nk_white);

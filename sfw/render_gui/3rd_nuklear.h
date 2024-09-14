@@ -20050,7 +20050,7 @@ ctx->current->is_window_resizing = 0;
         scaler.w = scrollbar_size.x * 2; //< @r-lyeh x2 easier grabbing
         scaler.h = scrollbar_size.y * 2; //< @r-lyeh x2 easier grabbing
 #if 1 //< @r-lyeh: pixel perfect adjustments
-        int scroll_has_scrolling = (window == ctx->active) && layout->has_scrolling;
+        //int scroll_has_scrolling = (window == ctx->active) && layout->has_scrolling;
         scaler.y = layout->bounds.y + layout->bounds.h - scaler.h + panel_padding.y;
         if (layout->flags & NK_WINDOW_SCALE_LEFT)
             scaler.x = layout->bounds.x - panel_padding.x; // + scaler.w * !!(window->flags & NK_WINDOW_NO_SCROLLBAR_Y); //< @r-lyeh

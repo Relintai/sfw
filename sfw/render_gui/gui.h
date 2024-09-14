@@ -14,7 +14,11 @@
 //--STRIP
 //#include "core/color.h"
 //#include "core/int_types.h"
-//#include "core/vector2.h"
+#include "core/vector2.h"
+#include "object/reference.h"
+
+class Texture;
+
 //--STRIP
 
 
@@ -63,11 +67,11 @@ int    ui_toggle(const char *label, bool *value);
 int    ui_dialog(const char *title, const char *text, int choices, bool *show); // @fixme: return
 int    ui_list(const char *label, const char **items, int num_items, int *selector);
 int    ui_radio(const char *label, const char **items, int num_items, int *selector);
-int    ui_texture(const char *label, texture_t t);
-int    ui_subtexture(const char *label, texture_t t, unsigned x, unsigned y, unsigned w, unsigned h);
-int    ui_image(const char *label, handle id, unsigned w, unsigned h); //(w,h) can be 0
-int    ui_subimage(const char *label, handle id, unsigned iw, unsigned ih, unsigned sx, unsigned sy, unsigned sw, unsigned sh);
-int    ui_colormap(const char *label, colormap_t *cm); // returns num member changed: 1 for color, 2 for texture map
+int    ui_texture(const char *label, Ref<Texture> t);
+int    ui_subtexture(const char *label, Ref<Texture> t, unsigned x, unsigned y, unsigned w, unsigned h);
+int    ui_image(const char *label, uint32_t id, unsigned w, unsigned h); //(w,h) can be 0
+int    ui_subimage(const char *label, uint32_t id, unsigned iw, unsigned ih, unsigned sx, unsigned sy, unsigned sw, unsigned sh);
+//int    ui_colormap(const char *label, colormap_t *cm); // returns num member changed: 1 for color, 2 for texture map
 int    ui_separator();
 int    ui_bitmask8(const char *label, uint8_t *bits);
 int    ui_bitmask16(const char *label, uint16_t *bits);
@@ -90,7 +94,7 @@ int ui_window_end();
 int  ui_show(const char *panel_or_window_title, int enabled);
 int  ui_dims(const char *panel_or_window_title, float width, float height);
 int  ui_visible(const char *panel_or_window_title); // @todo: include ui_collapse() items that are open as well?
-vec2 ui_get_dims();
+Vector2 ui_get_dims();
 
 int  ui_enable();
 int  ui_enabled();
