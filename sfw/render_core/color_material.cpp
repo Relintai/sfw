@@ -18,6 +18,11 @@ void ColorMaterial::setup_uniforms() {
 
 String ColorMaterial::get_vertex_shader_source() {
 	static const char *vertex_shader_source[] = {
+#if defined(__APPLE__)
+#else
+		"#version 100\n"
+		"precision mediump float;\n"
+#endif
 		"uniform mat4 u_proj_matrix;\n"
 		"uniform mat4 u_camera_matrix;\n"
 		"uniform mat4 u_model_view_matrix;\n"
