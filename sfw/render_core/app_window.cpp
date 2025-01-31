@@ -172,31 +172,15 @@ void AppWindow::drop_callback(GLFWwindow *window, int count, const char **paths)
 
 void AppWindow::window_hints(unsigned flags) {
 #ifdef __APPLE__
-	//glfwInitHint( GLFW_COCOA_CHDIR_RESOURCES, GLFW_FALSE );
 	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE); // @todo: remove silicon mac M1 hack
-//glfwWindowHint( GLFW_COCOA_GRAPHICS_SWITCHING, GLFW_FALSE );
-//glfwWindowHint( GLFW_COCOA_MENUBAR, GLFW_FALSE );
 #endif
 
 #if defined(__APPLE__)
-	/* We need to explicitly ask for a 3.2 context on OS X */
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // osx
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2); // osx, 2:#version150,3:330
-	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-	//glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 #elif defined(_WIN64) || defined(_WIN32)
-	// Compute shaders need 4.5 otherwise. But...
-	// According to the GLFW docs, the context version hint acts as a minimum version.
-	// i.e, the context you actually get may be a higher or highest version (which is usually the case)
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
@@ -205,10 +189,6 @@ void AppWindow::window_hints(unsigned flags) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-#endif
-
-#ifdef __APPLE__
-	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //osx
 #endif
 
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
