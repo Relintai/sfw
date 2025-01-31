@@ -113,6 +113,8 @@ List<String> process_classes_and_structs(const List<String> &list) {
 
 		s = s.replace(" _FORCE_INLINE_ ", " ");
 		s = s.replace("_FORCE_INLINE_ ", "");
+		s = s.replace(" _ALWAYS_INLINE_ ", " ");
+		s = s.replace("_ALWAYS_INLINE_ ", "");
 		s = s.replace(" _NO_DISCARD_CLASS_ ", " ");
 		s = s.replace(" inline ", " ");
 		s = s.replace("inline ", "");
