@@ -10,30 +10,30 @@
 
 // midi interface
 
-API void    midi_send(unsigned midi_msg);
+void    midi_send(unsigned midi_msg);
 
 // audio interface
 
 typedef struct audio_handle* audio_t;
 
-API audio_t audio_clip( const char *pathfile );
-API audio_t audio_stream( const char *pathfile );
-API int     audio_play( audio_t s, int flags );
-API int     audio_play_gain( audio_t a, int flags, float gain/*0*/ );
-API int     audio_play_gain_pitch( audio_t a, int flags, float gain, float pitch/*1*/ );
-API int     audio_play_gain_pitch_pan( audio_t a, int flags, float gain, float pitch, float pan/*0*/ );
-API int     audio_stop( audio_t a );
-API void    audio_loop( audio_t a, bool loop );
-API bool    audio_playing( audio_t a );
+audio_t audio_clip( const char *pathfile );
+audio_t audio_stream( const char *pathfile );
+int     audio_play( audio_t s, int flags );
+int     audio_play_gain( audio_t a, int flags, float gain/*0*/ );
+int     audio_play_gain_pitch( audio_t a, int flags, float gain, float pitch/*1*/ );
+int     audio_play_gain_pitch_pan( audio_t a, int flags, float gain, float pitch, float pan/*0*/ );
+int     audio_stop( audio_t a );
+void    audio_loop( audio_t a, bool loop );
+bool    audio_playing( audio_t a );
 
-API float   audio_volume_clip(float gain);   // set     fx volume if gain is in [0..1] range. returns current     fx volume in any case
-API float   audio_volume_stream(float gain); // set    bgm volume if gain is in [0..1] range. returns current    bgm volume in any case
-API float   audio_volume_master(float gain); // set master volume if gain is in [0..1] range. returns current master volume in any case
+float   audio_volume_clip(float gain);   // set     fx volume if gain is in [0..1] range. returns current     fx volume in any case
+float   audio_volume_stream(float gain); // set    bgm volume if gain is in [0..1] range. returns current    bgm volume in any case
+float   audio_volume_master(float gain); // set master volume if gain is in [0..1] range. returns current master volume in any case
 
-API int     audio_mute(int mute);
-API int     audio_muted();
+int     audio_mute(int mute);
+int     audio_muted();
 
-API int ui_audio();
+int ui_audio();
 
 enum AUDIO_FLAGS {
     AUDIO_1CH = 0, // default
@@ -57,4 +57,4 @@ enum AUDIO_FLAGS {
     AUDIO_SINGLE_INSTANCE = 512,
 };
 
-API int audio_queue( const void *samples, int num_samples, int flags );
+int audio_queue( const void *samples, int num_samples, int flags );
