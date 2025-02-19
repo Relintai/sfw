@@ -40,8 +40,10 @@ String ColoredMaterial::get_vertex_shader_source() {
 String ColoredMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
 #ifndef __APPLE__
-		"precision mediump float;\n"
-		"\n"
+		"#version 100\n"
+        "#ifdef GL_ES\n"
+        "    precision mediump float;\n"
+        "#endif\n"
 #endif
 		"\n"
 		"uniform vec4 fragment_color;\n"

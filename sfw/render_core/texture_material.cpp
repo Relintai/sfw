@@ -60,8 +60,10 @@ String TextureMaterial::get_vertex_shader_source() {
 String TextureMaterial::get_fragment_shader_source() {
 	static const char *fragment_shader_source[] = {
 #ifndef __APPLE__
-		"precision mediump float;\n"
-		"\n"
+		"#version 100\n"
+        "#ifdef GL_ES\n"
+        "    precision mediump float;\n"
+        "#endif\n"
 #endif
 		"uniform sampler2D u_texture;\n"
 		"\n"
