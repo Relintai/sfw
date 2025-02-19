@@ -1,59 +1,6 @@
 // @fixme: really shutdown audio & related threads before quitting. ma_dr_wav crashes.
 
 
-#if is(win32) && !is(gcc)
-#include <windows.h>
-#include <mmeapi.h> // midi
-static HMIDIOUT midi_out_handle = 0;
-#elif is(osx)
-static AudioUnit midi_out_handle = 0;
-#endif
-
-static void midi_init() {
-#if is(win32) && !is(gcc)
-    if( midiOutGetNumDevs() != 0 ) {
-        midiOutOpen(&midi_out_handle, 0, 0, 0, 0);
-    }
-#elif is(osx)
-    AUGraph graph;
-    AUNode outputNode, mixerNode, dlsNode;
-    NewAUGraph(&graph);
-    AudioComponentDescription output = {'auou','ahal','appl',0,0};
-    AUGraphAddNode(graph, &output, &outputNode);
-    AUGraphOpen(graph);
-    AUGraphInitialize(graph);
-    AUGraphStart(graph);
-    AudioComponentDescription dls = {'aumu','dls ','appl',0,0};
-    AUGraphAddNode(graph, &dls, &dlsNode);
-    AUGraphNodeInfo(graph, dlsNode, NULL, &midi_out_handle);
-    AudioComponentDescription mixer = {'aumx','smxr','appl',0,0};
-    AUGraphAddNode(graph, &mixer, &mixerNode);
-    AUGraphConnectNodeInput(graph,mixerNode,0,outputNode,0);
-    AUGraphConnectNodeInput(graph,dlsNode,0,mixerNode,0);
-    AUGraphUpdate(graph,NULL);
-#endif
-}
-
-static void midi_quit() {
-#if is(win32) && !is(gcc)
-    if (midi_out_handle) midiOutClose(midi_out_handle);
-#endif
-    // @fixme: osx
-    // https://developer.apple.com/library/archive/samplecode/PlaySoftMIDI/Listings/main_cpp.html#//apple_ref/doc/uid/DTS40008635-main_cpp-DontLinkElementID_4
-}
-
-void midi_send(unsigned midi_msg) {
-#if is(win32) && !is(gcc)
-    if( midi_out_handle ) {
-        midiOutShortMsg(midi_out_handle, midi_msg);
-    }
-#elif is(osx)
-    if( midi_out_handle ) {
-        MusicDeviceMIDIEvent(midi_out_handle, (midi_msg) & 0xFF, (midi_msg >> 8) & 0xFF, (midi_msg >> 16) & 0xFF, 0);
-    }
-#endif
-}
-
 // encapsulate ma_dr_wav,ma_dr_mp3,stbvorbis and some buffer with the sts_mixer_stream_t
 enum { UNK, WAV, OGG, MP1, MP3 };
 typedef struct {

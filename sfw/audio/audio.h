@@ -1,3 +1,13 @@
+//--STRIP
+#ifndef AUDIO_H
+#define AUDIO_H
+//--STRIP
+
+//--STRIP
+#include "object/object.h"
+#include "object/reference.h"
+//--STRIP
+
 // -----------------------------------------------------------------------------
 // audio framework
 // - rlyeh, public domain
@@ -8,16 +18,14 @@
 // @todo: destroystream()    if( ss->type == MOD ) jar_mod_unload(&ss->mod);
 // @todo: destroystream()    if( ss->type == XM && ss->xm ) jar_xm_free_context(ss->xm);
 
-// midi interface
-
-void    midi_send(unsigned midi_msg);
-
 // audio interface
 
 typedef struct audio_handle* audio_t;
 
 audio_t audio_clip( const char *pathfile );
 audio_t audio_stream( const char *pathfile );
+
+
 int     audio_play( audio_t s, int flags );
 int     audio_play_gain( audio_t a, int flags, float gain/*0*/ );
 int     audio_play_gain_pitch( audio_t a, int flags, float gain, float pitch/*1*/ );
@@ -56,3 +64,8 @@ enum AUDIO_FLAGS {
 };
 
 int audio_queue( const void *samples, int num_samples, int flags );
+
+
+//--STRIP
+#endif
+//--STRIP
