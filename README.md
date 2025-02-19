@@ -89,6 +89,12 @@ Has classes like:
 
 Depends on Core, Object and Render Core.
 
+### GUI
+
+Contains the Dear ImGui GUI toolkit.
+
+Depends on Core, Object and Render Core.
+
 ## SFWL
 
 The library's lite version.
