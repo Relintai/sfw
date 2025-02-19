@@ -714,6 +714,12 @@
 //#include "render_core/render_state.h"
 //--STRIP
 {{FILE:sfw/render_core/transparent_texture_material.h}}
+//--STRIP
+//#include "render_core/material.h"
+//#include "render_core/texture.h"
+//#include "render_core/render_state.h"
+//--STRIP
+{{FILE:sfw/render_core/colored_texture_material_2d.h}}
 
 
 //--STRIP

@@ -11,7 +11,7 @@
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
 #include "render_core/texture_material.h"
-#include "render_core/texture_material_2d.h"
+#include "render_core/colored_texture_material_2d.h"
 
 #include "render_core/render_state.h"
 //--STRIP

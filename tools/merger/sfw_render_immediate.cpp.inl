@@ -618,6 +618,10 @@
 //#includes own header
 //--STRIP
 {{FILE:sfw/render_core/transparent_texture_material.cpp}}
+//--STRIP
+//#includes own header
+//--STRIP
+{{FILE:sfw/render_core/colored_texture_material_2d.cpp}}
 
 //--STRIP
 //#include "render_core/image.h"

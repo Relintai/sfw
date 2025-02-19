@@ -82,6 +82,7 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/font_material.cpp -o s
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/texture_material_2d.cpp -o sfw/render_core/texture_material_2d.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/texture_material.cpp -o sfw/render_core/texture_material.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/transparent_texture_material.cpp -o sfw/render_core/transparent_texture_material.o
+ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/colored_texture_material_2d.cpp -o sfw/render_core/colored_texture_material_2d.o
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_immediate/renderer.cpp -o sfw/render_immediate/renderer.o
 
@@ -139,6 +140,7 @@ ccache g++ -Wall \
                         sfw/render_core/colored_material.o sfw/render_core/font_material.o \
                         sfw/render_core/texture_material_2d.o sfw/render_core/texture_material.o \
                         sfw/render_core/transparent_texture_material.o \
+                        sfw/render_core/colored_texture_material_2d.o \
                         sfw/render_immediate/renderer.o \
                         sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
                         sfw/render_objects/object_2d.o \

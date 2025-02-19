@@ -24,6 +24,7 @@ class ColorMaterial2D;
 class TextureMaterial;
 class ColorMaterial;
 class ColoredMaterial;
+class ColoredTextureMaterial2D;
 
 class Renderer : public Object {
 	SFW_OBJECT(Renderer, Object);
@@ -141,7 +142,7 @@ private:
 	Ref<Mesh> _3d_mesh;
 	Ref<Mesh> _font_mesh;
 
-	Ref<TextureMaterial2D> _texture_material_2d;
+	Ref<ColoredTextureMaterial2D> _texture_material_2d;
 	Ref<FontMaterial> _font_material;
 	Ref<ColorMaterial2D> _color_material_2d;
 

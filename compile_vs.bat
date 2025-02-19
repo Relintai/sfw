@@ -90,6 +90,7 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/font_material.cpp /Fo:sfw/ren
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/texture_material_2d.cpp /Fo:sfw/render_core/texture_material_2d.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/texture_material.cpp /Fo:sfw/render_core/texture_material.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/transparent_texture_material.cpp /Fo:sfw/render_core/transparent_texture_material.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/colored_texture_material_2d.cpp /Fo:sfw/render_core/colored_texture_material_2d.obj
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_immediate/renderer.cpp /Fo:sfw/render_immediate/renderer.obj
 
@@ -149,6 +150,7 @@ cl /D_REENTRANT /Zi ^
 		sfw/render_core/colored_material.obj sfw/render_core/font_material.obj ^
 		sfw/render_core/texture_material_2d.obj sfw/render_core/texture_material.obj ^
 		sfw/render_core/transparent_texture_material.obj ^
+		sfw/render_core/colored_texture_material_2d.obj ^
 		sfw/render_immediate/renderer.obj ^
 		sfw/render_objects/camera_3d.obj sfw/render_objects/object_3d.obj sfw/render_objects/mesh_instance_3d.obj ^
 		sfw/render_objects/object_2d.obj ^

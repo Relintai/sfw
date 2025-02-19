@@ -93,6 +93,7 @@ clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/font_material.cpp -o sfw/
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/texture_material_2d.cpp -o sfw/render_core/texture_material_2d.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/texture_material.cpp -o sfw/render_core/texture_material.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/transparent_texture_material.cpp -o sfw/render_core/transparent_texture_material.o
+clang++ $args -D_REENTRANT -g -Isfw -c sfw/render_core/colored_texture_material_2d.cpp -o sfw/render_core/colored_texture_material_2d.o
 
 clang++ -w -framework cocoa -framework iokit -framework CoreFoundation -framework CoreAudio -framework AudioToolbox -D_REENTRANT -g -Isfw -c sfw/render_core/glfw_impl.m -o sfw/render_core/glfw_impl.o
 
@@ -151,6 +152,7 @@ clang++ $args -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o 
                         sfw/render_core/colored_material.o sfw/render_core/font_material.o \
                         sfw/render_core/texture_material_2d.o sfw/render_core/texture_material.o \
                         sfw/render_core/transparent_texture_material.o \
+                        sfw/render_core/colored_texture_material_2d.o \
                         sfw/render_core/glfw_impl.o \
                         sfw/render_immediate/renderer.o \
                         sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
