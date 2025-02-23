@@ -369,9 +369,20 @@ void Renderer::draw_mesh_3d_textured(const Ref<Mesh> &p_mesh, const Ref<Texture>
 	camera_3d_pop_model_view_matrix();
 }
 
+
 void Renderer::camera_2d_bind() {
 	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
 	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
+}
+void Renderer::camera_2d_reset() {
+	RenderState::model_view_matrix_2d = Transform2D();
+	RenderState::projection_matrix_2d = Transform();
+
+	_camera_2d_model_view_matrix_stack.clear();
+	_camera_2d_projection_matrix_stack.clear();
+
+	_camera_2d_projection_matrix = RenderState::projection_matrix_2d;
+	_camera_2d_model_view_matrix = RenderState::model_view_matrix_2d;
 }
 
 Transform Renderer::camera_2d_get_current_projection_matrix() const {
@@ -397,6 +408,12 @@ void Renderer::camera_2d_pop_projection_matrix() {
 }
 int Renderer::get_camera_2d_projection_matrix_stack_size() const {
 	return _camera_2d_projection_matrix_stack.size();
+}
+void Renderer::camera_2d_projection_matrix_stack_clear() {
+	_camera_2d_projection_matrix_stack.clear();
+	
+	_camera_2d_projection_matrix = Transform();
+	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
 }
 
 Transform2D Renderer::camera_2d_get_current_model_view_matrix() const {
@@ -425,6 +442,12 @@ void Renderer::camera_2d_pop_model_view_matrix() {
 int Renderer::get_camera_2d_model_view_matrix_stack_size() const {
 	return _camera_2d_model_view_matrix_stack.size();
 }
+void Renderer::camera_2d_model_view_matrix_stack_clear() {
+	_camera_2d_model_view_matrix_stack.clear();
+	
+	_camera_2d_model_view_matrix = Transform2D();
+	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
+}
 
 void Renderer::camera_2d_projection_set_to_window() {
 	Vector2 size = get_window_size();
@@ -434,10 +457,9 @@ void Renderer::camera_2d_projection_set_to_window() {
 	//canvas_transform.scale(Vector3(2.0f / size.x, 2.0f / size.y, 1.0f));
 	canvas_transform.scale(Vector3(2.0f / size.x, -2.0f / size.y, 1.0f));
 
-	RenderState::model_view_matrix_2d = Transform2D();
 	RenderState::projection_matrix_2d = canvas_transform;
-
-	_camera_2d_model_view_matrix_stack.clear();
+	_camera_2d_projection_matrix_stack.clear();
+	_camera_2d_projection_matrix = canvas_transform;
 }
 
 void Renderer::camera_2d_projection_set_to_size(const Size2i &p_size) {
@@ -446,10 +468,9 @@ void Renderer::camera_2d_projection_set_to_size(const Size2i &p_size) {
 	//canvas_transform.scale(Vector3(2.0f / size.x, 2.0f / size.y, 1.0f));
 	canvas_transform.scale(Vector3(2.0f / p_size.x, -2.0f / p_size.y, 1.0f));
 
-	RenderState::model_view_matrix_2d = Transform2D();
 	RenderState::projection_matrix_2d = canvas_transform;
-
-	_camera_2d_model_view_matrix_stack.clear();
+	_camera_2d_projection_matrix_stack.clear();
+	_camera_2d_projection_matrix = canvas_transform;
 }
 
 void Renderer::camera_2d_projection_set_to_render_target() {
@@ -460,10 +481,15 @@ void Renderer::camera_2d_projection_set_to_render_target() {
 	//canvas_transform.scale(Vector3(2.0f / size.x, 2.0f / size.y, 1.0f));
 	canvas_transform.scale(Vector3(2.0f / size.x, -2.0f / size.y, 1.0f));
 
-	RenderState::model_view_matrix_2d = Transform2D();
 	RenderState::projection_matrix_2d = canvas_transform;
+	_camera_2d_projection_matrix_stack.clear();
+	_camera_2d_projection_matrix = canvas_transform;
+}
 
-	_camera_2d_model_view_matrix_stack.clear();
+void Renderer::camera_2d_projection_set_to_transform(const Transform &p_transform) {
+	RenderState::projection_matrix_2d = p_transform;
+	_camera_2d_projection_matrix_stack.clear();
+	_camera_2d_projection_matrix = p_transform;
 }
 
 void Renderer::camera_3d_bind() {

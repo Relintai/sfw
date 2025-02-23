@@ -70,20 +70,24 @@ public:
 	//2D Camera API
 
 	void camera_2d_bind();
+	void camera_2d_reset();
 
 	Transform camera_2d_get_current_projection_matrix() const;
 	void camera_2d_push_projection_matrix(const Transform &p_transform);
 	void camera_2d_pop_projection_matrix();
 	int get_camera_2d_projection_matrix_stack_size() const;
+	void camera_2d_projection_matrix_stack_clear();
 
 	Transform2D camera_2d_get_current_model_view_matrix() const;
 	void camera_2d_push_model_view_matrix(const Transform2D &p_transform_2d);
 	void camera_2d_pop_model_view_matrix();
 	int get_camera_2d_model_view_matrix_stack_size() const;
+	void camera_2d_model_view_matrix_stack_clear();
 
 	void camera_2d_projection_set_to_window();
 	void camera_2d_projection_set_to_size(const Size2i &p_size);
 	void camera_2d_projection_set_to_render_target();
+	void camera_2d_projection_set_to_transform(const Transform &p_transform);
 
 	//3D Camera API
 
