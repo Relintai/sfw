@@ -5,13 +5,13 @@
 #include "render_core/color_material.h"
 #include "render_core/color_material_2d.h"
 #include "render_core/colored_material.h"
+#include "render_core/colored_texture_material_2d.h"
 #include "render_core/font.h"
 #include "render_core/font_material.h"
 #include "render_core/material.h"
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
 #include "render_core/texture_material.h"
-#include "render_core/colored_texture_material_2d.h"
 
 #include "render_core/render_state.h"
 //--STRIP
@@ -369,7 +369,6 @@ void Renderer::draw_mesh_3d_textured(const Ref<Mesh> &p_mesh, const Ref<Texture>
 	camera_3d_pop_model_view_matrix();
 }
 
-
 void Renderer::camera_2d_bind() {
 	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
 	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
@@ -411,7 +410,7 @@ int Renderer::get_camera_2d_projection_matrix_stack_size() const {
 }
 void Renderer::camera_2d_projection_matrix_stack_clear() {
 	_camera_2d_projection_matrix_stack.clear();
-	
+
 	_camera_2d_projection_matrix = Transform();
 	RenderState::projection_matrix_2d = _camera_2d_projection_matrix;
 }
@@ -444,7 +443,7 @@ int Renderer::get_camera_2d_model_view_matrix_stack_size() const {
 }
 void Renderer::camera_2d_model_view_matrix_stack_clear() {
 	_camera_2d_model_view_matrix_stack.clear();
-	
+
 	_camera_2d_model_view_matrix = Transform2D();
 	RenderState::model_view_matrix_2d = _camera_2d_model_view_matrix;
 }
@@ -502,7 +501,7 @@ void Renderer::camera_3d_reset() {
 	_camera_3d_projection = Projection();
 	_camera_3d_camera_transform_matrix = Transform();
 	_camera_3d_model_view_matrix = Transform();
-	
+
 	_camera_3d_camera_transform_matrix_stack.clear();
 	_camera_3d_model_view_matrix_stack.clear();
 
@@ -535,6 +534,11 @@ void Renderer::camera_3d_pop_camera_transform_matrix() {
 int Renderer::get_camera_3d_camera_transform_matrix_stack_size() const {
 	return _camera_3d_camera_transform_matrix_stack.size();
 }
+void Renderer::camera_3d_camera_transform_matrix_stack_clear() {
+	_camera_3d_camera_transform_matrix_stack.clear();
+	_camera_3d_camera_transform_matrix = Transform();
+	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
+}
 
 Transform Renderer::camera_3d_get_current_model_view_matrix() const {
 	return _camera_3d_model_view_matrix;
@@ -560,6 +564,12 @@ void Renderer::camera_3d_pop_model_view_matrix() {
 int Renderer::get_camera_3d_model_view_matrix_stack_size() const {
 	return _camera_3d_model_view_matrix_stack.size();
 }
+void Renderer::get_camera_3d_model_view_matrix_stack_clear() {
+	_camera_3d_model_view_matrix_stack.clear();
+	_camera_3d_model_view_matrix = Transform();
+
+	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
+}
 
 // Aspect Ratio = w / h
 void Renderer::camera_3d_projection_set_to_orthographic(float aspect_ratio, float size, float znear, float zfar, bool vaspect) {
@@ -571,7 +581,7 @@ void Renderer::camera_3d_projection_set_to_orthographic(float aspect_ratio, floa
 			vaspect);
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
-	
+
 	_last_camera_3d_data.type = LastCamera3DData::TYPE_ORTOGRAPHIC;
 	_last_camera_3d_data.size = size;
 	_last_camera_3d_data.aspect_ratio = aspect_ratio;
@@ -590,8 +600,8 @@ void Renderer::camera_3d_projection_set_to_perspective(float aspect_ratio, float
 			vaspect);
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
-	
-		_last_camera_3d_data.type = LastCamera3DData::TYPE_PERSPECTIVE;
+
+	_last_camera_3d_data.type = LastCamera3DData::TYPE_PERSPECTIVE;
 	_last_camera_3d_data.size = size;
 	_last_camera_3d_data.aspect_ratio = aspect_ratio;
 	_last_camera_3d_data.znear = znear;
@@ -610,7 +620,7 @@ void Renderer::camera_3d_projection_set_to_frustum(float aspect_ratio, float siz
 			vaspect);
 
 	RenderState::projection_matrix_3d = _camera_3d_projection;
-	
+
 	_last_camera_3d_data.type = LastCamera3DData::TYPE_FRUSTUM;
 	_last_camera_3d_data.size = size;
 	_last_camera_3d_data.aspect_ratio = aspect_ratio;
@@ -681,7 +691,7 @@ Vector<Vector3> Renderer::camera_3d_get_near_plane_points() const {
 	Size2 viewport_size = RenderState::render_rect.size;
 
 	Projection cm;
-	
+
 	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
 		cm.set_orthogonal(_last_camera_3d_data.size, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
 	} else {
@@ -703,7 +713,7 @@ Point2 Renderer::camera_3d_unproject_position(const Vector3 &p_pos) const {
 	Size2 viewport_size = RenderState::render_rect.size;
 
 	Projection cm;
-	
+
 	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
 		cm.set_orthogonal(_last_camera_3d_data.size, viewport_size.aspect(), _last_camera_3d_data.znear, _last_camera_3d_data.zfar, true);
 	} else {
@@ -722,16 +732,15 @@ Point2 Renderer::camera_3d_unproject_position(const Vector3 &p_pos) const {
 	return res;
 }
 
-
 Vector3 Renderer::camera_3d_project_position(const Point2 &p_point, float p_z_depth) const {
 	if (p_z_depth == 0) {
 		return _camera_3d_camera_transform_matrix.origin;
 	}
-	
+
 	Size2 viewport_size = RenderState::render_rect.size;
 
 	Projection cm;
-	
+
 	if (_last_camera_3d_data.type == LastCamera3DData::TYPE_ORTOGRAPHIC) {
 		cm.set_orthogonal(_last_camera_3d_data.size, viewport_size.aspect(), p_z_depth, _last_camera_3d_data.zfar, true);
 	} else {
@@ -749,7 +758,6 @@ Vector3 Renderer::camera_3d_project_position(const Point2 &p_point, float p_z_de
 
 	return _camera_3d_camera_transform_matrix.xform(p);
 }
-
 
 void Renderer::clear_screen(const Color &p_color) {
 	glClearColor(p_color.r, p_color.g, p_color.b, p_color.a);

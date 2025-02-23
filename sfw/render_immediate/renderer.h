@@ -98,11 +98,13 @@ public:
 	void camera_3d_push_camera_transform_matrix(const Transform &p_transform);
 	void camera_3d_pop_camera_transform_matrix();
 	int get_camera_3d_camera_transform_matrix_stack_size() const;
+	void camera_3d_camera_transform_matrix_stack_clear();
 
 	Transform camera_3d_get_current_model_view_matrix() const;
 	void camera_3d_push_model_view_matrix(const Transform &p_transform);
 	void camera_3d_pop_model_view_matrix();
 	int get_camera_3d_model_view_matrix_stack_size() const;
+	void get_camera_3d_model_view_matrix_stack_clear();
 
 	// Aspect Ratio = w / h
 	void camera_3d_projection_set_to_orthographic(float aspect_ratio, float size = 1.0, float znear = 0.05, float zfar = 100, bool vaspect = false);
