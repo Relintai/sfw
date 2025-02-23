@@ -92,6 +92,7 @@ public:
 	//3D Camera API
 
 	void camera_3d_bind();
+	void camera_3d_reset();
 
 	Transform camera_3d_get_current_camera_transform_matrix() const;
 	void camera_3d_push_camera_transform_matrix(const Transform &p_transform);

@@ -498,6 +498,19 @@ void Renderer::camera_3d_bind() {
 	RenderState::projection_matrix_3d = _camera_3d_projection;
 }
 
+void Renderer::camera_3d_reset() {
+	_camera_3d_projection = Projection();
+	_camera_3d_camera_transform_matrix = Transform();
+	_camera_3d_model_view_matrix = Transform();
+	
+	_camera_3d_camera_transform_matrix_stack.clear();
+	_camera_3d_model_view_matrix_stack.clear();
+
+	RenderState::camera_transform_3d = _camera_3d_camera_transform_matrix;
+	RenderState::model_view_matrix_3d = _camera_3d_model_view_matrix;
+	RenderState::projection_matrix_3d = _camera_3d_projection;
+}
+
 Transform Renderer::camera_3d_get_current_camera_transform_matrix() const {
 	return _camera_3d_camera_transform_matrix;
 }
