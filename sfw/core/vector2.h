@@ -15,6 +15,7 @@
 //--STRIP
 
 class String;
+struct Vector2i;
 
 struct _NO_DISCARD_CLASS_ Vector2 {
 	static const int AXIS_COUNT = 2;
@@ -103,6 +104,7 @@ struct _NO_DISCARD_CLASS_ Vector2 {
 	Vector2 reflect(const Vector2 &p_normal) const;
 
 	bool is_equal_approx(const Vector2 &p_v) const;
+	bool is_zero_approx() const;
 
 	Vector2 operator+(const Vector2 &p_v) const;
 	void operator+=(const Vector2 &p_v);
@@ -158,6 +160,7 @@ struct _NO_DISCARD_CLASS_ Vector2 {
 	real_t aspect() const { return width / height; }
 
 	operator String() const;
+	operator Vector2i() const;
 
 	_FORCE_INLINE_ Vector2(real_t p_x, real_t p_y) {
 		x = p_x;

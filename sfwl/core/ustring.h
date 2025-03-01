@@ -9,10 +9,11 @@
 /*************************************************************************/
 
 //--STRIP
-#include "cowdata.h"
-#include "core/vector.h"
 #include "char_utils.h"
+#include "core/math_defs.h"
 #include "core/typedefs.h"
+#include "core/vector.h"
+#include "cowdata.h"
 //--STRIP
 
 /*************************************************************************/
@@ -350,6 +351,14 @@ public:
 	bool to_bool() const;
 	uint32_t to_uint() const;
 
+	_FORCE_INLINE_ real_t to_real() const {
+#ifdef REAL_T_IS_DOUBLE
+		return to_double();
+#else
+		return to_float();
+#endif
+	}
+
 	int hex_to_int(bool p_with_prefix = true) const;
 	int64_t hex_to_int64(bool p_with_prefix = true) const;
 	int64_t bin_to_int64(bool p_with_prefix = true) const;
@@ -366,6 +375,31 @@ public:
 	static double to_double(const char *p_str);
 	static double to_double(const wchar_t *p_str, const wchar_t **r_end = nullptr);
 	static double to_double(const CharType *p_str, const CharType **r_end = nullptr);
+
+	_FORCE_INLINE_ static real_t to_real(const char *p_str) {
+#ifdef REAL_T_IS_DOUBLE
+		return to_double(p_str);
+#else
+		return to_float(p_str);
+#endif
+	}
+
+	_FORCE_INLINE_ static real_t to_real(const wchar_t *p_str, const wchar_t **r_end = nullptr) {
+#ifdef REAL_T_IS_DOUBLE
+		return to_double(p_str, r_end);
+#else
+		return to_float(p_str, r_end);
+#endif
+	}
+
+	_FORCE_INLINE_ static real_t to_real(const CharType *p_str, const CharType **r_end = nullptr) {
+#ifdef REAL_T_IS_DOUBLE
+		return to_double(p_str, r_end);
+#else
+		return to_float(p_str, r_end);
+
+#endif
+	}
 
 	static uint32_t num_characters(int64_t p_int);
 
@@ -508,6 +542,7 @@ public:
 	String(const char *p_str);
 	String(const wchar_t *p_str);
 	String(const CharType *p_str);
+	String(const Char16String &p_str);
 	String(const char *p_str, int p_clip_to_len);
 	String(const wchar_t *p_str, int p_clip_to_len);
 	String(const CharType *p_str, int p_clip_to_len);
@@ -521,6 +556,7 @@ private:
 	void copy_from(const char *p_cstr, const int p_clip_to);
 	void copy_from(const wchar_t *p_cstr);
 	void copy_from(const wchar_t *p_cstr, const int p_clip_to);
+	void copy_from(const Char16String &p_str);
 	void copy_from(const CharType *p_cstr);
 	void copy_from(const CharType *p_cstr, const int p_clip_to);
 

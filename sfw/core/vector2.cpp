@@ -5,6 +5,7 @@
 
 //--STRIP
 #include "core/vector2.h"
+#include "core/vector2i.h"
 
 #include "core/ustring.h"
 //--STRIP
@@ -147,6 +148,14 @@ bool Vector2::is_equal_approx(const Vector2 &p_v) const {
 	return Math::is_equal_approx(x, p_v.x) && Math::is_equal_approx(y, p_v.y);
 }
 
+bool Vector2::is_zero_approx() const {
+	return Math::is_zero_approx(x) && Math::is_zero_approx(y);
+}
+
 Vector2::operator String() const {
 	return "(" + String::num_real(x) + ", " + String::num_real(y) + ")";
+}
+
+Vector2::operator Vector2i() const {
+	return Vector2i(x, y);
 }

@@ -24,6 +24,8 @@
 #endif
 //--STRIP
 
+#define PRINT_UNICODE_ERRORS 0
+
 #if defined(MINGW_ENABLED) || defined(_MSC_VER)
 #define snprintf _snprintf_s
 #endif
@@ -234,7 +236,9 @@ void String::copy_from(const char *p_cstr) {
 	for (size_t i = 0; i <= len; i++) {
 		uint8_t c = p_cstr[i] >= 0 ? p_cstr[i] : uint8_t(256 + p_cstr[i]);
 		if (c == 0 && i < len) {
+#if PRINT_UNICODE_ERRORS
 			print_unicode_error("NUL character", true);
+#endif
 			dst[i] = 0x20;
 		} else {
 			dst[i] = c;
@@ -267,7 +271,10 @@ void String::copy_from(const char *p_cstr, const int p_clip_to) {
 	for (int i = 0; i < len; i++) {
 		uint8_t c = p_cstr[i] >= 0 ? p_cstr[i] : uint8_t(256 + p_cstr[i]);
 		if (c == 0) {
+#if PRINT_UNICODE_ERRORS
 			print_unicode_error("NUL character", true);
+#endif
+
 			dst[i] = 0x20;
 		} else {
 			dst[i] = c;
@@ -296,9 +303,16 @@ void String::copy_from(const wchar_t *p_cstr, const int p_clip_to) {
 #endif
 }
 
+void String::copy_from(const Char16String &p_str) {
+	parse_utf16(p_str.ptr());
+}
+
 void String::copy_from(const CharType &p_char) {
 	if (p_char == 0) {
+#if PRINT_UNICODE_ERRORS
 		print_unicode_error("NUL character", true);
+#endif
+
 		return;
 	}
 	/*
@@ -368,7 +382,10 @@ void String::copy_from_unchecked(const CharType *p_char, const int p_length) {
 
 	for (int i = 0; i < p_length; i++) {
 		if (p_char[i] == 0) {
+#if PRINT_UNICODE_ERRORS
 			print_unicode_error("NUL character", true);
+#endif
+
 			dst[i] = 0x20;
 			continue;
 		}
@@ -449,7 +466,10 @@ String &String::operator+=(const String &p_str) {
 
 String &String::operator+=(CharType p_char) {
 	if (p_char == 0) {
+#if PRINT_UNICODE_ERRORS
 		print_unicode_error("NUL character", true);
+#endif
+
 		return *this;
 	}
 	/*
@@ -484,7 +504,10 @@ String &String::operator+=(const char *p_str) {
 	for (size_t i = 0; i <= rhs_len; i++) {
 		uint8_t c = p_str[i] >= 0 ? p_str[i] : uint8_t(256 + p_str[i]);
 		if (c == 0 && i < rhs_len) {
+#if PRINT_UNICODE_ERRORS
 			print_unicode_error("NUL character", true);
+#endif
+
 			dst[i] = 0x20;
 		} else {
 			dst[i] = c;
@@ -889,7 +912,7 @@ String String::substr_index(const int start_index, const int end_index) const {
 		return "";
 	}
 
-	if (end_index >= s) {
+	if (end_index > s) {
 		return substr(start_index, (s - 1) - start_index);
 	}
 
@@ -2385,13 +2408,16 @@ Vector<float> String::split_floats(const String &p_splitter, bool p_allow_empty)
 	int from = 0;
 	int len = length();
 
+	String buffer = *this;
 	while (true) {
 		int end = find(p_splitter, from);
 		if (end < 0) {
 			end = len;
 		}
 		if (p_allow_empty || (end > from)) {
-			ret.push_back(String::to_double(&get_data()[from]));
+			buffer[end] = 0;
+			ret.push_back(String::to_double(&buffer.get_data()[from]));
+			buffer[end] = _cowdata.get(end);
 		}
 
 		if (end == len) {
@@ -2409,6 +2435,7 @@ Vector<float> String::split_floats_mk(const Vector<String> &p_splitters, bool p_
 	int from = 0;
 	int len = length();
 
+	String buffer = *this;
 	while (true) {
 		int idx;
 		int end = findmk(p_splitters, from, &idx);
@@ -2420,7 +2447,9 @@ Vector<float> String::split_floats_mk(const Vector<String> &p_splitters, bool p_
 		}
 
 		if (p_allow_empty || (end > from)) {
-			ret.push_back(String::to_double(&get_data()[from]));
+			buffer[end] = 0;
+			ret.push_back(String::to_double(&buffer.get_data()[from]));
+			buffer[end] = _cowdata.get(end);
 		}
 
 		if (end == len) {
@@ -4693,6 +4722,10 @@ String::String(const wchar_t *p_str) {
 }
 
 String::String(const CharType *p_str) {
+	copy_from(p_str);
+}
+
+String::String(const Char16String &p_str) {
 	copy_from(p_str);
 }
 

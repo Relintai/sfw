@@ -238,6 +238,42 @@ String InputEventKey::as_text() const {
 	return kc;
 }
 
+Ref<InputEventKey> InputEventKey::create_reference(uint32_t p_keycode, bool p_physical) {
+	Ref<InputEventKey> ie;
+
+	ie.instance();
+
+	if (p_physical) {
+		ie->set_physical_scancode(p_keycode & KEY_CODE_MASK);
+	} else {
+		ie->set_scancode(p_keycode & KEY_CODE_MASK);
+	}
+
+	char32_t ch = char32_t(p_keycode & KEY_CODE_MASK);
+
+	if (ch < 0xd800 || (ch > 0xdfff && ch <= 0x10ffff)) {
+		ie->set_unicode(ch);
+	}
+
+	if ((p_keycode & KEY_MASK_SHIFT)) {
+		ie->set_shift(true);
+	}
+
+	if ((p_keycode & KEY_MASK_ALT)) {
+		ie->set_alt(true);
+	}
+
+	if ((p_keycode & KEY_MASK_CTRL)) {
+		ie->set_control(true);
+	}
+
+	if ((p_keycode & KEY_MASK_META)) {
+		ie->set_command(true);
+	}
+
+	return ie;
+}
+
 bool InputEventKey::action_match(const Ref<InputEvent> &p_event, bool p_exact_match, bool *p_pressed, float *p_strength, float *p_raw_strength, float p_deadzone) const {
 	Ref<InputEventKey> key = p_event;
 	if (key.is_null()) {

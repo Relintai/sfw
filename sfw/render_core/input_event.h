@@ -167,6 +167,8 @@ public:
 
 	virtual String as_text() const;
 
+	static Ref<InputEventKey> create_reference(uint32_t p_keycode_with_modifier_masks, bool p_physical = false);
+
 	InputEventKey();
 };
 
