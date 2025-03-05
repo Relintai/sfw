@@ -6,6 +6,7 @@
 #include "render_core/color_material.h"
 #include "render_core/colored_material.h"
 #include "render_core/font.h"
+#include "render_core/frame_buffer.h"
 #include "render_core/image.h"
 #include "render_core/mesh.h"
 #include "render_core/texture.h"
@@ -18,7 +19,8 @@
 #include "render_objects/sprite.h"
 #include "render_objects/text_2d.h"
 #include "render_objects/tile_map.h"
-#include "render_core/frame_buffer.h"
+
+#include "object/psignal.h"
 
 class Thread;
 class Socket;
@@ -45,6 +47,9 @@ public:
 
 	void toggle_socket();
 	static void socket_thread_func(void *d);
+
+	void signal_member(Signal *emitter);
+	static void signal_static(Signal *emitter);
 
 	GameScene();
 	~GameScene();
@@ -91,6 +96,8 @@ public:
 
 	Ref<FrameBuffer> _frame_buffer;
 	Ref<RenderTexture> _render_tex;
+
+	Signal test_signal;
 
 	//ColoredMaterial *cmaterial;
 };

@@ -4,11 +4,11 @@
 //--STRIP
 
 //--STRIP
-#include "core/vector.h"
 #include "core/ustring.h"
+#include "core/vector.h"
 
-#include "object/variant.h"
 #include "object/reference.h"
+#include "object/variant.h"
 //--STRIP
 
 class Signal {
@@ -18,11 +18,11 @@ public:
 	Vector<Variant> static_data;
 
 	template <class T>
-	void connect(T *obj, void (*func)(T*, Signal *));
+	void connect(T *obj, void (T::*func)(Signal *));
 	template <class T>
-	void disconnect(T *obj, void (*func)(T*, Signal *));
+	void disconnect(T *obj, void (T::*func)(Signal *));
 	template <class T>
-	bool is_connected(T *obj, void (*func)(T*, Signal *));
+	bool is_connected(T *obj, void (T::*func)(Signal *));
 
 	void connect_static(void (*func)(Signal *));
 	void disconnect_static(void (*func)(Signal *));
@@ -70,12 +70,11 @@ protected:
 	};
 
 	struct ClassSignalEntry : public SignalEntry {
-
-		virtual void* get_obj_ptr() {
+		virtual void *get_obj_ptr() {
 			return nullptr;
 		}
 
-		virtual void* get_func_ptr() {
+		virtual void *get_func_ptr() {
 			return nullptr;
 		}
 
@@ -84,26 +83,26 @@ protected:
 		}
 	};
 
-	template<typename T>
+	template <typename T>
 	struct ClassSignalEntrySpec : public ClassSignalEntry {
 		union {
-			T* obj;
-			void* obj_ptr;
+			T *obj;
+			void *obj_ptr;
 		};
 		union {
-			void (*func)(T*, Signal *);
-			void* func_ptr;
+			void (T::*func)(Signal *);
+			void *func_ptr;
 		};
 
 		virtual void call(Signal *s) {
-			func(obj, s);
+			(obj->*func)(s);
 		}
 
-		void* get_obj_ptr() {
+		void *get_obj_ptr() {
 			return obj_ptr;
 		}
 
-		void* get_func_ptr() {
+		void *get_func_ptr() {
 			return func_ptr;
 		}
 
@@ -118,7 +117,7 @@ protected:
 };
 
 template <typename T>
-void Signal::connect(T *obj, void (*func)(T*, Signal *)) {
+void Signal::connect(T *obj, void (T::*func)(Signal *)) {
 	ClassSignalEntrySpec<T> *ce = memnew(ClassSignalEntrySpec<T>());
 	ce->obj = obj;
 	ce->func = func;
@@ -127,13 +126,13 @@ void Signal::connect(T *obj, void (*func)(T*, Signal *)) {
 }
 
 template <typename T>
-void Signal::disconnect(T *obj, void (*func)(T*, Signal *)) {
+void Signal::disconnect(T *obj, void (T::*func)(Signal *)) {
 	ClassSignalEntrySpec<T> t;
 	t.obj = obj;
 	t.func = func;
 
-	void* obj_ptr = t.obj_ptr;
-	void* func_ptr = t.func_ptr;
+	void *obj_ptr = t.obj_ptr;
+	void *func_ptr = t.func_ptr;
 
 	for (int i = 0; i < entries.size(); ++i) {
 		SignalEntry *e = entries[i];
@@ -150,13 +149,13 @@ void Signal::disconnect(T *obj, void (*func)(T*, Signal *)) {
 }
 
 template <typename T>
-bool Signal::is_connected(T *obj, void (*func)(T*, Signal *)) {
+bool Signal::is_connected(T *obj, void (T::*func)(Signal *)) {
 	ClassSignalEntrySpec<T> t;
 	t.obj = obj;
 	t.func = func;
 
-	void* obj_ptr = t.obj_ptr;
-	void* func_ptr = t.func_ptr;
+	void *obj_ptr = t.obj_ptr;
+	void *func_ptr = t.func_ptr;
 
 	for (int i = 0; i < entries.size(); ++i) {
 		SignalEntry *e = entries[i];

@@ -10,9 +10,9 @@
 #include "render_core/app_window.h"
 #include "render_core/keyboard.h"
 #include "render_core/mesh_utils.h"
-#include "render_immediate/renderer.h"
 #include "render_gui/gui.h"
 #include "render_gui/imgui.h"
+#include "render_immediate/renderer.h"
 //#include "render_core/font.h"
 #include "core/sub_process.h"
 
@@ -85,6 +85,15 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 				ERR_PRINT("Running Game");
 				SubProcess s;
 				ERR_PRINT(itos(s.run("game")));
+			}
+		}
+
+		if (k->get_physical_scancode() == KEY_S) {
+			if (pressed) {
+				ERR_PRINT("Sending test signal");
+				test_signal.emit(this);
+				test_signal.emit(this, 12);
+				test_signal.emit(this, 33, "Test String");
 			}
 		}
 
@@ -440,7 +449,6 @@ void GameScene::render_gui_manual(bool clear_screen) {
 
 	GUI::new_frame();
 
-
 	ImGuiIO &io = ImGui::GetIO();
 	(void)io;
 
@@ -606,6 +614,21 @@ void GameScene::socket_thread_func(void *data) {
 
 	memdelete(self->_server_socket);
 	self->_server_socket = NULL;
+}
+
+void GameScene::signal_member(Signal *emitter) {
+	LOG_MSG("signal_member Params:");
+	for (int i = 0; i < emitter->params.size(); ++i) {
+		LOG_MSG(String(emitter->params[i]));
+	}
+	LOG_MSG("signal_member Params End.");
+}
+void GameScene::signal_static(Signal *emitter) {
+	LOG_MSG("signal_static Params:");
+	for (int i = 0; i < emitter->params.size(); ++i) {
+		LOG_MSG(String(emitter->params[i]));
+	}
+	LOG_MSG("signal_static Params End.");
 }
 
 GameScene::GameScene() {
@@ -792,6 +815,9 @@ GameScene::GameScene() {
 
 	_render_tex.instance();
 	_render_tex->set_frame_buffer(_frame_buffer);
+
+	test_signal.connect(this, &GameScene::signal_member);
+	test_signal.connect_static(&GameScene::signal_static);
 }
 
 GameScene::~GameScene() {
