@@ -16,6 +16,7 @@
 #define JO_INCLUDE_MP1_H
 
 #include <stdbool.h>
+#include <cstdio>
 
 extern bool jo_read_mp1(const void *input, int inputSize, short **output, int *outputSize, int *hz, int *channels);
 
@@ -363,7 +364,7 @@ bool jo_read_mp1(const void *input, int inputSize, short **output_, int *outputS
 				for (int i = 0; i < 32; ++i) {
 					double sum = 0;
 					for (int j = 0; j < 16; ++j) {
-						int k = i | (j + (j + 1 & -2)) << 5;
+						int k = i | (j + ((j + 1) & -2)) << 5;
 						sum += *w++ * buf[ch][(k + bufOffset[ch]) & 0x3ff];
 					}
 					int ss = (int)(sum * 0x8000);
