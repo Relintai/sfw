@@ -101,6 +101,8 @@
 //--STRIP
 {{FILE:sfwl/core/thread_safe.h}}
 
+{{FILE:sfwl/core/semaphore.h}}
+
 //--STRIP
 //#include "core/typedefs.h"
 //--STRIP
