@@ -43,11 +43,9 @@
 //--STRIP
 {{FILE:sfw/core/safe_refcount.cpp}}
 //--STRIP
-//--STRIP
 //#include "thread.h"
 //#include "core/error_macros.h"
 //#include "core/safe_refcount.h"
-//--STRIP
 //--STRIP
 {{FILE:sfw/core/thread.cpp}}
 
