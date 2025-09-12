@@ -42,6 +42,12 @@
 //#include "core/error/error_macros.h"
 //--STRIP
 {{FILE:sfwl/core/safe_refcount.cpp}}
+//--STRIP
+//#include "thread.h"
+//#include "core/error_macros.h"
+//#include "core/safe_refcount.h"
+//--STRIP
+{{FILE:sfwl/core/thread.cpp}}
 
 //--STRIP
 //#include "core/sfw_time.h"
