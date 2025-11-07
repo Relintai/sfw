@@ -51,6 +51,8 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sub_process.cpp /Fo:sfw/core/sub_pro
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sfw_core.cpp /Fo:sfw/core/sfw_core.obj
 
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/os.cpp /Fo:sfw/core/os.obj
+
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/object/object.cpp /Fo:sfw/object/object.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/object/reference.cpp /Fo:sfw/object/reference.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/object/core_string_names.cpp /Fo:sfw/object/core_string_names.obj
@@ -134,6 +136,7 @@ cl /D_REENTRANT /Zi ^
 		sfw/core/socket.obj sfw/core/inet_address.obj ^
 		sfw/core/sub_process.obj ^
 		sfw/core/sfw_core.obj ^
+		sfw/core/os.obj ^
 		sfw/object/object.obj sfw/object/reference.obj sfw/object/core_string_names.obj ^
 		sfw/object/variant.obj sfw/object/variant_op.obj sfw/object/psignal.obj ^
 		sfw/object/array.obj sfw/object/dictionary.obj sfw/object/ref_ptr.obj ^

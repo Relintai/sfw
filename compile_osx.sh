@@ -56,6 +56,8 @@ clang++ $args -D_REENTRANT -g -Isfw -c sfw/core/sub_process.cpp -o sfw/core/sub_
 
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/core/sfw_core.cpp -o sfw/core/sfw_core.o
 
+clang++ $args -D_REENTRANT -g -Isfw -c sfw/core/os.cpp -o sfw/core/os.o
+
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/object/object.cpp -o sfw/object/object.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/object/reference.cpp -o sfw/object/reference.o
 clang++ $args -D_REENTRANT -g -Isfw -c sfw/object/core_string_names.cpp -o sfw/object/core_string_names.o
@@ -136,6 +138,7 @@ clang++ $args -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color.o 
                         sfw/core/socket.o sfw/core/inet_address.o \
                         sfw/core/sub_process.o \
                         sfw/core/sfw_core.o \
+                        sfw/core/os.o \
                         sfw/object/object.o sfw/object/reference.o sfw/object/core_string_names.o \
                         sfw/object/variant.o sfw/object/variant_op.o sfw/object/psignal.o \
                         sfw/object/array.o sfw/object/dictionary.o sfw/object/ref_ptr.o \
