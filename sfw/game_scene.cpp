@@ -15,6 +15,7 @@
 #include "render_immediate/renderer.h"
 //#include "render_core/font.h"
 #include "core/sub_process.h"
+#include "core/os.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
 	//ERR_PRINT(event->as_text());
@@ -818,6 +819,9 @@ GameScene::GameScene() {
 
 	test_signal.connect(this, &GameScene::signal_member);
 	test_signal.connect_static(&GameScene::signal_static);
+
+
+	ERR_PRINT("Processor count: " + String::num(OS::get_processor_count()));
 }
 
 GameScene::~GameScene() {
