@@ -5,7 +5,7 @@
 
 class OS {
 public:
-	static void setup();
+	static int get_processor_count();
 };
 
 //--STRIP
