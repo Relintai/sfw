@@ -28,6 +28,8 @@ clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/sub_process.cpp -o sfwl/c
 
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/sfw_core.cpp -o sfwl/core/sfw_core.o
 
+clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/core/os.cpp -o sfwl/core/os.o
+
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/object/object.cpp -o sfwl/object/object.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/object/reference.cpp -o sfwl/object/reference.o
 clang++ -std=c++14 -D_REENTRANT -g -Isfwl -c sfwl/object/core_string_names.cpp -o sfwl/object/core_string_names.o
@@ -55,6 +57,7 @@ clang++ -std=c++14 -D_REENTRANT -g sfwl/core/color.o \
                         sfwl/core/socket.o sfwl/core/inet_address.o \
                         sfwl/core/sub_process.o \
                         sfwl/core/sfw_core.o \
+                        sfwl/core/os.o \
                         sfwl/object/object.o sfwl/object/reference.o sfwl/object/core_string_names.o \
                         sfwl/object/variant.o sfwl/object/variant_op.o sfwl/object/psignal.o \
                         sfwl/object/array.o sfwl/object/dictionary.o sfwl/object/ref_ptr.o \
