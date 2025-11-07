@@ -153,6 +153,15 @@
 {{FILE:sfwl/core/socket.cpp}}
 
 //--STRIP
+//Windows:
+//#include <windows.h>
+//#include <winnt.h>
+//Linux
+//#include <unistd.h>
+//--STRIP
+{{FILE:sfwl/core/os.cpp}}
+
+//--STRIP
 //Win Only
 //#include <avrt.h>
 //#include <direct.h>

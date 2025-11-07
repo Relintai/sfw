@@ -425,6 +425,11 @@
 {{FILE:sfw/core/socket.cpp}}
 
 //--STRIP
+//no includes
+//--STRIP
+{{FILE:sfw/core/os.h}}
+
+//--STRIP
 //Win Only
 //#include <avrt.h>
 //#include <direct.h>

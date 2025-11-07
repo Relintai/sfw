@@ -425,6 +425,15 @@
 {{FILE:sfw/core/socket.cpp}}
 
 //--STRIP
+//Windows:
+//#include <windows.h>
+//#include <winnt.h>
+//Linux
+//#include <unistd.h>
+//--STRIP
+{{FILE:sfw/core/os.cpp}}
+
+//--STRIP
 //Win Only
 //#include <avrt.h>
 //#include <direct.h>

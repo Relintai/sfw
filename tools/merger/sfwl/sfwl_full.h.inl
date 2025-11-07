@@ -363,6 +363,11 @@
 {{FILE:sfwl/core/socket.h}}
 
 //--STRIP
+//no includes
+//--STRIP
+{{FILE:sfwl/core/os.h}}
+
+//--STRIP
 //#include "core/list.h"
 //#include "core/math_defs.h"
 //#include "core/memory.h"
