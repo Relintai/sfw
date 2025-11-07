@@ -3,7 +3,7 @@
 #define SFW_OS_H
 //--STRIP
 
-class SFWOS {
+class OS {
 public:
 	static void setup();
 };
