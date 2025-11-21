@@ -9,9 +9,9 @@
 #include "core/math_defs.h"
 
 #include "core/sfw_time.h"
+#include "render_core/app_window.h"
 #include "render_core/input.h"
 #include "render_core/input_map.h"
-#include "render_core/app_window.h"
 
 #include "core/sfw_core.h"
 #include "object/core_string_names.h"
@@ -68,22 +68,22 @@ void Application::main_loop() {
 
 	uint64_t elapsed_us = end - start;
 
-	real_t elapsed_seconds = USEC_TO_SEC(elapsed_us);
+	double elapsed_seconds = USEC_TO_SEC(elapsed_us);
 
-	real_t tfps = 1.0 / static_cast<float>(target_fps);
-	real_t remaining = tfps - elapsed_seconds;
-
-	++_idle_frames;
+	double tfpss = 1.0 / static_cast<double>(target_fps);
+	double remaining = tfpss - elapsed_seconds;
 
 	if (remaining > 0) {
-		frame_delta = tfps;
+		SFWTime::sleep_us(SEC_TO_USEC(remaining));
 
-		SFWTime::sleep_us((double)SEC_TO_USEC(remaining));
-	} else {
-		frame_delta = elapsed_seconds;
+		end = SFWTime::time_us();
+		elapsed_us = end - start;
+		elapsed_seconds = USEC_TO_SEC(elapsed_us);
 	}
 
+	frame_delta = elapsed_seconds;
 	frame_delta *= _time_scale;
+	++_idle_frames;
 
 	w->frame_end();
 	w->frame_swap();
