@@ -177,7 +177,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 3) {
+	} else if (render_type == 2) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_capsule(_mesh_utils_test, 0.5, 0.5);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -188,7 +188,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 4) {
+	} else if (render_type == 3) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_cube(_mesh_utils_test, Vector3(0.5, 0.5, 0.5));
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -199,7 +199,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 5) {
+	} else if (render_type == 4) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_cylinder(_mesh_utils_test, 0.2, 0.5, 1);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -210,7 +210,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 6) {
+	} else if (render_type == 5) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_plane(_mesh_utils_test);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -221,7 +221,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 7) {
+	} else if (render_type == 6) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_prism(_mesh_utils_test);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -232,7 +232,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 8) {
+	} else if (render_type == 7) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_quad(_mesh_utils_test);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -243,7 +243,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 9) {
+	} else if (render_type == 8) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_quad_with_indices(_mesh_utils_test);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -254,7 +254,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 10) {
+	} else if (render_type == 9) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_sphere(_mesh_utils_test, 0.5, 0.5);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -265,7 +265,7 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 11) {
+	} else if (render_type == 10) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_point(_mesh_utils_test);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -276,9 +276,9 @@ void GameScene::render() {
 		Transform t = Transform(Basis(Vector3(1, 0, 0), rotmi), Vector3());
 		rotmi += 0.01;
 		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	} else if (render_type == 12) {
+	} else if (render_type == 11) {
 		render_immediate_3d();
-	} else if (render_type == 13) {
+	} else if (render_type == 12) {
 		Renderer *r = Renderer::get_singleton();
 		r->set_face_culling(Renderer::FACE_CULLING_BACK);
 
@@ -305,9 +305,9 @@ void GameScene::render() {
 		r->camera_2d_projection_set_to_window();
 		r->clear_screen(Color(1, 0, 0));
 		r->draw_texture(_render_tex, Rect2(100, 100, render_tex_size.x, render_tex_size.y));
-	} else if (render_type == 14) {
+	} else if (render_type == 13) {
 		render_gui();
-	} else if (render_type == 15) {
+	} else if (render_type == 14) {
 		render_gui_manual();
 	}
 }
