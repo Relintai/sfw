@@ -2048,7 +2048,7 @@ String String::chr(CharType p_char) {
 	return String(c);
 }
 
-String String::md5(const uint8_t *p_md5) {
+String String::hex_encode_md5_buffer(const uint8_t *p_md5) {
 	return String::hex_encode_buffer(p_md5, 16);
 }
 

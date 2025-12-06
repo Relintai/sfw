@@ -335,7 +335,7 @@ public:
 
 	static String chr(CharType p_char);
 
-	static String md5(const uint8_t *p_md5);
+	static String hex_encode_md5_buffer(const uint8_t *p_md5);
 
 	static String hex_encode_buffer(const uint8_t *p_buffer, int p_len);
 
