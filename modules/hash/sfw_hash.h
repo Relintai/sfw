@@ -14,6 +14,7 @@
 #include "sfwl.h"
 
 class SFWHash {
+public:
 	enum HashFunc {
 		HASH_SHA1 = 0x11,
 		HASH_SHA3_512 = 0x14,
@@ -29,10 +30,14 @@ class SFWHash {
 	HashFunc get_hash_func() const;
 
 	int get_hash_length();
-	String get_current_hash();
 
 	void hash_string(const String &p_str);
 	void hash_buffer(const uint8_t *p_buffer, const int p_length);
+
+	void finalize();
+	void reset();
+
+	String get_hash();
 
 	SFWHash();
 	~SFWHash();
@@ -40,7 +45,7 @@ class SFWHash {
 protected:
 	// Tell the length (in bytes) of the hash of the specified algorithm. If
 	// it is not implemented, then the result is zero.
-	static uint64_t _hash_length(HashFunc alg);
+	static int _hash_length(HashFunc alg);
 
 	// Returns a writable stream. If the echo stream is not null, then any
 	// data written to the stream is also written to the echo stream. When
@@ -51,9 +56,6 @@ protected:
 	// is allocated by malloc and must be freed by free. (This function is a
 	// convenience function implemented in terms of the other two functions.)
 	static unsigned char *_hash_buffer(HashFunc alg, const unsigned char *data, int len);
-
-	static ssize_t _hash_write(void *cookie, const char *buf, size_t size);
-	static int _hash_close(void *cookie);
 
 	/* Context for the SHA1 hash */
 	struct SHA1Context {
@@ -83,17 +85,6 @@ protected:
 		uint32_t a, b, c, d;
 	} MD5Context;
 
-	typedef struct {
-		union {
-			SHA1Context sha1;
-			SHA3Context sha3;
-			MD5Context md5;
-		};
-		long long alg;
-		FILE *echo;
-		unsigned char *out;
-	} HashState;
-
 	static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64]);
 	static void sha1_hash_init(SHA1Context *p);
 	static void sha1_hash_step(
@@ -113,12 +104,19 @@ protected:
 
 	static void md5_init(MD5Context *v);
 	static void md5_step(MD5Context *v);
-	static void md5_write(MD5Context *v, const char *buf, size_t len);
+	static void md5_write(MD5Context *v, const unsigned char *buf, size_t len);
 	static void md5_finish(MD5Context *v, unsigned char *o);
 
 protected:
+	union {
+		SHA1Context _sha1_context;
+		SHA3Context _sha3_context;
+		MD5Context _md5_context;
+	};
+
+	bool _finalized;
 	HashFunc _hash_func;
-	HashState *_hash_state;
+	unsigned char *_out;
 };
 
 #endif

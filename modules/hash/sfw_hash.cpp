@@ -7,9 +7,11 @@
 #include "sfw_hash.h"
 
 void SFWHash::init(HashFunc p_func) {
+	_hash_func = p_func;
+	reset();
 }
 bool SFWHash::is_initialized() const {
-	return _hash_state;
+	return _out;
 }
 
 SFWHash::HashFunc SFWHash::get_hash_func() const {
@@ -17,80 +19,114 @@ SFWHash::HashFunc SFWHash::get_hash_func() const {
 }
 
 int SFWHash::get_hash_length() {
-	return hash_length(_hash_func);
-}
-String SFWHash::get_current_hash() {
-	ERR_FAIL_COND_V(!is_initialized(), String());
-
-	return String();
+	return _hash_length(_hash_func);
 }
 
 void SFWHash::hash_string(const String &p_str) {
+	ERR_FAIL_COND(!is_initialized());
+
 	Vector<uint8_t> buf = p_str.to_utf8_buffer();
 
 	hash_buffer(buf.ptr(), buf.size());
 }
 void SFWHash::hash_buffer(const uint8_t *p_buffer, const int p_length) {
 	ERR_FAIL_COND(!is_initialized());
+
+	switch (_hash_func) {
+		case HASH_SHA1:
+			sha1_hash_step(&_sha1_context, p_buffer, p_length);
+			break;
+		case HASH_SHA3_224:
+		case HASH_SHA3_256:
+		case HASH_SHA3_384:
+		case HASH_SHA3_512:
+			SHA3Update(&_sha3_context, p_buffer, p_length);
+			break;
+		case HASH_MD5:
+			md5_write(&_md5_context, p_buffer, p_length);
+			break;
+	}
+}
+
+void SFWHash::finalize() {
+	ERR_FAIL_COND(!is_initialized());
+
+	if (_finalized) {
+		return;
+	}
+
+	switch (_hash_func) {
+		case HASH_SHA1:
+			sha1_hash_finish(&_sha1_context, _out);
+			break;
+		case HASH_SHA3_224:
+		case HASH_SHA3_256:
+		case HASH_SHA3_384:
+		case HASH_SHA3_512:
+			memcpy(_out, SHA3Final(&_sha3_context), get_hash_length());
+			break;
+		case HASH_MD5:
+			md5_finish(&_md5_context, _out);
+			break;
+	}
+}
+
+void SFWHash::reset() {
+	_finalized = false;
+
+	if (_out) {
+		memdelete(_out);
+	}
+
+	_out = memnew_arr(uint8_t, get_hash_length());
+
+	ERR_FAIL_COND(!_out);
+
+	switch (_hash_func) {
+		case HASH_SHA1:
+			sha1_hash_init(&_sha1_context);
+			break;
+		case HASH_SHA3_224:
+			SHA3Init(&_sha3_context, 224);
+			break;
+		case HASH_SHA3_256:
+			SHA3Init(&_sha3_context, 256);
+			break;
+		case HASH_SHA3_384:
+			SHA3Init(&_sha3_context, 384);
+			break;
+		case HASH_SHA3_512:
+			SHA3Init(&_sha3_context, 512);
+			break;
+		case HASH_MD5:
+			md5_init(&_md5_context);
+			break;
+		default:
+			memfree(_out);
+			_out = NULL;
+			ERR_PRINT("ERROR!");
+	}
+}
+
+String SFWHash::get_hash() {
+	ERR_FAIL_COND_V(!is_initialized(), String());
+
+	finalize();
+
+	return String::hex_encode_buffer(_out, get_hash_length());
 }
 
 SFWHash::SFWHash() {
+	_out = NULL;
+	_finalized = true;
 	_hash_func = HASH_MD5;
-	_hash_state = NULL;
 }
 SFWHash::~SFWHash() {
-	if (_hash_state) {
-		memdelete(_hash_state);
-		_hash_state = NULL;
-	}
 }
 
 // ########
 
-ssize_t SFWHash::_hash_write(void *cookie, const char *buf, size_t size) {
-	HashState *hs = static_cast<HashState>(cookie);
-	if (!size)
-		return 0;
-	if (hs->echo)
-		fwrite(buf, 1, size, hs->echo);
-	switch (hs->alg) {
-		case HASH_SHA1:
-			sha1_hash_step(&hs->sha1, buf, size);
-			break;
-		case HASH_SHA3_224:
-		case HASH_SHA3_256:
-		case HASH_SHA3_384:
-		case HASH_SHA3_512:
-			SHA3Update(&hs->sha3, buf, size);
-			break;
-		case HASH_MD5:
-			md5_write(&hs->md5, buf, size);
-			break;
-	}
-	return size;
-}
-
-int SFWHash::_hash_close(void *cookie) {
-	HashState *hs = static_cast<HashState>(cookie);
-	switch (hs->alg) {
-		case HASH_SHA1:
-			sha1_hash_finish(&hs->sha1, hs->out);
-			break;
-		case HASH_SHA3_224:
-		case HASH_SHA3_256:
-		case HASH_SHA3_384:
-		case HASH_SHA3_512:
-			memcpy(hs->out, SHA3Final(&hs->sha3), hash_length(hs->alg));
-			break;
-		case HASH_MD5:
-			md5_finish(&hs->md5, hs->out);
-			break;
-	}
-	free(cookie);
-	return 0;
-}
-
-long SFWHash::_hash_length(HashFunc alg) {
+int SFWHash::_hash_length(HashFunc alg) {
 	switch (alg) {
 		case HASH_SHA1:
 			return 20;
@@ -107,64 +143,6 @@ long SFWHash::_hash_length(HashFunc alg) {
 		default:
 			return 0;
 	}
-}
-
-FILE *SFWHash::_hash_stream(HashFunc alg, FILE *echo, unsigned char *out) {
-	HashState *hs = malloc(sizeof(HashState));
-	FILE *fp;
-	if (!hs)
-		return 0;
-	switch (alg) {
-		case HASH_SHA1:
-			sha1_hash_init(&hs->sha1);
-			break;
-		case HASH_SHA3_224:
-			SHA3Init(&hs->sha3, 224);
-			break;
-		case HASH_SHA3_256:
-			SHA3Init(&hs->sha3, 256);
-			break;
-		case HASH_SHA3_384:
-			SHA3Init(&hs->sha3, 384);
-			break;
-		case HASH_SHA3_512:
-			SHA3Init(&hs->sha3, 512);
-			break;
-		case HASH_MD5:
-			md5_init(&hs->md5);
-			break;
-		default:
-			free(hs);
-			return 0;
-	}
-	fp = fopencookie(hs, "w", (cookie_io_functions_t){ .write = hash_write, .close = hash_close });
-	if (!fp) {
-		free(hs);
-		return 0;
-	}
-	hs->alg = alg;
-	hs->echo = echo;
-	hs->out = out;
-	return fp;
-}
-
-unsigned char *SFWHash::_hash_buffer(HashFunc alg, const unsigned char *data, int len) {
-	int n = hash_length(alg);
-	unsigned char *b;
-	FILE *fp;
-	if (!n || (len && !data))
-		return 0;
-	b = malloc(n);
-	if (!b)
-		return 0;
-	fp = hash_stream(alg, 0, b);
-	if (!fp) {
-		free(b);
-		return 0;
-	}
-	fwrite(data, 1, len, fp);
-	fclose(fp);
-	return b;
 }
 
 // ######## SHA-1 hash
@@ -850,7 +828,7 @@ void SFWHash::md5_step(MD5Context *v) {
 	v->d += d;
 }
 
-void SFWHash::md5_write(MD5Context *v, const char *buf, size_t len) {
+void SFWHash::md5_write(MD5Context *v, const unsigned char *buf, size_t len) {
 	size_t n = len;
 	size_t i;
 	while (n) {
@@ -875,7 +853,8 @@ void SFWHash::md5_finish(MD5Context *v, unsigned char *o) {
   buf[4]=n>>040; buf[5]=n>>050; buf[6]=n>>060; buf[7]=n>>070;
 	// clang-format on
 
-	md5_write(v, "\x80", 1);
+	uint8_t ch[] = { 0x80, 0 };
+	md5_write(v, ch, 1);
 	memset(v->chunk + (v->len & 63), 0, 64 - (v->len & 63));
 	if ((v->len & 63) > 56) {
 		md5_step(v);
@@ -891,4 +870,3 @@ void SFWHash::md5_finish(MD5Context *v, unsigned char *o) {
   o[12]=v->d; o[13]=v->d>>8; o[14]=v->d>>16; o[15]=v->d>>24;
 	// clang-format on
 }
-
