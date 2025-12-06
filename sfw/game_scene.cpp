@@ -629,26 +629,8 @@ GameScene::GameScene() {
 	_font_test_mat.instance();
 	_font_test_mat->texture = _font->get_texture();
 
-	/*
-	_font_test_sprite = memnew(Sprite);
-
-	_font_test_sprite->mesh_instance->material = _font_test_mat;
-	_font_test_sprite->width = _font->get_atlas_width();
-	_font_test_sprite->height = _font->get_atlas_height();
-	_font_test_sprite->transform.set_origin(Vector2(1000, 100));
-	_font_test_sprite->update_mesh();
-	*/
-
 	_font_test_mesh.instance();
 	_font_test_mesh->vertex_dimesions = 2;
-
-	/*
-	_font_test_mi = memnew(MeshInstance2D());
-	_font_test_mi->material = _font_test_mat;
-	_font_test_mi->mesh = _font_test_mesh;
-	//_font_test_mi->transform.scale(Vector2(10, 10));
-	_font_test_mi->transform.set_origin(Vector2(1000, 400));
-	*/
 
 	_font->generate_mesh("asdfgh\nasdfvb", _font_test_mesh, Color(1, 1, 0));
 	_font_test_mesh->upload();
