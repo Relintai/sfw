@@ -4,6 +4,7 @@
 
 #include "core/inet_address.h"
 #include "core/memory.h"
+#include "core/sfw_time.h"
 #include "core/socket.h"
 #include "core/thread.h"
 #include "render_core/3rd_glad.h"
@@ -14,8 +15,8 @@
 #include "render_gui/imgui.h"
 #include "render_immediate/renderer.h"
 //#include "render_core/font.h"
-#include "core/sub_process.h"
 #include "core/os.h"
+#include "core/sub_process.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
 	//ERR_PRINT(event->as_text());
@@ -95,6 +96,23 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 				test_signal.emit(this);
 				test_signal.emit(this, 12);
 				test_signal.emit(this, 33, "Test String");
+			}
+		}
+
+		if (k->get_physical_scancode() == KEY_I) {
+			if (pressed) {
+				ERR_PRINT("SFWTime::get_date().day: " + String::num(SFWTime::get_date().day));
+				ERR_PRINT("SFWTime::get_date(true).day: " + String::num(SFWTime::get_date(true).day));
+				ERR_PRINT("SFWTime::get_time().hour: " + String::num(SFWTime::get_time().hour));
+				ERR_PRINT("SFWTime::get_time(true).hour: " + String::num(SFWTime::get_time(true).hour));
+				ERR_PRINT("SFWTime::get_time_zone_info().name: " + (SFWTime::get_time_zone_info().name));
+
+				ERR_PRINT("SFWTime::get_iso_date_time(): " + SFWTime::get_iso_date_time());
+				ERR_PRINT("SFWTime::get_iso_date_time(true): " + SFWTime::get_iso_date_time(true));
+
+				ERR_PRINT("SFWTime::get_unix_time(): " + String::num(SFWTime::get_unix_time()));
+				ERR_PRINT("SFWTime::get_system_time_secs(): " + String::num(SFWTime::get_system_time_secs()));
+				ERR_PRINT("SFWTime::get_system_time_msecs(): " + String::num(SFWTime::get_system_time_msecs()));
 			}
 		}
 
@@ -819,7 +837,6 @@ GameScene::GameScene() {
 
 	test_signal.connect(this, &GameScene::signal_member);
 	test_signal.connect_static(&GameScene::signal_static);
-
 
 	ERR_PRINT("Processor count: " + String::num(OS::get_processor_count()));
 }

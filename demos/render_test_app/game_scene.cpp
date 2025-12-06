@@ -74,6 +74,23 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 			}
 		}
 
+		if (k->get_physical_scancode() == KEY_I) {
+			if (pressed) {
+				ERR_PRINT("SFWTime::get_date().day: " + String::num(SFWTime::get_date().day));
+				ERR_PRINT("SFWTime::get_date(true).day: " + String::num(SFWTime::get_date(true).day));
+				ERR_PRINT("SFWTime::get_time().hour: " + String::num(SFWTime::get_time().hour));
+				ERR_PRINT("SFWTime::get_time(true).hour: " + String::num(SFWTime::get_time(true).hour));
+				ERR_PRINT("SFWTime::get_time_zone_info().name: " + (SFWTime::get_time_zone_info().name));
+
+				ERR_PRINT("SFWTime::get_iso_date_time(): " + SFWTime::get_iso_date_time());
+				ERR_PRINT("SFWTime::get_iso_date_time(true): " + SFWTime::get_iso_date_time(true));
+
+				ERR_PRINT("SFWTime::get_unix_time(): " + String::num(SFWTime::get_unix_time()));
+				ERR_PRINT("SFWTime::get_system_time_secs(): " + String::num(SFWTime::get_system_time_secs()));
+				ERR_PRINT("SFWTime::get_system_time_msecs(): " + String::num(SFWTime::get_system_time_msecs()));
+			}
+		}
+
 		return;
 	}
 
@@ -425,7 +442,6 @@ void GameScene::render_gui_manual(bool clear_screen) {
 	}
 
 	GUI::new_frame();
-
 
 	ImGuiIO &io = ImGui::GetIO();
 	(void)io;
