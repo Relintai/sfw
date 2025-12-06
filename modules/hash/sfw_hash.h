@@ -18,7 +18,7 @@
 #include "sfwl.h"
 //--STRIP
 
-// INCLUDE_SFW_HEADER
+//--INCLUDE_SFW_HEADER
 
 class SFWHash {
 public:

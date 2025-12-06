@@ -49,6 +49,11 @@ python tools/merger/join.py --template tools/merger/sfwl/sfwl_core.cpp.inl --pat
 python tools/merger/join.py --template tools/merger/sfwl/sfwl_full.h.inl --path . --output tools/merger/out/sfwl_full/sfwl.h
 python tools/merger/join.py --template tools/merger/sfwl/sfwl_full.cpp.inl --path . --output tools/merger/out/sfwl_full/sfwl.cpp
 
+# Hash Module
+python tools/merger/join.py --template modules/hash/merger/sfw_hash.h.inl --path . --output tools/merger/out/modules/hash/sfw/sfw_hash.h --library_include sfw
+python tools/merger/join.py --template modules/hash/merger/sfw_hash.cpp.inl --path . --output tools/merger/out/modules/hash/sfw/sfw_hash.cpp --library_include sfw
+python tools/merger/join.py --template modules/hash/merger/sfw_hash.h.inl --path . --output tools/merger/out/modules/hash/sfwl/sfw_hash.h --library_include sfwl
+python tools/merger/join.py --template modules/hash/merger/sfw_hash.cpp.inl --path . --output tools/merger/out/modules/hash/sfwl/sfw_hash.cpp --library_include sfwl
 
 echo "Running clang format!"
 
@@ -86,4 +91,10 @@ clang-format --Wno-error=unknown -i tools/merger/out/sfwl_core/sfwl.cpp
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.cpp
 
+# Hash Module
+
+clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfw/sfw_hash.h
+clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfw/sfw_hash.cpp
+clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.h
+clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.cpp
 

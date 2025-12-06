@@ -28,8 +28,13 @@ import os
 
 template_args = {}
 input_path = ""
+library_include = "sfw"
 
 print_includes_dict = dict()
+
+def ensure_dir(storage_path):
+    if not os.path.exists(storage_path):
+        os.makedirs(storage_path)
 
 def print_includes(f):
     s = f.split("\n")
@@ -58,10 +63,18 @@ def strip_file(f):
 
     return f
 
+def process_placeholders(f):
+    global library_include
+
+    inc = '#include "' + library_include + '.h"'
+
+    return f.replace("//--INCLUDE_SFW_HEADER", inc)
+
 def process_file(f):
     #print_includes(f)
 
     f = strip_file(f)
+    f = process_placeholders(f)
 
     #return f.replace('#include ', '//#include ')
 
@@ -100,11 +113,17 @@ def main():
     parser.add_argument("--template", required=True)
     parser.add_argument("--path", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--library_include", required=False)
 
     args, unknown = parser.parse_known_args()
 
     global input_path
+    global library_include
     input_path = args.path
+
+    if (args.library_include is not None):
+        library_include = args.library_include.strip()
+        print("Using library include: " + library_include)
 
     if len(unknown) % 2 != 0:
         print("Uneven number or template args")
@@ -116,6 +135,8 @@ def main():
 
     with open(args.template, "r") as f:
         output = process_template(strip_file(f.read()))
+
+    ensure_dir(os.path.dirname(args.output))
 
     with open(args.output, "w") as f:
         f.write(output)
