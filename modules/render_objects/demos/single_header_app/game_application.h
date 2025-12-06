@@ -2,6 +2,7 @@
 #define GAME_APPLICATION_H
 
 #include "sfw.h"
+#include "sfw_render_objects.h"
 
 class GameApplication : public Application {
 	SFW_OBJECT(GameApplication, Application);

@@ -2,6 +2,7 @@
 #define GAME_SCENE_H
 
 #include "sfw.h"
+#include "sfw_render_objects.h"
 
 class Thread;
 class Socket;
