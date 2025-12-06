@@ -1,8 +1,6 @@
 
-/*
-  Some of the code in this file is based on some code from SQLite.
-  The original code and this code also is public domain.
-*/
+// Some of the code in the .cpp file is based on some code from SQLite.
+// The original code and this code also is public domain.
 
 #include "sfw_hash.h"
 
@@ -183,12 +181,12 @@ int SFWHash::_hash_length(HashFunc alg) {
 /*
  * Hash a single 512-bit block. This is the core of the algorithm.
  */
-void SFWHash::SHA1Transform(unsigned int state[5], const unsigned char buffer[64]) {
-	unsigned int qq[5]; /* a, b, c, d, e; */
+void SFWHash::SHA1Transform(uint32_t state[5], const uint8_t buffer[64]) {
+	uint32_t qq[5]; /* a, b, c, d, e; */
 	static int one = 1;
-	unsigned int block[16];
+	uint32_t block[16];
 	memcpy(block, buffer, 64);
-	memcpy(qq, state, 5 * sizeof(unsigned int));
+	memcpy(qq, state, 5 * sizeof(uint32_t));
 
 #define a qq[0]
 #define b qq[1]
@@ -206,7 +204,7 @@ void SFWHash::SHA1Transform(unsigned int state[5], const unsigned char buffer[64
 	*/
 
 	/* 4 rounds of 20 operations each. Loop unrolled. */
-	if (1 == *(unsigned char *)&one) {
+	if (1 == *(uint8_t *)&one) {
 		// clang-format off
     Rl0(a,b,c,d,e, 0); Rl0(e,a,b,c,d, 1); Rl0(d,e,a,b,c, 2); Rl0(c,d,e,a,b, 3);
     Rl0(b,c,d,e,a, 4); Rl0(a,b,c,d,e, 5); Rl0(e,a,b,c,d, 6); Rl0(d,e,a,b,c, 7);
@@ -269,10 +267,10 @@ void SFWHash::sha1_hash_init(SHA1Context *p) {
 /* Add new content to the SHA1 hash */
 void SFWHash::sha1_hash_step(
 		SHA1Context *p, /* Add content to this context */
-		const unsigned char *data, /* Data to be added */
-		unsigned int len /* Number of bytes in data */
+		const uint8_t *data, /* Data to be added */
+		uint32_t len /* Number of bytes in data */
 ) {
-	unsigned int i, j;
+	uint32_t i, j;
 
 	j = p->count[0];
 	if ((p->count[0] += len << 3) < j) {
@@ -297,21 +295,21 @@ void SFWHash::sha1_hash_step(
 ** digest[] must be at least 20 bytes long. */
 void SFWHash::sha1_hash_finish(
 		SHA1Context *p, /* The SHA1 context to finish and render */
-		unsigned char *digest /* Store hash here */
+		uint8_t *digest /* Store hash here */
 ) {
-	unsigned int i;
-	unsigned char finalcount[8];
+	uint32_t i;
+	uint8_t finalcount[8];
 
 	for (i = 0; i < 8; i++) {
-		finalcount[i] = (unsigned char)((p->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255); /* Endian independent */
+		finalcount[i] = (uint8_t)((p->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255); /* Endian independent */
 	}
-	sha1_hash_step(p, (const unsigned char *)"\200", 1);
+	sha1_hash_step(p, (const uint8_t *)"\200", 1);
 	while ((p->count[0] & 504) != 448) {
-		sha1_hash_step(p, (const unsigned char *)"\0", 1);
+		sha1_hash_step(p, (const uint8_t *)"\0", 1);
 	}
 	sha1_hash_step(p, finalcount, 8); /* Should cause a SHA1Transform() */
 	for (i = 0; i < 20; i++) {
-		digest[i] = (unsigned char)((p->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
+		digest[i] = (uint8_t)((p->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
 	}
 }
 
@@ -344,12 +342,12 @@ void SFWHash::sha1_hash_finish(
 */
 void SFWHash::KeccakF1600Step(SHA3Context *p) {
 	int i;
-	u64 b0, b1, b2, b3, b4;
-	u64 c0, c1, c2, c3, c4;
-	u64 d0, d1, d2, d3, d4;
+	uint64_t b0, b1, b2, b3, b4;
+	uint64_t c0, c1, c2, c3, c4;
+	uint64_t d0, d1, d2, d3, d4;
 
 	// clang-format off
-  static const u64 RC[] = {
+  static const uint64_t RC[] = {
     0x0000000000000001ULL,  0x0000000000008082ULL,
     0x800000000000808aULL,  0x8000000080008000ULL,
     0x000000000000808bULL,  0x0000000080000001ULL,
@@ -681,8 +679,8 @@ void SFWHash::SHA3Init(SHA3Context *p, int iSize) {
 	p->ixMask = 7; /* Big-endian */
 #else
 	{
-		static unsigned int one = 1;
-		if (1 == *(unsigned char *)&one) {
+		static uint32_t one = 1;
+		if (1 == *(uint8_t *)&one) {
 			/* Little endian.  No byte swapping. */
 			p->ixMask = 0;
 		} else {
@@ -697,14 +695,14 @@ void SFWHash::SHA3Init(SHA3Context *p, int iSize) {
 ** Make consecutive calls to the SHA3Update function to add new content
 ** to the hash
 */
-void SFWHash::SHA3Update(SHA3Context *p, const unsigned char *aData, unsigned int nData) {
-	unsigned int i = 0;
+void SFWHash::SHA3Update(SHA3Context *p, const uint8_t *aData, uint32_t nData) {
+	uint32_t i = 0;
 	if (aData == 0)
 		return;
 #if SHA3_BYTEORDER == 1234
-	if ((p->nLoaded % 8) == 0 && ((aData - (const unsigned char *)0) & 7) == 0) {
+	if ((p->nLoaded % 8) == 0 && ((aData - (const uint8_t *)0) & 7) == 0) {
 		for (; i + 7 < nData; i += 8) {
-			p->u.s[p->nLoaded / 8] ^= *(u64 *)&aData[i];
+			p->u.s[p->nLoaded / 8] ^= *(uint64_t *)&aData[i];
 			p->nLoaded += 8;
 			if (p->nLoaded >= p->nRate) {
 				KeccakF1600Step(p);
@@ -734,14 +732,14 @@ void SFWHash::SHA3Update(SHA3Context *p, const unsigned char *aData, unsigned in
 ** the final hash.  The function returns a pointer to the binary
 ** hash value.
 */
-unsigned char *SFWHash::SHA3Final(SHA3Context *p) {
-	unsigned int i;
+uint8_t *SFWHash::SHA3Final(SHA3Context *p) {
+	uint32_t i;
 	if (p->nLoaded == p->nRate - 1) {
-		const unsigned char c1 = 0x86;
+		const uint8_t c1 = 0x86;
 		SHA3Update(p, &c1, 1);
 	} else {
-		const unsigned char c2 = 0x06;
-		const unsigned char c3 = 0x80;
+		const uint8_t c2 = 0x06;
+		const uint8_t c3 = 0x80;
 		SHA3Update(p, &c2, 1);
 		p->nLoaded = p->nRate - 1;
 		SHA3Update(p, &c3, 1);
@@ -828,7 +826,7 @@ void SFWHash::md5_step(MD5Context *v) {
 	v->d += d;
 }
 
-void SFWHash::md5_write(MD5Context *v, const unsigned char *buf, size_t len) {
+void SFWHash::md5_write(MD5Context *v, const uint8_t *buf, size_t len) {
 	size_t n = len;
 	size_t i;
 	while (n) {
@@ -844,7 +842,7 @@ void SFWHash::md5_write(MD5Context *v, const unsigned char *buf, size_t len) {
 	}
 }
 
-void SFWHash::md5_finish(MD5Context *v, unsigned char *o) {
+void SFWHash::md5_finish(MD5Context *v, uint8_t *o) {
 	uint64_t n = v->len * 8;
 	uint8_t buf[8];
 

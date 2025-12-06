@@ -8,10 +8,17 @@
 
 // Free public domain cryptographic hash library
 
+// Some of the code in the .cpp file is based on some code from SQLite.
+// The original code and this code also is public domain.
+
 // Adding -fwrapv (or equivalent) flag to the compiler might be needed in some specific compilers
 
+//--STRIP
 //#include "sfw.h"
 #include "sfwl.h"
+//--STRIP
+
+// INCLUDE_SFW_HEADER
 
 class SFWHash {
 public:
@@ -50,33 +57,31 @@ protected:
 	// Returns a writable stream. If the echo stream is not null, then any
 	// data written to the stream is also written to the echo stream. When
 	// the stream is closed, the hash (as binary) is written to the out.
-	static FILE *_hash_stream(HashFunc alg, FILE *echo, unsigned char *out);
+	static FILE *_hash_stream(HashFunc alg, FILE *echo, uint8_t *out);
 
 	// Returns a hash (as binary) of the specified data. The returned buffer
 	// is allocated by malloc and must be freed by free. (This function is a
 	// convenience function implemented in terms of the other two functions.)
-	static unsigned char *_hash_buffer(HashFunc alg, const unsigned char *data, int len);
+	static uint8_t *_hash_buffer(HashFunc alg, const uint8_t *data, int len);
 
 	/* Context for the SHA1 hash */
 	struct SHA1Context {
-		unsigned int state[5];
-		unsigned int count[2];
-		unsigned char buffer[64];
+		uint32_t state[5];
+		uint32_t count[2];
+		uint8_t buffer[64];
 	};
-
-	typedef unsigned long long u64;
 
 	/*
 	** State structure for a SHA3 hash in progress
 	*/
 	struct SHA3Context {
 		union {
-			u64 s[25]; /* Keccak state. 5x5 lines of 64 bits each */
-			unsigned char x[1600]; /* ... or 1600 bytes */
+			uint64_t s[25]; /* Keccak state. 5x5 lines of 64 bits each */
+			uint8_t x[1600]; /* ... or 1600 bytes */
 		} u;
-		unsigned nRate; /* Bytes of input accepted per Keccak iteration */
-		unsigned nLoaded; /* Input bytes loaded into u.x[] so far this cycle */
-		unsigned ixMask; /* Insert next input into u.x[nLoaded^ixMask]. */
+		uint32_t nRate; /* Bytes of input accepted per Keccak iteration */
+		uint32_t nLoaded; /* Input bytes loaded into u.x[] so far this cycle */
+		uint32_t ixMask; /* Insert next input into u.x[nLoaded^ixMask]. */
 	};
 
 	typedef struct {
@@ -85,27 +90,27 @@ protected:
 		uint32_t a, b, c, d;
 	} MD5Context;
 
-	static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64]);
+	static void SHA1Transform(uint32_t state[5], const uint8_t buffer[64]);
 	static void sha1_hash_init(SHA1Context *p);
 	static void sha1_hash_step(
 			SHA1Context *p, /* Add content to this context */
-			const unsigned char *data, /* Data to be added */
-			unsigned int len /* Number of bytes in data */
+			const uint8_t *data, /* Data to be added */
+			uint32_t len /* Number of bytes in data */
 	);
 	static void sha1_hash_finish(
 			SHA1Context *p, /* The SHA1 context to finish and render */
-			unsigned char *digest /* Store hash here */
+			uint8_t *digest /* Store hash here */
 	);
 
 	static void KeccakF1600Step(SHA3Context *p);
 	static void SHA3Init(SHA3Context *p, int iSize);
-	static void SHA3Update(SHA3Context *p, const unsigned char *aData, unsigned int nData);
-	static unsigned char *SHA3Final(SHA3Context *p);
+	static void SHA3Update(SHA3Context *p, const uint8_t *aData, uint32_t nData);
+	static uint8_t *SHA3Final(SHA3Context *p);
 
 	static void md5_init(MD5Context *v);
 	static void md5_step(MD5Context *v);
-	static void md5_write(MD5Context *v, const unsigned char *buf, size_t len);
-	static void md5_finish(MD5Context *v, unsigned char *o);
+	static void md5_write(MD5Context *v, const uint8_t *buf, size_t len);
+	static void md5_finish(MD5Context *v, uint8_t *o);
 
 protected:
 	union {
@@ -116,7 +121,7 @@ protected:
 
 	bool _finalized;
 	HashFunc _hash_func;
-	unsigned char *_out;
+	uint8_t *_out;
 };
 
 #endif
