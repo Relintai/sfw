@@ -8,7 +8,7 @@
 
 // Free public domain cryptographic hash library
 
-// Adding the -fwrapv flag might be needed
+// Adding -fwrapv (or equivalent) flag to the compiler might be needed in some specific compilers
 
 //#include "sfw.h"
 #include "sfwl.h"
