@@ -75,7 +75,7 @@ void SFWHash::reset() {
 	_finalized = false;
 
 	if (_out) {
-		memdelete(_out);
+		memdelete_arr(_out);
 	}
 
 	_out = memnew_arr(uint8_t, get_hash_length());
@@ -102,7 +102,7 @@ void SFWHash::reset() {
 			md5_init(&_md5_context);
 			break;
 		default:
-			memfree(_out);
+			memdelete_arr(_out);
 			_out = NULL;
 			ERR_PRINT("ERROR!");
 	}
