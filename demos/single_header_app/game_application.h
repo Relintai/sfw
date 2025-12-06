@@ -54,7 +54,7 @@ public:
 		}
 
 		if (up || down || left || right) {
-			sprite->transform.translate(trn);
+			//sprite->transform.translate(trn);
 		}
 	}
 
