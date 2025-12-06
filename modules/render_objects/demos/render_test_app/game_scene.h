@@ -30,6 +30,9 @@ public:
 	void toggle_socket();
 	static void socket_thread_func(void *d);
 
+	void signal_member(Signal *emitter);
+	static void signal_static(Signal *emitter);
+
 	GameScene();
 	~GameScene();
 
