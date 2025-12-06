@@ -249,11 +249,6 @@
 {{FILE:sfw/core/thread.cpp}}
 
 //--STRIP
-//#include "core/sfw_time.h"
-//--STRIP
-{{FILE:sfw/core/sfw_time.cpp}}
-
-//--STRIP
 //#include "core/memory.h"
 //#include "core/error_macros.h"
 //#include "core/safe_refcount.h"
@@ -304,6 +299,11 @@
 //#include "core/string_name.h"
 //--STRIP
 {{FILE:sfw/core/string_name.cpp}}
+
+//--STRIP
+//#include "core/sfw_time.h"
+//--STRIP
+{{FILE:sfw/core/sfw_time.cpp}}
 
 //--STRIP
 //#include "core/aabb.h"

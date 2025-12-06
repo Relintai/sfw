@@ -54,10 +54,6 @@
 {{FILE:sfw/core/marshalls.h}}
 
 //--STRIP
-//#include "core/int_types.h"
-//--STRIP
-{{FILE:sfw/core/sfw_time.h}}
-//--STRIP
 //#include "core/typedefs.h"
 //--STRIP
 {{FILE:sfw/core/safe_refcount.h}}
@@ -218,6 +214,12 @@
 //--STRIP
 //Needs ustring.h
 //--STRIP
+
+//--STRIP
+//#include "core/int_types.h"
+//#include "core/ustring.h"
+//--STRIP
+{{FILE:sfw/core/sfw_time.h}}
 
 //--STRIP
 //#include "core/memory.h"
