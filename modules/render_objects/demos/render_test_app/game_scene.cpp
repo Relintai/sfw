@@ -619,6 +619,21 @@ void GameScene::socket_thread_func(void *data) {
 	self->_server_socket = NULL;
 }
 
+void GameScene::signal_member(Signal *emitter) {
+	LOG_MSG("signal_member Params:");
+	for (int i = 0; i < emitter->params.size(); ++i) {
+		LOG_MSG(String(emitter->params[i]));
+	}
+	LOG_MSG("signal_member Params End.");
+}
+void GameScene::signal_static(Signal *emitter) {
+	LOG_MSG("signal_static Params:");
+	for (int i = 0; i < emitter->params.size(); ++i) {
+		LOG_MSG(String(emitter->params[i]));
+	}
+	LOG_MSG("signal_static Params End.");
+}
+
 GameScene::GameScene() {
 	render_type = 0;
 
