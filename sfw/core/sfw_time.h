@@ -80,9 +80,6 @@ public:
 	static DateTime get_datetime_from_unix_time(int64_t unix_time_val);
 	static int64_t get_unix_time_from_datetime(const DateTime &datetime);
 
-	static uint64_t datetime_to_uint(const DateTime &datetime); // YYYYMMDDhhmmss
-	static uint64_t get_datetime_as_uint(); // YYYYMMDDhhmmss
-
 	// Deprecated:
 	static uint64_t date(); // == get_unix_time();
 	static uint64_t date_epoch(); // == get_unix_time();
