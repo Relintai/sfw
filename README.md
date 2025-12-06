@@ -75,6 +75,20 @@ Contains a simple immediate renderer class. (called Renderer.)
 
 Depends on Core, Object and Render Core.
 
+### GUI
+
+Contains the Dear ImGui GUI toolkit.
+
+Depends on Core, Object and Render Core.
+
+## External Modules
+
+And 2 external modules (these are packages as separate header and cpp files):
+
+### Hash
+
+Contains MD5, SHA1, and SHA3 (224, 256, 382, 512) hash implementations.
+
 ### Render Object
 
 Contains a class based renerer api.
@@ -86,12 +100,6 @@ Has classes like:
 - Text2D
 - TileMap
 - Etc.
-
-Depends on Core, Object and Render Core.
-
-### GUI
-
-Contains the Dear ImGui GUI toolkit.
 
 Depends on Core, Object and Render Core.
 
