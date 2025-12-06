@@ -20,6 +20,7 @@ mkdir -p out/sfw
 mkdir -p out/sfw/merged
 mkdir -p out/sfw/split
 mkdir -p out/sfw/demos
+mkdir -p out/sfw/demos/modules
 mkdir -p out/sfw/modules
 
 mkdir -p out/sfwl
@@ -125,16 +126,6 @@ cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
 cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
 cp "$doc_folder/sfw_render_immediate.html" "$current_out_fol/sfw.html"
 
-# Render Objects
-current_in_fol=$project_root_folder/tools/merger/out/render_objects
-current_out_fol=$sfw_out_folder/merged/render_objects
-
-mkdir -p "$current_out_fol"
-cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
-cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
-cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
-cp "$doc_folder/sfw_render_objects.html" "$current_out_fol/sfw.html"
-
 # Full
 current_in_fol=$project_root_folder/tools/merger/out/full
 current_out_fol=$sfw_out_folder/merged/full
@@ -155,6 +146,15 @@ mkdir -p "$current_out_fol"
 cp "$current_in_fol/sfw_hash.h" "$current_out_fol/sfw_hash.h"
 cp "$current_in_fol/sfw_hash.cpp" "$current_out_fol/sfw_hash.cpp"
 cp "$doc_folder/sfw_hash.html" "$current_out_fol/sfw_hash.html"
+
+# Render Objects
+current_in_fol=$project_root_folder/tools/merger/out/modules/render_objects
+current_out_fol=$sfw_out_folder/modules/render_objects
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_render_objects.h" "$current_out_fol/sfw_render_objects.h"
+cp "$current_in_fol/sfw_render_objects.cpp" "$current_out_fol/sfw_render_objects.cpp"
+cp "$doc_folder/sfw_render_objects.html" "$current_out_fol/sfw_render_objects.html"
 
 # SFW Demos
 
@@ -202,6 +202,59 @@ cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
 cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
 
 current_in_fol=$project_root_folder/demos/render_test_app
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
+cp "$current_in_fol/game_scene.h" "$current_out_fol/game_scene.h"
+cp "$current_in_fol/game_scene.cpp" "$current_out_fol/game_scene.cpp"
+cp "$project_root_folder/icon.png" "$current_out_fol/icon.png"
+
+# Render Objects module demos
+
+current_out_fol=$sfw_out_folder/demos/modules/render_objects
+mkdir -p "$current_out_fol"
+
+# Single Header APP + Render Objects
+current_out_fol=$sfw_out_folder/demos/modules/render_objects/single_header_app
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp -R "$project_root_folder/modules/render_objects/demos/build_scripts/full_minimal/" "$current_out_fol"
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+
+current_in_fol=$project_root_folder/tools/merger/out/modules/render_objects
+
+cp "$current_in_fol/sfw_render_objects.h" "$current_out_fol/sfw_render_objects.h"
+cp "$current_in_fol/sfw_render_objects.cpp" "$current_out_fol/sfw_render_objects.cpp"
+
+current_in_fol=$project_root_folder/modules/render_objects/demos/single_header_app
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
+cp "$project_root_folder/icon.png" "$current_out_fol/icon.png"
+
+# Render Test APP + Render Objects
+current_out_fol=$sfw_out_folder/demos/modules/render_objects/render_test_app
+
+cp -R "$project_root_folder/modules/render_objects/demos/build_scripts/full/" "$current_out_fol"
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp "$current_in_fol/sfw.h" "$current_out_fol/sfw.h"
+cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
+
+current_in_fol=$project_root_folder/tools/merger/out/modules/render_objects
+
+cp "$current_in_fol/sfw_render_objects.h" "$current_out_fol/sfw_render_objects.h"
+cp "$current_in_fol/sfw_render_objects.cpp" "$current_out_fol/sfw_render_objects.cpp"
+
+current_in_fol=$project_root_folder/modules/render_objects/demos/render_test_app
 
 cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
 cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
