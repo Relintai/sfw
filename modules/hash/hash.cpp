@@ -65,16 +65,22 @@ static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64])
 
   /* 4 rounds of 20 operations each. Loop unrolled. */
   if( 1 == *(unsigned char*)&one ){
+		// clang-format off
     Rl0(a,b,c,d,e, 0); Rl0(e,a,b,c,d, 1); Rl0(d,e,a,b,c, 2); Rl0(c,d,e,a,b, 3);
     Rl0(b,c,d,e,a, 4); Rl0(a,b,c,d,e, 5); Rl0(e,a,b,c,d, 6); Rl0(d,e,a,b,c, 7);
     Rl0(c,d,e,a,b, 8); Rl0(b,c,d,e,a, 9); Rl0(a,b,c,d,e,10); Rl0(e,a,b,c,d,11);
     Rl0(d,e,a,b,c,12); Rl0(c,d,e,a,b,13); Rl0(b,c,d,e,a,14); Rl0(a,b,c,d,e,15);
+		// clang-format on
   }else{
+		// clang-format off
     Rb0(a,b,c,d,e, 0); Rb0(e,a,b,c,d, 1); Rb0(d,e,a,b,c, 2); Rb0(c,d,e,a,b, 3);
     Rb0(b,c,d,e,a, 4); Rb0(a,b,c,d,e, 5); Rb0(e,a,b,c,d, 6); Rb0(d,e,a,b,c, 7);
     Rb0(c,d,e,a,b, 8); Rb0(b,c,d,e,a, 9); Rb0(a,b,c,d,e,10); Rb0(e,a,b,c,d,11);
     Rb0(d,e,a,b,c,12); Rb0(c,d,e,a,b,13); Rb0(b,c,d,e,a,14); Rb0(a,b,c,d,e,15);
+		// clang-format on
   }
+
+	// clang-format off
   R1(e,a,b,c,d,16); R1(d,e,a,b,c,17); R1(c,d,e,a,b,18); R1(b,c,d,e,a,19);
   R2(a,b,c,d,e,20); R2(e,a,b,c,d,21); R2(d,e,a,b,c,22); R2(c,d,e,a,b,23);
   R2(b,c,d,e,a,24); R2(a,b,c,d,e,25); R2(e,a,b,c,d,26); R2(d,e,a,b,c,27);
@@ -91,6 +97,7 @@ static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64])
   R4(c,d,e,a,b,68); R4(b,c,d,e,a,69); R4(a,b,c,d,e,70); R4(e,a,b,c,d,71);
   R4(d,e,a,b,c,72); R4(c,d,e,a,b,73); R4(b,c,d,e,a,74); R4(a,b,c,d,e,75);
   R4(e,a,b,c,d,76); R4(d,e,a,b,c,77); R4(c,d,e,a,b,78); R4(b,c,d,e,a,79);
+	// clang-format on
 
   /* Add the working vars back into context.state[] */
   state[0] += a;
@@ -201,6 +208,8 @@ static void KeccakF1600Step(SHA3Context *p){
   u64 b0, b1, b2, b3, b4;
   u64 c0, c1, c2, c3, c4;
   u64 d0, d1, d2, d3, d4;
+
+	// clang-format off
   static const u64 RC[] = {
     0x0000000000000001ULL,  0x0000000000008082ULL,
     0x800000000000808aULL,  0x8000000080008000ULL,
@@ -215,6 +224,8 @@ static void KeccakF1600Step(SHA3Context *p){
     0x8000000080008081ULL,  0x8000000000008080ULL,
     0x0000000080000001ULL,  0x8000000080008008ULL
   };
+	// clang-format on
+
 # define a00 (p->u.s[0])
 # define a01 (p->u.s[1])
 # define a02 (p->u.s[2])
@@ -616,6 +627,8 @@ static void md5_init(MD5Context*v) {
 }
 
 static void md5_step(MD5Context*v) {
+
+	// clang-format off
   static const uint8_t s[64]={
     7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
     5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
@@ -646,6 +659,8 @@ static void md5_step(MD5Context*v) {
     20, 32, 44, 56, 4, 16, 28, 40, 52, 0, 12, 24, 36, 48, 60, 8,
     0, 28, 56, 20, 48, 12, 40, 4, 32, 60, 24, 52, 16, 44, 8, 36,
   };
+	// clang-format on
+
   uint32_t a,b,c,d,f,i;
   a=v->a; b=v->b; c=v->c; d=v->d;
   for(i=0;i<64;i++) {
@@ -676,8 +691,12 @@ static void md5_write(MD5Context*v,const char*buf,size_t len) {
 static void md5_finish(MD5Context*v,unsigned char*o) {
   uint64_t n=v->len*8;
   uint8_t buf[8];
+
+	// clang-format off
   buf[0]=n>>000; buf[1]=n>>010; buf[2]=n>>020; buf[3]=n>>030;
   buf[4]=n>>040; buf[5]=n>>050; buf[6]=n>>060; buf[7]=n>>070;
+	// clang-format on
+
   md5_write(v,"\x80",1);
   memset(v->chunk+(v->len&63),0,64-(v->len&63));
   if((v->len&63)>56) {
@@ -686,10 +705,13 @@ static void md5_finish(MD5Context*v,unsigned char*o) {
   }
   memcpy(v->chunk+56,buf,8);
   md5_step(v);
+
+	// clang-format off
   o[0]=v->a; o[1]=v->a>>8; o[2]=v->a>>16; o[3]=v->a>>24;
   o[4]=v->b; o[5]=v->b>>8; o[6]=v->b>>16; o[7]=v->b>>24;
   o[8]=v->c; o[9]=v->c>>8; o[10]=v->c>>16; o[11]=v->c>>24;
   o[12]=v->d; o[13]=v->d>>8; o[14]=v->d>>16; o[15]=v->d>>24;
+	// clang-format on
 }
 
 // ########
