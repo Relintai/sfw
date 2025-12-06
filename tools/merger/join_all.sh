@@ -96,6 +96,6 @@ clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.
 
 # Render Objects Module
 
-clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_hash.h
-clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_hash.cpp
+clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_render_objects.h
+clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_render_objects.cpp
 
