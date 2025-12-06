@@ -626,11 +626,12 @@ GameScene::GameScene() {
 	_font.instance();
 	_font->load_default(31.5);
 
+	_font_test_mat.instance();
+	_font_test_mat->texture = _font->get_texture();
+
 	/*
 	_font_test_sprite = memnew(Sprite);
 
-	_font_test_mat.instance();
-	_font_test_mat->texture = _font->get_texture();
 	_font_test_sprite->mesh_instance->material = _font_test_mat;
 	_font_test_sprite->width = _font->get_atlas_width();
 	_font_test_sprite->height = _font->get_atlas_height();
