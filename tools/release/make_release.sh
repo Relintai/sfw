@@ -20,11 +20,14 @@ mkdir -p out/sfw
 mkdir -p out/sfw/merged
 mkdir -p out/sfw/split
 mkdir -p out/sfw/demos
+mkdir -p out/sfw/modules
 
 mkdir -p out/sfwl
 mkdir -p out/sfwl/merged
 mkdir -p out/sfwl/split
 mkdir -p out/sfwl/demos
+mkdir -p out/sfwl/modules
+
 
 version=""
 
@@ -142,6 +145,17 @@ cp "$current_in_fol/sfw.cpp" "$current_out_fol/sfw.cpp"
 cp "$current_in_fol/sfw_3rd.m" "$current_out_fol/sfw_3rd.m"
 cp "$doc_folder/sfw_full.html" "$current_out_fol/sfw.html"
 
+# SFW Modules
+
+# Hash
+current_in_fol=$project_root_folder/tools/merger/out/modules/sfw
+current_out_fol=$sfw_out_folder/modules/hash
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_hash.h" "$current_out_fol/sfw_hash.h"
+cp "$current_in_fol/sfw_hash.cpp" "$current_out_fol/sfw_hash.cpp"
+cp "$doc_folder/sfw_hash.html" "$current_out_fol/sfw_hash.html"
+
 # SFW Demos
 
 # Minimal APP
@@ -244,7 +258,18 @@ cp "$current_in_fol/sfwl.h" "$current_out_fol/sfwl.h"
 cp "$current_in_fol/sfwl.cpp" "$current_out_fol/sfwl.cpp"
 cp "$doc_folder/sfwl_full.html" "$current_out_fol/sfwl.html"
 
-# SFW Demos
+# SFWL Modules
+
+# Hash
+current_in_fol=$project_root_folder/tools/merger/out/modules/sfwl
+current_out_fol=$sfwl_out_folder/modules/hash
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_hash.h" "$current_out_fol/sfw_hash.h"
+cp "$current_in_fol/sfw_hash.cpp" "$current_out_fol/sfw_hash.cpp"
+cp "$doc_folder/sfw_hash.html" "$current_out_fol/sfw_hash.html"
+
+# SFWL Demos
 
 # Minimal APP
 current_out_fol=$sfwl_out_folder/demos/sfwl_doc_merger
