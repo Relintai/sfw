@@ -23,21 +23,38 @@ class SFWHash {
 		HASH_MD5 = 0xD5,
 	};
 
+	void init(HashFunc p_func);
+	bool is_initialized() const;
+
+	HashFunc get_hash_func() const;
+
+	int get_hash_length();
+	String get_current_hash();
+
+	void hash_string(const String &p_str);
+	void hash_buffer(const uint8_t *p_buffer, const int p_length);
+
+	SFWHash();
+	~SFWHash();
+
+protected:
 	// Tell the length (in bytes) of the hash of the specified algorithm. If
 	// it is not implemented, then the result is zero.
-	static uint64_t hash_length(HashFunc alg);
+	static uint64_t _hash_length(HashFunc alg);
 
 	// Returns a writable stream. If the echo stream is not null, then any
 	// data written to the stream is also written to the echo stream. When
 	// the stream is closed, the hash (as binary) is written to the out.
-	static FILE *hash_stream(HashFunc alg, FILE *echo, unsigned char *out);
+	static FILE *_hash_stream(HashFunc alg, FILE *echo, unsigned char *out);
 
 	// Returns a hash (as binary) of the specified data. The returned buffer
 	// is allocated by malloc and must be freed by free. (This function is a
 	// convenience function implemented in terms of the other two functions.)
-	static unsigned char *hash_buffer(HashFunc alg, const unsigned char *data, int len);
+	static unsigned char *_hash_buffer(HashFunc alg, const unsigned char *data, int len);
 
-protected:
+	static ssize_t _hash_write(void *cookie, const char *buf, size_t size);
+	static int _hash_close(void *cookie);
+
 	/* Context for the SHA1 hash */
 	struct SHA1Context {
 		unsigned int state[5];
@@ -77,9 +94,6 @@ protected:
 		unsigned char *out;
 	} HashState;
 
-	static ssize_t hash_write(void *cookie, const char *buf, size_t size);
-	static int hash_close(void *cookie);
-
 	static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64]);
 	static void sha1_hash_init(SHA1Context *p);
 	static void sha1_hash_step(
@@ -101,6 +115,10 @@ protected:
 	static void md5_step(MD5Context *v);
 	static void md5_write(MD5Context *v, const char *buf, size_t len);
 	static void md5_finish(MD5Context *v, unsigned char *o);
+
+protected:
+	HashFunc _hash_func;
+	HashState *_hash_state;
 };
 
 #endif
