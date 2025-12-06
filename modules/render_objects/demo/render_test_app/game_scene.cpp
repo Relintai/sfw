@@ -1,22 +1,6 @@
 #include "game_scene.h"
 
-#include "render_core/application.h"
-
-#include "core/inet_address.h"
-#include "core/memory.h"
-#include "core/sfw_time.h"
-#include "core/socket.h"
-#include "core/thread.h"
-#include "render_core/3rd_glad.h"
-#include "render_core/app_window.h"
-#include "render_core/keyboard.h"
-#include "render_core/mesh_utils.h"
-#include "render_gui/gui.h"
-#include "render_gui/imgui.h"
-#include "render_immediate/renderer.h"
-//#include "render_core/font.h"
-#include "core/os.h"
-#include "core/sub_process.h"
+#include "sfw.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
 	//ERR_PRINT(event->as_text());
@@ -119,7 +103,6 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 		return;
 	}
 
-	/*
 	Ref<InputEventMouseMotion> mm = event;
 
 	if (mm.is_valid()) {
@@ -127,7 +110,6 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 			tile_map->transform.translate(mm->get_relative());
 		}
 	}
-	*/
 }
 
 void GameScene::update(float delta) {
@@ -150,7 +132,7 @@ void GameScene::update(float delta) {
 	}
 
 	if (up || down || left || right) {
-		//sprite->transform.translate(trn);
+		sprite->transform.translate(trn);
 	}
 }
 
@@ -166,25 +148,22 @@ void GameScene::render() {
 	static float rotmi = 0;
 
 	if (render_type == 0) {
-		render_immediate();
+		render_obj();
 	} else if (render_type == 1) {
+		render_immediate();
+	} else if (render_type == 2) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_simple_test_cone(_mesh_utils_test);
 		_mesh_utils_test->upload();
 
-		Renderer *r = Renderer::get_singleton();
+		camera->bind();
 
-		r->camera_3d_bind();
-
-		Transform t;
-		t.basis = Basis(Vector3(1, 0, 0), rotmi);
-
+		_mesh_utils_test_mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
 		rotmi += 0.01;
+		_mesh_utils_test_mi->render();
 
-		r->draw_mesh_3d_vertex_colored(_mesh_utils_test, t);
-	}
-/*
-	else if (render_type == 3) {
+		_mesh_utils_test_mi->render();
+	} else if (render_type == 3) {
 		_mesh_utils_test->clear();
 		MeshUtils::create_capsule(_mesh_utils_test, 0.5, 0.5);
 		_mesh_utils_test->fill_colors_interpolated(Color(0.2, 0, 0), Color(1, 0, 0));
@@ -301,9 +280,7 @@ void GameScene::render() {
 		_mesh_utils_test_mi->render();
 
 		_mesh_utils_test_mi->render();
-	} else
-		*/
-if (render_type == 12) {
+	} else if (render_type == 12) {
 		render_immediate_3d();
 	} else if (render_type == 13) {
 		Renderer *r = Renderer::get_singleton();
@@ -389,6 +366,35 @@ void GameScene::render_immediate(bool clear_screen) {
 
 	r->draw_text_2d_tf_material("draw_text_2d_tf_material1", _font, _font_test_mat, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1000, 800)));
 	r->draw_text_2d_tf_material("draw_text_2d_tf_material2", _font, _font_test_mat, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1200, 800)), Color(1, 0, 0));
+}
+
+void GameScene::render_obj() {
+	//static float rot = 0;
+	//Transform t = camera->get_camera_transform();
+	//t.basis = Basis(Vector3(0, 1, 0), rot);
+	//camera->set_camera_transform(t);
+	//rot += 0.01;
+
+	//Ref<Image> d = texture->get_data();
+	//texture->create_from_image(d);
+
+	camera->bind();
+
+	static float rotmi = 0;
+	mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+	rotmi += 0.01;
+	mi->render();
+
+	camera_2d->bind();
+	sprite->render();
+	tile_map->render();
+	_font_test_sprite->render();
+	_font_test_mi->render();
+
+	_text_2d->render();
+
+	//TextRenderer::get_singleton()->font_init();
+	//TextRenderer::get_singleton()->font_print("test");
 }
 
 void GameScene::render_immediate_3d(bool clear_screen) {
@@ -613,21 +619,6 @@ void GameScene::socket_thread_func(void *data) {
 	self->_server_socket = NULL;
 }
 
-void GameScene::signal_member(Signal *emitter) {
-	LOG_MSG("signal_member Params:");
-	for (int i = 0; i < emitter->params.size(); ++i) {
-		LOG_MSG(String(emitter->params[i]));
-	}
-	LOG_MSG("signal_member Params End.");
-}
-void GameScene::signal_static(Signal *emitter) {
-	LOG_MSG("signal_static Params:");
-	for (int i = 0; i < emitter->params.size(); ++i) {
-		LOG_MSG(String(emitter->params[i]));
-	}
-	LOG_MSG("signal_static Params End.");
-}
-
 GameScene::GameScene() {
 	render_type = 0;
 
@@ -653,7 +644,6 @@ GameScene::GameScene() {
 	_font.instance();
 	_font->load_default(31.5);
 
-	/*
 	_font_test_sprite = memnew(Sprite);
 
 	_font_test_mat.instance();
@@ -663,18 +653,15 @@ GameScene::GameScene() {
 	_font_test_sprite->height = _font->get_atlas_height();
 	_font_test_sprite->transform.set_origin(Vector2(1000, 100));
 	_font_test_sprite->update_mesh();
-	*/
 
 	_font_test_mesh.instance();
 	_font_test_mesh->vertex_dimesions = 2;
 
-	/*
 	_font_test_mi = memnew(MeshInstance2D());
 	_font_test_mi->material = _font_test_mat;
 	_font_test_mi->mesh = _font_test_mesh;
 	//_font_test_mi->transform.scale(Vector2(10, 10));
 	_font_test_mi->transform.set_origin(Vector2(1000, 400));
-	*/
 
 	_font->generate_mesh("asdfgh\nasdfvb", _font_test_mesh, Color(1, 1, 0));
 	_font_test_mesh->upload();
@@ -692,12 +679,74 @@ GameScene::GameScene() {
 	material.instance();
 	material->texture = texture;
 
+	sprite = memnew(Sprite());
+	sprite->mesh_instance->material = material;
+	sprite->width = 500;
+	sprite->height = 500;
+	sprite->transform.set_origin(Vector2(250, 250));
+	//sprite->region_x = 7.0 * (1.0 / 16.0);
+	//sprite->region_y = 7.0 * (1.0 / 16.0);
+	//sprite->region_width = 1.0 / 16.0;
+	//sprite->region_height = 1.0 / 16.0;
+	sprite->update_mesh();
+
+	tile_map = memnew(TileMap());
+	tile_map->material = material;
+	tile_map->atlas_size_x = 2;
+	tile_map->atlas_size_y = 2;
+
+	tile_map->allocate_data();
+
+	for (int x = 0; x < tile_map->size_x; ++x) {
+		for (int y = 0; y < tile_map->size_y; ++y) {
+			if (x == 0 || y == 0 || x == tile_map->size_x - 1 || y == tile_map->size_y - 1) {
+				tile_map->set_data(x, y, 2);
+			} else {
+				tile_map->set_data(x, y, 1);
+			}
+		}
+	}
+
+	tile_map->build_mesh();
+
+	tile_map->transform.scale(Vector2(32, 32));
+	tile_map->transform.set_origin(Vector2(500, 500));
+
+	camera = memnew(PerspectiveCamera());
+	Transform t = camera->get_camera_transform();
+	//camera->width = 2;
+	//camera->height = 2;
+	//camera->position.x = 0;
+	//camera->position.y = 0;
+	//camera->position.z = -2;
+	t.origin.z -= 2;
+	camera->set_camera_transform(t);
+
+	camera->screen_aspect_ratio = 1920.0 / 1080.0;
+
+	camera_2d = memnew(Camera2D);
+	camera_2d->size = Vector2(1920, 1080);
+
 	mesh = Ref<Mesh>(memnew(Mesh()));
 	//cmaterial = memnew(ColoredMaterial());
 	//cmaterial->color = glm::vec4(1, 1, 0, 1);
 	color_material.instance();
 
 	//mesh->clear();
+
+	MeshUtils::create_simple_test_cone(mesh);
+	mesh->upload();
+
+	mi = memnew(MeshInstance3D());
+	mi->material = color_material;
+	mi->mesh = mesh;
+
+	mi2 = memnew(MeshInstance3D());
+	mi2->material = color_material;
+	mi2->mesh = mesh;
+	mi2->transform.origin.x = 1;
+
+	mi->children.push_back(mi2);
 
 	//float width = 1;
 	//float height = 1;
@@ -733,10 +782,21 @@ GameScene::GameScene() {
 	mesh->upload();
 	*/
 
+	_text_2d = memnew(Text2D);
+	_text_2d->set_font(_font);
+	_text_2d->set_text("Test Text2D.\n Newline.");
+	_text_2d->set_text_color(Color(1, 1, 0));
+	_text_2d->update();
+	_text_2d->transform.set_origin(Vector2(1200, 250));
+
 	_mesh_utils_test.instance();
 
 	Renderer::initialize();
 	GUI::initialize();
+
+	_mesh_utils_test_mi = memnew(MeshInstance3D());
+	_mesh_utils_test_mi->material = color_material;
+	_mesh_utils_test_mi->mesh = _mesh_utils_test;
 
 	_frame_buffer.instance();
 	_frame_buffer->create(960, 540);
@@ -753,4 +813,8 @@ GameScene::GameScene() {
 GameScene::~GameScene() {
 	GUI::destroy();
 	Renderer::destroy();
+
+	memdelete(tile_map);
+	memdelete(camera);
+	memdelete(sprite);
 }

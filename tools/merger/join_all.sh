@@ -34,10 +34,6 @@ python tools/merger/join.py --template tools/merger/sfw_render_immediate.h.inl -
 python tools/merger/join.py --template tools/merger/sfw_render_immediate.cpp.inl --path . --output tools/merger/out/render_immediate/sfw.cpp
 python tools/merger/join.py --template tools/merger/sfw_3rd.x.inl --path . --output tools/merger/out/render_immediate/sfw_3rd.m
 
-python tools/merger/join.py --template tools/merger/sfw_render_objects.h.inl --path . --output tools/merger/out/render_objects/sfw.h
-python tools/merger/join.py --template tools/merger/sfw_render_objects.cpp.inl --path . --output tools/merger/out/render_objects/sfw.cpp
-python tools/merger/join.py --template tools/merger/sfw_3rd.x.inl --path . --output tools/merger/out/render_objects/sfw_3rd.m
-
 python tools/merger/join.py --template tools/merger/sfw_full.h.inl --path . --output tools/merger/out/full/sfw.h
 python tools/merger/join.py --template tools/merger/sfw_full.cpp.inl --path . --output tools/merger/out/full/sfw.cpp
 python tools/merger/join.py --template tools/merger/sfw_3rd.x.inl --path . --output tools/merger/out/full/sfw_3rd.m
@@ -54,6 +50,10 @@ python tools/merger/join.py --template modules/hash/merger/sfw_hash.h.inl --path
 python tools/merger/join.py --template modules/hash/merger/sfw_hash.cpp.inl --path . --output tools/merger/out/modules/hash/sfw/sfw_hash.cpp --library_include sfw
 python tools/merger/join.py --template modules/hash/merger/sfw_hash.h.inl --path . --output tools/merger/out/modules/hash/sfwl/sfw_hash.h --library_include sfwl
 python tools/merger/join.py --template modules/hash/merger/sfw_hash.cpp.inl --path . --output tools/merger/out/modules/hash/sfwl/sfw_hash.cpp --library_include sfwl
+
+# Render Objects Module
+python tools/merger/join.py --template modules/render_objects/merger/sfw_render_objects.h.inl --path . --output tools/merger/out/modules/render_objects/sfw_render_objects.h
+python tools/merger/join.py --template modules/render_objects/merger/sfw_render_objects.cpp.inl --path . --output tools/merger/out/modules/render_objects/sfw_render_objects.cpp
 
 echo "Running clang format!"
 
@@ -76,10 +76,6 @@ clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw_3rd.m
 
-clang-format --Wno-error=unknown -i tools/merger/out/render_objects/sfw.h
-clang-format --Wno-error=unknown -i tools/merger/out/render_objects/sfw.cpp
-#clang-format --Wno-error=unknown -i tools/merger/out/render_objects/sfw_3rd.m
-
 clang-format --Wno-error=unknown -i tools/merger/out/full/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/full/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/full/sfw_3rd.m
@@ -97,4 +93,9 @@ clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfw/sfw_hash.h
 clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfw/sfw_hash.cpp
 clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.h
 clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.cpp
+
+# Render Objects Module
+
+clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_hash.h
+clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_hash.cpp
 

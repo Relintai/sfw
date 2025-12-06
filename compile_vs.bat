@@ -96,18 +96,6 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_core/colored_texture_material_2d.c
 
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_immediate/renderer.cpp /Fo:sfw/render_immediate/renderer.obj
 
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/camera_3d.cpp /Fo:sfw/render_objects/camera_3d.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/object_3d.cpp /Fo:sfw/render_objects/object_3d.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/mesh_instance_3d.cpp /Fo:sfw/render_objects/mesh_instance_3d.obj
-
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/camera_2d.cpp /Fo:sfw/render_objects/camera_2d.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/mesh_instance_2d.cpp /Fo:sfw/render_objects/mesh_instance_2d.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/object_2d.cpp /Fo:sfw/render_objects/object_2d.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/sprite.cpp /Fo:sfw/render_objects/sprite.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/tile_map.cpp /Fo:sfw/render_objects/tile_map.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_objects/text_2d.cpp /Fo:sfw/render_objects/text_2d.obj
-
-
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui.cpp /Fo:sfw/render_gui/imgui.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_draw.cpp /Fo:sfw/render_gui/imgui_draw.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/render_gui/imgui_impl_glfw.cpp /Fo:sfw/render_gui/imgui_impl_glfw.obj
@@ -155,11 +143,6 @@ cl /D_REENTRANT /Zi ^
 		sfw/render_core/transparent_texture_material.obj ^
 		sfw/render_core/colored_texture_material_2d.obj ^
 		sfw/render_immediate/renderer.obj ^
-		sfw/render_objects/camera_3d.obj sfw/render_objects/object_3d.obj sfw/render_objects/mesh_instance_3d.obj ^
-		sfw/render_objects/object_2d.obj ^
-		sfw/render_objects/sprite.obj sfw/render_objects/tile_map.obj ^
-		sfw/render_objects/camera_2d.obj sfw/render_objects/mesh_instance_2d.obj ^
-		sfw/render_objects/text_2d.obj ^
 		sfw/render_gui/imgui.obj ^
 		sfw/render_gui/imgui_draw.obj ^
 		sfw/render_gui/imgui_impl_glfw.obj ^

@@ -88,17 +88,6 @@ ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_core/colored_texture_materi
 
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_immediate/renderer.cpp -o sfw/render_immediate/renderer.o
 
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/camera_3d.cpp -o sfw/render_objects/camera_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/object_3d.cpp -o sfw/render_objects/object_3d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/mesh_instance_3d.cpp -o sfw/render_objects/mesh_instance_3d.o
-
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/camera_2d.cpp -o sfw/render_objects/camera_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/mesh_instance_2d.cpp -o sfw/render_objects/mesh_instance_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/object_2d.cpp -o sfw/render_objects/object_2d.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/sprite.cpp -o sfw/render_objects/sprite.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/tile_map.cpp -o sfw/render_objects/tile_map.o
-ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_objects/text_2d.cpp -o sfw/render_objects/text_2d.o
-
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui.cpp -o sfw/render_gui/imgui.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_draw.cpp -o sfw/render_gui/imgui_draw.o
 ccache g++ -Wall -D_REENTRANT -g -Isfw -c sfw/render_gui/imgui_impl_glfw.cpp -o sfw/render_gui/imgui_impl_glfw.o
@@ -144,11 +133,6 @@ ccache g++ -Wall -D_REENTRANT -g sfw/core/aabb.o sfw/core/basis.o sfw/core/color
                         sfw/render_core/transparent_texture_material.o \
                         sfw/render_core/colored_texture_material_2d.o \
                         sfw/render_immediate/renderer.o \
-                        sfw/render_objects/camera_3d.o sfw/render_objects/object_3d.o sfw/render_objects/mesh_instance_3d.o \
-                        sfw/render_objects/object_2d.o \
-                        sfw/render_objects/sprite.o sfw/render_objects/tile_map.o \
-                        sfw/render_objects/camera_2d.o sfw/render_objects/mesh_instance_2d.o \
-                        sfw/render_objects/text_2d.o \
                         sfw/render_gui/imgui.o \
                         sfw/render_gui/imgui_draw.o \
                         sfw/render_gui/imgui_impl_glfw.o \
