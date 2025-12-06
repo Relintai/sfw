@@ -30,7 +30,21 @@ public:
 				right = pressed;
 			}
 
+			if (k->get_physical_scancode() == KEY_SPACE) {
+				if (pressed) {
+					immediate = !immediate;
+				}
+			}
+
 			return;
+		}
+
+		Ref<InputEventMouseMotion> mm = event;
+
+		if (mm.is_valid()) {
+			if (mm->get_button_mask() & BUTTON_MASK_LEFT) {
+				tile_map->transform.translate(mm->get_relative());
+			}
 		}
 	}
 
@@ -59,7 +73,11 @@ public:
 	}
 
 	virtual void render() {
-		render_immediate();
+		if (!immediate) {
+			render_obj();
+		} else {
+			render_immediate();
+		}
 	}
 
 	virtual void render_immediate() {
@@ -115,7 +133,41 @@ public:
 		r->draw_text_2d_tf_material("draw_text_2d_tf_material2", _font, _font_test_mat, Transform2D().rotated(Math_PI / 26.0).translated(Vector2(1200, 800)), Color(1, 0, 0));
 	}
 
+	virtual void render_obj() {
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		static float rot = 0;
+		Transform t = camera->get_camera_transform();
+		t.basis = Basis(Vector3(0, 1, 0), rot);
+		camera->set_camera_transform(t);
+		rot += 0.01;
+
+		Ref<Image> d = texture->get_data();
+		texture->create_from_image(d);
+
+		camera->bind();
+
+		static float rotmi = 0;
+		mi->transform.basis = Basis(Vector3(1, 0, 0), rotmi);
+		rotmi += 0.01;
+		mi->render();
+
+		camera_2d->bind();
+		sprite->render();
+		tile_map->render();
+		_font_test_sprite->render();
+		_font_test_mi->render();
+
+		_text_2d->render();
+
+		//TextRenderer::get_singleton()->font_init();
+		//TextRenderer::get_singleton()->font_print("test");
+	}
+
 	GameApplication() {
+		immediate = false;
+
 		left = false;
 		right = false;
 		up = false;
@@ -131,11 +183,24 @@ public:
 		_font.instance();
 		_font->load_default(31.5);
 
+		_font_test_sprite = memnew(Sprite);
+
 		_font_test_mat.instance();
 		_font_test_mat->texture = _font->get_texture();
+		_font_test_sprite->mesh_instance->material = _font_test_mat;
+		_font_test_sprite->width = _font->get_atlas_width();
+		_font_test_sprite->height = _font->get_atlas_height();
+		_font_test_sprite->transform.set_origin(Vector2(1000, 100));
+		_font_test_sprite->update_mesh();
 
 		_font_test_mesh.instance();
 		_font_test_mesh->vertex_dimesions = 2;
+
+		_font_test_mi = memnew(MeshInstance2D());
+		_font_test_mi->material = _font_test_mat;
+		_font_test_mi->mesh = _font_test_mesh;
+		//_font_test_mi->transform.scale(Vector2(10, 10));
+		_font_test_mi->transform.set_origin(Vector2(1000, 400));
 
 		_font->generate_mesh("asdfgh\nasdfvb", _font_test_mesh, Color(1, 1, 0));
 		_font_test_mesh->upload();
@@ -153,6 +218,54 @@ public:
 		material.instance();
 		material->texture = texture;
 
+		sprite = memnew(Sprite());
+		sprite->mesh_instance->material = material;
+		sprite->width = 500;
+		sprite->height = 500;
+		sprite->transform.set_origin(Vector2(250, 250));
+		//sprite->region_x = 7.0 * (1.0 / 16.0);
+		//sprite->region_y = 7.0 * (1.0 / 16.0);
+		//sprite->region_width = 1.0 / 16.0;
+		//sprite->region_height = 1.0 / 16.0;
+		sprite->update_mesh();
+
+		tile_map = memnew(TileMap());
+		tile_map->material = material;
+		tile_map->atlas_size_x = 2;
+		tile_map->atlas_size_y = 2;
+
+		tile_map->allocate_data();
+
+		for (int x = 0; x < tile_map->size_x; ++x) {
+			for (int y = 0; y < tile_map->size_y; ++y) {
+				if (x == 0 || y == 0 || x == tile_map->size_x - 1 || y == tile_map->size_y - 1) {
+					tile_map->set_data(x, y, 2);
+				} else {
+					tile_map->set_data(x, y, 1);
+				}
+			}
+		}
+
+		tile_map->build_mesh();
+
+		tile_map->transform.scale(Vector2(32, 32));
+		tile_map->transform.set_origin(Vector2(500, 500));
+
+		camera = memnew(PerspectiveCamera());
+		Transform t = camera->get_camera_transform();
+		//camera->width = 2;
+		//camera->height = 2;
+		//camera->position.x = 0;
+		//camera->position.y = 0;
+		//camera->position.z = -2;
+		t.origin.z -= 2;
+		camera->set_camera_transform(t);
+
+		camera->screen_aspect_ratio = 1920.0 / 1080.0;
+
+		camera_2d = memnew(Camera2D);
+		camera_2d->size = Vector2(1920, 1080);
+
 		mesh = Ref<Mesh>(memnew(Mesh()));
 		//cmaterial = memnew(ColoredMaterial());
 		//cmaterial->color = glm::vec4(1, 1, 0, 1);
@@ -162,6 +275,17 @@ public:
 
 		MeshUtils::create_simple_test_cone(mesh);
 		mesh->upload();
+
+		mi = memnew(MeshInstance3D());
+		mi->material = color_material;
+		mi->mesh = mesh;
+
+		mi2 = memnew(MeshInstance3D());
+		mi2->material = color_material;
+		mi2->mesh = mesh;
+		mi2->transform.origin.x = 1;
+
+		mi->children.push_back(mi2);
 
 		//float width = 1;
 		//float height = 1;
@@ -197,12 +321,25 @@ public:
 		mesh->upload();
 		*/
 
+		_text_2d = memnew(Text2D);
+		_text_2d->set_font(_font);
+		_text_2d->set_text("Test Text2D.\n Newline.");
+		_text_2d->set_text_color(Color(1, 1, 0));
+		_text_2d->update();
+		_text_2d->transform.set_origin(Vector2(1200, 250));
+
 		Renderer::initialize();
 	}
 
 	~GameApplication() {
 		Renderer::destroy();
+
+		memdelete(tile_map);
+		memdelete(camera);
+		memdelete(sprite);
 	}
+
+	bool immediate;
 
 	bool left;
 	bool right;
@@ -214,12 +351,23 @@ public:
 	Ref<TextureMaterial2D> material;
 
 	Ref<Font> _font;
+	Sprite *_font_test_sprite;
 	Ref<FontMaterial> _font_test_mat;
 
 	Ref<Mesh> _font_test_mesh;
+	MeshInstance2D *_font_test_mi;
 
+	Camera2D *camera_2d;
+	TileMap *tile_map;
+	Sprite *sprite;
+
+	Camera3D *camera;
 	Ref<Mesh> mesh;
+	MeshInstance3D *mi;
+	MeshInstance3D *mi2;
 	Ref<ColorMaterial> color_material;
+
+	Text2D *_text_2d;
 
 	//ColoredMaterial *cmaterial;
 };
