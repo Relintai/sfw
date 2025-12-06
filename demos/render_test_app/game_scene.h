@@ -75,6 +75,8 @@ public:
 	Ref<FrameBuffer> _frame_buffer;
 	Ref<RenderTexture> _render_tex;
 
+	Signal test_signal;
+
 	//ColoredMaterial *cmaterial;
 };
 

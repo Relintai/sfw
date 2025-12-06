@@ -74,6 +74,15 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 			}
 		}
 
+		if (k->get_physical_scancode() == KEY_S) {
+			if (pressed) {
+				ERR_PRINT("Sending test signal");
+				test_signal.emit(this);
+				test_signal.emit(this, 12);
+				test_signal.emit(this, 33, "Test String");
+			}
+		}
+
 		if (k->get_physical_scancode() == KEY_I) {
 			if (pressed) {
 				ERR_PRINT("SFWTime::get_date().day: " + String::num(SFWTime::get_date().day));
@@ -794,6 +803,11 @@ GameScene::GameScene() {
 
 	_render_tex.instance();
 	_render_tex->set_frame_buffer(_frame_buffer);
+
+	test_signal.connect(this, &GameScene::signal_member);
+	test_signal.connect_static(&GameScene::signal_static);
+
+	ERR_PRINT("Processor count: " + String::num(OS::get_processor_count()));
 }
 
 GameScene::~GameScene() {
