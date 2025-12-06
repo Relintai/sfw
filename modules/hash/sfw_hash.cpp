@@ -4,7 +4,7 @@
   The original code and this code also is public domain.
 */
 
-#include "hash.h"
+#include "sfw_hash.h"
 
 // ######## SHA-1 hash
 
@@ -44,7 +44,7 @@
 /*
  * Hash a single 512-bit block. This is the core of the algorithm.
  */
-static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64]) {
+void SFWHash::SHA1Transform(unsigned int state[5], const unsigned char buffer[64]) {
 	unsigned int qq[5]; /* a, b, c, d, e; */
 	static int one = 1;
 	unsigned int block[16];
@@ -117,7 +117,7 @@ static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64])
 }
 
 /* Initialize a SHA1 context */
-static void sha1_hash_init(SHA1Context *p) {
+void SFWHash::sha1_hash_init(SHA1Context *p) {
 	/* SHA1 initialization constants */
 	p->state[0] = 0x67452301;
 	p->state[1] = 0xEFCDAB89;
@@ -128,7 +128,7 @@ static void sha1_hash_init(SHA1Context *p) {
 }
 
 /* Add new content to the SHA1 hash */
-static void sha1_hash_step(
+void SFWHash::sha1_hash_step(
 		SHA1Context *p, /* Add content to this context */
 		const unsigned char *data, /* Data to be added */
 		unsigned int len /* Number of bytes in data */
@@ -156,7 +156,7 @@ static void sha1_hash_step(
 /* Add padding and compute the message digest.  Render the
 ** message digest as binary and put it into digest[].
 ** digest[] must be at least 20 bytes long. */
-static void sha1_hash_finish(
+void SFWHash::sha1_hash_finish(
 		SHA1Context *p, /* The SHA1 context to finish and render */
 		unsigned char *digest /* Store hash here */
 ) {
@@ -203,7 +203,7 @@ static void sha1_hash_finish(
 /*
 ** A single step of the Keccak mixing function for a 1600-bit state
 */
-static void KeccakF1600Step(SHA3Context *p) {
+void SFWHash::KeccakF1600Step(SHA3Context *p) {
 	int i;
 	u64 b0, b1, b2, b3, b4;
 	u64 c0, c1, c2, c3, c4;
@@ -529,7 +529,7 @@ static void KeccakF1600Step(SHA3Context *p) {
 ** in bits and should be one of 224, 256, 384, or 512.  Or iSize
 ** can be zero to use the default hash size of 256 bits.
 */
-static void SHA3Init(SHA3Context *p, int iSize) {
+void SFWHash::SHA3Init(SHA3Context *p, int iSize) {
 	memset(p, 0, sizeof(*p));
 	if (iSize >= 128 && iSize <= 512) {
 		p->nRate = (1600 - ((iSize + 31) & ~31) * 2) / 8;
@@ -558,10 +558,7 @@ static void SHA3Init(SHA3Context *p, int iSize) {
 ** Make consecutive calls to the SHA3Update function to add new content
 ** to the hash
 */
-static void SHA3Update(
-		SHA3Context *p,
-		const unsigned char *aData,
-		unsigned int nData) {
+void SFWHash::SHA3Update(SHA3Context *p, const unsigned char *aData, unsigned int nData) {
 	unsigned int i = 0;
 	if (aData == 0)
 		return;
@@ -598,7 +595,7 @@ static void SHA3Update(
 ** the final hash.  The function returns a pointer to the binary
 ** hash value.
 */
-static unsigned char *SHA3Final(SHA3Context *p) {
+unsigned char *SFWHash::SHA3Final(SHA3Context *p) {
 	unsigned int i;
 	if (p->nLoaded == p->nRate - 1) {
 		const unsigned char c1 = 0x86;
@@ -618,7 +615,7 @@ static unsigned char *SHA3Final(SHA3Context *p) {
 
 // ######## MD5
 
-static void md5_init(MD5Context *v) {
+void SFWHash::md5_init(MD5Context *v) {
 	v->len = 0;
 	v->a = 0x67452301;
 	v->b = 0xEFCDAB89;
@@ -626,7 +623,7 @@ static void md5_init(MD5Context *v) {
 	v->d = 0x10325476;
 }
 
-static void md5_step(MD5Context *v) {
+void SFWHash::md5_step(MD5Context *v) {
 	// clang-format off
   static const uint8_t s[64]={
     7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
@@ -692,7 +689,7 @@ static void md5_step(MD5Context *v) {
 	v->d += d;
 }
 
-static void md5_write(MD5Context *v, const char *buf, size_t len) {
+void SFWHash::md5_write(MD5Context *v, const char *buf, size_t len) {
 	size_t n = len;
 	size_t i;
 	while (n) {
@@ -708,7 +705,7 @@ static void md5_write(MD5Context *v, const char *buf, size_t len) {
 	}
 }
 
-static void md5_finish(MD5Context *v, unsigned char *o) {
+void SFWHash::md5_finish(MD5Context *v, unsigned char *o) {
 	uint64_t n = v->len * 8;
 	uint8_t buf[8];
 

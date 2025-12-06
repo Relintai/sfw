@@ -39,7 +39,6 @@ class SFWHash {
 
 protected:
 	/* Context for the SHA1 hash */
-	typedef struct SHA1Context SHA1Context;
 	struct SHA1Context {
 		unsigned int state[5];
 		unsigned int count[2];
@@ -51,7 +50,6 @@ protected:
 	/*
 	** State structure for a SHA3 hash in progress
 	*/
-	typedef struct SHA3Context SHA3Context;
 	struct SHA3Context {
 		union {
 			u64 s[25]; /* Keccak state. 5x5 lines of 64 bits each */
@@ -79,8 +77,30 @@ protected:
 		unsigned char *out;
 	} HashState;
 
-	static ssize_t SFWHash::hash_write(void *cookie, const char *buf, size_t size);
-	static int SFWHash::hash_close(void *cookie);
+	static ssize_t hash_write(void *cookie, const char *buf, size_t size);
+	static int hash_close(void *cookie);
+
+	static void SHA1Transform(unsigned int state[5], const unsigned char buffer[64]);
+	static void sha1_hash_init(SHA1Context *p);
+	static void sha1_hash_step(
+			SHA1Context *p, /* Add content to this context */
+			const unsigned char *data, /* Data to be added */
+			unsigned int len /* Number of bytes in data */
+	);
+	static void sha1_hash_finish(
+			SHA1Context *p, /* The SHA1 context to finish and render */
+			unsigned char *digest /* Store hash here */
+	);
+
+	static void KeccakF1600Step(SHA3Context *p);
+	static void SHA3Init(SHA3Context *p, int iSize);
+	static void SHA3Update(SHA3Context *p, const unsigned char *aData, unsigned int nData);
+	static unsigned char *SHA3Final(SHA3Context *p);
+
+	static void md5_init(MD5Context *v);
+	static void md5_step(MD5Context *v);
+	static void md5_write(MD5Context *v, const char *buf, size_t len);
+	static void md5_finish(MD5Context *v, unsigned char *o);
 };
 
 #endif
