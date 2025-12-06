@@ -10,8 +10,8 @@
 
 // Adding the -fwrapv flag might be needed
 
-#include "sfw.h"
-//#include "sfwl.h"
+//#include "sfw.h"
+#include "sfwl.h"
 
 class SFWHash {
 	enum HashFunc {
