@@ -148,7 +148,7 @@ cp "$doc_folder/sfw_full.html" "$current_out_fol/sfw.html"
 # SFW Modules
 
 # Hash
-current_in_fol=$project_root_folder/tools/merger/out/modules/sfw
+current_in_fol=$project_root_folder/tools/merger/out/modules/hash/sfw
 current_out_fol=$sfw_out_folder/modules/hash
 
 mkdir -p "$current_out_fol"
@@ -261,7 +261,7 @@ cp "$doc_folder/sfwl_full.html" "$current_out_fol/sfwl.html"
 # SFWL Modules
 
 # Hash
-current_in_fol=$project_root_folder/tools/merger/out/modules/sfwl
+current_in_fol=$project_root_folder/tools/merger/out/modules/hash/sfwl
 current_out_fol=$sfwl_out_folder/modules/hash
 
 mkdir -p "$current_out_fol"
