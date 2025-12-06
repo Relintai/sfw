@@ -1,29 +1,13 @@
-#if 0
-gcc ${CFLAGS:--s -O2} -c -fwrapv hash.c
-exit
-#endif
 
 /*
   Some of the code in this file is based on some code from SQLite.
   The original code and this code also is public domain.
 */
 
-#define _GNU_SOURCE
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "hash.h"
 
 // ######## SHA-1 hash
 
-/* Context for the SHA1 hash */
-typedef struct SHA1Context SHA1Context;
-struct SHA1Context {
-  unsigned int state[5];
-  unsigned int count[2];
-  unsigned char buffer[64];
-};
 
 #define SHA_ROT(x,l,r) ((x) << (l) | (x) >> (r))
 #define rol(x,k) SHA_ROT(x,k,32-(k))
@@ -208,22 +192,6 @@ static void sha1_hash_finish(
 #   define SHA3_BYTEORDER 0
 # endif
 #endif
-
-typedef unsigned long long u64;
-
-/*
-** State structure for a SHA3 hash in progress
-*/
-typedef struct SHA3Context SHA3Context;
-struct SHA3Context {
-  union {
-    u64 s[25];                /* Keccak state. 5x5 lines of 64 bits each */
-    unsigned char x[1600];    /* ... or 1600 bytes */
-  } u;
-  unsigned nRate;        /* Bytes of input accepted per Keccak iteration */
-  unsigned nLoaded;      /* Input bytes loaded into u.x[] so far this cycle */
-  unsigned ixMask;       /* Insert next input into u.x[nLoaded^ixMask]. */
-};
 
 /*
 ** A single step of the Keccak mixing function for a 1600-bit state
@@ -639,12 +607,6 @@ static unsigned char *SHA3Final(SHA3Context *p){
 
 // ######## MD5
 
-typedef struct {
-  uint8_t chunk[64];
-  uint64_t len;
-  uint32_t a,b,c,d;
-} MD5Context;
-
 static void md5_init(MD5Context*v) {
   v->len=0;
   v->a=0x67452301;
@@ -732,18 +694,7 @@ static void md5_finish(MD5Context*v,unsigned char*o) {
 
 // ########
 
-typedef struct {
-  union {
-    SHA1Context sha1;
-    SHA3Context sha3;
-    MD5Context md5;
-  };
-  long long alg;
-  FILE*echo;
-  unsigned char*out;
-} HashState;
-
-static ssize_t hash_write(void *cookie, const char *buf, size_t size) {
+ssize_t SFWHash::hash_write(void *cookie, const char *buf, size_t size) {
   HashState*hs=cookie;
   if(!size) return 0;
   if(hs->echo) fwrite(buf,1,size,hs->echo);
@@ -761,7 +712,7 @@ static ssize_t hash_write(void *cookie, const char *buf, size_t size) {
   return size;
 }
 
-static int hash_close(void *cookie) {
+int SFWHash::hash_close(void *cookie) {
   HashState*hs=cookie;
   switch(hs->alg) {
     case HASH_SHA1:
@@ -778,7 +729,7 @@ static int hash_close(void *cookie) {
   return 0;
 }
 
-long hash_length(long long alg) {
+long SFWHash::hash_length(HashFunc alg) {
   switch(alg) {
     case HASH_SHA1: return 20;
     case HASH_SHA3_224: return 224/8;
@@ -790,7 +741,7 @@ long hash_length(long long alg) {
   }
 }
 
-FILE*hash_stream(long long alg,FILE*echo,unsigned char*out) {
+FILE* SFWHash::hash_stream(HashFunc alg,FILE*echo,unsigned char*out) {
   HashState*hs=malloc(sizeof(HashState));
   FILE*fp;
   if(!hs) return 0;
@@ -814,7 +765,7 @@ FILE*hash_stream(long long alg,FILE*echo,unsigned char*out) {
   return fp;
 }
 
-unsigned char*hash_buffer(long long alg,const unsigned char*data,int len) {
+unsigned char* SFWHash::hash_buffer(HashFunc alg,const unsigned char*data,int len) {
   int n=hash_length(alg);
   unsigned char*b;
   FILE*fp;
