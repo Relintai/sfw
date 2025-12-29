@@ -178,7 +178,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ------------------------------------------------------------------------------
 */
 
-// --- STS MIxer ---
+// --- STS Mixer ---
 
 //https://github.com/kieselsteini/sts
 //https://github.com/kieselsteini/sts/blob/master/sts_mixer.h
