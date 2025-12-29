@@ -1,4 +1,6 @@
 
+//--STRIP
+
 #define MINIAUDIO_IMPLEMENTATION // miniaudio
 #define MA_NO_FLAC // miniaudio
 #define STS_MIXER_IMPLEMENTATION // sts_mixer
@@ -8,8 +10,6 @@
 #endif
 
 #define REALLOC memrealloc
-
-//--STRIP
 
 #include "audio.h"
 
