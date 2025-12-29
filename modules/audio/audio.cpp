@@ -683,6 +683,10 @@ AudioServer::~AudioServer() {
 	audio_drop();
 
 	for (List<audio_handle *>::Element *E = audio_instances.front(); E; E = E->next()) {
+		if (E->get()->is_stream) {
+			memdelete(E->get()->stream.vdata);
+		}
+
 		memdelete(E->get());
 	}
 
