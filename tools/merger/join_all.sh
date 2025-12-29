@@ -108,7 +108,8 @@ clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_
 # Audio Module
 
 clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfw/sfw_audio.h
-clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfw/sfw_audio.cpp
 clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audio.h
-clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audio.cpp
+# Don't. Not needed, and it takes ridiculous amount of memory.
+#clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfw/sfw_audio.cpp
+#clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audio.cpp
 
