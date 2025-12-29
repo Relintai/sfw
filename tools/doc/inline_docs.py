@@ -68,6 +68,7 @@ files = [
     "sfwl_core.html",
     "sfwl_full.html",
     "sfw_hash.html",
+    "sfw_audio.html",
 ]
 
 for f in files:
