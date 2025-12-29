@@ -19,49 +19,80 @@
 
 // audio interface
 
+struct audio_handle;
 typedef struct audio_handle *audio_t;
 
-audio_t audio_clip(const char *pathfile);
-audio_t audio_stream(const char *pathfile);
+class AudioServer : public Object {
+	SFW_OBJECT(AudioServer, Object);
 
-int audio_play(audio_t s, int flags);
-int audio_play_gain(audio_t a, int flags, float gain /*0*/);
-int audio_play_gain_pitch(audio_t a, int flags, float gain, float pitch /*1*/);
-int audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan /*0*/);
-int audio_stop(audio_t a);
-void audio_loop(audio_t a, bool loop);
-bool audio_playing(audio_t a);
+public:
+	enum AUDIO_FLAGS {
+		AUDIO_1CH = 0, // default
+		AUDIO_2CH = 1,
 
-float audio_volume_clip(float gain); // set     fx volume if gain is in [0..1] range. returns current     fx volume in any case
-float audio_volume_stream(float gain); // set    bgm volume if gain is in [0..1] range. returns current    bgm volume in any case
-float audio_volume_master(float gain); // set master volume if gain is in [0..1] range. returns current master volume in any case
+		AUDIO_8 = 2,
+		AUDIO_16 = 0, // default
+		AUDIO_32 = 4,
+		AUDIO_FLOAT = 8,
 
-int audio_mute(int mute);
-int audio_muted();
+		AUDIO_8KHZ = 16,
+		AUDIO_11KHZ = 32,
+		AUDIO_22KHZ = 0, // default
+		AUDIO_32KHZ = 64,
+		AUDIO_44KHZ = 128,
 
-enum AUDIO_FLAGS {
-	AUDIO_1CH = 0, // default
-	AUDIO_2CH = 1,
+		AUDIO_MIXER_GAIN = 0, // default
+		AUDIO_IGNORE_MIXER_GAIN = 256,
 
-	AUDIO_8 = 2,
-	AUDIO_16 = 0, // default
-	AUDIO_32 = 4,
-	AUDIO_FLOAT = 8,
+		AUDIO_MULTIPLE_INSTANCES = 0, // default
+		AUDIO_SINGLE_INSTANCE = 512,
+	};
 
-	AUDIO_8KHZ = 16,
-	AUDIO_11KHZ = 32,
-	AUDIO_22KHZ = 0, // default
-	AUDIO_32KHZ = 64,
-	AUDIO_44KHZ = 128,
+	audio_t audio_clip(const char *pathfile);
+	audio_t audio_stream(const char *pathfile);
 
-	AUDIO_MIXER_GAIN = 0, // default
-	AUDIO_IGNORE_MIXER_GAIN = 256,
+	int audio_play(audio_t s, int flags);
+	int audio_play_gain(audio_t a, int flags, float gain /*0*/);
+	int audio_play_gain_pitch(audio_t a, int flags, float gain, float pitch /*1*/);
+	int audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan /*0*/);
+	int audio_stop(audio_t a);
+	void audio_loop(audio_t a, bool loop);
+	bool audio_playing(audio_t a);
 
-	AUDIO_MULTIPLE_INSTANCES = 0, // default
-	AUDIO_SINGLE_INSTANCE = 512,
+	float audio_volume_clip(float gain); // set     fx volume if gain is in [0..1] range. returns current     fx volume in any case
+	float audio_volume_stream(float gain); // set    bgm volume if gain is in [0..1] range. returns current    bgm volume in any case
+	float audio_volume_master(float gain); // set master volume if gain is in [0..1] range. returns current master volume in any case
+
+	int audio_mute(int mute);
+	int audio_muted();
+
+	int audio_queue(const void *samples, int num_samples, int flags);
+
+	int audio_init(int flags);
+
+	static void create();
+	static void destroy();
+
+	static AudioServer *get_singleton() { return _singleton; }
+
+	AudioServer();
+	~AudioServer();
+
+protected:
+	void audio_drop();
+
+	void audio_queue_init();
+	void audio_queue_clear();
+
+	float volume_clip;
+	float volume_stream;
+	float volume_master;
+	int audio_queue_voice;
+
+	Vector<audio_handle *> audio_instances;
+
+	static AudioServer *_singleton;
 };
-
-int audio_queue(const void *samples, int num_samples, int flags);
 
 //--STRIP
 #endif

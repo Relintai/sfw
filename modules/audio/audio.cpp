@@ -29,11 +29,14 @@
 // @fixme: really shutdown audio & related threads before quitting. ma_dr_wav crashes.
 
 // encapsulate ma_dr_wav,ma_dr_mp3,stbvorbis and some buffer with the sts_mixer_stream_t
-enum { UNK,
+enum {
+	UNK,
 	WAV,
 	OGG,
 	MP1,
-	MP3 };
+	MP3
+};
+
 typedef struct {
 	int type;
 	union {
@@ -251,10 +254,10 @@ static bool load_sample(sts_mixer_sample_t *sample, const char *filename) {
 
 	if (channels > 1) {
 		if (sample->audio_format == STS_MIXER_SAMPLE_FORMAT_FLOAT) {
-			downsample_to_mono_flt(channels, (float*)sample->data, sample->length);
+			downsample_to_mono_flt(channels, (float *)sample->data, sample->length);
 			sample->data = memrealloc(sample->data, sample->length * sizeof(float));
 		} else if (sample->audio_format == STS_MIXER_SAMPLE_FORMAT_16) {
-			downsample_to_mono_s16(channels, (short int*)sample->data, sample->length);
+			downsample_to_mono_s16(channels, (short int *)sample->data, sample->length);
 			sample->data = memrealloc(sample->data, sample->length * sizeof(short));
 		} else {
 			puts("error!"); // @fixme
@@ -279,15 +282,13 @@ static void audio_callback(ma_device *pDevice, void *pOutput, const void *pInput
 	// return len / (sizeof(int32_t) / 4);
 }
 
-void audio_drop(void) {
+void AudioServer::audio_drop() {
 	ma_device_stop(&device);
 	ma_device_uninit(&device);
 	ma_context_uninit(&context);
 }
 
-int audio_init(int flags) {
-	atexit(audio_drop);
-
+int AudioServer::audio_init(int flags) {
 	// init sts_mixer
 	sts_mixer_init(&mixer, 44100, STS_MIXER_SAMPLE_FORMAT_32);
 
@@ -363,16 +364,14 @@ typedef struct audio_handle {
 	};
 } audio_handle;
 
-static Vector<audio_handle *> audio_instances;
-
-audio_t audio_clip(const char *pathfile) {
+audio_t AudioServer::audio_clip(const char *pathfile) {
 	audio_handle *a = memnew(audio_handle);
 	memset(a, 0, sizeof(audio_handle));
 	a->is_clip = load_sample(&a->clip, pathfile);
 	audio_instances.push_back(a);
 	return a;
 }
-audio_t audio_stream(const char *pathfile) {
+audio_t AudioServer::audio_stream(const char *pathfile) {
 	audio_handle *a = memnew(audio_handle);
 	memset(a, 0, sizeof(audio_handle));
 	a->is_stream = load_stream(&a->stream, pathfile);
@@ -380,8 +379,7 @@ audio_t audio_stream(const char *pathfile) {
 	return a;
 }
 
-static float volume_clip = 1, volume_stream = 1, volume_master = 1;
-float audio_volume_clip(float gain) {
+float AudioServer::audio_volume_clip(float gain) {
 	if (gain >= 0 && gain <= 1)
 		volume_clip = gain * gain;
 	// patch all live clips
@@ -392,7 +390,8 @@ float audio_volume_clip(float gain) {
 	}
 	return sqrt(volume_clip);
 }
-float audio_volume_stream(float gain) {
+
+float AudioServer::audio_volume_stream(float gain) {
 	if (gain >= 0 && gain <= 1)
 		volume_stream = gain * gain;
 	// patch all live streams
@@ -403,14 +402,16 @@ float audio_volume_stream(float gain) {
 	}
 	return sqrt(volume_stream);
 }
-float audio_volume_master(float gain) {
+
+float AudioServer::audio_volume_master(float gain) {
 	if (gain >= 0 && gain <= 1)
 		volume_master = gain * gain;
 	// patch global mixer
 	mixer.gain = volume_master;
 	return sqrt(volume_master);
 }
-int audio_mute(int mute) {
+
+int AudioServer::audio_mute(int mute) {
 	static bool muted = 0;
 
 	if (mute >= 0 && mute <= 1) {
@@ -419,11 +420,12 @@ int audio_mute(int mute) {
 
 	return muted;
 }
-int audio_muted() {
+
+int AudioServer::audio_muted() {
 	return audio_mute(-1);
 }
 
-int audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan) {
+int AudioServer::audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan) {
 	if (audio_muted())
 		return 1;
 
@@ -453,19 +455,19 @@ int audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, flo
 	return 1;
 }
 
-int audio_play_gain_pitch(audio_t a, int flags, float gain, float pitch) {
+int AudioServer::audio_play_gain_pitch(audio_t a, int flags, float gain, float pitch) {
 	return audio_play_gain_pitch_pan(a, flags, gain, pitch, 0);
 }
 
-int audio_play_gain(audio_t a, int flags, float gain) {
+int AudioServer::audio_play_gain(audio_t a, int flags, float gain) {
 	return audio_play_gain_pitch(a, flags, gain, 1.f);
 }
 
-int audio_play(audio_t a, int flags) {
+int AudioServer::audio_play(audio_t a, int flags) {
 	return audio_play_gain(a, flags & ~AUDIO_IGNORE_MIXER_GAIN, 0.f);
 }
 
-int audio_stop(audio_t a) {
+int AudioServer::audio_stop(audio_t a) {
 	if (a->is_clip) {
 		sts_mixer_stop_sample(&mixer, &a->clip);
 	}
@@ -476,13 +478,13 @@ int audio_stop(audio_t a) {
 	return 1;
 }
 
-void audio_loop(audio_t a, bool loop) {
+void AudioServer::audio_loop(audio_t a, bool loop) {
 	if (a->is_stream) {
 		a->stream.loop = loop;
 	}
 }
 
-bool audio_playing(audio_t a) {
+bool AudioServer::audio_playing(audio_t a) {
 	if (a->is_clip) {
 		return !sts_mixer_sample_stopped(&mixer, &a->clip);
 	}
@@ -514,7 +516,7 @@ typedef struct audio_queue_t {
 
 //static thread_queue_t queue_mutex;
 
-static void audio_queue_init() {
+void AudioServer::audio_queue_init() {
 	static void *audio_queues[AUDIO_QUEUE_MAX] = { 0 };
 	//do_once thread_queue_init(&queue_mutex, countof(audio_queues), audio_queues, 0);
 }
@@ -549,13 +551,13 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 	return 1;
 }
 
-static int audio_queue_voice = -1;
-void audio_queue_clear() {
+void AudioServer::audio_queue_clear() {
 	//do_once audio_queue_init();
 	sts_mixer_stop_voice(&mixer, audio_queue_voice);
 	audio_queue_voice = -1;
 }
-int audio_queue(const void *samples, int num_samples, int flags) {
+
+int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 	//do_once audio_queue_init();
 
 	float gain = 1; // [0..1]
@@ -612,3 +614,32 @@ int audio_queue(const void *samples, int num_samples, int flags) {
 
 	return audio_queue_voice;
 }
+
+void AudioServer::create() {
+	if (_singleton) {
+		return;
+	}
+
+	memnew(AudioServer);
+}
+void AudioServer::destroy() {
+	if (_singleton) {
+		memdelete(_singleton);
+	}
+}
+
+AudioServer::AudioServer() {
+	_singleton = this;
+
+	volume_clip = 1;
+	volume_stream = 1;
+	volume_master = 1;
+	audio_queue_voice = -1;
+}
+AudioServer::~AudioServer() {
+	audio_drop();
+
+	_singleton = NULL;
+}
+
+AudioServer *AudioServer::_singleton = NULL;
