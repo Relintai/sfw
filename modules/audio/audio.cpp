@@ -337,7 +337,7 @@ static bool load_sample(sts_mixer_sample_t *sample, const String &filename) {
 			downsample_to_mono_s16(channels, (short int *)sample->data, sample->length);
 			sample->data = memrealloc(sample->data, sample->length * sizeof(short));
 		} else {
-			puts("error!"); // @fixme
+			PRINT_ERROR("error!"); // @fixme
 		}
 	}
 
