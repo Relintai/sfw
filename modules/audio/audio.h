@@ -19,9 +19,15 @@
 
 // audio interface
 
+// AudioServerSample?
 struct audio_handle;
+// AudioQueue ? AudioQueueEntry?
 struct audio_queue_t;
+// It could be AudioServerSample* wrapped in a small AudioServerHandle helper class
+// Or it can just remain a typedef.
 typedef struct audio_handle *audio_t;
+
+// implement free for handles
 
 class AudioServer : public Object {
 	SFW_OBJECT(AudioServer, Object);
@@ -49,6 +55,9 @@ public:
 		AUDIO_SINGLE_INSTANCE = 512,
 	};
 
+	// Api cleanups
+	// getters, setters
+
 	audio_t audio_clip(const String &pathfile);
 	audio_t audio_stream(const String &pathfile);
 
@@ -72,6 +81,7 @@ public:
 	int audio_init(int flags);
 	void audio_drop();
 
+	// Should be initialize()
 	static void create();
 	static void destroy();
 
@@ -80,6 +90,7 @@ public:
 	AudioServer();
 	~AudioServer();
 
+	// Make it protected
 	audio_queue_t *_get_next_in_queue();
 
 protected:
