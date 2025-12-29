@@ -454,58 +454,67 @@ void AudioServer::free(const AudioServerHandle p_handle) {
 	audio_instances.erase(E);
 }
 
-float AudioServer::audio_volume_clip(float gain) {
-	if (gain >= 0 && gain <= 1)
+float AudioServer::get_volume_clip() const {
+	return Math::sqrt(volume_clip);
+}
+
+void AudioServer::set_volume_clip(float gain) {
+	if (gain >= 0 && gain <= 1) {
 		volume_clip = gain * gain;
+	}
+
 	// patch all live clips
 	for (int i = 0; i < STS_MIXER_VOICES; ++i) {
 		if (mixer.voices[i].state != STS_MIXER_VOICE_STOPPED) // is_active?
 			if (mixer.voices[i].sample) // is_sample?
 				mixer.voices[i].gain = volume_clip;
 	}
-	return sqrt(volume_clip);
 }
 
-float AudioServer::audio_volume_stream(float gain) {
-	if (gain >= 0 && gain <= 1)
+float AudioServer::get_volume_stream() const {
+	return Math::sqrt(volume_stream);
+}
+
+void AudioServer::set_volume_stream(float gain) {
+	if (gain >= 0 && gain <= 1) {
 		volume_stream = gain * gain;
+	}
+
 	// patch all live streams
 	for (int i = 0; i < STS_MIXER_VOICES; ++i) {
 		if (mixer.voices[i].state != STS_MIXER_VOICE_STOPPED) // is_active?
 			if (mixer.voices[i].stream) // is_stream?
 				mixer.voices[i].gain = volume_stream;
 	}
-	return sqrt(volume_stream);
 }
 
-float AudioServer::audio_volume_master(float gain) {
-	if (gain >= 0 && gain <= 1)
+float AudioServer::get_volume_master() const {
+	return Math::sqrt(volume_master);
+}
+
+void AudioServer::set_volume_master(float gain) {
+	if (gain >= 0 && gain <= 1) {
 		volume_master = gain * gain;
-	// patch global mixer
-	mixer.gain = volume_master;
-	return sqrt(volume_master);
-}
-
-int AudioServer::audio_mute(int mute) {
-	static bool muted = 0;
-
-	if (mute >= 0 && mute <= 1) {
-		muted = mute;
 	}
 
-	return muted;
+	// patch global mixer
+	mixer.gain = volume_master;
 }
 
-int AudioServer::audio_muted() {
-	return audio_mute(-1);
+bool AudioServer::is_muted() const {
+	return _muted;
 }
 
-int AudioServer::audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float gain, float pitch, float pan) {
+void AudioServer::set_mute(bool mute) {
+	_muted = mute;
+}
+
+int AudioServer::play(AudioServerHandle a, int flags, float gain, float pitch, float pan) {
 	if (!a) {
 		return 0;
 	}
 
-	if (audio_muted()) {
+	if (is_muted()) {
 		return 1;
 	}
 
@@ -521,7 +530,7 @@ int AudioServer::audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float
 	}
 
 	if (flags & AUDIO_SINGLE_INSTANCE) {
-		audio_stop(a);
+		stop(a);
 	}
 
 	// gain: [0..+1], pitch: (0..N], pan: [-1..+1]
@@ -555,19 +564,11 @@ int AudioServer::audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float
 	return 0;
 }
 
-int AudioServer::audio_play_gain_pitch(AudioServerHandle a, int flags, float gain, float pitch) {
-	return audio_play_gain_pitch_pan(a, flags, gain, pitch, 0);
+int AudioServer::play(AudioServerHandle a, int flags) {
+	return play(a, flags & ~AUDIO_IGNORE_MIXER_GAIN, 0.f);
 }
 
-int AudioServer::audio_play_gain(AudioServerHandle a, int flags, float gain) {
-	return audio_play_gain_pitch(a, flags, gain, 1.f);
-}
-
-int AudioServer::audio_play(AudioServerHandle a, int flags) {
-	return audio_play_gain(a, flags & ~AUDIO_IGNORE_MIXER_GAIN, 0.f);
-}
-
-int AudioServer::audio_stop(AudioServerHandle a) {
+int AudioServer::stop(AudioServerHandle a) {
 	if (a->is_clip) {
 		// No need for dynamic cast
 		AudioServerClip *clip = reinterpret_cast<AudioServerClip *>(a);
@@ -586,15 +587,7 @@ int AudioServer::audio_stop(AudioServerHandle a) {
 	return 1;
 }
 
-void AudioServer::audio_loop(AudioServerHandle a, bool loop) {
-	if (a->is_stream) {
-		// No need for dynamic cast
-		AudioServerStream *stream = reinterpret_cast<AudioServerStream *>(a);
-		stream->loop = loop;
-	}
-}
-
-bool AudioServer::audio_playing(AudioServerHandle a) {
+bool AudioServer::is_playing(AudioServerHandle a) {
 	if (a->is_clip) {
 		// No need for dynamic cast
 		AudioServerClip *clip = reinterpret_cast<AudioServerClip *>(a);
@@ -608,6 +601,14 @@ bool AudioServer::audio_playing(AudioServerHandle a) {
 	}
 
 	return false;
+}
+
+void AudioServer::audio_loop(AudioServerHandle a, bool loop) {
+	if (a->is_stream) {
+		// No need for dynamic cast
+		AudioServerStream *stream = reinterpret_cast<AudioServerStream *>(a);
+		stream->loop = loop;
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -774,6 +775,7 @@ AudioServer::AudioServer() {
 	volume_stream = 1;
 	volume_master = 1;
 	audio_queue_voice = -1;
+	_muted = false;
 }
 AudioServer::~AudioServer() {
 	audio_drop();

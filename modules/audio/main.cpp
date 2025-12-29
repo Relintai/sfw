@@ -16,14 +16,14 @@ public:
 		if (timer > 2) {
 			timer -= 2;
 			ERR_PRINT("Playing sound!");
-			int res = AudioServer::get_singleton()->audio_play(ta, 0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
+			int res = AudioServer::get_singleton()->play(ta, 0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
 			ERR_PRINT(String::num(res));
-			ERR_PRINT(String::bool_str(AudioServer::get_singleton()->audio_playing(ta)));
+			ERR_PRINT(String::bool_str(AudioServer::get_singleton()->is_playing(ta)));
 
-			if (!AudioServer::get_singleton()->audio_playing(tas)) {
+			if (!AudioServer::get_singleton()->is_playing(tas)) {
 				ERR_PRINT("Play Stream");
 
-				int res = AudioServer::get_singleton()->audio_play(tas, 0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
+				int res = AudioServer::get_singleton()->play(tas, 0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
 				ERR_PRINT(String::num(res));
 			}
 		}
@@ -39,9 +39,9 @@ public:
 
 		AudioServer::get_singleton()->audio_init(0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
 
-		AudioServer::get_singleton()->audio_volume_clip(1);
-		AudioServer::get_singleton()->audio_volume_stream(1);
-		AudioServer::get_singleton()->audio_volume_master(1);
+		//AudioServer::get_singleton()->set_volume_clip(1);
+		//AudioServer::get_singleton()->set_volume_stream(1);
+		//AudioServer::get_singleton()->set_volume_master(1);
 
 		ta = AudioServer::get_singleton()->load_clip("test.wav");
 		tas = AudioServer::get_singleton()->load_stream("test.mp3");

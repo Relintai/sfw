@@ -51,31 +51,40 @@ public:
 		AUDIO_SINGLE_INSTANCE = 512,
 	};
 
-	// Api cleanups
-	// getters, setters
-
+	// Clips
 	AudioServerHandle load_clip(const String &pathfile);
 	AudioServerHandle load_stream(const String &pathfile);
 
 	void free(const AudioServerHandle p_handle);
 
-	int audio_play(AudioServerHandle s, int flags);
-	int audio_play_gain(AudioServerHandle a, int flags, float gain /*0*/);
-	int audio_play_gain_pitch(AudioServerHandle a, int flags, float gain, float pitch /*1*/);
-	int audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float gain, float pitch, float pan /*0*/);
-	int audio_stop(AudioServerHandle a);
 	void audio_loop(AudioServerHandle a, bool loop);
-	bool audio_playing(AudioServerHandle a);
 
-	float audio_volume_clip(float gain); // set     fx volume if gain is in [0..1] range. returns current     fx volume in any case
-	float audio_volume_stream(float gain); // set    bgm volume if gain is in [0..1] range. returns current    bgm volume in any case
-	float audio_volume_master(float gain); // set master volume if gain is in [0..1] range. returns current master volume in any case
+	// Play
+	int play(AudioServerHandle s, int flags);
+	int play(AudioServerHandle a, int flags, float gain, float pitch = 1, float pan = 0);
 
-	int audio_mute(int mute);
-	int audio_muted();
+	int stop(AudioServerHandle a);
 
+	bool is_playing(AudioServerHandle a);
+
+	// Queue up custom samples
 	int audio_queue(const void *samples, int num_samples, int flags);
 
+	// Volume
+	// 0 .. 1 range
+	float get_volume_clip() const;
+	void set_volume_clip(float gain);
+
+	float get_volume_stream() const;
+	void set_volume_stream(float gain);
+
+	float get_volume_master() const;
+	void set_volume_master(float gain);
+
+	bool is_muted() const;
+	void set_mute(bool mute);
+
+	// Init
 	int audio_init(int flags);
 	void audio_drop();
 
@@ -97,6 +106,7 @@ protected:
 	float volume_stream;
 	float volume_master;
 	int audio_queue_voice;
+	bool _muted;
 
 	List<AudioServerSample *> audio_instances;
 
