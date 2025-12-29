@@ -21,9 +21,7 @@
 
 struct AudioServerSample;
 struct AudioQueueEntry;
-// It could be AudioServerSample* wrapped in a small AudioServerHandle helper class
-// Or it can just remain a typedef.
-typedef struct AudioServerSample *audio_t;
+typedef struct AudioServerSample *AudioServerHandle;
 
 // implement free for handles
 
@@ -56,16 +54,16 @@ public:
 	// Api cleanups
 	// getters, setters
 
-	audio_t audio_clip(const String &pathfile);
-	audio_t audio_stream(const String &pathfile);
+	AudioServerHandle audio_clip(const String &pathfile);
+	AudioServerHandle audio_stream(const String &pathfile);
 
-	int audio_play(audio_t s, int flags);
-	int audio_play_gain(audio_t a, int flags, float gain /*0*/);
-	int audio_play_gain_pitch(audio_t a, int flags, float gain, float pitch /*1*/);
-	int audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan /*0*/);
-	int audio_stop(audio_t a);
-	void audio_loop(audio_t a, bool loop);
-	bool audio_playing(audio_t a);
+	int audio_play(AudioServerHandle s, int flags);
+	int audio_play_gain(AudioServerHandle a, int flags, float gain /*0*/);
+	int audio_play_gain_pitch(AudioServerHandle a, int flags, float gain, float pitch /*1*/);
+	int audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float gain, float pitch, float pan /*0*/);
+	int audio_stop(AudioServerHandle a);
+	void audio_loop(AudioServerHandle a, bool loop);
+	bool audio_playing(AudioServerHandle a);
 
 	float audio_volume_clip(float gain); // set     fx volume if gain is in [0..1] range. returns current     fx volume in any case
 	float audio_volume_stream(float gain); // set    bgm volume if gain is in [0..1] range. returns current    bgm volume in any case

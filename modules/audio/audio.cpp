@@ -383,14 +383,14 @@ typedef struct AudioServerSample {
 	};
 } AudioServerSample;
 
-audio_t AudioServer::audio_clip(const String &pathfile) {
+AudioServerHandle AudioServer::audio_clip(const String &pathfile) {
 	AudioServerSample *a = memnew(AudioServerSample);
 	memset(a, 0, sizeof(AudioServerSample));
 	a->is_clip = load_sample(&a->clip, pathfile);
 	audio_instances.push_back(a);
 	return a;
 }
-audio_t AudioServer::audio_stream(const String &pathfile) {
+AudioServerHandle AudioServer::audio_stream(const String &pathfile) {
 	AudioServerSample *a = memnew(AudioServerSample);
 	memset(a, 0, sizeof(AudioServerSample));
 	a->is_stream = load_stream(&a->stream, pathfile);
@@ -444,7 +444,7 @@ int AudioServer::audio_muted() {
 	return audio_mute(-1);
 }
 
-int AudioServer::audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan) {
+int AudioServer::audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float gain, float pitch, float pan) {
 	if (audio_muted()) {
 		return 1;
 	}
@@ -475,19 +475,19 @@ int AudioServer::audio_play_gain_pitch_pan(audio_t a, int flags, float gain, flo
 	return 1;
 }
 
-int AudioServer::audio_play_gain_pitch(audio_t a, int flags, float gain, float pitch) {
+int AudioServer::audio_play_gain_pitch(AudioServerHandle a, int flags, float gain, float pitch) {
 	return audio_play_gain_pitch_pan(a, flags, gain, pitch, 0);
 }
 
-int AudioServer::audio_play_gain(audio_t a, int flags, float gain) {
+int AudioServer::audio_play_gain(AudioServerHandle a, int flags, float gain) {
 	return audio_play_gain_pitch(a, flags, gain, 1.f);
 }
 
-int AudioServer::audio_play(audio_t a, int flags) {
+int AudioServer::audio_play(AudioServerHandle a, int flags) {
 	return audio_play_gain(a, flags & ~AUDIO_IGNORE_MIXER_GAIN, 0.f);
 }
 
-int AudioServer::audio_stop(audio_t a) {
+int AudioServer::audio_stop(AudioServerHandle a) {
 	if (a->is_clip) {
 		sts_mixer_stop_sample(&mixer, &a->clip);
 	}
@@ -498,13 +498,13 @@ int AudioServer::audio_stop(audio_t a) {
 	return 1;
 }
 
-void AudioServer::audio_loop(audio_t a, bool loop) {
+void AudioServer::audio_loop(AudioServerHandle a, bool loop) {
 	if (a->is_stream) {
 		a->stream.loop = loop;
 	}
 }
 
-bool AudioServer::audio_playing(audio_t a) {
+bool AudioServer::audio_playing(AudioServerHandle a) {
 	if (a->is_clip) {
 		return !sts_mixer_sample_stopped(&mixer, &a->clip);
 	}

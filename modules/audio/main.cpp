@@ -53,8 +53,8 @@ public:
 		Renderer::destroy();
 	}
 
-	audio_t ta;
-	audio_t tas;
+	AudioServerHandle ta;
+	AudioServerHandle tas;
 	float timer;
 };
 
