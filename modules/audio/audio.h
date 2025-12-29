@@ -90,13 +90,13 @@ public:
 protected:
 	void audio_queue_clear();
 
-	float volume_clip;
-	float volume_stream;
-	float volume_master;
-	int audio_queue_voice;
+	float _volume_clip;
+	float _volume_stream;
+	float _volume_master;
+	int _audio_queue_voice;
 	bool _muted;
 
-	List<AudioServerSample *> audio_instances;
+	List<AudioServerSample *> _audio_instances;
 
 	static AudioServer *_singleton;
 

@@ -354,13 +354,13 @@ static void audio_callback(ma_device *pDevice, void *pOutput, const void *pInput
 AudioServerHandle AudioServer::load_clip(const String &pathfile) {
 	AudioServerClip *a = memnew(AudioServerClip);
 	a->valid = load_sample(&a->clip, pathfile);
-	audio_instances.push_back(a);
+	_audio_instances.push_back(a);
 	return a;
 }
 AudioServerHandle AudioServer::load_stream(const String &pathfile) {
 	AudioServerStream *a = memnew(AudioServerStream);
 	a->valid = load_audio_stream(a, pathfile);
-	audio_instances.push_back(a);
+	_audio_instances.push_back(a);
 	return a;
 }
 
@@ -369,7 +369,7 @@ void AudioServer::free(const AudioServerHandle p_handle) {
 		return;
 	}
 
-	List<AudioServerSample *>::Element *E = audio_instances.find(p_handle);
+	List<AudioServerSample *>::Element *E = _audio_instances.find(p_handle);
 
 	if (!E) {
 		return;
@@ -378,54 +378,54 @@ void AudioServer::free(const AudioServerHandle p_handle) {
 	AudioServerSample *s = E->get();
 	memdelete(s);
 
-	audio_instances.erase(E);
+	_audio_instances.erase(E);
 }
 
 float AudioServer::get_volume_clip() const {
-	return Math::sqrt(volume_clip);
+	return Math::sqrt(_volume_clip);
 }
 
 void AudioServer::set_volume_clip(float gain) {
 	if (gain >= 0 && gain <= 1) {
-		volume_clip = gain * gain;
+		_volume_clip = gain * gain;
 	}
 
 	// patch all live clips
 	for (int i = 0; i < STS_MIXER_VOICES; ++i) {
 		if (mixer.voices[i].state != STS_MIXER_VOICE_STOPPED) // is_active?
 			if (mixer.voices[i].sample) // is_sample?
-				mixer.voices[i].gain = volume_clip;
+				mixer.voices[i].gain = _volume_clip;
 	}
 }
 
 float AudioServer::get_volume_stream() const {
-	return Math::sqrt(volume_stream);
+	return Math::sqrt(_volume_stream);
 }
 
 void AudioServer::set_volume_stream(float gain) {
 	if (gain >= 0 && gain <= 1) {
-		volume_stream = gain * gain;
+		_volume_stream = gain * gain;
 	}
 
 	// patch all live streams
 	for (int i = 0; i < STS_MIXER_VOICES; ++i) {
 		if (mixer.voices[i].state != STS_MIXER_VOICE_STOPPED) // is_active?
 			if (mixer.voices[i].stream) // is_stream?
-				mixer.voices[i].gain = volume_stream;
+				mixer.voices[i].gain = _volume_stream;
 	}
 }
 
 float AudioServer::get_volume_master() const {
-	return Math::sqrt(volume_master);
+	return Math::sqrt(_volume_master);
 }
 
 void AudioServer::set_volume_master(float gain) {
 	if (gain >= 0 && gain <= 1) {
-		volume_master = gain * gain;
+		_volume_master = gain * gain;
 	}
 
 	// patch global mixer
-	mixer.gain = volume_master;
+	mixer.gain = _volume_master;
 }
 
 bool AudioServer::is_muted() const {
@@ -453,7 +453,7 @@ bool AudioServer::play(AudioServerHandle a, bool single_instance, float gain, fl
 		// do nothing, gain used as-is
 	} else {
 		// apply mixer gains on top
-		gain += a->is_clip ? volume_clip : volume_stream;
+		gain += a->is_clip ? _volume_clip : _volume_stream;
 	}
 
 	if (single_instance) {
@@ -601,8 +601,8 @@ AudioQueueEntry *AudioServer::_get_next_in_queue() {
 }
 
 void AudioServer::audio_queue_clear() {
-	sts_mixer_stop_voice(&mixer, audio_queue_voice);
-	audio_queue_voice = -1;
+	sts_mixer_stop_voice(&mixer, _audio_queue_voice);
+	_audio_queue_voice = -1;
 
 	_queue_mutex.lock();
 	_audio_queues.clear();
@@ -621,7 +621,7 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 	int bytes = num_samples * bytes_per_sample;
 
 	static sts_mixer_stream_t q = { 0 };
-	if (audio_queue_voice < 0) {
+	if (_audio_queue_voice < 0) {
 		void *reuse_ptr = q.sample.data;
 		q = ((sts_mixer_stream_t){ 0 });
 		q.sample.data = reuse_ptr;
@@ -636,8 +636,8 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 		q.sample.length = q.sample.frequency / (1000 / AUDIO_QUEUE_BUFFERING_MS); // num_samples;
 		int bytes = q.sample.length * 2 * (flags & AUDIO_FLOAT ? 4 : 2);
 		q.sample.data = memset(memrealloc(q.sample.data, bytes), 0, bytes);
-		audio_queue_voice = sts_mixer_play_stream(&mixer, &q, gain * 1.f);
-		if (audio_queue_voice < 0)
+		_audio_queue_voice = sts_mixer_play_stream(&mixer, &q, gain * 1.f);
+		if (_audio_queue_voice < 0)
 			return 0;
 	}
 
@@ -675,7 +675,7 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 		break;
 	}
 
-	return audio_queue_voice;
+	return _audio_queue_voice;
 }
 
 void AudioServer::initialize() {
@@ -694,10 +694,10 @@ void AudioServer::destroy() {
 AudioServer::AudioServer() {
 	_singleton = this;
 
-	volume_clip = 1;
-	volume_stream = 1;
-	volume_master = 1;
-	audio_queue_voice = -1;
+	_volume_clip = 1;
+	_volume_stream = 1;
+	_volume_master = 1;
+	_audio_queue_voice = -1;
 	_muted = false;
 
 	// init sts_mixer
@@ -764,11 +764,11 @@ AudioServer::AudioServer() {
 	ma_device_start(&device);
 }
 AudioServer::~AudioServer() {
-	for (List<AudioServerSample *>::Element *E = audio_instances.front(); E; E = E->next()) {
+	for (List<AudioServerSample *>::Element *E = _audio_instances.front(); E; E = E->next()) {
 		memdelete(E->get());
 	}
 
-	audio_instances.clear();
+	_audio_instances.clear();
 
 	ma_device_stop(&device);
 	ma_device_uninit(&device);
