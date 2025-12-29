@@ -1,12 +1,13 @@
 
-cp -u ../../tools/merger/out/sfwl_core/sfwl.h sfwl.h
-cp -u ../../tools/merger/out/sfwl_core/sfwl.cpp sfwl.cpp
+cp -u ../../tools/merger/out/full/sfw.h sfw.h
+cp -u ../../tools/merger/out/full/sfw.cpp sfw.cpp
+cp -u ../../tools/merger/out/full/sfw_3rd.m sfw_3rd.m
 
-ccache g++ -Wall -g -c sfwl.cpp -o sfwl.o
-ccache g++ -Wall -g -c sfw_hash.cpp -o sfw_hash.o
+ccache g++ -Wall -g -c sfw.cpp -o sfw.o
+ccache g++ -Wall -g -c audio.cpp -o audio.o
 ccache g++ -Wall -g -c main.cpp -o main.o
 
 #-static-libgcc -static-libstdc++
 
-ccache g++ -Wall -lpthread -static-libgcc -static-libstdc++ -g sfwl.o sfw_hash.o main.o -o game 
+ccache g++ -Wall -lpthread -lX11 -static-libgcc -static-libstdc++ -g sfw.o audio.o main.o -o game 
 
