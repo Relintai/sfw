@@ -55,6 +55,12 @@ python tools/merger/join.py --template modules/hash/merger/sfw_hash.cpp.inl --pa
 python tools/merger/join.py --template modules/render_objects/merger/sfw_render_objects.h.inl --path . --output tools/merger/out/modules/render_objects/sfw_render_objects.h
 python tools/merger/join.py --template modules/render_objects/merger/sfw_render_objects.cpp.inl --path . --output tools/merger/out/modules/render_objects/sfw_render_objects.cpp
 
+# Audio Module
+python tools/merger/join.py --template modules/audio/merger/sfw_audio.h.inl --path . --output tools/merger/out/modules/audio/sfw/sfw_audio.h --library_include sfw
+python tools/merger/join.py --template modules/audio/merger/sfw_audio.cpp.inl --path . --output tools/merger/out/modules/audio/sfw/sfw_audio.cpp --library_include sfw
+python tools/merger/join.py --template modules/audio/merger/sfw_audio.h.inl --path . --output tools/merger/out/modules/audio/sfwl/sfw_audio.h --library_include sfwl
+python tools/merger/join.py --template modules/audio/merger/sfw_audio.cpp.inl --path . --output tools/merger/out/modules/audio/sfwl/sfw_audio.cpp --library_include sfwl
+
 echo "Running clang format!"
 
 # SFW
@@ -98,4 +104,11 @@ clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.
 
 clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_render_objects.h
 clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_render_objects.cpp
+
+# Audio Module
+
+clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfw/sfw_audio.h
+clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfw/sfw_audio.cpp
+clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audio.h
+clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audio.cpp
 

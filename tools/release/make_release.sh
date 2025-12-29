@@ -156,6 +156,15 @@ cp "$current_in_fol/sfw_render_objects.h" "$current_out_fol/sfw_render_objects.h
 cp "$current_in_fol/sfw_render_objects.cpp" "$current_out_fol/sfw_render_objects.cpp"
 cp "$doc_folder/sfw_render_objects.html" "$current_out_fol/sfw_render_objects.html"
 
+# Audio
+current_in_fol=$project_root_folder/tools/merger/out/modules/audio/sfw
+current_out_fol=$sfw_out_folder/modules/audio
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_audio.h" "$current_out_fol/sfw_audio.h"
+cp "$current_in_fol/sfw_audio.cpp" "$current_out_fol/sfw_audio.cpp"
+cp "$doc_folder/sfw_audio.html" "$current_out_fol/sfw_audio.html"
+
 # SFW Demos
 
 # Minimal APP
@@ -321,6 +330,15 @@ mkdir -p "$current_out_fol"
 cp "$current_in_fol/sfw_hash.h" "$current_out_fol/sfw_hash.h"
 cp "$current_in_fol/sfw_hash.cpp" "$current_out_fol/sfw_hash.cpp"
 cp "$doc_folder/sfw_hash.html" "$current_out_fol/sfw_hash.html"
+
+# Audio
+current_in_fol=$project_root_folder/tools/merger/out/modules/audio/sfwl
+current_out_fol=$sfwl_out_folder/modules/audio
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_audio.h" "$current_out_fol/sfw_audio.h"
+cp "$current_in_fol/sfw_audio.cpp" "$current_out_fol/sfw_audio.cpp"
+cp "$doc_folder/sfw_audio.html" "$current_out_fol/sfw_audio.html"
 
 # SFWL Demos
 
