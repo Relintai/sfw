@@ -15,8 +15,6 @@ struct AudioServerSample;
 struct AudioQueueEntry;
 typedef struct AudioServerSample *AudioServerHandle;
 
-// implement free for handles
-
 class AudioServer : public Object {
 	SFW_OBJECT(AudioServer, Object);
 
