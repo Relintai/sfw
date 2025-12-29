@@ -54,8 +54,10 @@ public:
 	// Api cleanups
 	// getters, setters
 
-	AudioServerHandle audio_clip(const String &pathfile);
-	AudioServerHandle audio_stream(const String &pathfile);
+	AudioServerHandle load_clip(const String &pathfile);
+	AudioServerHandle load_stream(const String &pathfile);
+
+	void free(const AudioServerHandle p_handle);
 
 	int audio_play(AudioServerHandle s, int flags);
 	int audio_play_gain(AudioServerHandle a, int flags, float gain /*0*/);
@@ -86,7 +88,6 @@ public:
 	AudioServer();
 	~AudioServer();
 
-	// Make it protected
 	AudioQueueEntry *_get_next_in_queue();
 
 protected:

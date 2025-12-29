@@ -37,23 +37,73 @@ enum {
 	MP3
 };
 
-typedef struct {
+struct AudioServerSample {
+	bool is_clip;
+	bool is_stream;
+	bool valid;
+
+	AudioServerSample() {
+		valid = false;
+	}
+	virtual ~AudioServerSample() {}
+};
+
+struct AudioServerClip : public AudioServerSample {
+	sts_mixer_sample_t clip;
+
+	AudioServerClip() {
+		is_clip = true;
+		is_stream = false;
+
+		memset(&clip, 0, sizeof(sts_mixer_sample_t));
+	}
+	~AudioServerClip() {
+	}
+};
+
+struct AudioServerStream : public AudioServerSample {
 	int type;
+
 	union {
 		ma_dr_wav wav;
 		stb_vorbis *ogg;
 		void *opaque;
 		ma_dr_mp3 mp3_;
 	};
+
 	sts_mixer_stream_t stream; // mixer stream
+
 	union {
 		int32_t data[4096 * 2]; // static sample buffer
 		float dataf[4096 * 2];
 	};
+
 	bool rewind;
 	bool loop;
-	Vector<uint8_t> *vdata;
-} mystream_t;
+
+	Vector<uint8_t> vdata;
+
+	void reset() {
+		memset(data, 0, sizeof(data));
+		rewind = true;
+	}
+
+	AudioServerStream() {
+		is_clip = false;
+		is_stream = true;
+
+		type = 0;
+		rewind = false;
+		loop = false;
+
+		// Make sure the pointer types are NULL
+		ogg = NULL;
+		memset(&stream, 0, sizeof(sts_mixer_stream_t));
+		memset(&data, 0, sizeof(data));
+	}
+	~AudioServerStream() {
+	}
+};
 
 static void downsample_to_mono_flt(int channels, float *buffer, int samples) {
 	if (channels > 1) {
@@ -80,7 +130,7 @@ static void downsample_to_mono_s16(int channels, short *buffer, int samples) {
 
 // the callback to refill the (stereo) stream data
 static bool refill_stream(sts_mixer_sample_t *sample, void *userdata) {
-	mystream_t *stream = (mystream_t *)userdata;
+	AudioServerStream *stream = (AudioServerStream *)userdata;
 	switch (stream->type) {
 		default:
 			break;
@@ -120,31 +170,31 @@ static bool refill_stream(sts_mixer_sample_t *sample, void *userdata) {
 
 	return true;
 }
-static void reset_stream(mystream_t *stream) {
-	if (stream)
-		memset(stream->data, 0, sizeof(stream->data)), stream->rewind = 1;
+static void reset_stream(AudioServerStream *stream) {
+	if (stream) {
+		stream->reset();
+	}
 }
 
 // load a (stereo) stream
-static bool load_stream(mystream_t *stream, const String &filename) {
+static bool load_audio_stream(AudioServerStream *stream, const String &filename) {
 	FileAccess *fa = FileAccess::create_and_open(filename, FileAccess::READ);
 
 	if (!fa) {
 		return false;
 	}
 
-	stream->vdata = memnew(Vector<uint8_t>());
-	stream->vdata->resize(fa->get_len());
+	stream->vdata.resize(fa->get_len());
 
-	uint64_t read_len = fa->get_buffer(stream->vdata->ptrw(), stream->vdata->size());
+	uint64_t read_len = fa->get_buffer(stream->vdata.ptrw(), stream->vdata.size());
 
 	if (read_len != fa->get_len()) {
 		ERR_PRINT("read_len != fa->get_len()?");
 		return false;
 	}
 
-	int datalen = stream->vdata->size();
-	const char *data = (const char *)stream->vdata->ptr();
+	int datalen = stream->vdata.size();
+	const char *data = (const char *)stream->vdata.ptr();
 
 	if (!data) {
 		return false;
@@ -374,28 +424,34 @@ int AudioServer::audio_init(int flags) {
 	return true;
 }
 
-typedef struct AudioServerSample {
-	bool is_clip;
-	bool is_stream;
-	union {
-		sts_mixer_sample_t clip;
-		mystream_t stream;
-	};
-} AudioServerSample;
-
-AudioServerHandle AudioServer::audio_clip(const String &pathfile) {
-	AudioServerSample *a = memnew(AudioServerSample);
-	memset(a, 0, sizeof(AudioServerSample));
-	a->is_clip = load_sample(&a->clip, pathfile);
+AudioServerHandle AudioServer::load_clip(const String &pathfile) {
+	AudioServerClip *a = memnew(AudioServerClip);
+	a->valid = load_sample(&a->clip, pathfile);
 	audio_instances.push_back(a);
 	return a;
 }
-AudioServerHandle AudioServer::audio_stream(const String &pathfile) {
-	AudioServerSample *a = memnew(AudioServerSample);
-	memset(a, 0, sizeof(AudioServerSample));
-	a->is_stream = load_stream(&a->stream, pathfile);
+AudioServerHandle AudioServer::load_stream(const String &pathfile) {
+	AudioServerStream *a = memnew(AudioServerStream);
+	a->valid = load_audio_stream(a, pathfile);
 	audio_instances.push_back(a);
 	return a;
+}
+
+void AudioServer::free(const AudioServerHandle p_handle) {
+	if (!p_handle) {
+		return;
+	}
+
+	List<AudioServerSample *>::Element *E = audio_instances.find(p_handle);
+
+	if (!E) {
+		return;
+	}
+
+	AudioServerSample *s = E->get();
+	memdelete(s);
+
+	audio_instances.erase(E);
 }
 
 float AudioServer::audio_volume_clip(float gain) {
@@ -445,8 +501,16 @@ int AudioServer::audio_muted() {
 }
 
 int AudioServer::audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float gain, float pitch, float pan) {
+	if (!a) {
+		return 0;
+	}
+
 	if (audio_muted()) {
 		return 1;
+	}
+
+	if (!a->valid) {
+		return 0;
 	}
 
 	if (flags & AUDIO_IGNORE_MIXER_GAIN) {
@@ -463,16 +527,32 @@ int AudioServer::audio_play_gain_pitch_pan(AudioServerHandle a, int flags, float
 	// gain: [0..+1], pitch: (0..N], pan: [-1..+1]
 
 	if (a->is_clip) {
-		int voice = sts_mixer_play_sample(&mixer, &a->clip, gain, pitch, pan);
-		if (voice == -1)
+		// No need for dynamic cast
+		AudioServerClip *clip = reinterpret_cast<AudioServerClip *>(a);
+
+		int voice = sts_mixer_play_sample(&mixer, &clip->clip, gain, pitch, pan);
+
+		if (voice == -1) {
 			return 0; // all voices busy
+		}
+
+		return 1;
 	}
+
 	if (a->is_stream) {
-		int voice = sts_mixer_play_stream(&mixer, &a->stream.stream, gain);
-		if (voice == -1)
+		// No need for dynamic cast
+		AudioServerStream *stream = reinterpret_cast<AudioServerStream *>(a);
+
+		int voice = sts_mixer_play_stream(&mixer, &stream->stream, gain);
+
+		if (voice == -1) {
 			return 0; // all voices busy
+		}
+
+		return 1;
 	}
-	return 1;
+
+	return 0;
 }
 
 int AudioServer::audio_play_gain_pitch(AudioServerHandle a, int flags, float gain, float pitch) {
@@ -489,28 +569,44 @@ int AudioServer::audio_play(AudioServerHandle a, int flags) {
 
 int AudioServer::audio_stop(AudioServerHandle a) {
 	if (a->is_clip) {
-		sts_mixer_stop_sample(&mixer, &a->clip);
+		// No need for dynamic cast
+		AudioServerClip *clip = reinterpret_cast<AudioServerClip *>(a);
+		sts_mixer_stop_sample(&mixer, &clip->clip);
+		return 1;
 	}
+
 	if (a->is_stream) {
-		sts_mixer_stop_stream(&mixer, &a->stream.stream);
-		reset_stream(&a->stream);
+		// No need for dynamic cast
+		AudioServerStream *stream = reinterpret_cast<AudioServerStream *>(a);
+		sts_mixer_stop_stream(&mixer, &stream->stream);
+		reset_stream(stream);
+		return 1;
 	}
+
 	return 1;
 }
 
 void AudioServer::audio_loop(AudioServerHandle a, bool loop) {
 	if (a->is_stream) {
-		a->stream.loop = loop;
+		// No need for dynamic cast
+		AudioServerStream *stream = reinterpret_cast<AudioServerStream *>(a);
+		stream->loop = loop;
 	}
 }
 
 bool AudioServer::audio_playing(AudioServerHandle a) {
 	if (a->is_clip) {
-		return !sts_mixer_sample_stopped(&mixer, &a->clip);
+		// No need for dynamic cast
+		AudioServerClip *clip = reinterpret_cast<AudioServerClip *>(a);
+		return !sts_mixer_sample_stopped(&mixer, &clip->clip);
 	}
+
 	if (a->is_stream) {
-		return !sts_mixer_stream_stopped(&mixer, &a->stream.stream);
+		// No need for dynamic cast
+		AudioServerStream *stream = reinterpret_cast<AudioServerStream *>(a);
+		return !sts_mixer_stream_stopped(&mixer, &stream->stream);
 	}
+
 	return false;
 }
 
@@ -683,10 +779,6 @@ AudioServer::~AudioServer() {
 	audio_drop();
 
 	for (List<AudioServerSample *>::Element *E = audio_instances.front(); E; E = E->next()) {
-		if (E->get()->is_stream) {
-			memdelete(E->get()->stream.vdata);
-		}
-
 		memdelete(E->get());
 	}
 

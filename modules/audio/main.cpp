@@ -43,8 +43,8 @@ public:
 		AudioServer::get_singleton()->audio_volume_stream(1);
 		AudioServer::get_singleton()->audio_volume_master(1);
 
-		ta = AudioServer::get_singleton()->audio_clip("test.wav");
-		tas = AudioServer::get_singleton()->audio_stream("test.mp3");
+		ta = AudioServer::get_singleton()->load_clip("test.wav");
+		tas = AudioServer::get_singleton()->load_stream("test.mp3");
 		timer = 0;
 	}
 
