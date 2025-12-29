@@ -3,7 +3,11 @@
 #define SFW_AUDIO_H
 //--STRIP
 
+//--STRIP
 #include "sfw.h"
+//--STRIP
+
+//--INCLUDE_SFW_HEADER
 
 // -----------------------------------------------------------------------------
 // audio framework
