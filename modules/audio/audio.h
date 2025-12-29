@@ -29,7 +29,7 @@ class AudioServer : public Object {
 	SFW_OBJECT(AudioServer, Object);
 
 public:
-	enum AUDIO_FLAGS {
+	enum AudioCustomQueueFlags {
 		AUDIO_1CH = 0, // default
 		AUDIO_2CH = 1,
 
@@ -43,12 +43,6 @@ public:
 		AUDIO_22KHZ = 0, // default
 		AUDIO_32KHZ = 64,
 		AUDIO_44KHZ = 128,
-
-		AUDIO_MIXER_GAIN = 0, // default
-		AUDIO_IGNORE_MIXER_GAIN = 256,
-
-		AUDIO_MULTIPLE_INSTANCES = 0, // default
-		AUDIO_SINGLE_INSTANCE = 512,
 	};
 
 	// Clips
@@ -60,15 +54,14 @@ public:
 	void audio_loop(AudioServerHandle a, bool loop);
 
 	// Play
-	int play(AudioServerHandle s, int flags);
-	int play(AudioServerHandle a, int flags, float gain, float pitch = 1, float pan = 0);
+	bool play(AudioServerHandle a, bool single_instance = false, float gain = 1, float pitch = 1, float pan = 0, bool ignore_mixer_gain = true);
 
 	int stop(AudioServerHandle a);
 
 	bool is_playing(AudioServerHandle a);
 
 	// Queue up custom samples
-	int audio_queue(const void *samples, int num_samples, int flags);
+	int audio_queue(const void *samples, int num_samples, int queue_flags);
 
 	// Volume
 	// 0 .. 1 range

@@ -16,15 +16,15 @@ public:
 		if (timer > 2) {
 			timer -= 2;
 			ERR_PRINT("Playing sound!");
-			int res = AudioServer::get_singleton()->play(ta, 0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
-			ERR_PRINT(String::num(res));
+			bool res = AudioServer::get_singleton()->play(ta);
+			ERR_PRINT(String::bool_str(res));
 			ERR_PRINT(String::bool_str(AudioServer::get_singleton()->is_playing(ta)));
 
 			if (!AudioServer::get_singleton()->is_playing(tas)) {
 				ERR_PRINT("Play Stream");
 
-				int res = AudioServer::get_singleton()->play(tas, 0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
-				ERR_PRINT(String::num(res));
+				bool res = AudioServer::get_singleton()->play(tas);
+				ERR_PRINT(String::bool_str(res));
 			}
 		}
 	}
@@ -36,7 +36,6 @@ public:
 		Renderer::initialize();
 
 		AudioServer::initialize();
-
 
 		//AudioServer::get_singleton()->set_volume_clip(1);
 		//AudioServer::get_singleton()->set_volume_stream(1);

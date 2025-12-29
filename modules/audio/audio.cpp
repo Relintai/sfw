@@ -436,27 +436,27 @@ void AudioServer::set_mute(bool mute) {
 	_muted = mute;
 }
 
-int AudioServer::play(AudioServerHandle a, int flags, float gain, float pitch, float pan) {
+bool AudioServer::play(AudioServerHandle a, bool single_instance, float gain, float pitch, float pan, bool ignore_mixer_gain) {
 	if (!a) {
-		return 0;
+		return false;
 	}
 
 	if (is_muted()) {
-		return 1;
+		return true;
 	}
 
 	if (!a->valid) {
-		return 0;
+		return false;
 	}
 
-	if (flags & AUDIO_IGNORE_MIXER_GAIN) {
+	if (ignore_mixer_gain) {
 		// do nothing, gain used as-is
 	} else {
 		// apply mixer gains on top
 		gain += a->is_clip ? volume_clip : volume_stream;
 	}
 
-	if (flags & AUDIO_SINGLE_INSTANCE) {
+	if (single_instance) {
 		stop(a);
 	}
 
@@ -469,10 +469,10 @@ int AudioServer::play(AudioServerHandle a, int flags, float gain, float pitch, f
 		int voice = sts_mixer_play_sample(&mixer, &clip->clip, gain, pitch, pan);
 
 		if (voice == -1) {
-			return 0; // all voices busy
+			return false; // all voices busy
 		}
 
-		return 1;
+		return true;
 	}
 
 	if (a->is_stream) {
@@ -482,17 +482,13 @@ int AudioServer::play(AudioServerHandle a, int flags, float gain, float pitch, f
 		int voice = sts_mixer_play_stream(&mixer, &stream->stream, gain);
 
 		if (voice == -1) {
-			return 0; // all voices busy
+			return false; // all voices busy
 		}
 
-		return 1;
+		return true;
 	}
 
-	return 0;
-}
-
-int AudioServer::play(AudioServerHandle a, int flags) {
-	return play(a, flags & ~AUDIO_IGNORE_MIXER_GAIN, 0.f);
+	return false;
 }
 
 int AudioServer::stop(AudioServerHandle a) {
