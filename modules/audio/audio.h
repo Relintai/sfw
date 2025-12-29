@@ -9,8 +9,7 @@
 
 // -----------------------------------------------------------------------------
 // audio framework
-// - rlyeh, public domain
-//
+// - originally by rlyeh, public domain.
 
 struct AudioServerSample;
 struct AudioQueueEntry;
