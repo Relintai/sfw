@@ -3,10 +3,9 @@
 #define AUDIO_H
 //--STRIP
 
-//--STRIP
-#include "object/object.h"
-#include "object/reference.h"
-//--STRIP
+#include "sfw.h"
+
+// TODO would this work with sfwl?
 
 // -----------------------------------------------------------------------------
 // audio framework
