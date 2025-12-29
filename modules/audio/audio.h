@@ -11,13 +11,6 @@
 // audio framework
 // - rlyeh, public domain
 //
-// fixme: leaks, audio_delete
-// @todo: audio_volume_fx, audio_volume_bgm, audio_volume_master instead?
-// @todo: destroystream()    if( ss->type == WAV ) drwav_uninit(&ss->wav);
-// @todo: destroystream()    if( ss->type == MOD ) jar_mod_unload(&ss->mod);
-// @todo: destroystream()    if( ss->type == XM && ss->xm ) jar_xm_free_context(ss->xm);
-
-// audio interface
 
 struct AudioServerSample;
 struct AudioQueueEntry;

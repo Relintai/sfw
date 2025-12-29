@@ -102,6 +102,13 @@ struct AudioServerStream : public AudioServerSample {
 		memset(&data, 0, sizeof(data));
 	}
 	~AudioServerStream() {
+		if (type == OGG) {
+			stb_vorbis_close(ogg);
+		} else if (type == WAV) {
+			ma_dr_wav_uninit(&wav);
+		} else if (type == MP3) {
+			ma_dr_mp3_uninit(&mp3_);
+		}
 	}
 };
 
@@ -215,6 +222,7 @@ static bool load_audio_stream(AudioServerStream *stream, const String &filename)
 		stream->stream.sample.frequency = info.sample_rate;
 		stream->stream.sample.audio_format = STS_MIXER_SAMPLE_FORMAT_16;
 	}
+
 	if (stream->type == UNK && ma_dr_wav_init_memory(&stream->wav, data, (size_t)datalen, NULL)) {
 		if (stream->wav.channels != 2) {
 			ERR_PRINT("cannot stream wav file. stereo required.");
