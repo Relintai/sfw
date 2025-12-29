@@ -20,6 +20,7 @@
 // audio interface
 
 struct audio_handle;
+struct audio_queue_t;
 typedef struct audio_handle *audio_t;
 
 class AudioServer : public Object {
@@ -48,8 +49,8 @@ public:
 		AUDIO_SINGLE_INSTANCE = 512,
 	};
 
-	audio_t audio_clip(const char *pathfile);
-	audio_t audio_stream(const char *pathfile);
+	audio_t audio_clip(const String &pathfile);
+	audio_t audio_stream(const String &pathfile);
 
 	int audio_play(audio_t s, int flags);
 	int audio_play_gain(audio_t a, int flags, float gain /*0*/);
@@ -69,6 +70,7 @@ public:
 	int audio_queue(const void *samples, int num_samples, int flags);
 
 	int audio_init(int flags);
+	void audio_drop();
 
 	static void create();
 	static void destroy();
@@ -78,10 +80,9 @@ public:
 	AudioServer();
 	~AudioServer();
 
-protected:
-	void audio_drop();
+	audio_queue_t *_get_next_in_queue();
 
-	void audio_queue_init();
+protected:
 	void audio_queue_clear();
 
 	float volume_clip;
@@ -89,9 +90,12 @@ protected:
 	float volume_master;
 	int audio_queue_voice;
 
-	Vector<audio_handle *> audio_instances;
+	List<audio_handle *> audio_instances;
 
 	static AudioServer *_singleton;
+
+	List<audio_queue_t *> _audio_queues;
+	Mutex _queue_mutex;
 };
 
 //--STRIP

@@ -52,6 +52,7 @@ typedef struct {
 	};
 	bool rewind;
 	bool loop;
+	Vector<uint8_t> *vdata;
 } mystream_t;
 
 static void downsample_to_mono_flt(int channels, float *buffer, int samples) {
@@ -125,12 +126,25 @@ static void reset_stream(mystream_t *stream) {
 }
 
 // load a (stereo) stream
-static bool load_stream(mystream_t *stream, const char *filename) {
-	int datalen = 0;
+static bool load_stream(mystream_t *stream, const String &filename) {
+	FileAccess *fa = FileAccess::create_and_open(filename, FileAccess::READ);
 
-	//char *data = vfs_load(filename, &datalen);
+	if (!fa) {
+		return false;
+	}
 
-	char *data = NULL;
+	stream->vdata = memnew(Vector<uint8_t>());
+	stream->vdata->resize(fa->get_len());
+
+	uint64_t read_len = fa->get_buffer(stream->vdata->ptrw(), stream->vdata->size());
+
+	if (read_len != fa->get_len()) {
+		ERR_PRINT("read_len != fa->get_len()?");
+		return false;
+	}
+
+	int datalen = stream->vdata->size();
+	const char *data = (const char *)stream->vdata->ptr();
 
 	if (!data) {
 		return false;
@@ -144,7 +158,7 @@ static bool load_stream(mystream_t *stream, const char *filename) {
 	if (stream->type == UNK && (stream->ogg = stb_vorbis_open_memory((const unsigned char *)data, datalen, &error, NULL))) {
 		stb_vorbis_info info = stb_vorbis_get_info(stream->ogg);
 		if (info.channels != 2) {
-			puts("cannot stream ogg file. stereo required.");
+			ERR_PRINT("cannot stream ogg file. stereo required.");
 			goto end;
 		} // @fixme: upsample
 		stream->type = OGG;
@@ -153,7 +167,7 @@ static bool load_stream(mystream_t *stream, const char *filename) {
 	}
 	if (stream->type == UNK && ma_dr_wav_init_memory(&stream->wav, data, (size_t)datalen, NULL)) {
 		if (stream->wav.channels != 2) {
-			puts("cannot stream wav file. stereo required.");
+			ERR_PRINT("cannot stream wav file. stereo required.");
 			goto end;
 		} // @fixme: upsample
 		stream->type = WAV;
@@ -186,11 +200,16 @@ end:;
 }
 
 // load a (mono) sample
-static bool load_sample(sts_mixer_sample_t *sample, const char *filename) {
-	int datalen;
-	//char *data = vfs_load(filename, &datalen);
+static bool load_sample(sts_mixer_sample_t *sample, const String &filename) {
+	Error err;
+	Vector<uint8_t> vdata = FileAccess::get_file_as_array(filename, &err);
 
-	char *data = NULL;
+	if (err != OK) {
+		return false;
+	}
+
+	int datalen = vdata.size();
+	const char *data = (const char *)vdata.ptr();
 
 	if (!data) {
 		return false;
@@ -345,7 +364,7 @@ int AudioServer::audio_init(int flags) {
 	config.pUserData = NULL;
 
 	if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) {
-		printf("Failed to open playback device.");
+		ERR_PRINT("Failed to open playback device.");
 		ma_context_uninit(&context);
 		return false;
 	}
@@ -364,14 +383,14 @@ typedef struct audio_handle {
 	};
 } audio_handle;
 
-audio_t AudioServer::audio_clip(const char *pathfile) {
+audio_t AudioServer::audio_clip(const String &pathfile) {
 	audio_handle *a = memnew(audio_handle);
 	memset(a, 0, sizeof(audio_handle));
 	a->is_clip = load_sample(&a->clip, pathfile);
 	audio_instances.push_back(a);
 	return a;
 }
-audio_t AudioServer::audio_stream(const char *pathfile) {
+audio_t AudioServer::audio_stream(const String &pathfile) {
 	audio_handle *a = memnew(audio_handle);
 	memset(a, 0, sizeof(audio_handle));
 	a->is_stream = load_stream(&a->stream, pathfile);
@@ -426,8 +445,9 @@ int AudioServer::audio_muted() {
 }
 
 int AudioServer::audio_play_gain_pitch_pan(audio_t a, int flags, float gain, float pitch, float pan) {
-	if (audio_muted())
+	if (audio_muted()) {
 		return 1;
+	}
 
 	if (flags & AUDIO_IGNORE_MIXER_GAIN) {
 		// do nothing, gain used as-is
@@ -503,9 +523,6 @@ bool AudioServer::audio_playing(audio_t a) {
 #ifndef AUDIO_QUEUE_MAX
 #define AUDIO_QUEUE_MAX 2048
 #endif
-#ifndef AUDIO_QUEUE_TIMEOUT
-#define AUDIO_QUEUE_TIMEOUT ifdef(win32, THREAD_QUEUE_WAIT_INFINITE, 500)
-#endif
 
 typedef struct audio_queue_t {
 	int cursor;
@@ -514,15 +531,8 @@ typedef struct audio_queue_t {
 	char data[0];
 } audio_queue_t;
 
-//static thread_queue_t queue_mutex;
-
-void AudioServer::audio_queue_init() {
-	static void *audio_queues[AUDIO_QUEUE_MAX] = { 0 };
-	//do_once thread_queue_init(&queue_mutex, countof(audio_queues), audio_queues, 0);
-}
-
 static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
-	(void)userdata;
+	AudioServer *self = (AudioServer *)userdata;
 
 	int sl = sample->length / 2; // 2 ch
 	int bytes = sl * 2 * (sample->audio_format == STS_MIXER_SAMPLE_FORMAT_16 ? 2 : 4);
@@ -532,7 +542,11 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 
 	do {
 		while (!aq) {
-			//aq = (audio_queue_t *)thread_queue_consume(&queue_mutex, THREAD_QUEUE_WAIT_INFINITE);
+			aq = self->_get_next_in_queue();
+
+			if (!aq) {
+				SFWTime::sleep_ns(10);
+			}
 		}
 
 		int len = aq->avail > bytes ? bytes : aq->avail;
@@ -551,15 +565,31 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 	return 1;
 }
 
+audio_queue_t *AudioServer::_get_next_in_queue() {
+	_queue_mutex.lock();
+
+	if (_audio_queues.front()) {
+		audio_queue_t *aq = _audio_queues.front()->get();
+		_audio_queues.pop_front();
+		_queue_mutex.unlock();
+		return aq;
+	}
+
+	_queue_mutex.unlock();
+
+	return NULL;
+}
+
 void AudioServer::audio_queue_clear() {
-	//do_once audio_queue_init();
 	sts_mixer_stop_voice(&mixer, audio_queue_voice);
 	audio_queue_voice = -1;
+
+	_queue_mutex.lock();
+	_audio_queues.clear();
+	_queue_mutex.unlock();
 }
 
 int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
-	//do_once audio_queue_init();
-
 	float gain = 1; // [0..1]
 	//float pitch = 1; // (0..N]
 	//float pan = 0; // [-1..1]
@@ -577,6 +607,7 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 		q.sample.data = reuse_ptr;
 
 		q.callback = audio_queue_callback;
+		q.userdata = this;
 		q.sample.frequency = flags & AUDIO_8KHZ ? 8000 : flags & AUDIO_11KHZ ? 11025
 				: flags & AUDIO_44KHZ										 ? 44100
 				: flags & AUDIO_32KHZ										 ? 32000
@@ -609,8 +640,20 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 		}
 	}
 
-	//while (!thread_queue_produce(&queue_mutex, aq, THREAD_QUEUE_WAIT_INFINITE)) {
-	//}
+	// SHould probably use semaphores eventually.
+	while (true) {
+		_queue_mutex.lock();
+
+		if (_audio_queues.size() >= AUDIO_QUEUE_MAX) {
+			_queue_mutex.unlock();
+			SFWTime::sleep_ns(10);
+			continue;
+		}
+
+		_audio_queues.push_back(aq);
+		_queue_mutex.unlock();
+		break;
+	}
 
 	return audio_queue_voice;
 }
@@ -638,6 +681,12 @@ AudioServer::AudioServer() {
 }
 AudioServer::~AudioServer() {
 	audio_drop();
+
+	for (List<audio_handle *>::Element *E = audio_instances.front(); E; E = E->next()) {
+		memdelete(E->get());
+	}
+
+	audio_instances.clear();
 
 	_singleton = NULL;
 }
