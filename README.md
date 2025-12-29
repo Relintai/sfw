@@ -103,6 +103,10 @@ Has classes like:
 
 Depends on Core, Object and Render Core.
 
+### Audio
+
+Contains a class to that can audio files.
+
 ## SFWL
 
 The library's lite version.
