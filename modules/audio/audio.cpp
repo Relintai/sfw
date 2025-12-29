@@ -374,25 +374,25 @@ int AudioServer::audio_init(int flags) {
 	return true;
 }
 
-typedef struct audio_handle {
+typedef struct AudioServerSample {
 	bool is_clip;
 	bool is_stream;
 	union {
 		sts_mixer_sample_t clip;
 		mystream_t stream;
 	};
-} audio_handle;
+} AudioServerSample;
 
 audio_t AudioServer::audio_clip(const String &pathfile) {
-	audio_handle *a = memnew(audio_handle);
-	memset(a, 0, sizeof(audio_handle));
+	AudioServerSample *a = memnew(AudioServerSample);
+	memset(a, 0, sizeof(AudioServerSample));
 	a->is_clip = load_sample(&a->clip, pathfile);
 	audio_instances.push_back(a);
 	return a;
 }
 audio_t AudioServer::audio_stream(const String &pathfile) {
-	audio_handle *a = memnew(audio_handle);
-	memset(a, 0, sizeof(audio_handle));
+	AudioServerSample *a = memnew(AudioServerSample);
+	memset(a, 0, sizeof(AudioServerSample));
 	a->is_stream = load_stream(&a->stream, pathfile);
 	audio_instances.push_back(a);
 	return a;
@@ -682,7 +682,7 @@ AudioServer::AudioServer() {
 AudioServer::~AudioServer() {
 	audio_drop();
 
-	for (List<audio_handle *>::Element *E = audio_instances.front(); E; E = E->next()) {
+	for (List<AudioServerSample *>::Element *E = audio_instances.front(); E; E = E->next()) {
 		if (E->get()->is_stream) {
 			memdelete(E->get()->stream.vdata);
 		}

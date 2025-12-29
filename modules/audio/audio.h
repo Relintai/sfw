@@ -19,13 +19,12 @@
 
 // audio interface
 
-// AudioServerSample?
-struct audio_handle;
+struct AudioServerSample;
 // AudioQueue ? AudioQueueEntry?
 struct audio_queue_t;
 // It could be AudioServerSample* wrapped in a small AudioServerHandle helper class
 // Or it can just remain a typedef.
-typedef struct audio_handle *audio_t;
+typedef struct AudioServerSample *audio_t;
 
 // implement free for handles
 
@@ -101,7 +100,7 @@ protected:
 	float volume_master;
 	int audio_queue_voice;
 
-	List<audio_handle *> audio_instances;
+	List<AudioServerSample *> audio_instances;
 
 	static AudioServer *_singleton;
 
