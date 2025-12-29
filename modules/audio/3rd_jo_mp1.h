@@ -383,7 +383,7 @@ bool jo_read_mp1(const void *input, int inputSize, short **output_, int *outputS
 			outputMax = inputSize / (at / 8) * 384 * channels * sizeof(*output);
 			output = (short*)REALLOC(output, outputMax);
 		}
-		if (outputSize * sizeof(*output) + 384 * channels * sizeof(*output) > outputMax) {
+		if (outputSize * sizeof(*output) + 384 * channels * sizeof(*output) > (long unsigned int)outputMax) {
 			outputMax += 384 * channels * sizeof(*output);
 			output = (short*)REALLOC(output, outputMax);
 		}

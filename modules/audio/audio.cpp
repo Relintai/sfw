@@ -7,6 +7,8 @@
 #define MA_NO_RUNTIME_LINKING // miniaudio osx
 #endif
 
+#define REALLOC memrealloc
+
 //--STRIP
 
 #include "audio.h"
@@ -83,7 +85,7 @@ static bool refill_stream(sts_mixer_sample_t *sample, void *userdata) {
 			;
 			if (stream->rewind)
 				stream->rewind = 0, ma_dr_wav_seek_to_pcm_frame(&stream->wav, 0);
-			if (ma_dr_wav_read_pcm_frames_s16(&stream->wav, sl, (short *)stream->data) < sl) {
+			if (ma_dr_wav_read_pcm_frames_s16(&stream->wav, sl, (short *)stream->data) < (ma_uint64)sl) {
 				ma_dr_wav_seek_to_pcm_frame(&stream->wav, 0);
 				if (!stream->loop)
 					return false;
@@ -94,7 +96,7 @@ static bool refill_stream(sts_mixer_sample_t *sample, void *userdata) {
 			;
 			if (stream->rewind)
 				stream->rewind = 0, ma_dr_mp3_seek_to_pcm_frame(&stream->mp3_, 0);
-			if (ma_dr_mp3_read_pcm_frames_f32(&stream->mp3_, sl, stream->dataf) < sl) {
+			if (ma_dr_mp3_read_pcm_frames_f32(&stream->mp3_, sl, stream->dataf) < (ma_uint64)sl) {
 				ma_dr_mp3_seek_to_pcm_frame(&stream->mp3_, 0);
 				if (!stream->loop)
 					return false;
@@ -200,7 +202,7 @@ static bool load_sample(sts_mixer_sample_t *sample, const char *filename) {
 			sample->frequency = wav->sampleRate;
 			sample->audio_format = STS_MIXER_SAMPLE_FORMAT_16;
 			sample->length = wav->totalPCMFrameCount;
-			sample->data = REALLOC(0, sample->length * sizeof(short) * channels);
+			sample->data = memrealloc(0, sample->length * sizeof(short) * channels);
 			ma_dr_wav_read_pcm_frames_s16(wav, sample->length, (short *)sample->data);
 			ma_dr_wav_uninit(wav);
 		}
@@ -249,11 +251,11 @@ static bool load_sample(sts_mixer_sample_t *sample, const char *filename) {
 
 	if (channels > 1) {
 		if (sample->audio_format == STS_MIXER_SAMPLE_FORMAT_FLOAT) {
-			downsample_to_mono_flt(channels, sample->data, sample->length);
-			sample->data = REALLOC(sample->data, sample->length * sizeof(float));
+			downsample_to_mono_flt(channels, (float*)sample->data, sample->length);
+			sample->data = memrealloc(sample->data, sample->length * sizeof(float));
 		} else if (sample->audio_format == STS_MIXER_SAMPLE_FORMAT_16) {
-			downsample_to_mono_s16(channels, sample->data, sample->length);
-			sample->data = REALLOC(sample->data, sample->length * sizeof(short));
+			downsample_to_mono_s16(channels, (short int*)sample->data, sample->length);
+			sample->data = memrealloc(sample->data, sample->length * sizeof(short));
 		} else {
 			puts("error!"); // @fixme
 		}
@@ -510,11 +512,11 @@ typedef struct audio_queue_t {
 	char data[0];
 } audio_queue_t;
 
-static thread_queue_t queue_mutex;
+//static thread_queue_t queue_mutex;
 
 static void audio_queue_init() {
 	static void *audio_queues[AUDIO_QUEUE_MAX] = { 0 };
-	do_once thread_queue_init(&queue_mutex, countof(audio_queues), audio_queues, 0);
+	//do_once thread_queue_init(&queue_mutex, countof(audio_queues), audio_queues, 0);
 }
 
 static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
@@ -528,7 +530,7 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 
 	do {
 		while (!aq) {
-			aq = (audio_queue_t *)thread_queue_consume(&queue_mutex, THREAD_QUEUE_WAIT_INFINITE);
+			//aq = (audio_queue_t *)thread_queue_consume(&queue_mutex, THREAD_QUEUE_WAIT_INFINITE);
 		}
 
 		int len = aq->avail > bytes ? bytes : aq->avail;
@@ -549,16 +551,16 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 
 static int audio_queue_voice = -1;
 void audio_queue_clear() {
-	do_once audio_queue_init();
+	//do_once audio_queue_init();
 	sts_mixer_stop_voice(&mixer, audio_queue_voice);
 	audio_queue_voice = -1;
 }
 int audio_queue(const void *samples, int num_samples, int flags) {
-	do_once audio_queue_init();
+	//do_once audio_queue_init();
 
 	float gain = 1; // [0..1]
-	float pitch = 1; // (0..N]
-	float pan = 0; // [-1..1]
+	//float pitch = 1; // (0..N]
+	//float pan = 0; // [-1..1]
 
 	int bits = flags & AUDIO_8 ? 8 : flags & (AUDIO_32 | AUDIO_FLOAT) ? 32
 																	  : 16;
@@ -580,7 +582,7 @@ int audio_queue(const void *samples, int num_samples, int flags) {
 		q.sample.audio_format = flags & AUDIO_FLOAT ? STS_MIXER_SAMPLE_FORMAT_FLOAT : STS_MIXER_SAMPLE_FORMAT_16;
 		q.sample.length = q.sample.frequency / (1000 / AUDIO_QUEUE_BUFFERING_MS); // num_samples;
 		int bytes = q.sample.length * 2 * (flags & AUDIO_FLOAT ? 4 : 2);
-		q.sample.data = memset(REALLOC(q.sample.data, bytes), 0, bytes);
+		q.sample.data = memset(memrealloc(q.sample.data, bytes), 0, bytes);
 		audio_queue_voice = sts_mixer_play_stream(&mixer, &q, gain * 1.f);
 		if (audio_queue_voice < 0)
 			return 0;
@@ -605,8 +607,8 @@ int audio_queue(const void *samples, int num_samples, int flags) {
 		}
 	}
 
-	while (!thread_queue_produce(&queue_mutex, aq, THREAD_QUEUE_WAIT_INFINITE)) {
-	}
+	//while (!thread_queue_produce(&queue_mutex, aq, THREAD_QUEUE_WAIT_INFINITE)) {
+	//}
 
 	return audio_queue_voice;
 }
