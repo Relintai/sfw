@@ -84,12 +84,7 @@ public:
 	bool is_muted() const;
 	void set_mute(bool mute);
 
-	// Init
-	int audio_init(int flags);
-	void audio_drop();
-
-	// Should be initialize()
-	static void create();
+	static void initialize();
 	static void destroy();
 
 	static AudioServer *get_singleton() { return _singleton; }

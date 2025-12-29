@@ -351,79 +351,6 @@ static void audio_callback(ma_device *pDevice, void *pOutput, const void *pInput
 	// return len / (sizeof(int32_t) / 4);
 }
 
-void AudioServer::audio_drop() {
-	ma_device_stop(&device);
-	ma_device_uninit(&device);
-	ma_context_uninit(&context);
-}
-
-int AudioServer::audio_init(int flags) {
-	// init sts_mixer
-	sts_mixer_init(&mixer, 44100, STS_MIXER_SAMPLE_FORMAT_32);
-
-	// The prioritization of backends can be controlled by the application. You need only specify the backends
-	// you care about. If the context cannot be initialized for any of the specified backends ma_context_init()
-	// will fail.
-	ma_backend backends[] = {
-#if 1
-		ma_backend_wasapi, // Higest priority.
-		ma_backend_dsound,
-		ma_backend_winmm,
-		ma_backend_coreaudio,
-		ma_backend_pulseaudio,
-		ma_backend_alsa,
-		ma_backend_oss,
-		ma_backend_jack,
-		ma_backend_opensl,
-		// ma_backend_webaudio,
-		// ma_backend_openal,
-		//ma_backend_sdl,
-		ma_backend_null // Lowest priority.
-#else
-		// Highest priority
-		ma_backend_wasapi, // WASAPI      |  Windows Vista+
-		ma_backend_dsound, // DirectSound |  Windows XP+
-		ma_backend_winmm, // WinMM       |  Windows XP+ (may work on older versions, but untested)
-		ma_backend_coreaudio, // Core Audio  |  macOS, iOS
-		ma_backend_pulseaudio, // PulseAudio  |  Cross Platform (disabled on Windows, BSD and Android)
-		ma_backend_alsa, // ALSA        |  Linux
-		ma_backend_oss, // OSS         |  FreeBSD
-		ma_backend_jack, // JACK        |  Cross Platform (disabled on BSD and Android)
-		ma_backend_opensl, // OpenSL ES   |  Android (API level 16+)
-		ma_backend_webaudio, // Web Audio   |  Web (via Emscripten)
-		ma_backend_sndio, // sndio       |  OpenBSD
-		ma_backend_audio4, // audio(4)    |  NetBSD, OpenBSD
-		ma_backend_aaudio, // AAudio      |  Android 8+
-		ma_backend_custom, // Custom      |  Cross Platform
-		ma_backend_null, // Null        |  Cross Platform (not used on Web)
-	// Lowest priority
-#endif
-	};
-
-	if (ma_context_init(backends, (int)(sizeof(backends) / sizeof(0 [backends])), NULL, &context) != MA_SUCCESS) {
-		LOG_ERR("Failed to initialize audio context.");
-		return false;
-	}
-
-	ma_device_config config = ma_device_config_init(ma_device_type_playback); // Or ma_device_type_capture or ma_device_type_duplex.
-	config.playback.pDeviceID = NULL; // &myPlaybackDeviceID; // Or NULL for the default playback device.
-	config.playback.format = ma_format_s32;
-	config.playback.channels = 2;
-	config.sampleRate = 44100;
-	config.dataCallback = audio_callback;
-	config.pUserData = NULL;
-
-	if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) {
-		ERR_PRINT("Failed to open playback device.");
-		ma_context_uninit(&context);
-		return false;
-	}
-
-	(void)flags;
-	ma_device_start(&device);
-	return true;
-}
-
 AudioServerHandle AudioServer::load_clip(const String &pathfile) {
 	AudioServerClip *a = memnew(AudioServerClip);
 	a->valid = load_sample(&a->clip, pathfile);
@@ -755,7 +682,7 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 	return audio_queue_voice;
 }
 
-void AudioServer::create() {
+void AudioServer::initialize() {
 	if (_singleton) {
 		return;
 	}
@@ -776,15 +703,80 @@ AudioServer::AudioServer() {
 	volume_master = 1;
 	audio_queue_voice = -1;
 	_muted = false;
+
+	// init sts_mixer
+	sts_mixer_init(&mixer, 44100, STS_MIXER_SAMPLE_FORMAT_32);
+
+	// The prioritization of backends can be controlled by the application. You need only specify the backends
+	// you care about. If the context cannot be initialized for any of the specified backends ma_context_init()
+	// will fail.
+	ma_backend backends[] = {
+#if 1
+		ma_backend_wasapi, // Higest priority.
+		ma_backend_dsound,
+		ma_backend_winmm,
+		ma_backend_coreaudio,
+		ma_backend_pulseaudio,
+		ma_backend_alsa,
+		ma_backend_oss,
+		ma_backend_jack,
+		ma_backend_opensl,
+		// ma_backend_webaudio,
+		// ma_backend_openal,
+		//ma_backend_sdl,
+		ma_backend_null // Lowest priority.
+#else
+		// Highest priority
+		ma_backend_wasapi, // WASAPI      |  Windows Vista+
+		ma_backend_dsound, // DirectSound |  Windows XP+
+		ma_backend_winmm, // WinMM       |  Windows XP+ (may work on older versions, but untested)
+		ma_backend_coreaudio, // Core Audio  |  macOS, iOS
+		ma_backend_pulseaudio, // PulseAudio  |  Cross Platform (disabled on Windows, BSD and Android)
+		ma_backend_alsa, // ALSA        |  Linux
+		ma_backend_oss, // OSS         |  FreeBSD
+		ma_backend_jack, // JACK        |  Cross Platform (disabled on BSD and Android)
+		ma_backend_opensl, // OpenSL ES   |  Android (API level 16+)
+		ma_backend_webaudio, // Web Audio   |  Web (via Emscripten)
+		ma_backend_sndio, // sndio       |  OpenBSD
+		ma_backend_audio4, // audio(4)    |  NetBSD, OpenBSD
+		ma_backend_aaudio, // AAudio      |  Android 8+
+		ma_backend_custom, // Custom      |  Cross Platform
+		ma_backend_null, // Null        |  Cross Platform (not used on Web)
+	// Lowest priority
+#endif
+	};
+
+	if (ma_context_init(backends, (int)(sizeof(backends) / sizeof(0 [backends])), NULL, &context) != MA_SUCCESS) {
+		LOG_ERR("Failed to initialize audio context.");
+		return;
+	}
+
+	ma_device_config config = ma_device_config_init(ma_device_type_playback); // Or ma_device_type_capture or ma_device_type_duplex.
+	config.playback.pDeviceID = NULL; // &myPlaybackDeviceID; // Or NULL for the default playback device.
+	config.playback.format = ma_format_s32;
+	config.playback.channels = 2;
+	config.sampleRate = 44100;
+	config.dataCallback = audio_callback;
+	config.pUserData = NULL;
+
+	if (ma_device_init(NULL, &config, &device) != MA_SUCCESS) {
+		ERR_PRINT("Failed to open playback device.");
+		ma_context_uninit(&context);
+		return;
+	}
+
+	ma_device_start(&device);
 }
 AudioServer::~AudioServer() {
-	audio_drop();
-
 	for (List<AudioServerSample *>::Element *E = audio_instances.front(); E; E = E->next()) {
 		memdelete(E->get());
 	}
 
 	audio_instances.clear();
+
+	ma_device_stop(&device);
+	ma_device_uninit(&device);
+	ma_context_uninit(&context);
 
 	_singleton = NULL;
 }

@@ -35,9 +35,8 @@ public:
 	AudioTestApplication() {
 		Renderer::initialize();
 
-		AudioServer::create();
+		AudioServer::initialize();
 
-		AudioServer::get_singleton()->audio_init(0 | AudioServer::AUDIO_2CH | AudioServer::AUDIO_16 | AudioServer::AUDIO_22KHZ);
 
 		//AudioServer::get_singleton()->set_volume_clip(1);
 		//AudioServer::get_singleton()->set_volume_stream(1);
