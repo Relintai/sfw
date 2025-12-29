@@ -11,7 +11,7 @@
 
 ./game ../merger/out/modules/hash/sfw/sfw_hash.h -osfw_hash.html -tsfw_hash_template.html
 
-./game ../merger/out/modules/audio/sfw/sfw_hash.h -osfw_audio.html -tsfw_audio_template.html
+./game ../merger/out/modules/audio/sfw/sfw_audio.h -osfw_audio.html -tsfw_audio_template.html
 
 ./game ../merger/out/modules/render_objects/sfw_render_objects.h -osfw_render_objects.html -tsfw_render_objects_template.html
 
