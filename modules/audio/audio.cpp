@@ -524,12 +524,12 @@ bool AudioServer::audio_playing(audio_t a) {
 #define AUDIO_QUEUE_MAX 2048
 #endif
 
-typedef struct audio_queue_t {
+typedef struct AudioQueueEntry {
 	int cursor;
 	int avail;
 	unsigned flags;
 	char data[0];
-} audio_queue_t;
+} AudioQueueEntry;
 
 static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 	AudioServer *self = (AudioServer *)userdata;
@@ -538,7 +538,7 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 	int bytes = sl * 2 * (sample->audio_format == STS_MIXER_SAMPLE_FORMAT_16 ? 2 : 4);
 	char *dst = (char *)sample->data;
 
-	static audio_queue_t *aq = 0;
+	static AudioQueueEntry *aq = 0;
 
 	do {
 		while (!aq) {
@@ -565,11 +565,11 @@ static bool audio_queue_callback(sts_mixer_sample_t *sample, void *userdata) {
 	return 1;
 }
 
-audio_queue_t *AudioServer::_get_next_in_queue() {
+AudioQueueEntry *AudioServer::_get_next_in_queue() {
 	_queue_mutex.lock();
 
 	if (_audio_queues.front()) {
-		audio_queue_t *aq = _audio_queues.front()->get();
+		AudioQueueEntry *aq = _audio_queues.front()->get();
 		_audio_queues.pop_front();
 		_queue_mutex.unlock();
 		return aq;
@@ -621,7 +621,7 @@ int AudioServer::audio_queue(const void *samples, int num_samples, int flags) {
 			return 0;
 	}
 
-	audio_queue_t *aq = (audio_queue_t *)memalloc(sizeof(audio_queue_t) + (bytes << (channels == 1))); // dupe space if going to be converted from mono to stereo
+	AudioQueueEntry *aq = (AudioQueueEntry *)memalloc(sizeof(AudioQueueEntry) + (bytes << (channels == 1))); // dupe space if going to be converted from mono to stereo
 	aq->cursor = 0;
 	aq->avail = bytes;
 	aq->flags = flags;

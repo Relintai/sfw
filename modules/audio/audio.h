@@ -20,8 +20,7 @@
 // audio interface
 
 struct AudioServerSample;
-// AudioQueue ? AudioQueueEntry?
-struct audio_queue_t;
+struct AudioQueueEntry;
 // It could be AudioServerSample* wrapped in a small AudioServerHandle helper class
 // Or it can just remain a typedef.
 typedef struct AudioServerSample *audio_t;
@@ -90,7 +89,7 @@ public:
 	~AudioServer();
 
 	// Make it protected
-	audio_queue_t *_get_next_in_queue();
+	AudioQueueEntry *_get_next_in_queue();
 
 protected:
 	void audio_queue_clear();
@@ -104,7 +103,7 @@ protected:
 
 	static AudioServer *_singleton;
 
-	List<audio_queue_t *> _audio_queues;
+	List<AudioQueueEntry *> _audio_queues;
 	Mutex _queue_mutex;
 };
 
