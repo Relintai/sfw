@@ -5,8 +5,6 @@
 
 #include "sfw.h"
 
-// TODO would this work with sfwl?
-
 // -----------------------------------------------------------------------------
 // audio framework
 // - originally by rlyeh, public domain.
