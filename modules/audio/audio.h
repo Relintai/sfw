@@ -1,6 +1,6 @@
 //--STRIP
-#ifndef AUDIO_H
-#define AUDIO_H
+#ifndef SFW_AUDIO_H
+#define SFW_AUDIO_H
 //--STRIP
 
 #include "sfw.h"
