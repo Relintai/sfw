@@ -178,9 +178,9 @@ void Renderer::draw_texture_clipped(const Ref<Texture> &p_texture, const Rect2 &
 		Vector2 se = p_src_rect.get_end();
 
 		uv.position.x = ss.x / ts.x;
-		uv.position.x = ss.y / ts.y;
+		uv.position.y = ss.y / ts.y;
 		uv.size.x = se.x / ts.x;
-		uv.size.x = se.y / ts.y;
+		uv.size.y = se.y / ts.y;
 	}
 
 	Vector2 rect_end = p_dst_rect.get_end();
