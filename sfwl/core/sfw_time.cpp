@@ -403,10 +403,13 @@ double sleep_ss(double ss) {
 #define TIMER_E9 1000000000ULL
 
 #ifdef CLOCK_MONOTONIC_RAW
+#undef TIME_MONOTONIC
 #define TIME_MONOTONIC CLOCK_MONOTONIC_RAW
 #elif defined CLOCK_MONOTONIC
+#undef TIME_MONOTONIC
 #define TIME_MONOTONIC CLOCK_MONOTONIC
 #else
+// #undef TIME_MONOTONIC
 // #define TIME_MONOTONIC CLOCK_REALTIME // untested
 #endif
 
