@@ -156,7 +156,7 @@ void Texture::upload() {
 	int w = _texture_width;
 	int h = _texture_height;
 
-	int tsize = 0;
+	//int tsize = 0;
 
 	for (int i = 0; i < mipmaps; i++) {
 		int size;
@@ -166,7 +166,7 @@ void Texture::upload() {
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexImage2D(texture_type, i, gl_internal_format, w, h, 0, gl_format, gl_type, &read[ofs]);
 
-		tsize += size;
+		//tsize += size;
 
 		w = MAX(1, w >> 1);
 		h = MAX(1, h >> 1);
