@@ -19,8 +19,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
-
 //--STRIP
+
+#ifdef __APPLE__
+#define PTHREAD_RENAME_SELF
+#endif
 
 #if defined(_WIN64) || defined(_WIN32)
 
@@ -280,9 +283,11 @@ void *Thread::thread_callback(void *userdata) {
 	// Note _thread_id_key_destr_callback frees this
 	pthread_setspecific(_thread_id_key, (void *)memnew(ID(t->_id)));
 
+#ifndef __APPLE__
 	if (t->_settings.priority != PRIORITY_NORMAL) {
 		pthread_setschedprio(t->_pthread, t->_settings.priority);
 	}
+#endif
 
 	//init_func();
 
