@@ -10,10 +10,13 @@
 
 //--STRIP
 #include "core/error_list.h"
+#include "core/hash_map.h"
 #include "core/list.h"
+#include "core/local_vector.h"
 #include "core/math_defs.h"
 #include "core/memory.h"
 #include "core/mutex.h"
+#include "core/string_name.h"
 #include "core/typedefs.h"
 #include "core/ustring.h"
 
@@ -82,7 +85,7 @@ public:
 	void unset_environment_variable(const StringName &p_key);
 	void clear_environment_variables();
 
-	PoolStringArray get_environment_variable_keys();
+	Vector<String> get_environment_variable_keys();
 
 	// Other getters
 
@@ -106,11 +109,11 @@ public:
 	virtual Error write_to_stdin_utf8(const String &p_data);
 	virtual Error write_to_stdin_utf16(const String &p_data);
 	virtual Error write_to_stdin_utf32(const String &p_data);
-	virtual Error write_data_to_stdin(const PoolByteArray &p_data);
+	virtual Error write_data_to_stdin(const Vector<uint8_t> &p_data);
 
 	virtual bool is_process_running() const;
 
-	Error run(const String &p_executable_path, const Vector<String> &p_arguments, const int p_communication_flags = COMMUNICATION_FLAGS_STDOUT, bool p_blocking = true, bool p_use_pipe_mutex = false, bool p_open_console = false);
+	Error run(const String &p_executable_path, const Vector<String> &p_arguments = Vector<String>(), const int p_communication_flags = COMMUNICATION_FLAGS_STDOUT, bool p_blocking = true, bool p_use_pipe_mutex = false, bool p_open_console = false);
 
 	SubProcess();
 	virtual ~SubProcess();

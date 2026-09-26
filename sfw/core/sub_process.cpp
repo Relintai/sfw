@@ -654,7 +654,7 @@ Error SubProcess::write_to_stdin_utf32(const String &p_data) {
 
 	return OK;
 }
-Error SubProcess::write_data_to_stdin(const PoolByteArray &p_data) {
+Error SubProcess::write_data_to_stdin(const Vector<uint8_t> &p_data) {
 	if (!is_process_running()) {
 		return ERR_UNCONFIGURED;
 	}
@@ -668,13 +668,12 @@ Error SubProcess::write_data_to_stdin(const PoolByteArray &p_data) {
 	}
 
 	int size = p_data.size();
-	PoolByteArray::Read r = p_data.read();
 
 	DWORD total_written = 0;
 
 	for (;;) {
 		DWORD written;
-		const bool success = WriteFile(_data->_write_handles[1], r.ptr() + total_written, size - total_written, &written, NULL);
+		const bool success = WriteFile(_data->_write_handles[1], p_data.ptr() + total_written, size - total_written, &written, NULL);
 
 		if (!success) {
 			if (_std_in_mutex) {
@@ -1659,7 +1658,7 @@ Error SubProcess::write_to_stdin_utf32(const String &p_data) {
 	return OK;
 }
 
-Error SubProcess::write_data_to_stdin(const PoolByteArray &p_data) {
+Error SubProcess::write_data_to_stdin(const Vector<uint8_t> &p_data) {
 	if (_process_id == 0) {
 		return ERR_UNAVAILABLE;
 	}
@@ -1679,10 +1678,9 @@ Error SubProcess::write_data_to_stdin(const PoolByteArray &p_data) {
 	}
 
 	int size = p_data.size();
-	PoolByteArray::Read r = p_data.read();
 
 	while (sent < p_data.size()) {
-		ssize_t wb = write(_write_pipes[1], r.ptr() + sent, size - sent);
+		ssize_t wb = write(_write_pipes[1], p_data.ptr() + sent, size - sent);
 
 		// Error
 		if (wb < 0) {
@@ -2038,8 +2036,8 @@ void SubProcess::clear_environment_variables() {
 	_environment_variables.clear();
 }
 
-PoolStringArray SubProcess::get_environment_variable_keys() {
-	PoolStringArray r;
+Vector<String> SubProcess::get_environment_variable_keys() {
+	Vector<String> r;
 
 	for (const HashMap<StringName, String>::Element *E = _environment_variables.front(); E; E = E->next) {
 		r.push_back(E->key());
