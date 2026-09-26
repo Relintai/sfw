@@ -514,15 +514,17 @@
 {{FILE:sfw/core/os.h}}
 
 //--STRIP
+//#include "core/error_list.h"
+//#include "core/hash_map.h"
 //#include "core/list.h"
+//#include "core/local_vector.h"
 //#include "core/math_defs.h"
 //#include "core/memory.h"
 //#include "core/mutex.h"
+//#include "core/string_name.h"
 //#include "core/typedefs.h"
 //#include "core/ustring.h"
 //#include <stdio.h>
-//Win Only
-//#include "core/local_vector.h"
 //--STRIP
 {{FILE:sfw/core/sub_process.h}}
 
