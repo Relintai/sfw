@@ -23,14 +23,6 @@
 #include <stdio.h>
 //--STRIP
 
-#if defined(_WIN64) || defined(_WIN32)
-
-//--STRIP
-#include "core/local_vector.h"
-//--STRIP
-
-#endif
-
 /**
  * Multi-Platform abstraction for running and communicating with sub processes
  */
