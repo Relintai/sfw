@@ -219,7 +219,7 @@ Error SubProcess::start() {
 
 		// Unless MSDN is lying we need to write them in a sorted order.
 
-		PoolStringArray psa;
+		Vector<String> psa;
 
 		// Also let's count lengths for later
 		int length_count = 0;
@@ -249,9 +249,8 @@ Error SubProcess::start() {
 
 			uint64_t current_offset = 0;
 			int psa_size = psa.size();
-			PoolStringArray::Read r = psa.read();
 			for (int i = 0; i < psa_size; ++i) {
-				String key = r[i];
+				String key = psa[i];
 
 				// Write key
 				{
