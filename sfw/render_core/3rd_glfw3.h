@@ -7532,13 +7532,25 @@ void* _glfwLoadLocalVulkanLoaderNS(void);
 #endif
 
 // GLFW requires Windows XP or later
-#if WINVER < 0x0501
+//#if WINVER < 0x0501
+// #undef WINVER
+// #define WINVER 0x0501
+//#endif
+//#if _WIN32_WINNT < 0x0501
+// #undef _WIN32_WINNT
+// #define _WIN32_WINNT 0x0501
+//#endif
+
+// Winver needs to be at least 0x0600 (Windows Vista) to get the the RWLock apis for now.
+// Eventually some fallbacks should be added instead to rwlock, and force this api level if available
+// if we want winxp.
+#if WINVER < 0x0600
  #undef WINVER
- #define WINVER 0x0501
+ #define WINVER 0x0600
 #endif
-#if _WIN32_WINNT < 0x0501
+#if _WIN32_WINNT < 0x0600
  #undef _WIN32_WINNT
- #define _WIN32_WINNT 0x0501
+ #define _WIN32_WINNT 0x0600
 #endif
 
 // GLFW uses DirectInput8 interfaces
@@ -18322,7 +18334,8 @@ GLFWAPI void glfwPostEmptyEvent(void)
 
 #ifdef MINGW
 #define UNICODE
-#define WINVER 0x0501
+//#define WINVER 0x0501
+#define WINVER 0x0600
 #endif
 
 #ifndef HEADER_GUARD_WIN32_INIT_C
