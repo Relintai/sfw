@@ -41,7 +41,7 @@ cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/pool_vector.cpp /Fo:sfw/core/pool_ve
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/pool_allocator.cpp /Fo:sfw/core/pool_allocator.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/mutex.cpp /Fo:sfw/core/mutex.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/rw_lock.cpp /Fo:sfw/core/rw_lock.obj
-cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/semaphone.cpp /Fo:sfw/core/semaphone.obj
+cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/semaphore.cpp /Fo:sfw/core/semaphore.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/sfw_time.cpp /Fo:sfw/core/sfw_time.obj
 cl /D_REENTRANT /EHsc /Zi /Isfw /c sfw/core/string_builder.cpp /Fo:sfw/core/string_builder.obj
 
