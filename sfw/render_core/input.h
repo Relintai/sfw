@@ -19,6 +19,10 @@
 #include "render_core/input_event.h"
 //--STRIP
 
+#if defined(_WIN64) || defined(_WIN32)
+#include <cstdint>
+#endif
+
 class Application;
 struct GLFWwindow;
 
