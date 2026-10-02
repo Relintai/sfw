@@ -7,7 +7,7 @@
 
 //--STRIP
 #include "safe_refcount.h"
-#include "core/error/error_macros.h"
+#include "core/error_macros.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
