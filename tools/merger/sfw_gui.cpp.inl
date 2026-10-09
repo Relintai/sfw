@@ -54,6 +54,18 @@
 #define Font The_Font_I_dont_care
 #endif
 
+// If you create a new project in Visual Studio, and add the library to it, these will be treated as errors, so disable them for ease of use.
+// This is not an issue when compiling from the command line.
+#if defined(_MSC_VER)
+//unary minus operator applied to unsigned type, result still unsigned
+#pragma warning (disable: 4146)
+//'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+//'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+#pragma warning (disable: 4996)
+//potentially uninitialized local pointer variable 'w_ptr' used
+#pragma warning (disable: 4703)
+#endif
+
 // Note: On Windows we need to make sure that 
 // GLFW includes it's needed windows headers first, as it has quite a bit of setup.
 // Also windows headers can define quite a bit of stuff like far and near macros
