@@ -17,9 +17,9 @@
 #include "core/vector2.h"
 //--STRIP
 
-struct GLFWwindow;
-struct GLFWcursor;
-struct GLFWmonitor;
+struct SDL_Window;
+struct SDL_GLContextState;
+typedef struct SDL_GLContextState* SDL_GLContext;
 
 class AppWindow {
 public:
@@ -131,7 +131,7 @@ protected:
 	static void glfw_quit();
 	static void glfw_init();
 	static void glfw_error_callback(int error, const char *description);
-	static void drop_callback(GLFWwindow *window, int count, const char **paths);
+	//static void drop_callback(GLFWwindow *window, int count, const char **paths);
 	static void window_hints(unsigned flags);
 	//GLFWmonitor *find_monitor(int wx, int wy);
 	void resize();
@@ -143,8 +143,9 @@ protected:
 
 	double boot_time;
 
-	//GLFWwindow *_window;
-	void *_window;
+	SDL_Window *_window;
+	SDL_GLContext _context;
+
 	int w;
 	int h;
 	int xpos;

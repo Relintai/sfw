@@ -18,6 +18,10 @@
 
 #endif
 
+//#define SDL_MAIN_HANDLED
+#include <SDL3/SDL.h>
+//#include <SDL3/SDL_main.h>
+
 #include "core/error_macros.h"
 #include "core/sfw_time.h"
 #include "core/ustring.h"
@@ -50,32 +54,33 @@ void AppWindow::glfw_init() {
 #endif
 }
 
-void AppWindow::drop_callback(GLFWwindow *window, int count, const char **paths) {
-}
+//void AppWindow::drop_callback(GLFWwindow *window, int count, const char **paths) {
+//}
 
 void AppWindow::window_hints(unsigned flags) {
 #if 0
-
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE); // @todo: remove silicon mac M1 hack
 #endif
-
-#if defined(__APPLE__)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-#elif defined(_WIN64) || defined(_WIN32)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-#else
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 #endif
 
+#if defined(__APPLE__)
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE | SDL_GL_CONTEXT_PROFILE_ES);
+#elif defined(_WIN64) || defined(_WIN32)
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	//according to the documentation, it must be GLFW_OPENGL_ANY_PROFILE.
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE | SDL_GL_CONTEXT_PROFILE_ES);
+#else
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+#endif
+
+#if 0
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
 	glfwWindowHint(GLFW_STENCIL_BITS, 8); //osx
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
@@ -136,16 +141,21 @@ void AppWindow::glNewFrame() {
 }
 
 bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_scale, unsigned int flags, float window_scale) {
-#if 0
-
 	// abort run if any test suite failed in unit-test mode
 
-	glfw_init();
-	//fwk_init();
+	//SDL_SetMainReady();
 
-	if (!t) {
-		t = glfwGetTime();
+	bool success = SDL_InitSubSystem(SDL_INIT_VIDEO);
+
+	if (!success) {
+		SDL_Log("SDL_Init: %s", SDL_GetError());
+
+		return false;
 	}
+
+	//if (!t) {
+	//	t = glfwGetTime();
+	//}
 
 #ifdef __EMSCRIPTEN__
 	canvas_scale = 1.f;
@@ -169,8 +179,12 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	window_hints(flags);
 
+#if 0
 	GLFWmonitor *monitor = NULL;
+#endif
 #ifndef __EMSCRIPTEN__
+
+#if 0
 	if (FLAGS_FULLSCREEN || FLAGS_FULLSCREEN_DESKTOP) {
 		monitor = glfwGetPrimaryMonitor();
 	}
@@ -186,6 +200,9 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 		winHeight = mode->height;
 	}
 
+#endif
+
+#if 0
 	if (FLAGS_WINDOWED) {
 #ifndef __EMSCRIPTEN__
 		if (FLAGS_TRANSPARENT) { // @transparent
@@ -213,11 +230,13 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 		}
 	}
 #endif
+#endif
 
-	_window = handle ? (GLFWwindow *)handle : glfwCreateWindow(winWidth, winHeight, "", monitor, NULL);
+	_window = SDL_CreateWindow("", winWidth, winHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
-	ERR_FAIL_COND_V_MSG(!_window, false, "GLFW Window creation failed");
+	ERR_FAIL_COND_V_MSG(!_window, false, "SDL Window creation failed");
 
+#if 0
 	glfwGetFramebufferSize(_window, &w, &h); //glfwGetWindowSize(window, &w, &h);
 
 	if (flags & WINDOW_FIXED) { // disable resizing
@@ -227,7 +246,9 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	if (flags & (WINDOW_SQUARE | WINDOW_PORTRAIT | WINDOW_LANDSCAPE | WINDOW_ASPECT)) { // keep aspect ratio
 		aspect_lock(w, h);
 	}
+#endif
 
+#if 0
 #ifndef __EMSCRIPTEN__
 	if (FLAGS_WINDOWED) {
 		// center window
@@ -259,6 +280,12 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 #else
 	int gl_version = gladLoadGL(glfwGetProcAddress);
 #endif
+#endif
+
+	_context = SDL_GL_CreateContext(_window);
+
+	//int gl_version = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
+	int gl_version = gladLoadGL(SDL_GL_GetProcAddress);
 
 	//glDebugEnable();
 
@@ -285,6 +312,7 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 #ifndef __EMSCRIPTEN__
 	LOG_MSG("GPU OpenGL: " + String::num(GLAD_VERSION_MAJOR(gl_version)) + " " + String::num(GLAD_VERSION_MINOR(gl_version)));
 
+#if 0
 	if (FLAGS_TRANSPARENT) { // @transparent
 		glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE); // @todo: is decorated an attrib or a hint?
 
@@ -294,13 +322,17 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	}
 #endif
 
+#endif
+
 	width = get_width();
 	height = get_height();
 
 	RenderState::window_update_render_rect_size(width, height);
 
 	// cursor(flags & WINDOW_NO_MOUSE ? false : true);
+#if 0
 	glfwSetDropCallback(_window, drop_callback);
+#endif
 
 	// camera inits for fwk_pre_init() -> ddraw_flush() -> get_active_camera()
 	// static camera_t cam = {0}; id44(cam.view); id44(cam.proj); extern camera_t *last_camera; last_camera = &cam;
@@ -308,8 +340,8 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	//fwk_post_init(mode->refreshRate);
 
+#if 0
 	Input::get_singleton()->_setup_window_callbacks();
-
 #endif
 
 	return true;
@@ -384,6 +416,8 @@ void AppWindow::frame_swap() {
 	glfwSwapBuffers(_window);
 	// emscripten_webgl_commit_frame();
 #endif
+
+	SDL_GL_SwapWindow(_window);
 }
 
 void AppWindow::reset_viewport() {
@@ -423,7 +457,7 @@ Vector2 AppWindow::get_canvas() {
 	return Vector2(mode->width, mode->height);
 #endif /* __EMSCRIPTEN__ */
 #endif
-	return Vector2();
+	return Vector2(800, 600);
 }
 
 int AppWindow::get_width() {
