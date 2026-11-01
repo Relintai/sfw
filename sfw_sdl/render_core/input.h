@@ -9,11 +9,11 @@
 /*************************************************************************/
 
 //--STRIP
-#include "core/vector2i.h"
-#include "object/object.h"
 #include "core/rb_map.h"
 #include "core/rb_set.h"
 #include "core/thread_safe.h"
+#include "core/vector2i.h"
+#include "object/object.h"
 #include "object/psignal.h"
 #include "object/reference.h"
 #include "render_core/input_event.h"
@@ -135,6 +135,7 @@ public:
 	void _setup_window_callbacks();
 
 protected:
+#if 0
 	static int glfw_to_sfw_code(int glfw_code);
 
 	unsigned int get_mouse_button_state(unsigned int p_button, int p_type);
@@ -150,9 +151,9 @@ protected:
 	static void GLFWdropfunCallback(GLFWwindow *window, int path_count, const char *paths[]);
 	static void GLFWjoystickfunCallback(int jid, int event);
 	static void GLFWwindowfocusfunCallback(GLFWwindow *window, int focused);
+#endif
 
 protected:
-
 	struct SpeedTrack {
 		uint64_t last_tick;
 		Vector2 speed;

@@ -8,13 +8,11 @@
 
 #include "core/logger.h"
 #include "core/sfw_time.h"
+#include "render_core/app_window.h"
 #include "render_core/application.h"
 #include "render_core/input_map.h"
 #include "render_core/keyboard.h"
 #include "render_core/texture.h"
-#include "render_core/app_window.h"
-
-#include "render_core/3rd_glfw3.h"
 //--STRIP
 
 Input *Input::get_singleton() {
@@ -328,6 +326,7 @@ Input::Input() {
 	last_key_modifier_state = 0;
 }
 
+#if 0
 unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) {
 	unsigned int mask = 1 << (p_button - 1);
 
@@ -683,8 +682,10 @@ void Input::GLFWwindowfocusfunCallback(GLFWwindow *window, int focused) {
 		self->main_loop->notification(Application::NOTIFICATION_WM_FOCUS_OUT);
 	}
 }
+#endif
 
 void Input::_setup_window_callbacks() {
+#if 0
 	GLFWwindow *window = (GLFWwindow *)AppWindow::get_singleton()->get_handle();
 
 	glfwSetKeyCallback(window, &Input::GLFWkeyfunCallback);
@@ -697,6 +698,7 @@ void Input::_setup_window_callbacks() {
 	//glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
 	//glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
 	glfwSetWindowFocusCallback(window, &Input::GLFWwindowfocusfunCallback);
+#endif
 }
 
 void Input::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_emulated) {
