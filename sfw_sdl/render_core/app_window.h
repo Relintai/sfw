@@ -133,7 +133,7 @@ protected:
 	static void glfw_error_callback(int error, const char *description);
 	static void drop_callback(GLFWwindow *window, int count, const char **paths);
 	static void window_hints(unsigned flags);
-	GLFWmonitor *find_monitor(int wx, int wy);
+	//GLFWmonitor *find_monitor(int wx, int wy);
 	void resize();
 	void glNewFrame();
 	double get_scale();
@@ -143,7 +143,8 @@ protected:
 
 	double boot_time;
 
-	GLFWwindow *_window;
+	//GLFWwindow *_window;
+	void *_window;
 	int w;
 	int h;
 	int xpos;
@@ -179,8 +180,8 @@ protected:
 	bool _vsync_adaptive;
 
 	bool _cursors_initialized;
-	GLFWcursor *cursors[7];
-	unsigned int cursor_enums[7];
+	//GLFWcursor *cursors[7];
+	//unsigned int cursor_enums[7];
 };
 
 //--STRIP
