@@ -88,15 +88,15 @@ ccache g++ -Wall -D_REENTRANT -g -I. -c render_core/texture_material.cpp -o rend
 ccache g++ -Wall -D_REENTRANT -g -I. -c render_core/transparent_texture_material.cpp -o render_core/transparent_texture_material.o
 ccache g++ -Wall -D_REENTRANT -g -I. -c render_core/colored_texture_material_2d.cpp -o render_core/colored_texture_material_2d.o
 
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_immediate/renderer.cpp -o render_immediate/renderer.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_immediate/renderer.cpp -o render_immediate/renderer.o
 
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui.cpp -o render_gui/imgui.o
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_draw.cpp -o render_gui/imgui_draw.o
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_impl_glfw.cpp -o render_gui/imgui_impl_glfw.o
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_impl_opengl3.cpp -o render_gui/imgui_impl_opengl3.o
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_tables.cpp -o render_gui/imgui_tables.o
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_widgets.cpp -o render_gui/imgui_widgets.o
-ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/gui.cpp -o render_gui/gui.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui.cpp -o render_gui/imgui.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_draw.cpp -o render_gui/imgui_draw.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_impl_glfw.cpp -o render_gui/imgui_impl_glfw.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_impl_opengl3.cpp -o render_gui/imgui_impl_opengl3.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_tables.cpp -o render_gui/imgui_tables.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/imgui_widgets.cpp -o render_gui/imgui_widgets.o
+#ccache g++ -Wall -D_REENTRANT -g -I. -c render_gui/gui.cpp -o render_gui/gui.o
 
 ccache g++ -Wall -D_REENTRANT -g -I. -c game_scene.cpp -o game_scene.o
 ccache g++ -Wall -D_REENTRANT -g -I. -c main.cpp -o main.o
@@ -134,15 +134,17 @@ ccache g++ -Wall -D_REENTRANT -g core/aabb.o core/basis.o core/color.o \
                         render_core/texture_material_2d.o render_core/texture_material.o \
                         render_core/transparent_texture_material.o \
                         render_core/colored_texture_material_2d.o \
-                        render_immediate/renderer.o \
-                        render_gui/imgui.o \
-                        render_gui/imgui_draw.o \
-                        render_gui/imgui_impl_glfw.o \
-                        render_gui/imgui_impl_opengl3.o \
-                        render_gui/imgui_tables.o \
-                        render_gui/imgui_widgets.o \
-                        render_gui/gui.o \
                         game_scene.o main.o \
                         -lX11 \
                         -o game 
+
+
+                        #render_immediate/renderer.o \
+                        #render_gui/imgui.o \
+                        #render_gui/imgui_draw.o \
+                        #render_gui/imgui_impl_glfw.o \
+                        #render_gui/imgui_impl_opengl3.o \
+                        #render_gui/imgui_tables.o \
+                        #render_gui/imgui_widgets.o \
+                        #render_gui/gui.o \
 
