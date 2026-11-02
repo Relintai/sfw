@@ -129,11 +129,11 @@ public:
 	void set_main_loop(Application *p_main_loop);
 	void iteration(real_t p_step);
 
-	void poll_events();
+	virtual void poll_events();
+	virtual void process_event(SDL_Event &ev);
+
 	bool should_quit();
 	void reset_should_quit();
-
-	//Add SDL_Event* callback methods
 
 	Input();
 

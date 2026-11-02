@@ -314,80 +314,84 @@ void Input::iteration(real_t p_step) {
 void Input::poll_events() {
 	SDL_Event ev;
 	while (SDL_PollEvent(&ev)) {
-		switch (ev.type) {
-			case SDL_EVENT_WINDOW_RESIZED:
-				break;
-			case SDL_EVENT_KEY_UP:
-			case SDL_EVENT_KEY_DOWN: {
-				last_key_modifier_state = ev.key.mod;
-
-				unsigned int keycode = sdl_to_sfw_code(ev.key.key);
-				unsigned int physical_keycode = ev.key.key;
-				unsigned int unicode = ev.key.scancode;
-				SDL_Keymod mods = ev.key.mod;
-
-				bool keypress = ev.key.down;
-				bool echo = ev.key.repeat;
-
-				if (physical_keycode == 0 && keycode == 0 && unicode == 0) {
-					return;
-				}
-
-				if (keycode == 0) {
-					keycode = physical_keycode;
-				}
-
-				Ref<InputEventKey> k;
-				k.instance();
-
-				get_key_modifier_state(mods, k);
-
-				k->set_pressed(keypress);
-
-				if (keycode >= 'a' && keycode <= 'z') {
-					keycode -= 'a' - 'A';
-				}
-
-				k->set_scancode(keycode);
-				k->set_physical_scancode(physical_keycode);
-				k->set_unicode(unicode);
-				k->set_echo(echo);
-
-				//don't set mod state if modifier keys are released by themselves
-				//else event.is_action() will not work correctly here
-				if (!k->is_pressed()) {
-					if (k->get_scancode() == KEY_SHIFT) {
-						k->set_shift(false);
-					} else if (k->get_scancode() == KEY_CONTROL) {
-						k->set_control(false);
-					} else if (k->get_scancode() == KEY_ALT) {
-						k->set_alt(false);
-					} else if (k->get_scancode() == KEY_META) {
-						k->set_metakey(false);
-					}
-				}
-
-				bool last_is_pressed = Input::get_singleton()->is_key_pressed(k->get_scancode());
-				if (k->is_pressed()) {
-					if (last_is_pressed) {
-						k->set_echo(true);
-					}
-				}
-
-				parse_input_event(k);
-
-			} break;
-			case SDL_EVENT_MOUSE_MOTION:
-			case SDL_EVENT_MOUSE_WHEEL:
-			case SDL_EVENT_MOUSE_BUTTON_UP:
-			case SDL_EVENT_MOUSE_BUTTON_DOWN:
-				break;
-			case SDL_EVENT_QUIT:
-				_should_quit = true;
-				break;
-		}
+		process_event(ev);
 	}
 }
+void Input::process_event(SDL_Event &ev) {
+	switch (ev.type) {
+		case SDL_EVENT_WINDOW_RESIZED:
+			break;
+		case SDL_EVENT_KEY_UP:
+		case SDL_EVENT_KEY_DOWN: {
+			last_key_modifier_state = ev.key.mod;
+
+			unsigned int keycode = sdl_to_sfw_code(ev.key.key);
+			unsigned int physical_keycode = ev.key.key;
+			unsigned int unicode = ev.key.scancode;
+			SDL_Keymod mods = ev.key.mod;
+
+			bool keypress = ev.key.down;
+			bool echo = ev.key.repeat;
+
+			if (physical_keycode == 0 && keycode == 0 && unicode == 0) {
+				return;
+			}
+
+			if (keycode == 0) {
+				keycode = physical_keycode;
+			}
+
+			Ref<InputEventKey> k;
+			k.instance();
+
+			get_key_modifier_state(mods, k);
+
+			k->set_pressed(keypress);
+
+			if (keycode >= 'a' && keycode <= 'z') {
+				keycode -= 'a' - 'A';
+			}
+
+			k->set_scancode(keycode);
+			k->set_physical_scancode(physical_keycode);
+			k->set_unicode(unicode);
+			k->set_echo(echo);
+
+			//don't set mod state if modifier keys are released by themselves
+			//else event.is_action() will not work correctly here
+			if (!k->is_pressed()) {
+				if (k->get_scancode() == KEY_SHIFT) {
+					k->set_shift(false);
+				} else if (k->get_scancode() == KEY_CONTROL) {
+					k->set_control(false);
+				} else if (k->get_scancode() == KEY_ALT) {
+					k->set_alt(false);
+				} else if (k->get_scancode() == KEY_META) {
+					k->set_metakey(false);
+				}
+			}
+
+			bool last_is_pressed = Input::get_singleton()->is_key_pressed(k->get_scancode());
+			if (k->is_pressed()) {
+				if (last_is_pressed) {
+					k->set_echo(true);
+				}
+			}
+
+			parse_input_event(k);
+
+		} break;
+		case SDL_EVENT_MOUSE_MOTION:
+		case SDL_EVENT_MOUSE_WHEEL:
+		case SDL_EVENT_MOUSE_BUTTON_UP:
+		case SDL_EVENT_MOUSE_BUTTON_DOWN:
+			break;
+		case SDL_EVENT_QUIT:
+			_should_quit = true;
+			break;
+	}
+}
+
 bool Input::should_quit() {
 	return _should_quit;
 }
