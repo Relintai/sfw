@@ -306,13 +306,18 @@ Vector2 AppWindow::get_canvas() {
 	int height = EM_ASM_INT_V(return canvas.height);
 	return Vector2(width, height);
 #else
-	int ww;
-	int wh;
+	Vector2 c = Vector2(800, 600); // Fallback
 
-	// Todo, test this with high DPI monitors
-	SDL_GetWindowSizeInPixels(_window, &ww, &wh);
+	SDL_DisplayID monitor = SDL_GetPrimaryDisplay();
 
-	return Vector2(ww, wh);
+	const SDL_DisplayMode *mode = SDL_GetCurrentDisplayMode(monitor);
+
+	if (mode) {
+		c.x = mode->w;
+		c.y = mode->h;
+	}
+
+	return c;
 #endif /* __EMSCRIPTEN__ */
 }
 
