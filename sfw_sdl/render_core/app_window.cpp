@@ -53,36 +53,27 @@ void AppWindow::setup_window_attributes(const uint32_t flags) {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 #endif
 
-#if 0
 	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //osx+ems
-	glfwWindowHint(GLFW_STENCIL_BITS, 8); //osx
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8); //osx
 
-	//glfwWindowHint( GLFW_RED_BITS, 8 );
-	//glfwWindowHint( GLFW_GREEN_BITS, 8 );
-	//glfwWindowHint( GLFW_BLUE_BITS, 8 );
-	//glfwWindowHint( GLFW_ALPHA_BITS, 8 );
-	//glfwWindowHint( GLFW_DEPTH_BITS, 24 );
+	// Defaults:
+	//SDL_GL_SetAttribute(SDL_GL_RED_SIZE , 8 );
+	//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8 );
+	//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8 );
+	//SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8 );
+	//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16 );
+	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, GL_TRUE);
 
 	//glfwWindowHint(GLFW_AUX_BUFFERS, Nth);
 	//glfwWindowHint(GLFW_STEREO, GL_TRUE);
-	glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
 
-	// Prevent fullscreen window minimize on focus loss
-	glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
+	// Fix SRGB on intels. TODO check if needed with SDL
+	// requests sRGB-capable visual if 1. Defaults to -1 ("don't care"). This is a request; GL drivers might not comply!
+	//SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, GLFW_TRUE);
 
-	// Fix SRGB on intels
-	glfwWindowHint(GLFW_SRGB_CAPABLE, GLFW_TRUE);
-
-	glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
-	glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
-	// glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); // makes it non-resizable
 	//if(flags & WINDOW_MSAA2) glfwWindowHint(GLFW_SAMPLES, 2); // x2 AA
 	//if(flags & WINDOW_MSAA4) glfwWindowHint(GLFW_SAMPLES, 4); // x4 AA
 	//if(flags & WINDOW_MSAA8) glfwWindowHint(GLFW_SAMPLES, 8); // x8 AA
-
-#endif
 
 	AppWindow::get_singleton()->_window_flags = flags;
 }

@@ -60,7 +60,7 @@ public:
 	double get_time();
 	double get_delta();
 
-	void set_focus(); // window attribute using haz catz language for now
+	void set_focus();
 	int has_focus();
 
 	void set_fullscreen(int enabled);
