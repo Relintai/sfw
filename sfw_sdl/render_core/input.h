@@ -143,22 +143,6 @@ protected:
 	static void get_key_modifier_state(uint16_t mods, Ref<InputEventWithModifiers> state);
 	unsigned int get_mouse_button_state(unsigned int p_button, bool p_pressed);
 
-#if 0
-	unsigned int get_mouse_button_state(unsigned int p_button, int p_type);
-	static void get_key_modifier_state(int mods, Ref<InputEventWithModifiers> state);
-
-	static void GLFWkeyfunCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-	static void GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint);
-	static void GLFWcharmodsfunCallback(GLFWwindow *window, unsigned int codepoint, int mods);
-	static void GLFWmousebuttonfunCallback(GLFWwindow *window, int button, int action, int mods);
-	static void GLFWcursorposfunCallback(GLFWwindow *window, double xpos, double ypos);
-	static void GLFWcursorenterfunCallback(GLFWwindow *window, int entered);
-	static void GLFWscrollfunCallback(GLFWwindow *window, double xoffset, double yoffset);
-	static void GLFWdropfunCallback(GLFWwindow *window, int path_count, const char *paths[]);
-	static void GLFWjoystickfunCallback(int jid, int event);
-	static void GLFWwindowfocusfunCallback(GLFWwindow *window, int focused);
-#endif
-
 protected:
 	bool _should_quit;
 

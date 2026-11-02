@@ -473,6 +473,37 @@ void Input::process_event(SDL_Event &ev) {
 		case SDL_EVENT_QUIT:
 			_should_quit = true;
 			break;
+		case SDL_EVENT_WINDOW_MOUSE_ENTER: {
+			last_mouse_pos_valid = false;
+
+			if (main_loop && (get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
+				main_loop->notification(Application::NOTIFICATION_WM_MOUSE_ENTER);
+			}
+		} break;
+		case SDL_EVENT_WINDOW_MOUSE_LEAVE: {
+			last_mouse_pos_valid = false;
+
+			if (main_loop && (get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
+				main_loop->notification(Application::NOTIFICATION_WM_MOUSE_EXIT);
+			}
+		} break;
+		case SDL_EVENT_WINDOW_FOCUS_GAINED: {
+			window_has_focus = true;
+
+			if (main_loop) {
+				main_loop->notification(Application::NOTIFICATION_WM_FOCUS_IN);
+			}
+		} break;
+		case SDL_EVENT_WINDOW_FOCUS_LOST: {
+			window_has_focus = false;
+
+			release_pressed_events();
+			if (main_loop) {
+				main_loop->notification(Application::NOTIFICATION_WM_FOCUS_OUT);
+			}
+		} break;
+		default:
+			break;
 	}
 }
 
@@ -625,36 +656,6 @@ unsigned int Input::get_mouse_button_state(unsigned int p_button, bool p_pressed
 
 	return last_button_state;
 }
-
-#if 0
-void Input::GLFWcursorenterfunCallback(GLFWwindow *window, int entered) {
-	Input *self = Input::get_singleton();
-
-	self->last_mouse_pos_valid = false;
-
-	if (entered) {
-		if (self->main_loop && (self->get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
-			self->main_loop->notification(Application::NOTIFICATION_WM_MOUSE_ENTER);
-		}
-	} else {
-		if (self->main_loop && (self->get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
-			self->main_loop->notification(Application::NOTIFICATION_WM_MOUSE_EXIT);
-		}
-	}
-}
-void Input::GLFWwindowfocusfunCallback(GLFWwindow *window, int focused) {
-	Input *self = Input::get_singleton();
-
-	self->window_has_focus = focused;
-
-	if (focused) {
-		self->main_loop->notification(Application::NOTIFICATION_WM_FOCUS_IN);
-	} else {
-		self->release_pressed_events();
-		self->main_loop->notification(Application::NOTIFICATION_WM_FOCUS_OUT);
-	}
-}
-#endif
 
 void Input::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_emulated) {
 	// This function does the final delivery of the input event to user land.
