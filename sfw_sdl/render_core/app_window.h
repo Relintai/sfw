@@ -133,9 +133,9 @@ protected:
 	static void glfw_error_callback(int error, const char *description);
 	//static void drop_callback(GLFWwindow *window, int count, const char **paths);
 	static void window_hints(unsigned flags);
-	//GLFWmonitor *find_monitor(int wx, int wy);
+
 	void resize();
-	void glNewFrame();
+	void new_frame();
 	double get_scale();
 	void create_default_cursors();
 

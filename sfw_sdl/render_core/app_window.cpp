@@ -114,7 +114,7 @@ void AppWindow::window_hints(unsigned flags) {
 	AppWindow::get_singleton()->_window_flags = flags;
 }
 
-void AppWindow::glNewFrame() {
+void AppWindow::new_frame() {
 	// @transparent debug
 	// if( input_down(KEY_F1) ) transparent(window_has_transparent()^1);
 	// if( input_down(KEY_F2) ) maximize(window_has_maximize()^1);
@@ -391,7 +391,7 @@ int AppWindow::frame_begin() {
 		return 0;
 	}
 
-	glNewFrame();
+	new_frame();
 
 #if 0
 	glfwPollEvents();
