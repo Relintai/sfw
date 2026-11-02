@@ -636,11 +636,11 @@ GameScene::GameScene() {
 	_font_test_mesh->upload();
 
 	image.instance();
-	image->load_from_file("icon.png");
+	image->load_from_file("../icon.png");
 	//image->bumpmap_to_normalmap();
 
 	texture.instance();
-	//texture->load_image("icon.png");
+	//texture->load_image("../icon.png");
 	texture->create_from_image(image);
 	//ha a textúrának van alpha csatornája:
 	//texture->load_image("download.bmp", GL_RGBA, GL_RGBA);
