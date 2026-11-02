@@ -20,6 +20,7 @@
 struct SDL_Window;
 struct SDL_GLContextState;
 typedef struct SDL_GLContextState *SDL_GLContext;
+struct SDL_Cursor;
 
 class AppWindow {
 public:
@@ -98,7 +99,7 @@ public:
 
 	Vector2 get_dpi();
 
-	enum CURSOR_SHAPES {
+	enum CursorShapes {
 		CURSOR_NONE,
 		CURSOR_HW_ARROW, // default
 		CURSOR_HW_IBEAM, // i-beam text cursor
@@ -109,7 +110,7 @@ public:
 		CURSOR_SW_AUTO, // software cursor, ui driven. note: this is the only icon that may be recorded or snapshotted
 	};
 
-	void set_cursor_shape(const CURSOR_SHAPES shape);
+	void set_cursor_shape(const CursorShapes shape);
 
 	const char *get_clipboard();
 	void set_clipboard(const char *text);
@@ -156,7 +157,7 @@ protected:
 	Color winbgcolor;
 	int _has_icon;
 
-	int _cursorshape = 1;
+	CursorShapes _cursorshape = CURSOR_HW_ARROW;
 
 	Vector2 last_canvas_size;
 
@@ -172,9 +173,10 @@ protected:
 
 	String _title;
 
+	MouseMode _mouse_mode;
+
 	bool _cursors_initialized;
-	//GLFWcursor *cursors[7];
-	//unsigned int cursor_enums[7];
+	SDL_Cursor *cursors[7];
 };
 
 //--STRIP

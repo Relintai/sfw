@@ -18,6 +18,14 @@ void GameScene::input_event(const Ref<InputEvent> &event) {
 				AppWindow::get_singleton()->set_fullscreen(1);
 			} else if (iek->get_scancode() == KEY_T) {
 				AppWindow::get_singleton()->set_title("ASD");
+			} else if (iek->get_scancode() == KEY_C) {
+				AppWindow::get_singleton()->set_cursor_shape(AppWindow::CURSOR_HW_HAND);
+			} else if (iek->get_scancode() == KEY_1) {
+				AppWindow::get_singleton()->set_mouse_mode(AppWindow::MOUSE_MODE_CAPTURED);
+			} else if (iek->get_scancode() == KEY_2) {
+				AppWindow::get_singleton()->set_mouse_mode(AppWindow::MOUSE_MODE_HIDDEN);
+			} else if (iek->get_scancode() == KEY_3) {
+				AppWindow::get_singleton()->set_mouse_mode(AppWindow::MOUSE_MODE_VISIBLE);
 			}
 		}
 	}

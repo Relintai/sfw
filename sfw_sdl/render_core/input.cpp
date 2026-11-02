@@ -479,12 +479,20 @@ void Input::process_event(SDL_Event &ev) {
 			if (main_loop && (get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
 				main_loop->notification(Application::NOTIFICATION_WM_MOUSE_ENTER);
 			}
+
+			if (get_mouse_mode() == MOUSE_MODE_HIDDEN) {
+				SDL_HideCursor();
+			}
 		} break;
 		case SDL_EVENT_WINDOW_MOUSE_LEAVE: {
 			last_mouse_pos_valid = false;
 
 			if (main_loop && (get_mouse_mode() != MOUSE_MODE_CAPTURED)) {
 				main_loop->notification(Application::NOTIFICATION_WM_MOUSE_EXIT);
+			}
+
+			if (get_mouse_mode() == MOUSE_MODE_HIDDEN) {
+				SDL_ShowCursor();
 			}
 		} break;
 		case SDL_EVENT_WINDOW_FOCUS_GAINED: {

@@ -475,67 +475,58 @@ void AppWindow::set_fullscreen(int enabled) {
 }
 
 void AppWindow::create_default_cursors() {
-#if 0
 	if (_cursors_initialized) {
 		return;
 	}
 
 	_cursors_initialized = true;
 
-	unsigned int pixels[16 * 16] = { 0x01000000 }; // ABGR(le) glfw3 note: A(0x00) means 0xFF for some reason
-	GLFWimage image = { 16, 16, (unsigned char *)pixels };
-	GLFWcursor *empty;
+	uint8_t pixels[16 * 16] = { 0x00 };
+	SDL_Cursor *empty;
 
 	for (int x = 0; x < 16 * 16; ++x) {
 		pixels[x] = pixels[0];
 	}
 
-	empty = glfwCreateCursor(&image, 0, 0);
+	empty = SDL_CreateCursor(pixels, pixels, 16, 16, 0, 0);
 
-	for (int i = 0; i < 7; ++i) {
-		cursors[i] = i ? glfwCreateStandardCursor(cursor_enums[i]) : empty;
-	}
-#endif
+	cursors[0] = empty;
+	cursors[1] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_DEFAULT);
+	cursors[2] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_TEXT);
+	cursors[3] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_EW_RESIZE);
+	cursors[4] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_NS_RESIZE);
+	cursors[5] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER);
+	cursors[6] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
 }
 
-void AppWindow::set_cursor_shape(const CURSOR_SHAPES mode) {
-#if 0
-	_cursorshape = static_cast<int>(mode);
+void AppWindow::set_cursor_shape(const CursorShapes mode) {
+	_cursorshape = mode;
 
 	create_default_cursors();
 
-	glfwSetCursor(_window, _cursorshape < 7 ? cursors[_cursorshape] : NULL);
-#endif
+	SDL_SetCursor(cursors[static_cast<int>(mode)]);
 }
 
 void AppWindow::set_mouse_mode(MouseMode p_mode) {
-#if 0
-	int im;
+	_mouse_mode = p_mode;
 
 	if (p_mode == MOUSE_MODE_HIDDEN) {
-		im = GLFW_CURSOR_HIDDEN;
+		SDL_SetWindowRelativeMouseMode(_window, false);
+		SDL_CaptureMouse(false);
+		SDL_HideCursor();
 	} else if (p_mode == MOUSE_MODE_CAPTURED) {
-		im = GLFW_CURSOR_DISABLED;
+		SDL_CaptureMouse(true);
+		SDL_HideCursor();
+		SDL_SetWindowRelativeMouseMode(_window, true);
 	} else {
 		//MOUSE_MODE_VISIBLE
-		im = GLFW_CURSOR_NORMAL;
+		SDL_SetWindowRelativeMouseMode(_window, false);
+		SDL_CaptureMouse(false);
+		SDL_ShowCursor();
 	}
-
-	glfwSetInputMode(_window, GLFW_CURSOR, im);
-#endif
 }
 AppWindow::MouseMode AppWindow::get_mouse_mode() const {
-#if 0
-	int im = glfwGetInputMode(_window, GLFW_CURSOR);
-
-	if (im == GLFW_CURSOR_HIDDEN) {
-		return MOUSE_MODE_HIDDEN;
-	} else if (im == GLFW_CURSOR_DISABLED) {
-		return MOUSE_MODE_CAPTURED;
-	}
-
-#endif
-	return MOUSE_MODE_VISIBLE;
+	return _mouse_mode;
 }
 
 void AppWindow::set_visible(int visible) {
@@ -671,7 +662,8 @@ AppWindow *AppWindow::get_singleton() {
 AppWindow::AppWindow() {
 	_singleton = this;
 
-	//_window = NULL;
+	_window = NULL;
+	_context = NULL;
 
 	boot_time = 0;
 
@@ -695,7 +687,7 @@ AppWindow::AppWindow() {
 
 	_has_icon = 0;
 
-	_cursorshape = 1;
+	_cursorshape = CURSOR_HW_ARROW;
 
 	width = 0;
 	height = 0;
@@ -709,19 +701,9 @@ AppWindow::AppWindow() {
 
 	_cursors_initialized = false;
 
-#if 0
 	for (int i = 0; i < 7; ++i) {
 		cursors[i] = NULL;
 	}
-
-	cursor_enums[0] = 0;
-	cursor_enums[1] = GLFW_ARROW_CURSOR;
-	cursor_enums[2] = GLFW_IBEAM_CURSOR;
-	cursor_enums[3] = GLFW_HRESIZE_CURSOR;
-	cursor_enums[4] = GLFW_VRESIZE_CURSOR;
-	cursor_enums[5] = GLFW_HAND_CURSOR;
-	cursor_enums[6] = GLFW_CROSSHAIR_CURSOR;
-#endif
 
 	// According to SDL Docs, subsystem inits are refcounted, so we should be okay with doing this
 	bool success = SDL_InitSubSystem(SDL_INIT_VIDEO);
@@ -732,6 +714,22 @@ AppWindow::AppWindow() {
 }
 AppWindow::~AppWindow() {
 	_singleton = NULL;
+
+	for (int i = 0; i < 7; ++i) {
+		if (cursors[i]) {
+			SDL_DestroyCursor(cursors[i]);
+		}
+	}
+
+	if (_context) {
+		SDL_GL_DestroyContext(_context);
+		_context = NULL;
+	}
+
+	if (_window) {
+		SDL_DestroyWindow(_window);
+		_window = NULL;
+	}
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
