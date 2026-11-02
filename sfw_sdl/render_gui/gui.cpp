@@ -9,8 +9,8 @@
 #include "render_core/app_window.h"
 
 #include "imgui.h"
-#include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_impl_sdl3.h"
 #include <stdio.h>
 
 //--STRIP
@@ -80,10 +80,11 @@ void GUI::initialize() {
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsLight();
 
-	GLFWwindow *window = (GLFWwindow *)AppWindow::get_singleton()->get_window_handle();
+	SDL_Window *window = AppWindow::get_singleton()->get_sdl_window();
+	SDL_GLContext context = AppWindow::get_singleton()->get_sdl_gl_context();
 
 	// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplSDL3_InitForOpenGL(window, context);
 #ifdef __EMSCRIPTEN__
 	ImGui_ImplGlfw_InstallEmscriptenCallbacks(window, "#canvas");
 #endif
@@ -110,7 +111,7 @@ void GUI::initialize() {
 void GUI::destroy() {
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
 	ERR_FAIL_COND(!_singleton);
@@ -120,7 +121,7 @@ void GUI::destroy() {
 void GUI::new_frame() {
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 }
 
