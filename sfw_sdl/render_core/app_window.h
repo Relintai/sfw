@@ -52,7 +52,6 @@ public:
 	void set_color(unsigned color);
 	Vector2 get_canvas();
 	void *get_handle();
-	char *get_stats();
 
 	uint64_t frame();
 	int get_width();

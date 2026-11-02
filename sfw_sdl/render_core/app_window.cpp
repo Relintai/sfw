@@ -253,42 +253,6 @@ bool AppWindow::create(bool full_Screen, float canvas_scale, unsigned int flags,
 	return create_from_handle(NULL, full_Screen, canvas_scale, flags, window_scale);
 }
 
-char *AppWindow::get_stats() {
-	static double num_frames = 0, begin = FLT_MAX, prev_frame = 0;
-
-	double now = SFWTime::time_ss();
-	if (boot_time < 0) {
-		boot_time = now;
-	}
-
-	if (begin > now) {
-		begin = now;
-		num_frames = 0;
-	}
-	if ((now - begin) >= 0.25f) {
-		fps = num_frames * (1.f / (now - begin));
-	}
-	if ((now - begin) > 1) {
-		begin = now + ((now - begin) - 1);
-		num_frames = 0;
-	}
-
-	//const char *cmdline = app_cmdline();
-
-	// @todo: print %used/%avail kib mem, %used/%avail objs as well
-	static char buf[256];
-	snprintf(buf, 256, "%s | boot %.2fs | %5.2ffps (%.2fms)",
-			title,
-			!boot_time ? now : boot_time,
-			fps, (now - prev_frame) * 1000.f);
-	//cmdline[0] ? " | " : "", cmdline[0] ? cmdline : "");
-
-	prev_frame = now;
-	++num_frames;
-
-	return buf + strspn(buf, " ");
-}
-
 int AppWindow::frame_begin() {
 	Input::get_singleton()->poll_events();
 
