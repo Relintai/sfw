@@ -25,54 +25,41 @@
 #include <unistd.h>
 #endif
 
-#ifndef SFW_H
-
-#ifdef __APPLE__
-#ifndef _APPLE_NO_IMPL_
-#define _APPLE_NO_IMPL_
-#endif //_APPLE_NO_IMPL_
-#endif //__APPLE__
-
-#include "sfw.h"
-
-#ifdef __APPLE__
-#undef ONLY_GLAD
-#include "sfw_3rd.m"
-#endif //__APPLE__
-
-#endif //SFW_H
-
-// On OSX sfw_3rd.m has to be compiled manually on Objective C Mode.
-#ifndef __APPLE__
-
-#ifndef SFW_3RD_IMPL
-#define SFW_3RD_IMPL
-
-#if defined(__linux__)
-//typedef XID Font;
-#define Font The_Font_I_dont_care
+#if defined(_WIN64) || defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
 
 // If you create a new project in Visual Studio, and add the library to it, these will be treated as errors, so disable them for ease of use.
 // This is not an issue when compiling from the command line.
 #if defined(_MSC_VER)
 //unary minus operator applied to unsigned type, result still unsigned
-#pragma warning (disable: 4146)
+#pragma warning(disable : 4146)
 //'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 //'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-#pragma warning (disable: 4996)
+#pragma warning(disable : 4996)
 //potentially uninitialized local pointer variable 'w_ptr' used
-#pragma warning (disable: 4703)
+#pragma warning(disable : 4703)
 #endif
 
-// Note: On Windows we need to make sure that 
-// GLFW includes it's needed windows headers first, as it has quite a bit of setup.
-// Also windows headers can define quite a bit of stuff like far and near macros
-// Wee need to make sure it's safe to undo those as soon as possible
-// This means that <windows.h> cannot be included in sfw.h if rendering is enabled.
-// Also since it pull in lots of defines it probably shouldn't anyway.
-#undef ONLY_GLAD
-#include "sfw_3rd.m"
+#define SFW_3RD_IMPL
+
+#define GLAD_GL_IMPLEMENTATION // glad
+#define STB_TRUETYPE_IMPLEMENTATION
+#define STB_RECT_PACK_IMPLEMENTATION
+#define IMGUI_DISABLE_STB_RECT_PACK_IMPLEMENTATION
+
+#define STB_IMAGE_IMPLEMENTATION // stbi
+#define STB_IMAGE_WRITE_IMPLEMENTATION // stbi_write
+#define STB_SPRINTF_IMPLEMENTATION // stb_sprintf
+#define STB_SPRINTF_NOUNALIGNED // stb_sprintf
+
+#include "sfw.h"
+
+#if defined(__linux__)
+//typedef XID Font;
+#define Font The_Font_I_dont_care
+#endif
 
 #undef CursorShape
 
@@ -234,9 +221,6 @@
 #undef GAMEPAD_NAME
 #endif
 
-#endif //SFW_3RD_IMPL
-
-#endif // #ifndef __APPLE__
 
 //===================  CORE SECTION  ===================
 

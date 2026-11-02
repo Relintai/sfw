@@ -840,35 +840,36 @@
 
 {{FILE:sfw/render_gui/imgui.h}}
 
-// expose glfw/glad apis
 #if __EMSCRIPTEN__
     #include <GL/glew.h>
     #include <GLFW/glfw3.h>
     #include <emscripten.h>
     #include <emscripten/html5.h>
     #define gladLoadGL(func) (glewExperimental = true, glewInit() == GLEW_OK) ///-
-#else
-    #if defined(_WIN64) || defined(_WIN32) /*&& is(tcc)*/ // && ENABLE_DLL
-    #ifdef GLAD_API_CALL
-    #undef GLAD_API_CALL
-    #endif
-    #define GLAD_API_CALL extern 
-    //TODO Figure out why did this build, and why it now doesn't want to work in the amalgamated build
-    // API ///-
-    #endif
-    
-    #ifndef GLAD_GL_H_
-
-    #ifdef __APPLE__
-    #ifndef _APPLE_NO_IMPL_
-    #define _APPLE_NO_IMPL_
-    #endif //_APPLE_NO_IMPL_
-    #endif //__APPLE__
-
-    #define ONLY_GLAD
-
-    #include "sfw_3rd.m"
-    #endif
 #endif
+
+#if defined(_WIN64) || defined(_WIN32) /*&& is(tcc)*/ // && ENABLE_DLL
+#ifdef GLAD_API_CALL
+#undef GLAD_API_CALL
+#endif
+#define GLAD_API_CALL extern 
+//TODO Figure out why did this build, and why it now doesn't want to work in the amalgamated build
+// API ///-
+#endif
+
+{{FILE:sfw/render_core/3rd_glad.h}}
+
+{{FILE:sfw/render_gui/imstb_rectpack.h}}
+
+{{FILE:sfw/render_core/3rd_stb_truetype.h}}
+
+{{FILE:sfw/render_core/3rd_stb_image.h}}
+
+{{FILE:sfw/render_core/3rd_stb_image_write.h}}
+
+#undef freelist
+#undef _GNU_SOURCE
+#undef timeGetTime
+#undef Time
 
 #endif
