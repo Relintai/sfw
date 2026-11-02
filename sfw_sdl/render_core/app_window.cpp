@@ -516,15 +516,12 @@ void AppWindow::set_clipboard(const char *text) {
 #endif
 }
 
-double AppWindow::get_scale() { // ok? @testme
-#if 0
-	float xscale, yscale;
-	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-	glfwGetMonitorContentScale(monitor, &xscale, &yscale);
-	return MAX(xscale, yscale);
-#endif
+float AppWindow::get_display_content_scale() {
+	SDL_DisplayID monitor = SDL_GetDisplayForWindow(_window);
 
-	return 0;
+	float scale = SDL_GetDisplayContentScale(monitor);
+
+	return scale;
 }
 
 void *AppWindow::get_window_handle() {

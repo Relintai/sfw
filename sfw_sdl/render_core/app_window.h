@@ -88,6 +88,7 @@ public:
 	void reset_viewport();
 
 	Vector2 get_dpi();
+	float get_display_content_scale();
 
 	enum CursorShapes {
 		CURSOR_NONE,
@@ -117,7 +118,6 @@ protected:
 
 	void resize();
 	void new_frame();
-	double get_scale();
 	void create_default_cursors();
 
 	static AppWindow *_singleton;
