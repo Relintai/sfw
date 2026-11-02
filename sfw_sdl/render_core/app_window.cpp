@@ -71,9 +71,14 @@ void AppWindow::setup_window_attributes(const uint32_t flags) {
 	// requests sRGB-capable visual if 1. Defaults to -1 ("don't care"). This is a request; GL drivers might not comply!
 	//SDL_GL_SetAttribute(SDL_GL_FRAMEBUFFER_SRGB_CAPABLE, GLFW_TRUE);
 
-	//if(flags & WINDOW_MSAA2) glfwWindowHint(GLFW_SAMPLES, 2); // x2 AA
-	//if(flags & WINDOW_MSAA4) glfwWindowHint(GLFW_SAMPLES, 4); // x4 AA
-	//if(flags & WINDOW_MSAA8) glfwWindowHint(GLFW_SAMPLES, 8); // x8 AA
+	// TODO likely needs SDL_GL_MULTISAMPLEBUFFERS
+
+	if (flags & WINDOW_MSAA2)
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2); // x2 AA
+	if (flags & WINDOW_MSAA4)
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4); // x4 AA
+	if (flags & WINDOW_MSAA8)
+		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8); // x8 AA
 
 	AppWindow::get_singleton()->_window_flags = flags;
 }
@@ -128,42 +133,47 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	setup_window_attributes(flags);
 
-#if 0
-	GLFWmonitor *monitor = NULL;
-#endif
-#ifndef __EMSCRIPTEN__
+	SDL_DisplayID monitor = 0;
 
-#if 0
+#ifndef __EMSCRIPTEN__
 	if (FLAGS_FULLSCREEN || FLAGS_FULLSCREEN_DESKTOP) {
-		monitor = glfwGetPrimaryMonitor();
+		monitor = SDL_GetPrimaryDisplay();
 	}
 
 	if (FLAGS_FULLSCREEN_DESKTOP) {
-		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-		glfwWindowHint(GLFW_RED_BITS, mode->redBits);
-		glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
-		glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
-		glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+		const SDL_DisplayMode *mode = SDL_GetCurrentDisplayMode(monitor);
 
-		winWidth = mode->width;
-		winHeight = mode->height;
+		if (mode) {
+			const SDL_PixelFormatDetails *fd = SDL_GetPixelFormatDetails(mode->format);
+
+			if (fd) {
+				SDL_GL_SetAttribute(SDL_GL_RED_SIZE, fd->Rbits);
+				SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, fd->Gbits);
+				SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, fd->Bbits);
+				//glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+			}
+
+			//dpi = mode->pixel_density;
+
+			winWidth = mode->w;
+			winHeight = mode->h;
+		}
 	}
-
 #endif
 
-#if 0
+	uint64_t window_flags = 0;
+
 	if (FLAGS_WINDOWED) {
 #ifndef __EMSCRIPTEN__
 		if (FLAGS_TRANSPARENT) { // @transparent
-			//glfwWindowHint(GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE); // see through. requires undecorated
-			//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE); // always on top
-			glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+			window_flags |= SDL_WINDOW_TRANSPARENT;
 		}
 
 		if (flags & WINDOW_BORDERLESS) {
-			glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+			window_flags |= SDL_WINDOW_BORDERLESS;
 		}
 #endif
+
 		// windowed
 		float ratio = (float)winWidth / (winHeight + !winHeight);
 
@@ -178,73 +188,42 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 			}
 		}
 	}
-#endif
-#endif
 
-	_window = SDL_CreateWindow("", winWidth, winHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+	if (!(flags & WINDOW_FIXED)) {
+		window_flags |= SDL_WINDOW_RESIZABLE;
+	}
+
+	// Only do this if opengl is enabled
+	window_flags |= SDL_WINDOW_OPENGL;
+
+	_window = SDL_CreateWindow("", winWidth, winHeight, window_flags);
 
 	ERR_FAIL_COND_V_MSG(!_window, false, "SDL Window creation failed");
 
-#if 0
-	glfwGetFramebufferSize(_window, &w, &h); //glfwGetWindowSize(window, &w, &h);
+	// Only do this if opengl is enabled
+	_context = SDL_GL_CreateContext(_window);
 
-	if (flags & WINDOW_FIXED) { // disable resizing
-		glfwSetWindowSizeLimits(_window, w, h, w, h);
-	}
+	// Todo, test this with high DPI monitors
+	SDL_GetWindowSizeInPixels(_window, &w, &h);
 
 	if (flags & (WINDOW_SQUARE | WINDOW_PORTRAIT | WINDOW_LANDSCAPE | WINDOW_ASPECT)) { // keep aspect ratio
 		aspect_lock(w, h);
 	}
-#endif
-
-#if 0
-#ifndef __EMSCRIPTEN__
-	if (FLAGS_WINDOWED) {
-		// center window
-		monitor = monitor ? monitor : glfwGetPrimaryMonitor();
-		const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-
-		int area_width = mode->width;
-		int area_height = mode->height;
-		glfwGetMonitorWorkarea(monitor, &xpos, &ypos, &area_width, &area_height);
-
-		xpos = xpos + (area_width - winWidth) / 2;
-		ypos = ypos + (area_height - winHeight) / 2;
-		glfwSetWindowPos(_window, xpos, ypos);
-		//printf("%dx%d @(%d,%d) [res:%dx%d]\n", winWidth, winHeight, xpos,ypos, area_width, area_height );
-
-		wprev = w;
-		hprev = h;
-		xprev = xpos;
-		yprev = ypos;
-	}
-#endif
-
-	glfwMakeContextCurrent(_window);
 
 #ifdef __EMSCRIPTEN__
 	if (FLAGS_FULLSCREEN) {
 		fullscreen(1);
 	}
 #else
-	int gl_version = gladLoadGL(glfwGetProcAddress);
-#endif
-#endif
-
-	_context = SDL_GL_CreateContext(_window);
-
 	//int gl_version = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
 	int gl_version = gladLoadGL(SDL_GL_GetProcAddress);
-
-	//glDebugEnable();
-
-	//glEnable(GL_TEXTURE_2D);
+#endif
 
 	// 0:disable vsync, 1:enable vsync, <0:adaptive (allow vsync when framerate is higher than syncrate and disable vsync when framerate drops below syncrate)
 	//flags |= _vsync ? WINDOW_VSYNC : WINDOW_VSYNC_DISABLED;
 	//flags |= _vsync_adaptive ? WINDOW_VSYNC_ADAPTIVE : 0;
 
-	flags |= WINDOW_VSYNC_DISABLED;
+	//flags |= WINDOW_VSYNC_DISABLED;
 
 	//int has_adaptive_vsync = glfwExtensionSupported("WGL_EXT_swap_control_tear") || glfwExtensionSupported("GLX_EXT_swap_control_tear") || //glfwExtensionSupported("EXT_swap_control_tear");
 	//int wants_adaptive_vsync = (flags & WINDOW_VSYNC_ADAPTIVE);
@@ -258,20 +237,7 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	//PRINTF("GPU device: %s\n", glGetString(GL_RENDERER));
 	//PRINTF("GPU driver: %s\n", glGetString(GL_VERSION));
 
-#ifndef __EMSCRIPTEN__
 	LOG_MSG("GPU OpenGL: " + String::num(GLAD_VERSION_MAJOR(gl_version)) + " " + String::num(GLAD_VERSION_MINOR(gl_version)));
-
-#if 0
-	if (FLAGS_TRANSPARENT) { // @transparent
-		glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE); // @todo: is decorated an attrib or a hint?
-
-		if (canvas_scale >= 1) {
-			glfwMaximizeWindow(_window);
-		}
-	}
-#endif
-
-#endif
 
 	width = get_width();
 	height = get_height();
@@ -279,19 +245,6 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	RenderState::window_update_render_rect_size(width, height);
 
 	// cursor(flags & WINDOW_NO_MOUSE ? false : true);
-#if 0
-	glfwSetDropCallback(_window, drop_callback);
-#endif
-
-	// camera inits for fwk_pre_init() -> ddraw_flush() -> get_active_camera()
-	// static camera_t cam = {0}; id44(cam.view); id44(cam.proj); extern camera_t *last_camera; last_camera = &cam;
-	//fwk_pre_init();
-
-	//fwk_post_init(mode->refreshRate);
-
-#if 0
-	Input::get_singleton()->_setup_window_callbacks();
-#endif
 
 	return true;
 }
