@@ -318,8 +318,65 @@ void Input::poll_events() {
 			case SDL_EVENT_WINDOW_RESIZED:
 				break;
 			case SDL_EVENT_KEY_UP:
-			case SDL_EVENT_KEY_DOWN:
-				break;
+			case SDL_EVENT_KEY_DOWN: {
+				last_key_modifier_state = ev.key.mod;
+
+				unsigned int keycode = sdl_to_sfw_code(ev.key.key);
+				unsigned int physical_keycode = ev.key.key;
+				unsigned int unicode = ev.key.scancode;
+				SDL_Keymod mods = ev.key.mod;
+
+				bool keypress = ev.key.down;
+				bool echo = ev.key.repeat;
+
+				if (physical_keycode == 0 && keycode == 0 && unicode == 0) {
+					return;
+				}
+
+				if (keycode == 0) {
+					keycode = physical_keycode;
+				}
+
+				Ref<InputEventKey> k;
+				k.instance();
+
+				get_key_modifier_state(mods, k);
+
+				k->set_pressed(keypress);
+
+				if (keycode >= 'a' && keycode <= 'z') {
+					keycode -= 'a' - 'A';
+				}
+
+				k->set_scancode(keycode);
+				k->set_physical_scancode(physical_keycode);
+				k->set_unicode(unicode);
+				k->set_echo(echo);
+
+				//don't set mod state if modifier keys are released by themselves
+				//else event.is_action() will not work correctly here
+				if (!k->is_pressed()) {
+					if (k->get_scancode() == KEY_SHIFT) {
+						k->set_shift(false);
+					} else if (k->get_scancode() == KEY_CONTROL) {
+						k->set_control(false);
+					} else if (k->get_scancode() == KEY_ALT) {
+						k->set_alt(false);
+					} else if (k->get_scancode() == KEY_META) {
+						k->set_metakey(false);
+					}
+				}
+
+				bool last_is_pressed = Input::get_singleton()->is_key_pressed(k->get_scancode());
+				if (k->is_pressed()) {
+					if (last_is_pressed) {
+						k->set_echo(true);
+					}
+				}
+
+				parse_input_event(k);
+
+			} break;
 			case SDL_EVENT_MOUSE_MOTION:
 			case SDL_EVENT_MOUSE_WHEEL:
 			case SDL_EVENT_MOUSE_BUTTON_UP:
@@ -462,6 +519,13 @@ int Input::sdl_to_sfw_code(int sdl_code) {
 	return sdl_code;
 }
 
+void Input::get_key_modifier_state(uint16_t mods, Ref<InputEventWithModifiers> state) {
+	state->set_shift((mods & SDL_KMOD_LSHIFT) || (mods & SDL_KMOD_RSHIFT));
+	state->set_control((mods & SDL_KMOD_LCTRL) || (mods & SDL_KMOD_RCTRL));
+	state->set_alt((mods & SDL_KMOD_LALT)); //altgr should not count as alt
+	state->set_metakey((mods & SDL_KMOD_LGUI) || (mods & SDL_KMOD_RGUI));
+}
+
 #if 0
 unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) {
 	unsigned int mask = 1 << (p_button - 1);
@@ -475,12 +539,6 @@ unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) 
 	return last_button_state;
 }
 
-void Input::get_key_modifier_state(int mods, Ref<InputEventWithModifiers> state) {
-	state->set_shift((mods & GLFW_MOD_SHIFT));
-	state->set_control((mods & GLFW_MOD_CONTROL));
-	state->set_alt((mods & GLFW_MOD_ALT)); //altgr should not count as alt
-	state->set_metakey((mods & GLFW_MOD_SUPER));
-}
 
 void Input::GLFWkeyfunCallback(GLFWwindow *window, int glfw_keycode, int scancode, int action, int mods) {
 	Input *self = Input::get_singleton();

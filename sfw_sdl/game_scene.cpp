@@ -7,7 +7,7 @@
 #include "render_core/3rd_glad.h"
 
 void GameScene::input_event(const Ref<InputEvent> &event) {
-	//ERR_PRINT(event->as_text());
+	ERR_PRINT(event->as_text());
 }
 
 void GameScene::update(float delta) {

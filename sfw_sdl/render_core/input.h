@@ -24,7 +24,7 @@
 #endif
 
 class Application;
-struct GLFWwindow;
+union SDL_Event;
 
 class Input : public Object {
 	SFW_OBJECT(Input, Object);
@@ -133,6 +133,8 @@ public:
 	bool should_quit();
 	void reset_should_quit();
 
+	//Add SDL_Event* callback methods
+
 	Input();
 
 	//Called by AppWindow
@@ -140,6 +142,8 @@ public:
 
 protected:
 	static int sdl_to_sfw_code(int sdl_code);
+
+	static void get_key_modifier_state(uint16_t mods, Ref<InputEventWithModifiers> state);
 
 #if 0
 	unsigned int get_mouse_button_state(unsigned int p_button, int p_type);
