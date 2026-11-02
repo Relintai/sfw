@@ -539,73 +539,6 @@ unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) 
 	return last_button_state;
 }
 
-
-void Input::GLFWkeyfunCallback(GLFWwindow *window, int glfw_keycode, int scancode, int action, int mods) {
-	Input *self = Input::get_singleton();
-
-	self->last_key_modifier_state = mods;
-
-	unsigned int keycode = glfw_to_sfw_code(glfw_keycode);
-	unsigned int physical_keycode = keycode;
-	unsigned int unicode = scancode;
-
-	bool keypress = action == GLFW_PRESS;
-	bool echo = action == GLFW_REPEAT;
-
-	if (physical_keycode == 0 && keycode == 0 && unicode == 0) {
-		return;
-	}
-
-	if (keycode == 0) {
-		keycode = physical_keycode;
-	}
-
-	Ref<InputEventKey> k;
-	k.instance();
-
-	get_key_modifier_state(mods, k);
-
-	k->set_pressed(keypress);
-
-	if (keycode >= 'a' && keycode <= 'z') {
-		keycode -= 'a' - 'A';
-	}
-
-	k->set_scancode(keycode);
-	k->set_physical_scancode(physical_keycode);
-	k->set_unicode(unicode);
-	k->set_echo(echo);
-
-	//don't set mod state if modifier keys are released by themselves
-	//else event.is_action() will not work correctly here
-	if (!k->is_pressed()) {
-		if (k->get_scancode() == KEY_SHIFT) {
-			k->set_shift(false);
-		} else if (k->get_scancode() == KEY_CONTROL) {
-			k->set_control(false);
-		} else if (k->get_scancode() == KEY_ALT) {
-			k->set_alt(false);
-		} else if (k->get_scancode() == KEY_META) {
-			k->set_metakey(false);
-		}
-	}
-
-	bool last_is_pressed = Input::get_singleton()->is_key_pressed(k->get_scancode());
-	if (k->is_pressed()) {
-		if (last_is_pressed) {
-			k->set_echo(true);
-		}
-	}
-
-	self->parse_input_event(k);
-}
-void Input::GLFWcharfunCallback(GLFWwindow *window, unsigned int codepoint) {
-	ERR_PRINT("GLFWcharfunCallback");
-}
-void Input::GLFWcharmodsfunCallback(GLFWwindow *window, unsigned int codepoint, int mods) {
-	ERR_PRINT("GLFWcharmodsfunCallback");
-}
-
 void Input::GLFWmousebuttonfunCallback(GLFWwindow *window, int button, int action, int mods) {
 	Input *self = Input::get_singleton();
 
@@ -711,16 +644,6 @@ void Input::GLFWcursorenterfunCallback(GLFWwindow *window, int entered) {
 		}
 	}
 }
-void Input::GLFWscrollfunCallback(GLFWwindow *window, double xoffset, double yoffset) {
-	ERR_PRINT("GLFWscrollfunCallback");
-}
-void Input::GLFWdropfunCallback(GLFWwindow *window, int path_count, const char *paths[]) {
-	ERR_PRINT("GLFWdropfunCallback");
-}
-void Input::GLFWjoystickfunCallback(int jid, int event) {
-	ERR_PRINT("GLFWjoystickfunCallback");
-}
-
 void Input::GLFWwindowfocusfunCallback(GLFWwindow *window, int focused) {
 	Input *self = Input::get_singleton();
 
@@ -734,23 +657,6 @@ void Input::GLFWwindowfocusfunCallback(GLFWwindow *window, int focused) {
 	}
 }
 #endif
-
-void Input::_setup_window_callbacks() {
-#if 0
-	GLFWwindow *window = (GLFWwindow *)AppWindow::get_singleton()->get_handle();
-
-	glfwSetKeyCallback(window, &Input::GLFWkeyfunCallback);
-	//glfwSetCharCallback(window, &Input::GLFWcharfunCallback);
-	//glfwSetCharModsCallback(window, &Input::GLFWcharmodsfunCallback);
-	glfwSetMouseButtonCallback(window, &Input::GLFWmousebuttonfunCallback);
-	glfwSetCursorPosCallback(window, &Input::GLFWcursorposfunCallback);
-	glfwSetCursorEnterCallback(window, &Input::GLFWcursorenterfunCallback);
-	//glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
-	//glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
-	//glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
-	glfwSetWindowFocusCallback(window, &Input::GLFWwindowfocusfunCallback);
-#endif
-}
 
 void Input::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_emulated) {
 	// This function does the final delivery of the input event to user land.

@@ -137,9 +137,6 @@ public:
 
 	Input();
 
-	//Called by AppWindow
-	void _setup_window_callbacks();
-
 protected:
 	static int sdl_to_sfw_code(int sdl_code);
 
