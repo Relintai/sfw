@@ -118,22 +118,12 @@ protected:
 	SDL_Window *_window;
 	SDL_GLContext _context;
 
-	int w;
-	int h;
-	int xpos;
-	int ypos;
-
-	int xprev;
-	int yprev;
-	int wprev;
-	int hprev;
+	int _w;
+	int _h;
 
 	CursorShapes _cursorshape = CURSOR_HW_ARROW;
 
-	Vector2 last_canvas_size;
-
-	int width;
-	int height;
+	Vector2 _last_canvas_size;
 
 	unsigned int _window_flags;
 
@@ -145,7 +135,7 @@ protected:
 	MouseMode _mouse_mode;
 
 	bool _cursors_initialized;
-	SDL_Cursor *cursors[7];
+	SDL_Cursor *_cursors[7];
 };
 
 //--STRIP

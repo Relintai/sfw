@@ -97,13 +97,10 @@ void AppWindow::new_frame() {
     //printf("%dx%d\n", w, h);
 #else
 	// Todo, test this with high DPI monitors
-	SDL_GetWindowSizeInPixels(_window, &w, &h);
+	SDL_GetWindowSizeInPixels(_window, &_w, &_h);
 #endif
 
-	AppWindow::get_singleton()->width = w;
-	AppWindow::get_singleton()->height = h;
-
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, _w, _h);
 }
 
 bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_scale, unsigned int flags, float window_scale) {
@@ -204,7 +201,7 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	_context = SDL_GL_CreateContext(_window);
 
 	// Todo, test this with high DPI monitors
-	SDL_GetWindowSizeInPixels(_window, &w, &h);
+	SDL_GetWindowSizeInPixels(_window, &_w, &_h);
 
 #ifdef __EMSCRIPTEN__
 	if (FLAGS_FULLSCREEN) {
@@ -235,10 +232,7 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	LOG_MSG("GPU OpenGL: " + String::num(GLAD_VERSION_MAJOR(gl_version)) + " " + String::num(GLAD_VERSION_MINOR(gl_version)));
 
-	width = get_width();
-	height = get_height();
-
-	RenderState::window_update_render_rect_size(width, height);
+	RenderState::window_update_render_rect_size(_w, _h);
 
 	if (!_title.empty()) {
 		set_title(_title);
@@ -273,7 +267,7 @@ void AppWindow::frame_swap() {
 }
 
 void AppWindow::reset_viewport() {
-	glViewport(0, 0, width, height);
+	glViewport(0, 0, _w, _h);
 }
 
 void AppWindow::resize() {
@@ -284,12 +278,12 @@ void AppWindow::resize() {
 		return;
 	EM_ASM(canvas.canResize = 1);
 	Vector2 size = canvas();
-	if (size.x != last_canvas_size.x || size.y != last_canvas_size.y) {
+	if (size.x != _last_canvas_size.x || size.y != _last_canvas_size.y) {
 		w = size.x;
 		h = size.y;
-		width = w;
-		height = h;
-		last_canvas_size = Vector2(w, h);
+		_width = w;
+		_height = h;
+		_last_canvas_size = Vector2(w, h);
 		emscripten_set_canvas_size(w, h);
 	}
 #endif /* __EMSCRIPTEN__ */
@@ -318,10 +312,10 @@ Vector2 AppWindow::get_canvas() {
 }
 
 int AppWindow::get_width() {
-	return w;
+	return _w;
 }
 int AppWindow::get_height() {
-	return h;
+	return _h;
 }
 
 bool AppWindow::maximize_window() {
@@ -433,13 +427,13 @@ void AppWindow::create_default_cursors() {
 
 	empty = SDL_CreateCursor(pixels, pixels, 16, 16, 0, 0);
 
-	cursors[0] = empty;
-	cursors[1] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_DEFAULT);
-	cursors[2] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_TEXT);
-	cursors[3] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_EW_RESIZE);
-	cursors[4] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_NS_RESIZE);
-	cursors[5] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER);
-	cursors[6] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
+	_cursors[0] = empty;
+	_cursors[1] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_DEFAULT);
+	_cursors[2] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_TEXT);
+	_cursors[3] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_EW_RESIZE);
+	_cursors[4] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_NS_RESIZE);
+	_cursors[5] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_POINTER);
+	_cursors[6] = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
 }
 
 void AppWindow::set_cursor_shape(const CursorShapes mode) {
@@ -447,7 +441,7 @@ void AppWindow::set_cursor_shape(const CursorShapes mode) {
 
 	create_default_cursors();
 
-	SDL_SetCursor(cursors[static_cast<int>(mode)]);
+	SDL_SetCursor(_cursors[static_cast<int>(mode)]);
 }
 
 void AppWindow::set_mouse_mode(MouseMode p_mode) {
@@ -473,7 +467,7 @@ AppWindow::MouseMode AppWindow::get_mouse_mode() const {
 }
 
 double AppWindow::get_aspect() {
-	return (double)w / (h + !h);
+	return (double)_w / (_h + !_h);
 }
 
 bool AppWindow::has_clipboard_text() {
@@ -519,21 +513,10 @@ AppWindow::AppWindow() {
 	_window = NULL;
 	_context = NULL;
 
-	w = 0;
-	h = 0;
-
-	xpos = 0;
-	ypos = 0;
-
-	xprev = 0;
-	yprev = 0;
-	wprev = 0;
-	hprev = 0;
+	_w = 0;
+	_h = 0;
 
 	_cursorshape = CURSOR_HW_ARROW;
-
-	width = 0;
-	height = 0;
 
 	_window_flags = 0;
 
@@ -543,7 +526,7 @@ AppWindow::AppWindow() {
 	_cursors_initialized = false;
 
 	for (int i = 0; i < 7; ++i) {
-		cursors[i] = NULL;
+		_cursors[i] = NULL;
 	}
 
 	// According to SDL Docs, subsystem inits are refcounted, so we should be okay with doing this
@@ -557,8 +540,8 @@ AppWindow::~AppWindow() {
 	_singleton = NULL;
 
 	for (int i = 0; i < 7; ++i) {
-		if (cursors[i]) {
-			SDL_DestroyCursor(cursors[i]);
+		if (_cursors[i]) {
+			SDL_DestroyCursor(_cursors[i]);
 		}
 	}
 
