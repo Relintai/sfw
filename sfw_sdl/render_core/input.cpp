@@ -13,6 +13,9 @@
 #include "render_core/input_map.h"
 #include "render_core/keyboard.h"
 #include "render_core/texture.h"
+
+#include <SDL3/SDL.h>
+
 //--STRIP
 
 Input *Input::get_singleton() {
@@ -308,6 +311,33 @@ void Input::iteration(real_t p_step) {
 	}
 }
 
+void Input::poll_events() {
+	SDL_Event ev;
+	while (SDL_PollEvent(&ev)) {
+		switch (ev.type) {
+			case SDL_EVENT_WINDOW_RESIZED:
+				break;
+			case SDL_EVENT_KEY_UP:
+			case SDL_EVENT_KEY_DOWN:
+				break;
+			case SDL_EVENT_MOUSE_MOTION:
+			case SDL_EVENT_MOUSE_WHEEL:
+			case SDL_EVENT_MOUSE_BUTTON_UP:
+			case SDL_EVENT_MOUSE_BUTTON_DOWN:
+				break;
+			case SDL_EVENT_QUIT:
+				_should_quit = true;
+				break;
+		}
+	}
+}
+bool Input::should_quit() {
+	return _should_quit;
+}
+void Input::reset_should_quit() {
+	_should_quit = false;
+}
+
 Input::Input() {
 	singleton = this;
 
@@ -324,6 +354,112 @@ Input::Input() {
 	last_button_state = 0;
 
 	last_key_modifier_state = 0;
+
+	_should_quit = false;
+}
+
+struct SDLKeyMap {
+	int sdl_code;
+	int sfw_code;
+} sdl_keymap[] = {
+	{ SDLK_SPACE, ' ' },
+	{ SDLK_A, 'A' },
+	{ SDLK_B, 'B' },
+	{ SDLK_C, 'C' },
+	{ SDLK_D, 'D' },
+	{ SDLK_E, 'E' },
+	{ SDLK_F, 'F' },
+	{ SDLK_G, 'G' },
+	{ SDLK_H, 'H' },
+	{ SDLK_I, 'I' },
+	{ SDLK_J, 'J' },
+	{ SDLK_K, 'K' },
+	{ SDLK_L, 'L' },
+	{ SDLK_M, 'M' },
+	{ SDLK_N, 'N' },
+	{ SDLK_O, 'O' },
+	{ SDLK_P, 'P' },
+	{ SDLK_Q, 'Q' },
+	{ SDLK_R, 'R' },
+	{ SDLK_S, 'S' },
+	{ SDLK_T, 'T' },
+	{ SDLK_U, 'U' },
+	{ SDLK_V, 'V' },
+	{ SDLK_W, 'W' },
+	{ SDLK_X, 'X' },
+	{ SDLK_Y, 'Y' },
+	{ SDLK_Z, 'Z' },
+	{ SDLK_0, '0' },
+	{ SDLK_1, '1' },
+	{ SDLK_2, '2' },
+	{ SDLK_3, '3' },
+	{ SDLK_4, '4' },
+	{ SDLK_5, '5' },
+	{ SDLK_6, '6' },
+	{ SDLK_7, '7' },
+	{ SDLK_8, '8' },
+	{ SDLK_9, '9' },
+	{ SDLK_F1, KEY_F1 },
+	{ SDLK_F2, KEY_F2 },
+	{ SDLK_F3, KEY_F3 },
+	{ SDLK_F4, KEY_F4 },
+	{ SDLK_F5, KEY_F5 },
+	{ SDLK_F6, KEY_F6 },
+	{ SDLK_F7, KEY_F7 },
+	{ SDLK_F8, KEY_F8 },
+	{ SDLK_F9, KEY_F9 },
+	{ SDLK_F10, KEY_F10 },
+	{ SDLK_F11, KEY_F11 },
+	{ SDLK_F12, KEY_F12 },
+	{ SDLK_UP, KEY_UP },
+	{ SDLK_DOWN, KEY_DOWN },
+	{ SDLK_LEFT, KEY_LEFT },
+	{ SDLK_RIGHT, KEY_RIGHT },
+	{ SDLK_TAB, KEY_TAB },
+	{ SDLK_BACKSPACE, KEY_BACKSPACE },
+	{ SDLK_INSERT, KEY_INSERT },
+	{ SDLK_DELETE, KEY_DELETE },
+	{ SDLK_HOME, KEY_HOME },
+	{ SDLK_END, KEY_END },
+	{ SDLK_PAGEUP, KEY_PAGEUP },
+	{ SDLK_PAGEDOWN, KEY_PAGEDOWN },
+	{ SDLK_RETURN, KEY_ENTER },
+	{ SDLK_ESCAPE, KEY_ESCAPE },
+	{ SDLK_LCTRL, KEY_CONTROL },
+	{ SDLK_RCTRL, KEY_CONTROL },
+	{ SDLK_LALT, KEY_ALT },
+	{ SDLK_RALT, KEY_ALT },
+	{ SDLK_LSHIFT, KEY_SHIFT },
+	{ SDLK_RSHIFT, KEY_SHIFT },
+	{ SDLK_LGUI, KEY_META },
+	{ SDLK_RGUI, KEY_META },
+	{ SDLK_KP_0, KEY_KP_0 },
+	{ SDLK_KP_1, KEY_KP_1 },
+	{ SDLK_KP_2, KEY_KP_2 },
+	{ SDLK_KP_3, KEY_KP_3 },
+	{ SDLK_KP_4, KEY_KP_4 },
+	{ SDLK_KP_5, KEY_KP_5 },
+	{ SDLK_KP_6, KEY_KP_6 },
+	{ SDLK_KP_7, KEY_KP_7 },
+	{ SDLK_KP_8, KEY_KP_8 },
+	{ SDLK_KP_9, KEY_KP_9 },
+	{ SDLK_KP_MULTIPLY, KEY_KP_MULTIPLY },
+	{ SDLK_KP_MINUS, KEY_KP_SUBTRACT },
+	{ SDLK_KP_PLUS, KEY_KP_ADD },
+	{ SDLK_KP_PERIOD, KEY_KP_PERIOD },
+	{ SDLK_KP_ENTER, KEY_KP_ENTER },
+	{ SDLK_KP_DIVIDE, KEY_KP_DIVIDE },
+	{ 0, 0 },
+};
+
+int Input::sdl_to_sfw_code(int sdl_code) {
+	for (int i = 0; sdl_keymap[i].sdl_code; i++) {
+		if (sdl_keymap[i].sdl_code == sdl_code) {
+			return sdl_keymap[i].sfw_code;
+		}
+	}
+
+	return sdl_code;
 }
 
 #if 0
@@ -344,149 +480,6 @@ void Input::get_key_modifier_state(int mods, Ref<InputEventWithModifiers> state)
 	state->set_control((mods & GLFW_MOD_CONTROL));
 	state->set_alt((mods & GLFW_MOD_ALT)); //altgr should not count as alt
 	state->set_metakey((mods & GLFW_MOD_SUPER));
-}
-
-struct GLFWKeyMap {
-	int glfw_code;
-	int sfw_code;
-} glfw_keymap[] = {
-	/* The unknown key */
-	{ GLFW_KEY_UNKNOWN, 0 },
-
-	/* Printable keys */
-	{ GLFW_KEY_SPACE, KEY_SPACE },
-	{ GLFW_KEY_APOSTROPHE, KEY_APOSTROPHE },
-	{ GLFW_KEY_COMMA, KEY_COMMA },
-	{ GLFW_KEY_MINUS, KEY_MINUS },
-	{ GLFW_KEY_PERIOD, KEY_PERIOD },
-	{ GLFW_KEY_SLASH, KEY_SLASH },
-	{ GLFW_KEY_0, KEY_0 },
-	{ GLFW_KEY_1, KEY_1 },
-	{ GLFW_KEY_2, KEY_2 },
-	{ GLFW_KEY_3, KEY_3 },
-	{ GLFW_KEY_4, KEY_4 },
-	{ GLFW_KEY_5, KEY_5 },
-	{ GLFW_KEY_6, KEY_6 },
-	{ GLFW_KEY_7, KEY_7 },
-	{ GLFW_KEY_8, KEY_8 },
-	{ GLFW_KEY_9, KEY_9 },
-	{ GLFW_KEY_SEMICOLON, KEY_SEMICOLON },
-	{ GLFW_KEY_EQUAL, KEY_EQUAL },
-	{ GLFW_KEY_A, KEY_A },
-	{ GLFW_KEY_B, KEY_B },
-	{ GLFW_KEY_C, KEY_C },
-	{ GLFW_KEY_D, KEY_D },
-	{ GLFW_KEY_E, KEY_E },
-	{ GLFW_KEY_F, KEY_F },
-	{ GLFW_KEY_G, KEY_G },
-	{ GLFW_KEY_H, KEY_H },
-	{ GLFW_KEY_I, KEY_I },
-	{ GLFW_KEY_J, KEY_J },
-	{ GLFW_KEY_K, KEY_K },
-	{ GLFW_KEY_L, KEY_L },
-	{ GLFW_KEY_M, KEY_M },
-	{ GLFW_KEY_N, KEY_N },
-	{ GLFW_KEY_O, KEY_O },
-	{ GLFW_KEY_P, KEY_P },
-	{ GLFW_KEY_Q, KEY_Q },
-	{ GLFW_KEY_R, KEY_R },
-	{ GLFW_KEY_S, KEY_S },
-	{ GLFW_KEY_T, KEY_T },
-	{ GLFW_KEY_U, KEY_U },
-	{ GLFW_KEY_V, KEY_V },
-	{ GLFW_KEY_W, KEY_W },
-	{ GLFW_KEY_X, KEY_X },
-	{ GLFW_KEY_Y, KEY_Y },
-	{ GLFW_KEY_Z, KEY_Z },
-	{ GLFW_KEY_LEFT_BRACKET, KEY_BRACKETLEFT },
-	{ GLFW_KEY_BACKSLASH, KEY_BACKSLASH },
-	{ GLFW_KEY_RIGHT_BRACKET, KEY_BRACKETRIGHT },
-	{ GLFW_KEY_GRAVE_ACCENT, KEY_QUOTELEFT },
-	{ GLFW_KEY_WORLD_1, KEY_EXCLAMDOWN },
-	{ GLFW_KEY_WORLD_2, KEY_CENT },
-
-	/* Function keys */
-	{ GLFW_KEY_ESCAPE, KEY_ESCAPE },
-	{ GLFW_KEY_ENTER, KEY_ENTER },
-	{ GLFW_KEY_TAB, KEY_TAB },
-	{ GLFW_KEY_BACKSPACE, KEY_BACKSPACE },
-	{ GLFW_KEY_INSERT, KEY_INSERT },
-	{ GLFW_KEY_DELETE, KEY_DELETE },
-	{ GLFW_KEY_RIGHT, KEY_RIGHT },
-	{ GLFW_KEY_LEFT, KEY_LEFT },
-	{ GLFW_KEY_DOWN, KEY_DOWN },
-	{ GLFW_KEY_UP, KEY_UP },
-	{ GLFW_KEY_PAGE_UP, KEY_PAGEUP },
-	{ GLFW_KEY_PAGE_DOWN, KEY_PAGEDOWN },
-	{ GLFW_KEY_HOME, KEY_HOME },
-	{ GLFW_KEY_END, KEY_END },
-	{ GLFW_KEY_CAPS_LOCK, KEY_CAPSLOCK },
-	{ GLFW_KEY_SCROLL_LOCK, KEY_SCROLLLOCK },
-	{ GLFW_KEY_NUM_LOCK, KEY_NUMLOCK },
-	{ GLFW_KEY_PRINT_SCREEN, KEY_PRINT },
-	{ GLFW_KEY_PAUSE, KEY_PAUSE },
-	{ GLFW_KEY_F1, KEY_F1 },
-	{ GLFW_KEY_F2, KEY_F2 },
-	{ GLFW_KEY_F3, KEY_F3 },
-	{ GLFW_KEY_F4, KEY_F4 },
-	{ GLFW_KEY_F5, KEY_F5 },
-	{ GLFW_KEY_F6, KEY_F6 },
-	{ GLFW_KEY_F7, KEY_F7 },
-	{ GLFW_KEY_F8, KEY_F8 },
-	{ GLFW_KEY_F9, KEY_F9 },
-	{ GLFW_KEY_F10, KEY_F10 },
-	{ GLFW_KEY_F11, KEY_F11 },
-	{ GLFW_KEY_F12, KEY_F12 },
-	{ GLFW_KEY_F13, KEY_F13 },
-	{ GLFW_KEY_F14, KEY_F14 },
-	{ GLFW_KEY_F15, KEY_F15 },
-	{ GLFW_KEY_F16, KEY_F16 },
-	{ GLFW_KEY_F17, 0 },
-	{ GLFW_KEY_F18, 0 },
-	{ GLFW_KEY_F19, 0 },
-	{ GLFW_KEY_F20, 0 },
-	{ GLFW_KEY_F21, 0 },
-	{ GLFW_KEY_F22, 0 },
-	{ GLFW_KEY_F23, 0 },
-	{ GLFW_KEY_F24, 0 },
-	{ GLFW_KEY_F25, 0 },
-	{ GLFW_KEY_KP_0, KEY_KP_0 },
-	{ GLFW_KEY_KP_1, KEY_KP_1 },
-	{ GLFW_KEY_KP_2, KEY_KP_2 },
-	{ GLFW_KEY_KP_3, KEY_KP_3 },
-	{ GLFW_KEY_KP_4, KEY_KP_4 },
-	{ GLFW_KEY_KP_5, KEY_KP_5 },
-	{ GLFW_KEY_KP_6, KEY_KP_6 },
-	{ GLFW_KEY_KP_7, KEY_KP_7 },
-	{ GLFW_KEY_KP_8, KEY_KP_8 },
-	{ GLFW_KEY_KP_9, KEY_KP_9 },
-	{ GLFW_KEY_KP_DECIMAL, KEY_KP_PERIOD },
-	{ GLFW_KEY_KP_DIVIDE, KEY_KP_DIVIDE },
-	{ GLFW_KEY_KP_MULTIPLY, KEY_KP_MULTIPLY },
-	{ GLFW_KEY_KP_SUBTRACT, KEY_KP_SUBTRACT },
-	{ GLFW_KEY_KP_ADD, KEY_KP_ADD },
-	{ GLFW_KEY_KP_ENTER, KEY_KP_ENTER },
-	{ GLFW_KEY_KP_EQUAL, KEY_EQUAL },
-	{ GLFW_KEY_LEFT_SHIFT, KEY_SHIFT },
-	{ GLFW_KEY_LEFT_CONTROL, KEY_CONTROL },
-	{ GLFW_KEY_LEFT_ALT, KEY_ALT },
-	{ GLFW_KEY_LEFT_SUPER, KEY_SUPER_L },
-	{ GLFW_KEY_RIGHT_SHIFT, KEY_SHIFT },
-	{ GLFW_KEY_RIGHT_CONTROL, KEY_CONTROL },
-	{ GLFW_KEY_RIGHT_ALT, 0 }, //altgr?
-	{ GLFW_KEY_RIGHT_SUPER, KEY_SUPER_R },
-	{ GLFW_KEY_MENU, KEY_MENU },
-	{ 0, 0 },
-};
-
-int Input::glfw_to_sfw_code(int glfw_code) {
-	for (int i = 0; glfw_keymap[i].glfw_code; i++) {
-		if (glfw_keymap[i].glfw_code == glfw_code) {
-			return glfw_keymap[i].sfw_code;
-		}
-	}
-
-	return 0;
 }
 
 void Input::GLFWkeyfunCallback(GLFWwindow *window, int glfw_keycode, int scancode, int action, int mods) {

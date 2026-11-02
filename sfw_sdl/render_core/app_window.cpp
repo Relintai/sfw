@@ -388,6 +388,12 @@ char *AppWindow::get_stats() {
 }
 
 int AppWindow::frame_begin() {
+	Input::get_singleton()->poll_events();
+
+	if (Input::get_singleton()->should_quit()) {
+		return 0;
+	}
+
 #if 0
 	glfwPollEvents();
 

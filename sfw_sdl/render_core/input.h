@@ -129,15 +129,19 @@ public:
 	void set_main_loop(Application *p_main_loop);
 	void iteration(real_t p_step);
 
+	void poll_events();
+	bool should_quit();
+	void reset_should_quit();
+
 	Input();
 
 	//Called by AppWindow
 	void _setup_window_callbacks();
 
 protected:
-#if 0
-	static int glfw_to_sfw_code(int glfw_code);
+	static int sdl_to_sfw_code(int sdl_code);
 
+#if 0
 	unsigned int get_mouse_button_state(unsigned int p_button, int p_type);
 	static void get_key_modifier_state(int mods, Ref<InputEventWithModifiers> state);
 
@@ -154,6 +158,8 @@ protected:
 #endif
 
 protected:
+	bool _should_quit;
+
 	struct SpeedTrack {
 		uint64_t last_tick;
 		Vector2 speed;
