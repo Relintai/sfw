@@ -102,7 +102,7 @@ public:
 
 	void reset_viewport();
 
-	Vector2 dpi();
+	Vector2 get_dpi();
 
 	enum CURSOR_SHAPES {
 		CURSOR_NONE,

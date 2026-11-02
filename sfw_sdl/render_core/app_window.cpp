@@ -407,14 +407,19 @@ void *AppWindow::get_handle() {
 	return _window;
 }
 
-Vector2 AppWindow::dpi() {
+Vector2 AppWindow::get_dpi() {
 	Vector2 dpi = Vector2(1, 1);
 
-#if 0
 #if !defined(__EMSCRIPTEN__) && !defined(__APPLE__) // @todo: remove silicon mac M1 hack`
-	glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &dpi.x, &dpi.y);
+	// TODO this should get the dpi of the display the window is on.
+	SDL_DisplayID monitor = SDL_GetPrimaryDisplay();
+
+	float d = SDL_GetDisplayContentScale(monitor);
+
+	dpi.x = d;
+	dpi.y = d;
 #endif
-#endif
+
 	return dpi;
 }
 
