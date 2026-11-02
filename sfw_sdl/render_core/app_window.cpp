@@ -423,48 +423,20 @@ Vector2 AppWindow::get_dpi() {
 	return dpi;
 }
 
-// -----------------------------------------------------------------------------
-// fullscreen
-
-#if 0
-GLFWmonitor *AppWindow::find_monitor(int wx, int wy) {
-	GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-
-	// find best monitor given current window coordinates. @todo: select by ocuppied window area inside each monitor instead.
-	int num_monitors = 0;
-	GLFWmonitor **monitors = glfwGetMonitors(&num_monitors);
-#ifdef __EMSCRIPTEN__
-	return *monitors;
-#else
-	for (int i = 0; i < num_monitors; ++i) {
-		int mx = 0, my = 0, mw = 0, mh = 0;
-		glfwGetMonitorWorkarea(monitors[i], &mx, &my, &mw, &mh);
-		monitor = wx >= mx && wx <= (mx + mw) && wy >= my && wy <= (my + mh) ? monitors[i] : monitor;
-	}
-	return monitor;
-#endif
-}
-#endif
-
 int AppWindow::has_fullscreen() {
-#if 0
 #ifdef __EMSCRIPTEN__
 	EmscriptenFullscreenChangeEvent fsce;
 	emscripten_get_fullscreen_status(&fsce);
 	return !!fsce.isFullscreen;
 #else
-	return !!glfwGetWindowMonitor(_window);
+	return _fullscreen;
 #endif /* __EMSCRIPTEN__ */
-#endif
-	return 0;
 }
 
 void AppWindow::set_fullscreen(int enabled) {
 	if (has_fullscreen() == enabled) {
 		return;
 	}
-
-#if 0
 
 #ifdef __EMSCRIPTEN__
 
@@ -495,32 +467,10 @@ void AppWindow::set_fullscreen(int enabled) {
 
 #else
 
-#if 0
-    if( enabled ) {
-        /*glfwGetWindowPos(g->window, &g->window_xpos, &g->window_ypos);*/
-        glfwGetWindowSize(g->window, &g->width, &g->height);
-        glfwSetWindowMonitor(g->window, glfwGetPrimaryMonitor(), 0, 0, g->width, g->height, GLFW_DONT_CARE);
-    } else {
-        glfwSetWindowMonitor(g->window, NULL, 0, 0, g->width, g->height, GLFW_DONT_CARE);
-    }
-#else
-	if (enabled) {
-		int wx = 0, wy = 0;
-		glfwGetWindowPos(_window, &wx, &wy);
-		GLFWmonitor *monitor = find_monitor(wx, wy);
+	_fullscreen = enabled;
 
-		wprev = w, hprev = h, xprev = wx, yprev = wy; // save window context for further restoring
+	SDL_SetWindowFullscreen(_window, enabled);
 
-		int width, height;
-		glfwGetMonitorWorkarea(monitor, NULL, NULL, &width, &height);
-		glfwSetWindowMonitor(_window, monitor, 0, 0, width, height, GLFW_DONT_CARE);
-	} else {
-		glfwSetWindowMonitor(_window, NULL, xpos, ypos, wprev, hprev, GLFW_DONT_CARE);
-		glfwSetWindowPos(_window, xprev, yprev);
-	}
-#endif
-
-#endif
 #endif
 }
 
