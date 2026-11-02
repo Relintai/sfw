@@ -297,3 +297,20 @@ Install:
 Run compiledb with make to generate compile_commands.json
 
 ``` compiledb make ```
+
+## Contributions: Use of AI content generators
+
+Even though this framework is practically unknown, and it's not really getting patch
+submissions as of now (realistically it won't get submissions probably ever),
+to be on the safe side I'm adopting the following policy (very similar to zig's):
+
+- No LLMs for issues.
+- No LLMs for patches / pull requests.
+- No LLMs for comments on the bug tracker, including translation.
+- No generative AI models for other assets. (For example icons.)
+- English is the main language of the issue tracker, but I can also speak Hungarian.
+  You can write in your own language, but if you can, include an english translation as well.
+  - For translation you can use traditional tools. (Yes, these use neural networks, but these are
+    not LLMs. They also only use fraction of the power and compute.)
+    - For example here's a FOSS one, thay you can even run locally. (Should work on raspberry pi tier hardware): [libretranslate](https://libretranslate.com/).
+
