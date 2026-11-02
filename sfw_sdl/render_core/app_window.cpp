@@ -127,6 +127,7 @@ void AppWindow::glNewFrame() {
     h = canvasHeight;
     //printf("%dx%d\n", w, h);
 #else
+	// Todo, test this with high DPI monitors
 	SDL_GetWindowSizeInPixels(_window, &w, &h);
 #endif
 
