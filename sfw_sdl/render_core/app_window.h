@@ -128,7 +128,7 @@ public:
 	~AppWindow();
 
 protected:
-	static void window_hints(unsigned flags);
+	virtual void setup_window_attributes(const uint32_t flags);
 
 	void resize();
 	void new_frame();

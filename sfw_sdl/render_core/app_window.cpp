@@ -30,7 +30,7 @@
 #include "render_core/render_state.h"
 //--STRIP
 
-void AppWindow::window_hints(unsigned flags) {
+void AppWindow::setup_window_attributes(const uint32_t flags) {
 #if 0
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE); // @todo: remove silicon mac M1 hack
@@ -135,7 +135,7 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	int winWidth = get_canvas().x * window_scale;
 	int winHeight = get_canvas().y * window_scale;
 
-	window_hints(flags);
+	setup_window_attributes(flags);
 
 #if 0
 	GLFWmonitor *monitor = NULL;
