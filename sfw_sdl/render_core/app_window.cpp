@@ -366,13 +366,6 @@ void AppWindow::set_title(const String &p_title) {
 
 	SDL_SetWindowTitle(_window, cs.get_data());
 }
-void AppWindow::set_color(unsigned color) {
-	unsigned r = (color >> 0) & 255;
-	unsigned g = (color >> 8) & 255;
-	unsigned b = (color >> 16) & 255;
-	unsigned a = (color >> 24) & 255;
-	winbgcolor = Color(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
-}
 
 int AppWindow::has_icon() {
 	return _has_icon;

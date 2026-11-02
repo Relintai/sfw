@@ -51,7 +51,6 @@ public:
 	String get_title();
 	void set_title(const String &p_title);
 
-	void set_color(unsigned color);
 	Vector2 get_canvas();
 	void *get_handle();
 
