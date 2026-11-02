@@ -43,16 +43,20 @@ Index of this file:
 
 */
 
+//--STRIP
 #pragma once
+//--STRIP
 #ifndef IMGUI_DISABLE
 
 //-----------------------------------------------------------------------------
 // [SECTION] Header mess
 //-----------------------------------------------------------------------------
 
+//--STRIP
 #ifndef IMGUI_VERSION
 #include "imgui.h"
 #endif
+//--STRIP
 
 #include <stdio.h>      // FILE*, sscanf
 #include <stdlib.h>     // NULL, malloc, free, qsort, atoi, atof
@@ -129,6 +133,9 @@ Index of this file:
 #if !defined(IMGUI_ENABLE_FREETYPE) && !defined(IMGUI_ENABLE_STB_TRUETYPE) && !defined(IMGUI_DISABLE_STB_TRUETYPE)
 #define IMGUI_ENABLE_STB_TRUETYPE
 #endif
+
+
+//--STRIP
 
 //-----------------------------------------------------------------------------
 // [SECTION] Forward declarations
@@ -219,6 +226,8 @@ typedef int ImGuiWindowRefreshFlags;    // -> enum ImGuiWindowRefreshFlags_ // F
 // Table column indexing
 typedef ImS16 ImGuiTableColumnIdx;
 typedef ImU16 ImGuiTableDrawChannelIdx;
+
+//--STRIP
 
 //-----------------------------------------------------------------------------
 // [SECTION] Context pointer
@@ -1088,7 +1097,7 @@ enum ImGuiItemStatusFlags_
     ImGuiItemStatusFlags_HasShortcut        = 1 << 10,  // g.LastItemData.Shortcut valid. Set by SetNextItemShortcut() -> ItemAdd().
     //ImGuiItemStatusFlags_FocusedByTabbing = 1 << 8,   // Removed IN 1.90.1 (Dec 2023). The trigger is part of g.NavActivateId. See commit 54c1bdeceb.
     ImGuiItemStatusFlags_EditedInternal     = 1 << 11,  // Similar to ImGuiItemStatusFlags_Edited but bypassing ImGuiItemFlags_NoMarkEdited.
-    
+
     // Additional status + semantic for ImGuiTestEngine
 #ifdef IMGUI_ENABLE_TEST_ENGINE
     ImGuiItemStatusFlags_Openable           = 1 << 20,  // Item is an openable (e.g. TreeNode)

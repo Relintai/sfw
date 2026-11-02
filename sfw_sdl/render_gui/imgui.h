@@ -58,14 +58,18 @@ Index of this file:
 
 */
 
+//--STRIP
 #pragma once
+//--STRIP
 
 // Configuration file with compile-time options
 // (edit imconfig.h or '#define IMGUI_USER_CONFIG "myfilename.h" from your build system)
 #ifdef IMGUI_USER_CONFIG
 #include IMGUI_USER_CONFIG
 #endif
+//--STRIP
 #include "imconfig.h"
+//--STRIP
 
 #ifndef IMGUI_DISABLE
 
@@ -3389,7 +3393,7 @@ enum ImDrawFlags_
     ImDrawFlags_RoundCornersTop         = ImDrawFlags_RoundTop,
     ImDrawFlags_RoundCornersBottom      = ImDrawFlags_RoundBottom,
     ImDrawFlags_RoundCornersLeft        = ImDrawFlags_RoundLeft,
-    ImDrawFlags_RoundCornersRight       = ImDrawFlags_RoundRight,      
+    ImDrawFlags_RoundCornersRight       = ImDrawFlags_RoundRight,
 #endif
 };
 

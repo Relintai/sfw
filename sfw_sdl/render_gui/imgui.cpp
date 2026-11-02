@@ -1294,9 +1294,13 @@ IMPLEMENTING SUPPORT for ImGuiBackendFlags_RendererHasTextures:
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_internal.h"
+//--STRIP
 
 // System includes
 #include <stdio.h>      // vsnprintf, sscanf, printf
@@ -2541,7 +2545,7 @@ ImGuiID ImHashData(const void* data_p, size_t data_size, ImGuiID seed)
 #else
         ImU32 v;
         memcpy(&v, data, sizeof(ImU32)); // Avoid aliasing violation (#9557)
-        crc = _mm_crc32_u32(crc, v); 
+        crc = _mm_crc32_u32(crc, v);
 #endif
         data += 4;
     }

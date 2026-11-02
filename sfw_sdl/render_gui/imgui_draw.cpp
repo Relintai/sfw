@@ -33,9 +33,13 @@ Index of this file:
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_internal.h"
+//--STRIP
 #ifdef IMGUI_ENABLE_FREETYPE
 #include "misc/freetype/imgui_freetype.h"
 #endif
@@ -157,8 +161,10 @@ namespace IMGUI_STB_NAMESPACE
 #endif
 #ifdef IMGUI_STB_TRUETYPE_FILENAME
 #include IMGUI_STB_TRUETYPE_FILENAME
+//--STRIP
 #else
 #include "imstb_truetype.h"
+//--STRIP
 #endif
 #endif
 #endif // IMGUI_ENABLE_STB_TRUETYPE
@@ -1666,7 +1672,7 @@ void ImDrawList::PathArcTo(const ImVec2& center, float radius, float a_min, floa
 
     // Automatic segment count
     if (radius <= _Data->ArcFastRadiusCutoff)
-    { 
+    {
         const bool a_is_reverse = a_max < a_min;
 
         // Calculate number of segments per circle.
@@ -4867,7 +4873,7 @@ static int InitCornerGeometry(float cx, float cy, float rounding, float circle_s
     const int arc_point_count = arc_step_count + 1;
 
     // Build arc of points, with straight segments at each end.
-    //      . [n-2]..[n-1] 
+    //      . [n-2]..[n-1]
     //    .`
     //   .
     //  [1]     x (cx,cy)

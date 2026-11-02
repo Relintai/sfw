@@ -133,9 +133,13 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+//--STRIP
 #include "imgui.h"
+//--STRIP
 #ifndef IMGUI_DISABLE
+//--STRIP
 #include "imgui_impl_opengl3.h"
+//--STRIP
 #include <stdio.h>
 #include <stdint.h>     // intptr_t
 #if defined(__APPLE__)
@@ -188,9 +192,11 @@
 //   Typically you would run: python3 ./gl3w_gen.py --output ../imgui/backends/imgui_impl_opengl3_loader.h --ref ../imgui/backends/imgui_impl_opengl3.cpp ./extra_symbols.txt
 // - You can temporarily use an unstripped version. See https://github.com/dearimgui/gl3w_stripped/releases
 // Changes to this backend using new APIs should be accompanied by a regenerated stripped loader version.
+//--STRIP
 #define IMGL3W_IMPL
 #define IMGUI_IMPL_OPENGL_LOADER_IMGL3W
 #include "imgui_impl_opengl3_loader.h"
+//--STRIP
 #endif
 #ifndef GL_LOWER_LEFT
 #define GL_LOWER_LEFT 0x8CA1
@@ -199,7 +205,11 @@
 
 // Vertex arrays are not supported on ES2/WebGL1 unless Emscripten which uses an extension
 #ifndef IMGUI_IMPL_OPENGL_ES2
+
+#ifndef __APPLE__
 #define IMGUI_IMPL_OPENGL_USE_VERTEX_ARRAY
+#endif
+
 #elif defined(__EMSCRIPTEN__)
 #define IMGUI_IMPL_OPENGL_USE_VERTEX_ARRAY
 #define glBindVertexArray       glBindVertexArrayOES
@@ -231,9 +241,9 @@
 #endif
 
 // Desktop GL 3.3+ and GL ES 3.0+ have glBindSampler()
-#if !defined(IMGUI_IMPL_OPENGL_ES2) && (defined(IMGUI_IMPL_OPENGL_ES3) || defined(GL_VERSION_3_3))
-#define IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
-#endif
+//#if !defined(IMGUI_IMPL_OPENGL_ES2) && (defined(IMGUI_IMPL_OPENGL_ES3) || defined(GL_VERSION_3_3))
+//#define IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
+//#endif
 
 // [Debugging]
 //#define IMGUI_IMPL_OPENGL_DEBUG
