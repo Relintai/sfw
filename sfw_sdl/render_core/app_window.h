@@ -48,7 +48,9 @@ public:
 	void frame_end();
 	void frame_swap();
 
-	void set_title(const char *title);
+	String get_title();
+	void set_title(const String &p_title);
+
 	void set_color(unsigned color);
 	Vector2 get_canvas();
 	void *get_handle();
@@ -174,6 +176,8 @@ protected:
 	bool _transparent;
 	bool _vsync;
 	bool _vsync_adaptive;
+
+	String _title;
 
 	bool _cursors_initialized;
 	//GLFWcursor *cursors[7];

@@ -244,6 +244,10 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 
 	RenderState::window_update_render_rect_size(width, height);
 
+	if (!_title.empty()) {
+		set_title(_title);
+	}
+
 	// cursor(flags & WINDOW_NO_MOUSE ? false : true);
 
 	return true;
@@ -341,13 +345,21 @@ double AppWindow::get_fps_target() {
 uint64_t AppWindow::frame() {
 	return frame_count;
 }
-void AppWindow::set_title(const char *title_) {
-#if 0
-	snprintf(title, 128, "%s", title_);
-	if (!title[0]) {
-		glfwSetWindowTitle(_window, title);
+
+String AppWindow::get_title() {
+	return _title;
+}
+
+void AppWindow::set_title(const String &p_title) {
+	_title = p_title;
+
+	if (!_window) {
+		return;
 	}
-#endif
+
+	CharString cs = p_title.utf8();
+
+	SDL_SetWindowTitle(_window, cs.get_data());
 }
 void AppWindow::set_color(unsigned color) {
 	unsigned r = (color >> 0) & 255;
