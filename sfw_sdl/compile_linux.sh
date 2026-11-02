@@ -92,7 +92,7 @@ ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_core/texture_material.cp
 ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_core/transparent_texture_material.cpp -o render_core/transparent_texture_material.o
 ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_core/colored_texture_material_2d.cpp -o render_core/colored_texture_material_2d.o
 
-#ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_immediate/renderer.cpp -o render_immediate/renderer.o
+ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_immediate/renderer.cpp -o render_immediate/renderer.o
 
 #ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_gui/imgui.cpp -o render_gui/imgui.o
 #ccache g++ -Wall -D_REENTRANT -g -I. $sdlargs -c render_gui/imgui_draw.cpp -o render_gui/imgui_draw.o
@@ -138,13 +138,13 @@ ccache g++ -Wall -D_REENTRANT -g core/aabb.o core/basis.o core/color.o \
                         render_core/texture_material_2d.o render_core/texture_material.o \
                         render_core/transparent_texture_material.o \
                         render_core/colored_texture_material_2d.o \
+                        render_immediate/renderer.o \
                         game_scene.o main.o \
                         -lX11 \
 												$sdlargslink \
                         -o game 
 
 
-                        #render_immediate/renderer.o \
                         #render_gui/imgui.o \
                         #render_gui/imgui_draw.o \
                         #render_gui/imgui_impl_glfw.o \
