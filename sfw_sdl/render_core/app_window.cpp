@@ -330,6 +330,16 @@ double AppWindow::get_delta() {
 	return dt;
 }
 
+bool AppWindow::maximize_window() {
+	return SDL_MaximizeWindow(_window);
+}
+bool AppWindow::minimize_window() {
+	return SDL_MinimizeWindow(_window);
+}
+bool AppWindow::restore_window() {
+	return SDL_RestoreWindow(_window);
+}
+
 double AppWindow::get_fps() {
 	return fps;
 }

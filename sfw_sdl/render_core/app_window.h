@@ -61,8 +61,12 @@ public:
 	double get_time();
 	double get_delta();
 
-	void set_fullscreen(int enabled);
 	int has_fullscreen();
+	void set_fullscreen(int enabled);
+
+	bool maximize_window();
+	bool minimize_window();
+	bool restore_window();
 
 	enum MouseMode {
 		MOUSE_MODE_VISIBLE, //=GLFW_CURSOR_NORMAL
