@@ -262,22 +262,6 @@ int AppWindow::frame_begin() {
 
 	new_frame();
 
-#if 0
-	glfwPollEvents();
-
-	if (glfwWindowShouldClose(_window)) {
-		return 0;
-	}
-
-
-	double now = paused ? t : glfwGetTime();
-	dt = now - t;
-	t = now;
-
-	glfwSetWindowTitle(_window, title);
-
-#endif
-
 	return 1;
 }
 
@@ -313,19 +297,19 @@ void AppWindow::resize() {
 }
 
 Vector2 AppWindow::get_canvas() {
-#if 0
 #ifdef __EMSCRIPTEN__
 	int width = EM_ASM_INT_V(return canvas.width);
 	int height = EM_ASM_INT_V(return canvas.height);
 	return Vector2(width, height);
 #else
-	glfw_init();
-	const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	CRASH_COND(!mode);
-	return Vector2(mode->width, mode->height);
+	int ww;
+	int wh;
+
+	// Todo, test this with high DPI monitors
+	SDL_GetWindowSizeInPixels(_window, &ww, &wh);
+
+	return Vector2(ww, wh);
 #endif /* __EMSCRIPTEN__ */
-#endif
-	return Vector2(800, 600);
 }
 
 int AppWindow::get_width() {
