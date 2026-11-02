@@ -60,9 +60,6 @@ public:
 	double get_time();
 	double get_delta();
 
-	void set_focus();
-	int has_focus();
-
 	void set_fullscreen(int enabled);
 	int has_fullscreen();
 
@@ -74,9 +71,6 @@ public:
 
 	void set_mouse_mode(MouseMode p_mode);
 	MouseMode get_mouse_mode() const;
-
-	void set_pause(int paused);
-	int has_pause();
 
 	void set_visible(int visible);
 	int has_visible();

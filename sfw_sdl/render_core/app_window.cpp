@@ -474,24 +474,6 @@ void AppWindow::set_fullscreen(int enabled) {
 #endif
 }
 
-void AppWindow::set_pause(int enabled) {
-	paused = enabled;
-}
-int AppWindow::has_pause() {
-	return paused;
-}
-void AppWindow::set_focus() {
-#if 0
-	glfwFocusWindow(_window);
-#endif
-}
-int AppWindow::has_focus() {
-#if 0
-	return glfwGetWindowAttrib(_window, GLFW_FOCUSED);
-#endif
-	return 0;
-}
-
 void AppWindow::create_default_cursors() {
 #if 0
 	if (_cursors_initialized) {
