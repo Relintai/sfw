@@ -53,13 +53,9 @@ public:
 	void set_title(const String &p_title);
 
 	Vector2 get_canvas();
-	void *get_handle();
 
-	uint64_t frame();
 	int get_width();
 	int get_height();
-	double get_time();
-	double get_delta();
 
 	int has_fullscreen();
 	void set_fullscreen(int enabled);
@@ -79,15 +75,10 @@ public:
 
 	double get_aspect();
 
-	double get_fps();
-	double get_fps_target();
-
-	void fps_lock(float fps);
-	void fps_unlock();
-
 	void reset_viewport();
 
 	Vector2 get_dpi();
+
 	float get_display_content_scale();
 
 	enum CursorShapes {
@@ -105,9 +96,10 @@ public:
 
 	bool has_clipboard_text();
 	String get_clipboard_text();
-	bool set_clipboard_tect(const String &text);
+	bool set_clipboard_text(const String &text);
 
-	void *get_window_handle();
+	SDL_Window *get_sdl_window();
+	SDL_GLContext get_sdl_gl_context();
 
 	static AppWindow *get_singleton();
 

@@ -323,12 +323,6 @@ int AppWindow::get_width() {
 int AppWindow::get_height() {
 	return h;
 }
-double AppWindow::get_time() {
-	return t;
-}
-double AppWindow::get_delta() {
-	return dt;
-}
 
 bool AppWindow::maximize_window() {
 	return SDL_MaximizeWindow(_window);
@@ -338,23 +332,6 @@ bool AppWindow::minimize_window() {
 }
 bool AppWindow::restore_window() {
 	return SDL_RestoreWindow(_window);
-}
-
-double AppWindow::get_fps() {
-	return fps;
-}
-void AppWindow::fps_lock(float fps) {
-	hz = fps;
-}
-void AppWindow::fps_unlock() {
-	hz = 0;
-}
-double AppWindow::get_fps_target() {
-	return hz;
-}
-
-uint64_t AppWindow::frame() {
-	return frame_count;
 }
 
 String AppWindow::get_title() {
@@ -371,10 +348,6 @@ void AppWindow::set_title(const String &p_title) {
 	CharString cs = p_title.utf8();
 
 	SDL_SetWindowTitle(_window, cs.get_data());
-}
-
-void *AppWindow::get_handle() {
-	return _window;
 }
 
 Vector2 AppWindow::get_dpi() {
@@ -515,7 +488,7 @@ String AppWindow::get_clipboard_text() {
 
 	return s;
 }
-bool AppWindow::set_clipboard_tect(const String &text) {
+bool AppWindow::set_clipboard_text(const String &text) {
 	CharString cs = text.utf8();
 
 	return SDL_SetClipboardText(cs.get_data());
@@ -529,8 +502,11 @@ float AppWindow::get_display_content_scale() {
 	return scale;
 }
 
-void *AppWindow::get_window_handle() {
+SDL_Window *AppWindow::get_sdl_window() {
 	return _window;
+}
+SDL_GLContext AppWindow::get_sdl_gl_context() {
+	return _context;
 }
 
 AppWindow *AppWindow::get_singleton() {
