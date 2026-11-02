@@ -381,11 +381,95 @@ void Input::process_event(SDL_Event &ev) {
 			parse_input_event(k);
 
 		} break;
-		case SDL_EVENT_MOUSE_MOTION:
-		case SDL_EVENT_MOUSE_WHEEL:
+		case SDL_EVENT_MOUSE_MOTION: {
+			Point2 pos(ev.motion.x, ev.motion.y);
+
+			if (!last_mouse_pos_valid) {
+				last_mouse_pos = pos;
+				last_mouse_pos_valid = true;
+			}
+
+			Point2 rel = pos - last_mouse_pos;
+
+			MouseMode mouse_mode = get_mouse_mode();
+
+			if (mouse_mode == MOUSE_MODE_CAPTURED) {
+				int w = AppWindow::get_singleton()->get_width();
+				int h = AppWindow::get_singleton()->get_height();
+
+				pos = Point2i(w / 2, h / 2);
+			}
+
+			Ref<InputEventMouseMotion> mm;
+			mm.instance();
+			mm->set_pressure((last_button_state & (1 << (BUTTON_LEFT - 1))) ? 1.0f : 0.0f);
+
+			// Make the absolute position integral so it doesn't look _too_ weird :)
+			Point2i posi(pos);
+
+			get_key_modifier_state(last_key_modifier_state, mm);
+			mm->set_button_mask(last_button_state);
+			mm->set_position(posi);
+			mm->set_global_position(posi);
+			mm->set_speed(get_last_mouse_speed());
+
+			mm->set_relative(rel);
+
+			last_mouse_pos = pos;
+
+			// printf("rel: %d,%d\n", rel.x, rel.y );
+			// Don't propagate the motion event unless we have focus
+			// this is so that the relative motion doesn't get messed up
+			// after we regain focus.
+			if (window_has_focus || mouse_mode != MOUSE_MODE_CAPTURED) {
+				parse_input_event(mm);
+			}
+
+		} break;
+		case SDL_EVENT_MOUSE_WHEEL: {
+			// TODO
+		} break;
 		case SDL_EVENT_MOUSE_BUTTON_UP:
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			break;
+		case SDL_EVENT_MOUSE_BUTTON_DOWN: {
+			bool pressed = ev.button.down;
+			int button = ev.button.button;
+			last_mouse_pos = Point2(ev.button.x, ev.button.y);
+
+			Ref<InputEventMouseButton> mb;
+			mb.instance();
+
+			get_key_modifier_state(last_key_modifier_state, mb);
+
+			mb->set_button_index(button + 1);
+			mb->set_button_mask(get_mouse_button_state(mb->get_button_index(), pressed));
+			mb->set_position(last_mouse_pos);
+			mb->set_global_position(mb->get_position());
+
+			mb->set_pressed(pressed);
+
+			if (pressed) {
+				uint64_t diff = SFWTime::time_us() / 1000 - last_click_ms;
+
+				if (mb->get_button_index() == last_click_button_index) {
+					if (diff < 400 && Point2(last_click_pos).distance_to(last_mouse_pos) < 5) {
+						last_click_ms = 0;
+						last_click_pos = Point2(-100, -100);
+						last_click_button_index = -1;
+						mb->set_doubleclick(true);
+					}
+
+				} else if (mb->get_button_index() < 4 || mb->get_button_index() > 7) {
+					last_click_button_index = mb->get_button_index();
+				}
+
+				if (!mb->is_doubleclick()) {
+					last_click_ms += diff;
+					last_click_pos = last_mouse_pos;
+				}
+			}
+
+			parse_input_event(mb);
+		} break;
 		case SDL_EVENT_QUIT:
 			_should_quit = true;
 			break;
@@ -530,11 +614,10 @@ void Input::get_key_modifier_state(uint16_t mods, Ref<InputEventWithModifiers> s
 	state->set_metakey((mods & SDL_KMOD_LGUI) || (mods & SDL_KMOD_RGUI));
 }
 
-#if 0
-unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) {
+unsigned int Input::get_mouse_button_state(unsigned int p_button, bool p_pressed) {
 	unsigned int mask = 1 << (p_button - 1);
 
-	if (p_action == GLFW_PRESS) {
+	if (p_pressed) {
 		last_button_state |= mask;
 	} else {
 		last_button_state &= ~mask;
@@ -543,96 +626,7 @@ unsigned int Input::get_mouse_button_state(unsigned int p_button, int p_action) 
 	return last_button_state;
 }
 
-void Input::GLFWmousebuttonfunCallback(GLFWwindow *window, int button, int action, int mods) {
-	Input *self = Input::get_singleton();
-
-	self->last_key_modifier_state = mods;
-
-	bool pressed = action == GLFW_PRESS;
-
-	Vector2 last_mouse_pos = self->last_mouse_pos;
-
-	Ref<InputEventMouseButton> mb;
-	mb.instance();
-
-	get_key_modifier_state(mods, mb);
-
-	mb->set_button_index(button + 1);
-	mb->set_button_mask(self->get_mouse_button_state(mb->get_button_index(), action));
-	mb->set_position(last_mouse_pos);
-	mb->set_global_position(mb->get_position());
-
-	mb->set_pressed(pressed);
-
-	if (pressed) {
-		uint64_t diff = SFWTime::time_us() / 1000 - self->last_click_ms;
-
-		if (mb->get_button_index() == self->last_click_button_index) {
-			if (diff < 400 && Point2(self->last_click_pos).distance_to(last_mouse_pos) < 5) {
-				self->last_click_ms = 0;
-				self->last_click_pos = Point2(-100, -100);
-				self->last_click_button_index = -1;
-				mb->set_doubleclick(true);
-			}
-
-		} else if (mb->get_button_index() < 4 || mb->get_button_index() > 7) {
-			self->last_click_button_index = mb->get_button_index();
-		}
-
-		if (!mb->is_doubleclick()) {
-			self->last_click_ms += diff;
-			self->last_click_pos = last_mouse_pos;
-		}
-	}
-
-	self->parse_input_event(mb);
-}
-void Input::GLFWcursorposfunCallback(GLFWwindow *window, double xpos, double ypos) {
-	Input *self = Input::get_singleton();
-
-	Point2 pos(xpos, ypos);
-
-	if (!self->last_mouse_pos_valid) {
-		self->last_mouse_pos = pos;
-		self->last_mouse_pos_valid = true;
-	}
-
-	Point2 rel = pos - self->last_mouse_pos;
-
-	MouseMode mouse_mode = self->get_mouse_mode();
-
-	if (mouse_mode == MOUSE_MODE_CAPTURED) {
-		int w = AppWindow::get_singleton()->get_width();
-		int h = AppWindow::get_singleton()->get_height();
-
-		pos = Point2i(w / 2, h / 2);
-	}
-
-	Ref<InputEventMouseMotion> mm;
-	mm.instance();
-	mm->set_pressure((self->last_button_state & (1 << (BUTTON_LEFT - 1))) ? 1.0f : 0.0f);
-
-	// Make the absolute position integral so it doesn't look _too_ weird :)
-	Point2i posi(pos);
-
-	get_key_modifier_state(self->last_key_modifier_state, mm);
-	mm->set_button_mask(self->last_button_state);
-	mm->set_position(posi);
-	mm->set_global_position(posi);
-	mm->set_speed(self->get_last_mouse_speed());
-
-	mm->set_relative(rel);
-
-	self->last_mouse_pos = pos;
-
-	// printf("rel: %d,%d\n", rel.x, rel.y );
-	// Don't propagate the motion event unless we have focus
-	// this is so that the relative motion doesn't get messed up
-	// after we regain focus.
-	if (self->window_has_focus || mouse_mode != MOUSE_MODE_CAPTURED) {
-		self->parse_input_event(mm);
-	}
-}
+#if 0
 void Input::GLFWcursorenterfunCallback(GLFWwindow *window, int entered) {
 	Input *self = Input::get_singleton();
 

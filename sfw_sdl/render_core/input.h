@@ -141,6 +141,7 @@ protected:
 	static int sdl_to_sfw_code(int sdl_code);
 
 	static void get_key_modifier_state(uint16_t mods, Ref<InputEventWithModifiers> state);
+	unsigned int get_mouse_button_state(unsigned int p_button, bool p_pressed);
 
 #if 0
 	unsigned int get_mouse_button_state(unsigned int p_button, int p_type);
