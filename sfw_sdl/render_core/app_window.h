@@ -19,7 +19,7 @@
 
 struct SDL_Window;
 struct SDL_GLContextState;
-typedef struct SDL_GLContextState* SDL_GLContext;
+typedef struct SDL_GLContextState *SDL_GLContext;
 
 class AppWindow {
 public:
@@ -128,10 +128,6 @@ public:
 	~AppWindow();
 
 protected:
-	static void glfw_quit();
-	static void glfw_init();
-	static void glfw_error_callback(int error, const char *description);
-	//static void drop_callback(GLFWwindow *window, int count, const char **paths);
 	static void window_hints(unsigned flags);
 
 	void resize();

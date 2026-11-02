@@ -30,33 +30,6 @@
 #include "render_core/render_state.h"
 //--STRIP
 
-void AppWindow::glfw_error_callback(int error, const char *description) {
-#ifdef __APPLE__
-	if (error == 65544)
-		return; // whitelisted
-#endif
-
-	CRASH_MSG(String(description) + " (error " + String::num(error) + ")");
-}
-
-void AppWindow::glfw_quit() {
-	//glfwTerminate();
-}
-
-void AppWindow::glfw_init() {
-#if 0
-	glfwSetErrorCallback(glfw_error_callback);
-	int ok = glfwInit();
-
-	CRASH_COND(!ok);
-
-	atexit(glfw_quit); //glfwTerminate);
-#endif
-}
-
-//void AppWindow::drop_callback(GLFWwindow *window, int count, const char **paths) {
-//}
-
 void AppWindow::window_hints(unsigned flags) {
 #if 0
 #ifdef __APPLE__
@@ -138,18 +111,6 @@ void AppWindow::new_frame() {
 }
 
 bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_scale, unsigned int flags, float window_scale) {
-	// abort run if any test suite failed in unit-test mode
-
-	//SDL_SetMainReady();
-
-	bool success = SDL_InitSubSystem(SDL_INIT_VIDEO);
-
-	if (!success) {
-		SDL_Log("SDL_Init: %s", SDL_GetError());
-
-		return false;
-	}
-
 	//if (!t) {
 	//	t = glfwGetTime();
 	//}
@@ -922,9 +883,18 @@ AppWindow::AppWindow() {
 	cursor_enums[5] = GLFW_HAND_CURSOR;
 	cursor_enums[6] = GLFW_CROSSHAIR_CURSOR;
 #endif
+
+	// According to SDL Docs, subsystem inits are refcounted, so we should be okay with doing this
+	bool success = SDL_InitSubSystem(SDL_INIT_VIDEO);
+
+	if (!success) {
+		ERR_PRINT("Failed to initialize SDL Video Subsystem! Error: " + String::utf8(SDL_GetError()));
+	}
 }
 AppWindow::~AppWindow() {
 	_singleton = NULL;
+
+	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 AppWindow *AppWindow::_singleton = NULL;
