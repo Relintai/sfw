@@ -115,7 +115,6 @@ void AppWindow::window_hints(unsigned flags) {
 }
 
 void AppWindow::glNewFrame() {
-#if 0
 	// @transparent debug
 	// if( input_down(KEY_F1) ) transparent(window_has_transparent()^1);
 	// if( input_down(KEY_F2) ) maximize(window_has_maximize()^1);
@@ -128,10 +127,7 @@ void AppWindow::glNewFrame() {
     h = canvasHeight;
     //printf("%dx%d\n", w, h);
 #else
-	//glfwGetWindowSize(window, &w, &h);
-	glfwGetFramebufferSize(_window, &w, &h);
-	//printf("%dx%d\n", w, h);
-#endif
+	SDL_GetWindowSizeInPixels(_window, &w, &h);
 #endif
 
 	AppWindow::get_singleton()->width = w;
@@ -394,6 +390,8 @@ int AppWindow::frame_begin() {
 		return 0;
 	}
 
+	glNewFrame();
+
 #if 0
 	glfwPollEvents();
 
@@ -401,7 +399,6 @@ int AppWindow::frame_begin() {
 		return 0;
 	}
 
-	glNewFrame();
 
 	double now = paused ? t : glfwGetTime();
 	dt = now - t;
@@ -418,11 +415,6 @@ void AppWindow::frame_end() {
 }
 
 void AppWindow::frame_swap() {
-#if 0
-	glfwSwapBuffers(_window);
-	// emscripten_webgl_commit_frame();
-#endif
-
 	SDL_GL_SwapWindow(_window);
 }
 
