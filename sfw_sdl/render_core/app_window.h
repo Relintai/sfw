@@ -115,8 +115,6 @@ protected:
 
 	static AppWindow *_singleton;
 
-	double boot_time;
-
 	SDL_Window *_window;
 	SDL_GLContext _context;
 
@@ -124,18 +122,11 @@ protected:
 	int h;
 	int xpos;
 	int ypos;
-	int paused;
-	int fullscreen;
+
 	int xprev;
 	int yprev;
 	int wprev;
 	int hprev;
-	uint64_t frame_count;
-	double t;
-	double dt;
-	double fps;
-	double hz;
-	char title[128];
 
 	CursorShapes _cursorshape = CURSOR_HW_ARROW;
 
@@ -143,13 +134,11 @@ protected:
 
 	int width;
 	int height;
-	bool keep_running;
+
 	unsigned int _window_flags;
 
 	bool _fullscreen;
 	bool _transparent;
-	bool _vsync;
-	bool _vsync_adaptive;
 
 	String _title;
 

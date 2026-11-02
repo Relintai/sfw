@@ -519,36 +519,26 @@ AppWindow::AppWindow() {
 	_window = NULL;
 	_context = NULL;
 
-	boot_time = 0;
-
 	w = 0;
 	h = 0;
+
 	xpos = 0;
 	ypos = 0;
-	paused = 0;
-	fullscreen = 0;
+
 	xprev = 0;
 	yprev = 0;
 	wprev = 0;
 	hprev = 0;
-	frame_count = 0;
-	t = 0;
-	dt = 0;
-	fps = 0;
-	hz = 0.00;
-	title[0] = '\0';
 
 	_cursorshape = CURSOR_HW_ARROW;
 
 	width = 0;
 	height = 0;
-	keep_running = true;
+
 	_window_flags = 0;
 
 	_fullscreen = false;
 	_transparent = false;
-	_vsync = false;
-	_vsync_adaptive = false;
 
 	_cursors_initialized = false;
 
