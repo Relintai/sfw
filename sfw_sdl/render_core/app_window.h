@@ -73,21 +73,7 @@ public:
 	void set_mouse_mode(MouseMode p_mode);
 	MouseMode get_mouse_mode() const;
 
-	void set_visible(int visible);
-	int has_visible();
-
-	void set_maximize(int enabled);
-	int has_maximize();
-
-	void set_transparent(int enabled);
-	int has_transparent();
-
-	void set_icon(const char *file_icon);
-	int has_icon();
-
 	double get_aspect();
-	void aspect_lock(unsigned numer, unsigned denom);
-	void aspect_unlock();
 
 	double get_fps();
 	double get_fps_target();
@@ -153,9 +139,6 @@ protected:
 	double fps;
 	double hz;
 	char title[128];
-	int locked_aspect_ratio;
-	Color winbgcolor;
-	int _has_icon;
 
 	CursorShapes _cursorshape = CURSOR_HW_ARROW;
 

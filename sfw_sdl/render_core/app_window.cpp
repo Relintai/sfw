@@ -206,10 +206,6 @@ bool AppWindow::create_from_handle(void *handle, bool full_Screen, float canvas_
 	// Todo, test this with high DPI monitors
 	SDL_GetWindowSizeInPixels(_window, &w, &h);
 
-	if (flags & (WINDOW_SQUARE | WINDOW_PORTRAIT | WINDOW_LANDSCAPE | WINDOW_ASPECT)) { // keep aspect ratio
-		aspect_lock(w, h);
-	}
-
 #ifdef __EMSCRIPTEN__
 	if (FLAGS_FULLSCREEN) {
 		fullscreen(1);
@@ -367,42 +363,6 @@ void AppWindow::set_title(const String &p_title) {
 	SDL_SetWindowTitle(_window, cs.get_data());
 }
 
-int AppWindow::has_icon() {
-	return _has_icon;
-}
-void AppWindow::set_icon(const char *file_icon) {
-	/*
-	int len = 0;
-	void *data = vfs_load(file_icon, &len);
-	if (!data)
-		data = file_read(file_icon), len = file_size(file_icon);
-
-	if (data && len) {
-		image_t img = image_from_mem(data, len, IMAGE_RGBA);
-		if (img.w && img.h && img.pixels) {
-			GLFWimage images[1];
-			images[0].width = img.w;
-			images[0].height = img.h;
-			images[0].pixels = img.pixels;
-			glfwSetWindowIcon(window, 1, images);
-			has_icon = 1;
-			return;
-		}
-	}
-#if 0 // is(win32)
-	HANDLE hIcon = LoadImageA(0, file_icon, IMAGE_ICON, 0, 0, LR_DEFAULTSIZE | LR_LOADFROMFILE);
-	if( hIcon ) {
-		HWND hWnd = glfwGetWin32Window(window);
-		SendMessage(hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-		SendMessage(hWnd, WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
-		SendMessage(GetWindow(hWnd, GW_OWNER), WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
-		SendMessage(GetWindow(hWnd, GW_OWNER), WM_SETICON, ICON_BIG,   (LPARAM)hIcon);
-		has_icon = 1;
-		return;
-	}
-#endif
-	*/
-}
 void *AppWindow::get_handle() {
 	return _window;
 }
@@ -529,102 +489,8 @@ AppWindow::MouseMode AppWindow::get_mouse_mode() const {
 	return _mouse_mode;
 }
 
-void AppWindow::set_visible(int visible) {
-#if 0
-	if (!_window) {
-		return;
-	}
-
-	//if(window) (visible ? glfwRestoreWindow : glfwIconifyWindow)(window);
-	(visible ? glfwShowWindow : glfwHideWindow)(_window);
-
-// call glfwpollevents in linux to flush visiblity changes that would happen in next frame otherwise
-#if defined(__linux__) || defined(__APPLE__)
-	glfwPollEvents();
-#endif
-#endif
-}
-int AppWindow::has_visible() {
-#if 0
-	return glfwGetWindowAttrib(_window, GLFW_VISIBLE);
-#endif
-	return 0;
-}
-
 double AppWindow::get_aspect() {
 	return (double)w / (h + !h);
-}
-void AppWindow::aspect_lock(unsigned numer, unsigned denom) {
-#if 0
-	if (!_window) {
-		return;
-	}
-
-	if (numer * denom != 0) {
-		glfwSetWindowAspectRatio(_window, numer, denom);
-	} else {
-		glfwSetWindowAspectRatio(_window, GLFW_DONT_CARE, GLFW_DONT_CARE);
-	}
-#endif
-}
-void AppWindow::aspect_unlock() {
-	if (!_window) {
-		return;
-	}
-
-	AppWindow::aspect_lock(0, 0);
-}
-
-void AppWindow::set_transparent(int enabled) {
-#if 0
-#ifndef __EMSCRIPTEN__
-	if (!has_fullscreen()) {
-		if (enabled) {
-			glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_FALSE);
-			//glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH , GLFW_TRUE);
-			//glfwMaximizeWindow(window);
-		} else {
-			//glfwRestoreWindow(window);
-			//glfwSetWindowAttrib(window, GLFW_MOUSE_PASSTHROUGH , GLFW_FALSE);
-			glfwSetWindowAttrib(_window, GLFW_DECORATED, GLFW_TRUE);
-		}
-	}
-#endif
-#endif
-}
-int AppWindow::has_transparent() {
-#if 0
-#ifndef __EMSCRIPTEN__
-	return glfwGetWindowAttrib(_window, GLFW_DECORATED) != GLFW_TRUE;
-#else
-	return 0;
-#endif
-#endif
-	return 0;
-}
-
-void AppWindow::set_maximize(int enabled) {
-#if 0
-#ifndef __EMSCRIPTEN__
-	if (!has_fullscreen()) {
-		if (enabled) {
-			glfwMaximizeWindow(_window);
-		} else {
-			glfwRestoreWindow(_window);
-		}
-	}
-#endif
-#endif
-}
-int AppWindow::has_maximize() {
-#if 0
-#ifndef __EMSCRIPTEN__
-	return glfwGetWindowAttrib(_window, GLFW_MAXIMIZED) == GLFW_TRUE;
-#else
-	return 0;
-#endif
-#endif
-	return 0;
 }
 
 const char *AppWindow::get_clipboard() {
@@ -682,10 +548,7 @@ AppWindow::AppWindow() {
 	dt = 0;
 	fps = 0;
 	hz = 0.00;
-	locked_aspect_ratio = 0;
 	title[0] = '\0';
-
-	_has_icon = 0;
 
 	_cursorshape = CURSOR_HW_ARROW;
 
