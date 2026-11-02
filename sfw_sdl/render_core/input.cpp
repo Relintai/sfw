@@ -315,6 +315,10 @@ void Input::poll_events() {
 	SDL_Event ev;
 	while (SDL_PollEvent(&ev)) {
 		process_event(ev);
+
+		if (_gui_callback) {
+			_gui_callback(&ev);
+		}
 	}
 }
 void Input::process_event(SDL_Event &ev) {
@@ -522,8 +526,14 @@ void Input::reset_should_quit() {
 	_should_quit = false;
 }
 
+void Input::set_gui_event_processor(gui_event_processor_callback p_callback) {
+	_gui_callback = p_callback;
+}
+
 Input::Input() {
 	singleton = this;
+
+	_gui_callback = NULL;
 
 	use_input_buffering = false;
 	use_accumulated_input = true;

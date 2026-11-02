@@ -137,6 +137,9 @@ public:
 
 	Input();
 
+	typedef void (*gui_event_processor_callback)(const SDL_Event *);
+	void set_gui_event_processor(gui_event_processor_callback p_callback);
+
 protected:
 	static int sdl_to_sfw_code(int sdl_code);
 
@@ -144,6 +147,8 @@ protected:
 	unsigned int get_mouse_button_state(unsigned int p_button, bool p_pressed);
 
 protected:
+	gui_event_processor_callback _gui_callback;
+
 	bool _should_quit;
 
 	struct SpeedTrack {

@@ -7,6 +7,7 @@
 #include "gui.h"
 
 #include "render_core/app_window.h"
+#include "render_core/input.h"
 
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
@@ -106,6 +107,8 @@ void GUI::initialize() {
 	//io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
 	//ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(font != nullptr);
+
+	setup_input_hook();
 }
 
 void GUI::destroy() {
@@ -113,6 +116,8 @@ void GUI::destroy() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
+
+	remove_input_hook();
 
 	ERR_FAIL_COND(!_singleton);
 	memdelete(_singleton);
@@ -129,6 +134,27 @@ void GUI::render() {
 	// Rendering
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void GUI::process_event(const SDL_Event *event) {
+	if (_singleton) {
+		ImGui_ImplSDL3_ProcessEvent(event);
+	}
+}
+
+void GUI::setup_input_hook() {
+	Input *input = Input::get_singleton();
+
+	if (input) {
+		input->set_gui_event_processor(&GUI::process_event);
+	}
+}
+void GUI::remove_input_hook() {
+	Input *input = Input::get_singleton();
+
+	if (input) {
+		input->set_gui_event_processor(NULL);
+	}
 }
 
 GUI::GUI() {
