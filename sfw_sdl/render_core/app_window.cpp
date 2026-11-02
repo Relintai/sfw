@@ -503,17 +503,22 @@ double AppWindow::get_aspect() {
 	return (double)w / (h + !h);
 }
 
-const char *AppWindow::get_clipboard() {
-#if 0
-	return glfwGetClipboardString(_window);
-#endif
-
-	return NULL;
+bool AppWindow::has_clipboard_text() {
+	return SDL_HasClipboardText();
 }
-void AppWindow::set_clipboard(const char *text) {
-#if 0
-	glfwSetClipboardString(_window, text);
-#endif
+String AppWindow::get_clipboard_text() {
+	char *c = SDL_GetClipboardText();
+
+	String s = String::utf8(c);
+
+	SDL_free(c);
+
+	return s;
+}
+bool AppWindow::set_clipboard_tect(const String &text) {
+	CharString cs = text.utf8();
+
+	return SDL_SetClipboardText(cs.get_data());
 }
 
 float AppWindow::get_display_content_scale() {

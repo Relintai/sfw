@@ -103,8 +103,9 @@ public:
 
 	void set_cursor_shape(const CursorShapes shape);
 
-	const char *get_clipboard();
-	void set_clipboard(const char *text);
+	bool has_clipboard_text();
+	String get_clipboard_text();
+	bool set_clipboard_tect(const String &text);
 
 	void *get_window_handle();
 
