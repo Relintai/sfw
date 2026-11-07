@@ -16,6 +16,7 @@
 rm -Rf out
 
 mkdir -p out
+
 mkdir -p out/sfw
 mkdir -p out/sfw/merged
 mkdir -p out/sfw/split
@@ -29,6 +30,12 @@ mkdir -p out/sfwl/split
 mkdir -p out/sfwl/demos
 mkdir -p out/sfwl/modules
 
+mkdir -p out/sfw_sdl
+mkdir -p out/sfw_sdl/merged
+mkdir -p out/sfw_sdl/split
+mkdir -p out/sfw_sdl/demos
+mkdir -p out/sfw_sdl/demos/modules
+mkdir -p out/sfw_sdl/modules
 
 version=""
 
@@ -43,6 +50,7 @@ cd ..
 project_root_folder=$(pwd)
 sfw_out_folder=$(pwd)/tools/release/out/sfw
 sfwl_out_folder=$(pwd)/tools/release/out/sfwl
+sfw_sdl_out_folder=$(pwd)/tools/release/out/sfw_sdl
 
 doc_folder=$(pwd)/tools/doc/out/processed
 
@@ -367,9 +375,103 @@ cp "$current_in_fol/run.sh" "$current_out_fol/run.sh"
 cp "$current_in_fol/sfwl_full_template.html" "$current_out_fol/sfwl_full_template.html"
 cp "$current_in_fol/slate.css" "$current_out_fol/slate.css"
 
+# SFW SDL
+
+# SFW SDL Common files
+
+cp "$project_root_folder/.clang-format" "$sfw_sdl_out_folder/.clang-format"
+cp "$project_root_folder/.clang-tidy" "$sfw_sdl_out_folder/.clang-tidy"
+cp "$project_root_folder/.editorconfig" "$sfw_sdl_out_folder/.editorconfig"
+cp "$project_root_folder/.gitignore" "$sfw_sdl_out_folder/.gitignore"
+cp "$project_root_folder/LICENSE.txt" "$sfw_sdl_out_folder/LICENSE.txt"
+cp "$project_root_folder/README.md" "$sfw_sdl_out_folder/README.md"
+cp "$project_root_folder/icon.png" "$sfw_sdl_out_folder/icon.png"
+
+# SFW SDL Split
+cp -R "$project_root_folder/sfw_sdl" "$sfw_sdl_out_folder/split/sfw_sdl"
+cp "$project_root_folder/compile_linux.sh" "$sfw_sdl_out_folder/split/compile_linux.sh"
+cp "$project_root_folder/compile_osx.sh" "$sfw_sdl_out_folder/split/compile_osx.sh"
+cp "$project_root_folder/compile_vs.bat" "$sfw_sdl_out_folder/split/compile_vs.bat"
+cp "$project_root_folder/compile_windows.sh" "$sfw_sdl_out_folder/split/compile_windows.sh"
+cp "$project_root_folder/Makefile" "$sfw_sdl_out_folder/split/Makefile"
+
+cp "$project_root_folder/.clang-format" "$sfw_sdl_out_folder/split/.clang-format"
+cp "$project_root_folder/.clang-tidy" "$sfw_sdl_out_folder/split/.clang-tidy"
+cp "$project_root_folder/.editorconfig" "$sfw_sdl_out_folder/split/.editorconfig"
+cp "$project_root_folder/.gitignore" "$sfw_sdl_out_folder/split/.gitignore"
+cp "$project_root_folder/LICENSE.txt" "$sfw_sdl_out_folder/split/LICENSE.txt"
+cp "$project_root_folder/README.md" "$sfw_sdl_out_folder/split/README.md"
+cp "$project_root_folder/icon.png" "$sfw_sdl_out_folder/split/icon.png"
+
+cp "$project_root_folder/tools/doc/out/processed/sfw_sdl_full.html" "$sfw_sdl_out_folder/split/sfw_sdl.html"
+
+# SFW SDL Merged
+
+# Full
+current_in_fol=$project_root_folder/tools/merger/out/full
+current_out_fol=$sfw_sdl_out_folder/merged/full
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_sdl.h" "$current_out_fol/sfw_sdl.h"
+cp "$current_in_fol/sfw_sdl.cpp" "$current_out_fol/sfw.cpp"
+cp "$doc_folder/sfw_sdl_full.html" "$current_out_fol/sfw_sdl.html"
+
+# SFW SDL Modules
+
+# Hash
+current_in_fol=$project_root_folder/tools/merger/out/modules/hash/sfw
+current_out_fol=$sfw_sdl_out_folder/modules/hash
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_hash.h" "$current_out_fol/sfw_hash.h"
+cp "$current_in_fol/sfw_hash.cpp" "$current_out_fol/sfw_hash.cpp"
+cp "$doc_folder/sfw_hash.html" "$current_out_fol/sfw_hash.html"
+
+# Render Objects
+current_in_fol=$project_root_folder/tools/merger/out/modules/render_objects
+current_out_fol=$sfw_sdl_out_folder/modules/render_objects
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_render_objects.h" "$current_out_fol/sfw_render_objects.h"
+cp "$current_in_fol/sfw_render_objects.cpp" "$current_out_fol/sfw_render_objects.cpp"
+cp "$doc_folder/sfw_render_objects.html" "$current_out_fol/sfw_render_objects.html"
+
+# Audio
+current_in_fol=$project_root_folder/tools/merger/out/modules/audio/sfw
+current_out_fol=$sfw_sdl_out_folder/modules/audio
+
+mkdir -p "$current_out_fol"
+cp "$current_in_fol/sfw_audio.h" "$current_out_fol/sfw_audio.h"
+cp "$current_in_fol/sfw_audio.cpp" "$current_out_fol/sfw_audio.cpp"
+cp "$doc_folder/sfw_audio.html" "$current_out_fol/sfw_audio.html"
+
+# SFW SDL Demos
+
+# Render Test APP
+current_out_fol=$sfw_sdl_out_folder/demos/render_test_app_sdl
+
+current_in_fol=$project_root_folder/tools/merger/out/full
+
+cp -R "$project_root_folder/demos/build_scripts/full_sdl/" "$current_out_fol"
+
+cp "$current_in_fol/sfw_sdl.h" "$current_out_fol/sfw_sdl.h"
+cp "$current_in_fol/sfw_sdl.cpp" "$current_out_fol/sfw_sdl.cpp"
+
+current_in_fol=$project_root_folder/demos/render_test_app_sdl
+
+cp "$current_in_fol/main.cpp" "$current_out_fol/main.cpp"
+cp "$current_in_fol/game_application.h" "$current_out_fol/game_application.h"
+cp "$current_in_fol/game_scene.h" "$current_out_fol/game_scene.h"
+cp "$current_in_fol/game_scene.cpp" "$current_out_fol/game_scene.cpp"
+cp "$project_root_folder/icon.png" "$current_out_fol/icon.png"
+
+
+
 # ==== Zip everything ====
 
 cd $(pwd)/tools/release/out
 
 zip -q -r sfw_v${version}.zip  ./sfw/*
 zip -q -r sfwl_v${version}.zip  ./sfwl/*
+zip -q -r sfw_sdl_v${version}.zip  ./sfw_sdl/*
+
