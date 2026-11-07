@@ -11,6 +11,8 @@ mkdir -p out/full
 mkdir -p out/sfwl_core
 mkdir -p out/sfwl_full
 
+mkdir -p out/sfw_sdl_full
+
 cd ..
 cd ..
 
@@ -44,6 +46,10 @@ python tools/merger/join.py --template tools/merger/sfwl/sfwl_core.cpp.inl --pat
 
 python tools/merger/join.py --template tools/merger/sfwl/sfwl_full.h.inl --path . --output tools/merger/out/sfwl_full/sfwl.h
 python tools/merger/join.py --template tools/merger/sfwl/sfwl_full.cpp.inl --path . --output tools/merger/out/sfwl_full/sfwl.cpp
+
+# SFW SDL
+python tools/merger/join.py --template tools/merger/sfw_sdl/sfw_sdl_full.h.inl --path . --output tools/merger/out/sfw_sdl_full/sfw_sdl.h
+python tools/merger/join.py --template tools/merger/sfw_sdl/sfw_sdl_full.cpp.inl --path . --output tools/merger/out/sfw_sdl_full/sfw_sdl.cpp
 
 # Hash Module
 python tools/merger/join.py --template modules/hash/merger/sfw_hash.h.inl --path . --output tools/merger/out/modules/hash/sfw/sfw_hash.h --library_include sfw
@@ -92,6 +98,10 @@ clang-format --Wno-error=unknown -i tools/merger/out/sfwl_core/sfwl.cpp
 
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.cpp
+
+# SFW SDL
+clang-format --Wno-error=unknown -i tools/merger/out/sfw_sdl_full/sfw_sdl.h
+clang-format --Wno-error=unknown -i tools/merger/out/sfw_sdl_full/sfw_sdl.cpp
 
 # Hash Module
 
