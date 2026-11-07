@@ -5859,7 +5859,7 @@ void ImGui::DebugNodeInputTextState(ImGuiInputTextState* state)
             if (undo_rec_type == ' ')
                 BeginDisabled();
             const int buf_preview_len = (undo_rec_type != ' ' && undo_rec->char_storage != -1) ? undo_rec->insert_length : 0;
-            const char* buf_preview_str = undo_state->undo_char + undo_rec->char_storage;
+            const char* buf_preview_str = reinterpret_cast<const char*>(undo_state->undo_char + undo_rec->char_storage);
             Text("%c [%02d] where %03d, insert %03d, delete %03d, char_storage %03d \"%.*s\"",
                 undo_rec_type, n, undo_rec->where, undo_rec->insert_length, undo_rec->delete_length, undo_rec->char_storage, buf_preview_len, buf_preview_str);
             if (undo_rec_type == ' ')

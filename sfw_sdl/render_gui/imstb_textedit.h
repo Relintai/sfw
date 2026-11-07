@@ -1296,7 +1296,7 @@ static IMSTB_TEXTEDIT_CHARTYPE *stb_text_createundo(StbUndoState *state, int pos
    } else {
       r->char_storage = state->undo_char_point;
       state->undo_char_point += insert_len;
-      return &state->undo_char[r->char_storage];
+      return reinterpret_cast<IMSTB_TEXTEDIT_CHARTYPE *>(&state->undo_char[r->char_storage]);
    }
 }
 
@@ -1358,7 +1358,7 @@ static void stb_text_undo(IMSTB_TEXTEDIT_STRING *str, STB_TexteditState *state)
    // check type of recorded action:
    if (u.insert_length) {
       // easy case: was a deletion, so we need to insert n characters
-      u.insert_length = STB_TEXTEDIT_INSERTCHARS(str, u.where, &s->undo_char[u.char_storage], u.insert_length);
+      u.insert_length = STB_TEXTEDIT_INSERTCHARS(str, u.where, reinterpret_cast<IMSTB_TEXTEDIT_CHARTYPE *>(&s->undo_char[u.char_storage]), u.insert_length);
       s->undo_char_point -= u.insert_length;
    }
 
@@ -1409,7 +1409,7 @@ static void stb_text_redo(IMSTB_TEXTEDIT_STRING *str, STB_TexteditState *state)
 
    if (r.insert_length) {
       // easy case: need to insert n characters
-      r.insert_length = STB_TEXTEDIT_INSERTCHARS(str, r.where, &s->undo_char[r.char_storage], r.insert_length);
+      r.insert_length = STB_TEXTEDIT_INSERTCHARS(str, r.where, reinterpret_cast<IMSTB_TEXTEDIT_CHARTYPE *>(&s->undo_char[r.char_storage]), r.insert_length);
       s->redo_char_point += r.insert_length;
    }
 
