@@ -542,6 +542,7 @@ void process_file(const String &path, const String &out_file, const String &temp
 
 	String compilation_no_renderer = FileAccess::get_file_as_string("compilation_no_renderer.md.html");
 	String compilation_renderer = FileAccess::get_file_as_string("compilation_renderer.md.html");
+	String compilation_sdl_renderer = FileAccess::get_file_as_string("compilation_sdl_renderer.md.html");
 	String licenses_renderer = FileAccess::get_file_as_string("licenses_renderer.md.html");
 	String licenses_gui = FileAccess::get_file_as_string("licenses_gui.md.html");
 	String markdeep_min_js = FileAccess::get_file_as_string("markdeep.min.js");
@@ -549,6 +550,7 @@ void process_file(const String &path, const String &out_file, const String &temp
 
 	index_str = index_str.replace("$FILE_Compilation_No_Renderer$", compilation_no_renderer);
 	index_str = index_str.replace("$FILE_Compilation_Renderer$", compilation_renderer);
+	index_str = index_str.replace("$FILE_Compilation_SDL_Renderer$", compilation_sdl_renderer);
 	index_str = index_str.replace("$LICENSES_Renderer$", licenses_renderer);
 	index_str = index_str.replace("$LICENSES_GUI$", licenses_gui);
 
