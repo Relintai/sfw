@@ -80,7 +80,7 @@
 //#define IMGUI_STB_TRUETYPE_FILENAME   "my_folder/stb_truetype.h"
 //#define IMGUI_STB_TRUETYPE_FILENAME   "render_core/3rd_stb_truetype.h"
 //--STRIP
-#define IMGUI_STB_TRUETYPE_FILENAME   "render_core/3rd_stb_truetype.h"
+#define IMGUI_STB_TRUETYPE_FILENAME "render_core/3rd_stb_truetype.h"
 //--STRIP
 //#define IMGUI_STB_RECT_PACK_FILENAME  "my_folder/stb_rect_pack.h"
 //#define IMGUI_STB_SPRINTF_FILENAME    "my_folder/stb_sprintf.h"    // only used if IMGUI_USE_STB_SPRINTF is defined.
@@ -115,12 +115,12 @@
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
 /*
 #define IM_VEC2_CLASS_EXTRA                                                     \
-        IM_NODEBUGSTEP constexpr inline ImVec2(const MyVec2& f) : x(f.x), y(f.y) {}    \
-        IM_NODEBUGSTEP inline operator MyVec2() const { return MyVec2(x,y); }
+		IM_NODEBUGSTEP constexpr inline ImVec2(const MyVec2& f) : x(f.x), y(f.y) {}    \
+		IM_NODEBUGSTEP inline operator MyVec2() const { return MyVec2(x,y); }
 
 #define IM_VEC4_CLASS_EXTRA                                                                     \
-        IM_NODEBUGSTEP constexpr inline ImVec4(const MyVec4& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}    \
-        IM_NODEBUGSTEP inline operator MyVec4() const { return MyVec4(x,y,z,w); }
+		IM_NODEBUGSTEP constexpr inline ImVec4(const MyVec4& f) : x(f.x), y(f.y), z(f.z), w(f.w) {}    \
+		IM_NODEBUGSTEP inline operator MyVec4() const { return MyVec4(x,y,z,w); }
 */
 //---- ...Or use Dear ImGui's own basic math operators in every file including imgui.h:
 //#ifndef IMGUI_DEFINE_MATH_OPERATORS
@@ -156,6 +156,6 @@
 /*
 namespace ImGui
 {
-    void MyFunction(const char* name, MyMatrix44* mtx);
+	void MyFunction(const char* name, MyMatrix44* mtx);
 }
 */
