@@ -3638,7 +3638,7 @@ static void TableSettingsInit(ImGuiTableSettings *settings, ImGuiID id, int colu
 	ImGuiTableColumnSettings *settings_column = settings->GetColumnSettings();
 	for (int n = 0; n < columns_count_max; n++, settings_column++)
 		IM_PLACEMENT_NEW(settings_column)
-		ImGuiTableColumnSettings();
+	ImGuiTableColumnSettings();
 	settings->ID = id;
 	settings->ColumnsCount = (ImGuiTableColumnIdx)columns_count;
 	settings->ColumnsCountMax = (ImGuiTableColumnIdx)columns_count_max;

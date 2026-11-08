@@ -840,23 +840,30 @@ inline bool ImTriangleIsClockwise(const ImVec2 &a, const ImVec2 &b, const ImVec2
 IM_MSVC_RUNTIME_CHECKS_OFF
 struct ImVec1 {
 	float x;
-	IM_NODEBUGSTEP constexpr inline ImVec1() : x(0.0f) {}
-	IM_NODEBUGSTEP constexpr inline ImVec1(float _x) : x(_x) {}
+	IM_NODEBUGSTEP constexpr inline ImVec1() :
+			x(0.0f) {}
+	IM_NODEBUGSTEP constexpr inline ImVec1(float _x) :
+			x(_x) {}
 };
 
 // Helper: ImVec2i (2D vector, integer)
 struct ImVec2i {
 	int x, y;
-	IM_NODEBUGSTEP constexpr inline ImVec2i() : x(0), y(0) {}
-	IM_NODEBUGSTEP constexpr inline ImVec2i(int _x, int _y) : x(_x), y(_y) {}
+	IM_NODEBUGSTEP constexpr inline ImVec2i() :
+			x(0), y(0) {}
+	IM_NODEBUGSTEP constexpr inline ImVec2i(int _x, int _y) :
+			x(_x), y(_y) {}
 };
 
 // Helper: ImVec2ih (2D vector, half-size integer, for long-term packed storage)
 struct ImVec2ih {
 	short x, y;
-	IM_NODEBUGSTEP constexpr inline ImVec2ih() : x(0), y(0) {}
-	IM_NODEBUGSTEP constexpr inline ImVec2ih(short _x, short _y) : x(_x), y(_y) {}
-	IM_NODEBUGSTEP constexpr inline explicit ImVec2ih(const ImVec2 &rhs) : x((short)rhs.x), y((short)rhs.y) {}
+	IM_NODEBUGSTEP constexpr inline ImVec2ih() :
+			x(0), y(0) {}
+	IM_NODEBUGSTEP constexpr inline ImVec2ih(short _x, short _y) :
+			x(_x), y(_y) {}
+	IM_NODEBUGSTEP constexpr inline explicit ImVec2ih(const ImVec2 &rhs) :
+			x((short)rhs.x), y((short)rhs.y) {}
 };
 
 // Helper: ImRect (2D axis aligned bounding-box)
@@ -865,10 +872,14 @@ struct IMGUI_API ImRect {
 	ImVec2 Min; // Upper-left
 	ImVec2 Max; // Lower-right
 
-	IM_NODEBUGSTEP constexpr inline ImRect() : Min(0.0f, 0.0f), Max(0.0f, 0.0f) {}
-	IM_NODEBUGSTEP constexpr inline ImRect(const ImVec2 &min, const ImVec2 &max) : Min(min), Max(max) {}
-	IM_NODEBUGSTEP constexpr inline ImRect(const ImVec4 &v) : Min(v.x, v.y), Max(v.z, v.w) {}
-	IM_NODEBUGSTEP constexpr inline ImRect(float x1, float y1, float x2, float y2) : Min(x1, y1), Max(x2, y2) {}
+	IM_NODEBUGSTEP constexpr inline ImRect() :
+			Min(0.0f, 0.0f), Max(0.0f, 0.0f) {}
+	IM_NODEBUGSTEP constexpr inline ImRect(const ImVec2 &min, const ImVec2 &max) :
+			Min(min), Max(max) {}
+	IM_NODEBUGSTEP constexpr inline ImRect(const ImVec4 &v) :
+			Min(v.x, v.y), Max(v.z, v.w) {}
+	IM_NODEBUGSTEP constexpr inline ImRect(float x1, float y1, float x2, float y2) :
+			Min(x1, y1), Max(x2, y2) {}
 
 	ImVec2 GetCenter() const { return ImVec2((Min.x + Max.x) * 0.5f, (Min.y + Max.y) * 0.5f); }
 	ImVec2 GetSize() const { return ImVec2(Max.x - Min.x, Max.y - Min.y); }
