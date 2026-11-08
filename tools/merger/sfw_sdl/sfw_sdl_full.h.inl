@@ -861,15 +861,25 @@
 // API ///-
 #endif
 
-{{FILE:sfw_sdl/render_core/3rd_glad.h}}
+/* clang-format off */
+{{FILEPLACEHOLDER:sfw_sdl/render_core/3rd_glad.h.placeholder}}
+/* clang-format on */
 
+/* clang-format off */
 {{FILE:sfw_sdl/render_gui/imstb_rectpack.h}}
+/* clang-format on */
 
+/* clang-format off */
 {{FILE:sfw_sdl/render_core/3rd_stb_truetype.h}}
+/* clang-format on */
 
+/* clang-format off */
 {{FILE:sfw_sdl/render_core/3rd_stb_image.h}}
+/* clang-format on */
 
+/* clang-format off */
 {{FILE:sfw_sdl/render_core/3rd_stb_image_write.h}}
+/* clang-format on */
 
 #undef freelist
 #undef _GNU_SOURCE

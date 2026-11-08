@@ -47,12 +47,12 @@ def print_includes(f):
                 print(l)
                 print_includes_dict[l] = 1
 
-def strip_file(f):
+def strip_file(f, file_path):
     if "//--STRIP" in f:
         s = f.split("//--STRIP")
         
         if len(s) % 2 != 1:
-            print("File likely has non-terminated //--STRIP comments!")
+            print("File likely has non-terminated //--STRIP comments! " + file_path)
             return f
 
         f = ""
@@ -70,17 +70,17 @@ def process_placeholders(f):
 
     return f.replace("//--INCLUDE_SFW_HEADER", inc)
 
-def process_file(f):
+def process_file(f, file_path):
     #print_includes(f)
 
-    f = strip_file(f)
+    f = strip_file(f, file_path)
     f = process_placeholders(f)
 
     #return f.replace('#include ', '//#include ')
 
     return f
 
-def process_command(name, value):
+def process_command(name, value, file_path):
     if name == "ARG":
         print("Appending arg: " + value)
         return template_args[value]
@@ -89,20 +89,27 @@ def process_command(name, value):
         print("Appending file: " + value)
         with open(file_path, "r") as file:
             res = "#line 1 \"" + value + "\"\n"
-            res += process_file(file.read())
+            res += process_file(file.read(), file_path)
+            return res
+    elif name == "FILEPLACEHOLDER":
+        file_path = os.path.join(input_path, value)
+        print("Appending file: " + value)
+        with open(file_path, "r") as file:
+            res = "#line 1 \"" + value.replace(".placeholder", "") + "\"\n"
+            res += process_file(file.read(), file_path)
             return res
     elif name == "FILEINLINE":
         file_path = os.path.join(input_path, value)
         print("Appending inline file: " + value)
         with open(file_path, "r") as file:
-            res = process_file(file.read())
+            res = process_file(file.read(), file_path)
             return res
 
-def process_template(template):
+def process_template(template, file_path):
     regex = r"{{([A-Z]*):([\w./]*)}}"
     matches = re.finditer(regex, template, re.MULTILINE)
     for _, match in enumerate(matches, start=1):
-        res = process_command(match.group(1), match.group(2))
+        res = process_command(match.group(1), match.group(2), file_path)
         template = template.replace(match.group(0), res)
 
     return template
@@ -133,7 +140,7 @@ def main():
             template_args[arg[2:]] = unknown[i + 1]
 
     with open(args.template, "r") as f:
-        output = process_template(strip_file(f.read()))
+        output = process_template(strip_file(f.read(), args.template), args.template)
 
     ensure_dir(os.path.dirname(args.output))
 

@@ -49,6 +49,8 @@ python tools/merger/join.py --template tools/merger/sfwl/sfwl_full.cpp.inl --pat
 
 # SFW SDL
 python tools/merger/join.py --template tools/merger/sfw_sdl/sfw_sdl_full.h.inl --path . --output tools/merger/out/sfw_sdl_full/sfw_sdl.h
+#enable this if you disable clang formats
+#python tools/merger/replace_placeholder.py --text "// INSERT GLAD HERE" --replace_with_file sfw_sdl/render_core/3rd_glad.h --path tools/merger/out/sfw_sdl_full/sfw_sdl.h
 python tools/merger/join.py --template tools/merger/sfw_sdl/sfw_sdl_full.cpp.inl --path . --output tools/merger/out/sfw_sdl_full/sfw_sdl.cpp
 
 # Hash Module
@@ -100,7 +102,9 @@ clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.cpp
 
 # SFW SDL
+# NOt that having glad in this file will make current clang format eat all ram and exit, so ve add that in the next line
 clang-format --Wno-error=unknown -i tools/merger/out/sfw_sdl_full/sfw_sdl.h
+python tools/merger/replace_placeholder.py --text "// INSERT GLAD HERE" --replace_with_file sfw_sdl/render_core/3rd_glad.h --path tools/merger/out/sfw_sdl_full/sfw_sdl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfw_sdl_full/sfw_sdl.cpp
 
 # Hash Module
