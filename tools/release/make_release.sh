@@ -67,12 +67,7 @@ cp "$project_root_folder/README.md" "$sfw_out_folder/README.md"
 cp "$project_root_folder/icon.png" "$sfw_out_folder/icon.png"
 
 # SFW Split
-cp -R "$project_root_folder/sfw" "$sfw_out_folder/split/sfw"
-cp "$project_root_folder/compile_linux.sh" "$sfw_out_folder/split/compile_linux.sh"
-cp "$project_root_folder/compile_osx.sh" "$sfw_out_folder/split/compile_osx.sh"
-cp "$project_root_folder/compile_vs.bat" "$sfw_out_folder/split/compile_vs.bat"
-cp "$project_root_folder/compile_windows.sh" "$sfw_out_folder/split/compile_windows.sh"
-cp "$project_root_folder/Makefile" "$sfw_out_folder/split/Makefile"
+cp -R "$project_root_folder/sfw" "$sfw_out_folder/split"
 
 cp "$project_root_folder/.clang-format" "$sfw_out_folder/split/.clang-format"
 cp "$project_root_folder/.clang-tidy" "$sfw_out_folder/split/.clang-tidy"
@@ -292,12 +287,7 @@ cp "$project_root_folder/README.md" "$sfwl_out_folder/README.md"
 cp "$project_root_folder/icon.png" "$sfwl_out_folder/icon.png"
 
 # SFWL Split
-cp -R "$project_root_folder/sfwl" "$sfwl_out_folder/split/sfwl"
-cp "$project_root_folder/compile_linux_sfwl.sh" "$sfwl_out_folder/split/compile_linux.sh"
-cp "$project_root_folder/compile_osx_sfwl.sh" "$sfwl_out_folder/split/compile_osx.sh"
-cp "$project_root_folder/compile_vs_sfwl.bat" "$sfwl_out_folder/split/compile_vs.bat"
-cp "$project_root_folder/compile_windows_sfwl.sh" "$sfwl_out_folder/split/compile_windows.sh"
-cp "$project_root_folder/Makefile_sfwl" "$sfwl_out_folder/split/Makefile"
+cp -R "$project_root_folder/sfwl" "$sfwl_out_folder/split"
 
 cp "$project_root_folder/.clang-format" "$sfwl_out_folder/split/.clang-format"
 cp "$project_root_folder/.clang-tidy" "$sfwl_out_folder/split/.clang-tidy"
@@ -388,12 +378,7 @@ cp "$project_root_folder/README.md" "$sfw_sdl_out_folder/README.md"
 cp "$project_root_folder/icon.png" "$sfw_sdl_out_folder/icon.png"
 
 # SFW SDL Split
-cp -R "$project_root_folder/sfw_sdl" "$sfw_sdl_out_folder/split/sfw_sdl"
-cp "$project_root_folder/compile_linux.sh" "$sfw_sdl_out_folder/split/compile_linux.sh"
-cp "$project_root_folder/compile_osx.sh" "$sfw_sdl_out_folder/split/compile_osx.sh"
-cp "$project_root_folder/compile_vs.bat" "$sfw_sdl_out_folder/split/compile_vs.bat"
-cp "$project_root_folder/compile_windows.sh" "$sfw_sdl_out_folder/split/compile_windows.sh"
-cp "$project_root_folder/Makefile" "$sfw_sdl_out_folder/split/Makefile"
+cp -R "$project_root_folder/sfw_sdl" "$sfw_sdl_out_folder/split"
 
 cp "$project_root_folder/.clang-format" "$sfw_sdl_out_folder/split/.clang-format"
 cp "$project_root_folder/.clang-tidy" "$sfw_sdl_out_folder/split/.clang-tidy"
@@ -408,12 +393,12 @@ cp "$project_root_folder/tools/doc/out/processed/sfw_sdl_full.html" "$sfw_sdl_ou
 # SFW SDL Merged
 
 # Full
-current_in_fol=$project_root_folder/tools/merger/out/full
+current_in_fol=$project_root_folder/tools/merger/out/sfw_sdl_full
 current_out_fol=$sfw_sdl_out_folder/merged/full
 
 mkdir -p "$current_out_fol"
 cp "$current_in_fol/sfw_sdl.h" "$current_out_fol/sfw_sdl.h"
-cp "$current_in_fol/sfw_sdl.cpp" "$current_out_fol/sfw.cpp"
+cp "$current_in_fol/sfw_sdl.cpp" "$current_out_fol/sfw_sdl.cpp"
 cp "$doc_folder/sfw_sdl_full.html" "$current_out_fol/sfw_sdl.html"
 
 # SFW SDL Modules
@@ -450,7 +435,7 @@ cp "$doc_folder/sfw_audio.html" "$current_out_fol/sfw_audio.html"
 # Render Test APP
 current_out_fol=$sfw_sdl_out_folder/demos/render_test_app_sdl
 
-current_in_fol=$project_root_folder/tools/merger/out/full
+current_in_fol=$project_root_folder/tools/merger/out/sfw_sdl_full
 
 cp -R "$project_root_folder/demos/build_scripts/full_sdl/" "$current_out_fol"
 
