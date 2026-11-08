@@ -9,7 +9,7 @@
 ./game ../merger/out/sfwl_core/sfwl.h -osfwl_core.html -tsfwl_core_template.html
 ./game ../merger/out/sfwl_full/sfwl.h -osfwl_full.html -tsfwl_full_template.html
 
-./game ../merger/out/sfwl_sdl_full/sfw_sdl.h -osfw_sdl_full.html -tsfw_sdl_full_template.html
+./game ../merger/out/sfw_sdl_full/sfw_sdl.h -osfw_sdl_full.html -tsfw_sdl_full_template.html
 
 ./game ../merger/out/modules/hash/sfw/sfw_hash.h -osfw_hash.html -tsfw_hash_template.html
 
