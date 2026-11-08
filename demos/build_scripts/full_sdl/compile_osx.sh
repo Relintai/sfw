@@ -1,4 +1,6 @@
 
+# TODO this needs to be updated
+
 export SDKROOT=$(xcrun --show-sdk-path)
 
 export args="-std=c++14 -w -framework cocoa -framework iokit -framework CoreFoundation -framework CoreAudio -framework AudioToolbox "

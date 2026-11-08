@@ -1,4 +1,7 @@
 
+# TODO this needs to be updated,
+# sdl setup used to be not that trivial on windows, there are likely better ways now
+
 g++ -Wall -g -c sfw.cpp -o sfw.o
 g++ -Wall -g -c game_scene.cpp -o game_scene.o
 g++ -Wall -g -c main.cpp -o main.o
