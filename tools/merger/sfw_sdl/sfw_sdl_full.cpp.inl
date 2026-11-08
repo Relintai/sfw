@@ -850,7 +850,6 @@ namespace ImStb
 {{FILE:sfw_sdl/render_gui/imgui_internal.h}}
 
 
-//--STRIP
 // Wrapper for stb_textedit.h to edit text (our wrapper is for: statically sized buffer, single-line, wchar characters. InputText converts between UTF-8 and wchar)
 // With our UTF-8 use of stb_textedit:
 // - STB_TEXTEDIT_GETCHAR is nothing more than a a "GETBYTE". It's only used to compare to ascii or to copy blocks of text so we are fine.
