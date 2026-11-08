@@ -75,37 +75,55 @@ echo "Running clang format!"
 clang-format --Wno-error=unknown -i tools/merger/out/core/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/core/sfw.cpp
 
+echo "SFW Core Done."
+
 clang-format --Wno-error=unknown -i tools/merger/out/object/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/object/sfw.cpp
+
+echo "SFW Object Done."
 
 clang-format --Wno-error=unknown -i tools/merger/out/render_core/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/render_core/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/render_core/sfw_3rd.m
 
+echo "SFW Render Core Done."
+
 clang-format --Wno-error=unknown -i tools/merger/out/render_gui/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/render_gui/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/gui/sfw_3rd.m
+
+echo "SFW GUI Done."
 
 clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/render_immediate/sfw_3rd.m
 
+echo "SFW Render Immediate Done."
+
 clang-format --Wno-error=unknown -i tools/merger/out/full/sfw.h
 clang-format --Wno-error=unknown -i tools/merger/out/full/sfw.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/full/sfw_3rd.m
+
+echo "SFW Full Done."
 
 #SFWL
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_core/sfwl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_core/sfwl.cpp
 
+echo "SFWL Core Done."
+
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfwl_full/sfwl.cpp
+
+echo "SFWL Full Done."
 
 # SFW SDL
 # NOt that having glad in this file will make current clang format eat all ram and exit, so ve add that in the next line
 clang-format --Wno-error=unknown -i tools/merger/out/sfw_sdl_full/sfw_sdl.h
 python tools/merger/replace_placeholder.py --text "// INSERT GLAD HERE" --replace_with_file sfw_sdl/render_core/3rd_glad.h --path tools/merger/out/sfw_sdl_full/sfw_sdl.h
 clang-format --Wno-error=unknown -i tools/merger/out/sfw_sdl_full/sfw_sdl.cpp
+
+echo "SFW SDL Full Done."
 
 # Hash Module
 
@@ -114,10 +132,14 @@ clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfw/sfw_hash.c
 clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.h
 clang-format --Wno-error=unknown -i tools/merger/out/modules/hash/sfwl/sfw_hash.cpp
 
+echo "SFW Hash Module Done."
+
 # Render Objects Module
 
 clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_render_objects.h
 clang-format --Wno-error=unknown -i tools/merger/out/modules/render_objects/sfw_render_objects.cpp
+
+echo "SFW Render Objects Module Done."
 
 # Audio Module
 
@@ -126,4 +148,6 @@ clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audi
 # Don't. Not needed, and it takes ridiculous amount of memory.
 #clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfw/sfw_audio.cpp
 #clang-format --Wno-error=unknown -i tools/merger/out/modules/audio/sfwl/sfw_audio.cpp
+
+echo "SFW Audio Module Done."
 
