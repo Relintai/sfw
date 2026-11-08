@@ -8,6 +8,9 @@ rem debug: /Zi (== -g)
 
 rem you might need to add /std:c++14 depending on your compiler version.
 
+rem /Ilibs\SDL2-VC\include
+rem /link /LIBPATH:libs\SDL2-VC\lib SDL2.lib SDL2main.lib opengl32.lib
+
 cl /D_REENTRANT /EHsc /Zi /I. /c core/aabb.cpp /Fo:core/aabb.obj
 cl /D_REENTRANT /EHsc /Zi /I. /c core/basis.cpp /Fo:core/basis.obj
 cl /D_REENTRANT /EHsc /Zi /I. /c core/color.cpp /Fo:core/color.obj
