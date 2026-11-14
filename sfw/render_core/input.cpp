@@ -661,9 +661,47 @@ void Input::GLFWcursorenterfunCallback(GLFWwindow *window, int entered) {
 		}
 	}
 }
+
 void Input::GLFWscrollfunCallback(GLFWwindow *window, double xoffset, double yoffset) {
-	ERR_PRINT("GLFWscrollfunCallback");
+	Input *self = Input::get_singleton();
+
+    Ref<InputEventMouseButton> mb;
+    mb.instance();
+
+    Point2i pos = self->last_mouse_pos;
+
+    get_key_modifier_state(self->last_key_modifier_state, mb);
+
+    mb->set_position(pos);
+    mb->set_global_position(pos);
+    mb->set_button_mask(self->last_button_state);
+	
+    // Vertical scrolling
+    if (yoffset != 0) {
+        mb->set_button_index(yoffset > 0 ? BUTTON_WHEEL_UP : BUTTON_WHEEL_DOWN);
+        mb->set_pressed(true);
+        mb->set_factor(Math::abs(yoffset));
+
+        self->parse_input_event(mb);
+
+        mb->set_pressed(false);
+        self->parse_input_event(mb);
+    }
+
+    // Horizontal scrolling
+    if (xoffset != 0) {
+        mb->set_button_index(xoffset > 0 ? BUTTON_WHEEL_RIGHT : BUTTON_WHEEL_LEFT);
+        mb->set_pressed(true);
+        mb->set_factor(Math::abs(xoffset));
+
+        self->parse_input_event(mb);
+
+        mb->set_pressed(false);
+        self->parse_input_event(mb);
+    }
+
 }
+
 void Input::GLFWdropfunCallback(GLFWwindow *window, int path_count, const char *paths[]) {
 	ERR_PRINT("GLFWdropfunCallback");
 }
@@ -693,7 +731,7 @@ void Input::_setup_window_callbacks() {
 	glfwSetMouseButtonCallback(window, &Input::GLFWmousebuttonfunCallback);
 	glfwSetCursorPosCallback(window, &Input::GLFWcursorposfunCallback);
 	glfwSetCursorEnterCallback(window, &Input::GLFWcursorenterfunCallback);
-	//glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
+	glfwSetScrollCallback(window, &Input::GLFWscrollfunCallback);
 	//glfwSetDropCallback(window, &Input::GLFWdropfunCallback);
 	//glfwSetJoystickCallback(&Input::GLFWjoystickfunCallback);
 	glfwSetWindowFocusCallback(window, &Input::GLFWwindowfocusfunCallback);
